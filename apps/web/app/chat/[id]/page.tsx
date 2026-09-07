@@ -1307,11 +1307,11 @@ export default function ChatPage() {
               <button
                 onClick={() => {
                   setPaymentConfirmation(null);
-                  router.push(`/properties/${lead?.propertyId || lead?.property?.id}/edit`);
+                  router.push(isOwnerViewer ? `/properties/${lead?.propertyId || lead?.property?.id}/edit` : '/dashboard/customer');
                 }}
                 className="w-full bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold py-3 rounded-xl text-xs transition shadow-md uppercase tracking-wider"
               >
-                View Property Management
+                {isOwnerViewer ? 'View Property Management' : 'Go to My Buyer Dashboard'}
               </button>
               <button
                 onClick={() => setPaymentConfirmation(null)}
