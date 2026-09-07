@@ -585,7 +585,7 @@ export default function ChatPage() {
 
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const token = localStorage.getItem('Ziva_access');
+      const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
       if (token) {
         const res = await fetch(`${apiBase}/api/v1/visits`, {
           method: 'POST',
@@ -599,20 +599,25 @@ export default function ChatPage() {
             scheduledAt: new Date(visitDate).toISOString(),
             notes: visitNotes,
           }),
-        });
-        if (res.ok) {
+        }).catch(() => null);
+
+        if (res && res.ok) {
           const data = await res.json();
           setVisits((prev) => [...prev, data.data || data]);
           setShowVisitModal(false);
-          alert('Visit requested! Owner will accept/reject.');
+          setVisitDate('');
+          alert('Visit appointment scheduled successfully! Owner will review.');
           return;
         }
       }
-    } catch (err) {}
+    } catch (err) {} finally {
+      setSchedulingVisit(false);
+    }
 
     // Fallback local update
     setVisits((prev) => [...prev, newVisit]);
     setShowVisitModal(false);
+    setVisitDate('');
     alert('Visit requested! Owner will review and accept your viewing appointment.');
     setSchedulingVisit(false);
   };
