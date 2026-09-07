@@ -1,0 +1,955 @@
+// ============================================================
+// Ziva HOUSING — PostgreSQL Schema via Prisma ORM
+// All 25+ entities for Phase 1 MVP
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum UserRole {
+  CUSTOMER
+  OWNER
+  AGENT
+  SERVICE_PROVIDER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING_VERIFICATION
+  SUSPENDED
+  BLOCKED
+  DELETED
+}
+
+enum PropertyPurpose {
+  SELL
+  RENT
+  LEASE
+  PG
+}
+
+enum PropertyType {
+  APARTMENT
+  INDEPENDENT_HOUSE
+  VILLA
+  PLOT
+  COMMERCIAL_OFFICE
+  COMMERCIAL_SHOP
+  COMMERCIAL_WAREHOUSE
+  FARM_HOUSE
+  STUDIO
+}
+
+enum PropertyStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  SOLD
+  RENTED
+  REJECTED
+  ARCHIVED
+  SUSPENDED
+}
+
+enum FurnishingStatus {
+  UNFURNISHED
+  SEMI_FURNISHED
+  FULLY_FURNISHED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  VISIT_SCHEDULED
+  NEGOTIATION
+  BOOKING
+  COMPLETED
+  LOST
+}
+
+enum VisitStatus {
+  REQUESTED
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionStatus {
+  CREATED
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  ON_HOLD
+}
+
+enum NotificationChannel {
+  EMAIL
+  SMS
+  PUSH
+  WHATSAPP
+  IN_APP
+}
+
+enum NotificationType {
+  ENQUIRY_CREATED
+  NEW_MESSAGE
+  MESSAGE_FLAGGED
+  VISIT_REQUESTED
+  VISIT_ACCEPTED
+  VISIT_REJECTED
+  VISIT_COMPLETED
+  OFFER_RECEIVED
+  BOOKING_CONFIRMED
+  PAYMENT_RECEIVED
+  PROPERTY_APPROVED
+  PROPERTY_REJECTED
+  ACCOUNT_VERIFIED
+  ACCOUNT_SUSPENDED
+  JOB_ASSIGNED
+  REVIEW_REQUESTED
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  APPROVE
+  REJECT
+  SUSPEND
+  BLOCK
+  UNBLOCK
+  VERIFY
+  ASSIGN
+  PAYOUT
+}
+
+enum DocumentType {
+  OWNERSHIP_PROOF
+  IDENTITY_PROOF
+  NOC
+  FLOOR_PLAN
+  ENCUMBRANCE_CERTIFICATE
+  SALE_AGREEMENT
+  RENT_AGREEMENT
+  OTHER
+}
+
+enum CommissionType {
+  PERCENTAGE
+  FLAT_FEE
+}
+
+enum ReviewTargetType {
+  PROPERTY
+  SERVICE_BOOKING
+  OWNER
+  AGENT
+  SERVICE_PROVIDER
+}
+
+// ============================================================
+// USER SYSTEM
+// ============================================================
+
+model User {
+  id                String     @id @default(cuid())
+  email             String?    @unique
+  phone             String     @unique
+  passwordHash      String?
+  role              UserRole   @default(CUSTOMER)
+  status            UserStatus @default(PENDING_VERIFICATION)
+  firstName         String
+  lastName          String
+  profilePictureUrl String?
+  isPhoneVerified   Boolean    @default(false)
+  isEmailVerified   Boolean    @default(false)
+  otpCode           String?
+  otpExpiresAt      DateTime?
+  lastLoginAt       DateTime?
+  fcmToken          String?    // Push notification token
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  deletedAt         DateTime?
+
+  // Relations
+  customerProfile        CustomerProfile?
+  ownerProfile           OwnerProfile?
+  agentProfile           AgentProfile?
+  serviceProviderProfile ServiceProviderProfile?
+  leadsAsCustomer        Lead[]                  @relation("CustomerLeads")
+  leadsAsOwner           Lead[]                  @relation("OwnerLeads")
+  messagesSent           LeadMessage[]
+  notifications          Notification[]
+  payouts                Payout[]
+  reviewsGiven           Review[]                @relation("ReviewerUser")
+  reviewsReceived        Review[]                @relation("ReviewedUser")
+  adminActions           AuditLog[]              @relation("AdminAuditLogs")
+  refreshTokens          RefreshToken[]
+  termsAcceptances       TermsAcceptance[]
+  supportTickets         SupportTicket[]         @relation("UserSupportTickets")
+  supportMessages        SupportMessage[]        @relation("UserSupportMessages")
+
+  @@index([phone])
+  @@index([email])
+  @@index([role, status])
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model CustomerProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  preferredCities   String[]
+  preferredBudgetMin Decimal?
+  preferredBudgetMax Decimal?
+  preferredBHK      Int[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("customer_profiles")
+}
+
+// Owner contact info stored here — NEVER exposed to customers directly
+model OwnerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  // Contact info fields stored here, never returned in public API responses
+  alternatePhone  String?
+  whatsappNumber  String?
+  gstNumber       String?
+  panNumber       String?
+  bankAccountName String?
+  bankAccountNo   String?
+  bankIfscCode    String?
+  isVerified      Boolean  @default(false)
+  totalProperties Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  properties Property[]
+
+  @@map("owner_profiles")
+}
+
+model AgentProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  reraNumber   String?
+  agencyName   String?
+  isVerified   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("agent_profiles")
+}
+
+model ServiceProviderProfile {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  serviceArea             String[]
+  isVerified              Boolean  @default(false)
+  rating                  Float    @default(0)
+  totalJobs               Int      @default(0)
+  bankAccountName         String?
+  bankAccountNo           String?
+  bankIfscCode            String?
+  categoryName            String?
+  requiresBackgroundCheck Boolean  @default(false)
+  verificationStatus      String   @default("PENDING") // PENDING, CHANGES_REQUESTED, APPROVED, REJECTED
+  backgroundCheckStatus   String   @default("NOT_REQUIRED") // NOT_REQUIRED, PENDING, PASSED, FAILED
+  verificationNotes       String?
+  idProofUrl              String?
+  addressProofUrl         String?
+  certificateUrl          String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceBookings  ServiceBooking[]
+  availability     ProviderAvailability[]
+
+  @@map("service_provider_profiles")
+}
+
+// ============================================================
+// PROPERTY MODULE
+// ============================================================
+
+model Property {
+  id               String          @id @default(cuid())
+  // Owner — stored as FK, phone NEVER returned in API
+  ownerProfileId   String
+  title            String
+  description      String
+  purpose          PropertyPurpose
+  propertyType     PropertyType
+  status           PropertyStatus  @default(DRAFT)
+  isZivaVerified  Boolean         @default(false)
+  verifiedAt       DateTime?
+  verifiedByAdminId String?
+
+  // Location
+  addressLine1  String
+  addressLine2  String?
+  locality      String
+  city          String
+  state         String
+  pincode       String
+  latitude      Decimal?
+  longitude     Decimal?
+
+  // Details
+  bhk             Int?
+  bathrooms       Int?
+  balconies       Int?
+  totalFloors     Int?
+  floorNumber     Int?
+  builtUpArea     Decimal? // sq.ft
+  carpetArea      Decimal? // sq.ft
+  plotArea        Decimal? // sq.ft
+  furnishing      FurnishingStatus @default(UNFURNISHED)
+  availableFrom   DateTime?
+
+  // Pricing
+  expectedPrice   Decimal?
+  pricePerSqft    Decimal?
+  monthlyRent     Decimal?
+  maintenanceCharges Decimal?
+  securityDeposit Decimal?
+  brokerageCharge Decimal?
+
+  // Admin review
+  adminNotes      String?
+  rejectionReason String?
+  duplicateFlag   Boolean @default(false)
+  fraudFlag       Boolean @default(false)
+  fraudNotes      String?
+
+  // SEO / Search
+  searchVector    Unsupported("tsvector")? // PostgreSQL FTS
+
+  viewCount       Int      @default(0)
+  enquiryCount    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  deletedAt       DateTime?
+
+  ownerProfile  OwnerProfile          @relation(fields: [ownerProfileId], references: [id])
+  photos        PropertyPhoto[]
+  documents     PropertyDocument[]
+  amenities     PropertyAmenity[]
+  leads         Lead[]
+  visits        PropertyVisit[]
+  offers        Offer[]
+
+  @@index([city, status])
+  @@index([purpose, propertyType, status])
+  @@index([ownerProfileId])
+  @@map("properties")
+}
+
+model PropertyPhoto {
+  id          String   @id @default(cuid())
+  propertyId  String
+  url         String
+  thumbnailUrl String?
+  caption     String?
+  order       Int      @default(0)
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_photos")
+}
+
+model PropertyDocument {
+  id              String       @id @default(cuid())
+  propertyId      String
+  documentType    DocumentType
+  url             String
+  fileName        String
+  isAdminVerified Boolean      @default(false)
+  verifiedAt      DateTime?
+  createdAt       DateTime     @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+  @@map("property_documents")
+}
+
+model Amenity {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  category   String   // "basic", "security", "recreational", etc.
+  icon       String?
+  createdAt  DateTime @default(now())
+
+  propertyAmenities PropertyAmenity[]
+
+  @@map("amenities")
+}
+
+model PropertyAmenity {
+  propertyId String
+  amenityId  String
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity  Amenity  @relation(fields: [amenityId], references: [id])
+
+  @@id([propertyId, amenityId])
+  @@map("property_amenities")
+}
+
+// ============================================================
+// LEAD PROTECTION SYSTEM (Core Business Logic)
+// ============================================================
+
+model Lead {
+  // Format: JVH-{CITY}-{YEAR}-{sequence} e.g. JVH-MUM-2024-00001
+  id         String     @id
+  propertyId String
+  customerId String     // FK -> User (customer)
+  ownerId    String     // FK -> User (owner) — stored for internal tracking only
+  status     LeadStatus @default(NEW)
+  notes      String?    // internal notes from customer
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  closedAt   DateTime?
+  closedReason String?
+
+  property Property       @relation(fields: [propertyId], references: [id])
+  customer User           @relation("CustomerLeads", fields: [customerId], references: [id])
+  owner    User           @relation("OwnerLeads", fields: [ownerId], references: [id])
+  messages LeadMessage[]
+  visits   PropertyVisit[]
+  offers   Offer[]
+  reviews  Review[]       @relation("LeadReviews")
+  payments Payment[]
+  statusHistory     LeadStatusHistory[]
+  bypassIncidents   BypassIncident[]
+
+  @@unique([propertyId, customerId]) // One lead per customer per property
+  @@index([customerId])
+  @@index([ownerId])
+  @@index([propertyId])
+  @@index([status])
+  @@map("leads")
+}
+
+// Sequence counter for Lead ID generation
+model LeadSequence {
+  id     String @id @default(cuid())
+  cityCode String
+  year   Int
+  lastSeq Int   @default(0)
+
+  @@unique([cityCode, year])
+  @@map("lead_sequences")
+}
+
+model LeadMessage {
+  id                 String   @id @default(cuid())
+  leadId             String
+  senderId           String
+  // Content stored in two forms for lead protection
+  contentRaw         String   // Original message (admin-only view)
+  contentSanitized   String   // Cleaned message shown to users
+  hasFlaggedContent  Boolean  @default(false)
+  flaggedPatterns    Json?    // e.g. [{ type: "PHONE", pattern: "98765*****", position: [5, 15] }]
+  isRead             Boolean  @default(false)
+  readAt             DateTime?
+  isDeleted          Boolean  @default(false)
+  createdAt          DateTime @default(now())
+
+  lead   Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id])
+
+  @@index([leadId, createdAt])
+  @@index([senderId])
+  @@map("lead_messages")
+}
+
+// ============================================================
+// VISIT SCHEDULING
+// ============================================================
+
+model PropertyVisit {
+  id          String      @id @default(cuid())
+  leadId      String
+  propertyId  String
+  customerId  String
+  ownerId     String
+  scheduledAt DateTime
+  notes       String?
+  status      VisitStatus @default(REQUESTED)
+  rejectionReason String?
+  completedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  lead     Lead     @relation(fields: [leadId], references: [id])
+  property Property @relation(fields: [propertyId], references: [id])
+
+  @@index([leadId])
+  @@index([customerId])
+  @@index([ownerId])
+  @@index([scheduledAt])
+  @@map("property_visits")
+}
+
+// ============================================================
+// OFFERS
+// ============================================================
+
+model Offer {
+  id            String   @id @default(cuid())
+  leadId        String
+  propertyId    String?
+  customerId    String
+  offerAmount   Decimal
+  counterPrice  Decimal?
+  validUntil    DateTime
+  status        String   @default("PENDING") // PENDING, COUNTERED, ACCEPTED, REJECTED
+  createdByRole String   @default("CUSTOMER") // CUSTOMER, OWNER, AGENT
+  parentOfferId String?
+  message       String?
+  isAccepted    Boolean  @default(false)
+  isRejected    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  lead     Lead      @relation(fields: [leadId], references: [id])
+  property Property? @relation(fields: [propertyId], references: [id])
+
+  @@index([leadId])
+  @@index([propertyId])
+  @@map("offers")
+}
+
+// ============================================================
+// PAYMENTS & COMMISSION ENGINE
+// ============================================================
+
+// Transaction ID format: JVH-PAY-{YYYYMMDD}-{seq}
+model Transaction {
+  id            String            @id // JVH-PAY-{date}-{seq}
+  leadId        String?
+  serviceBookingId String?
+  amount        Decimal
+  currency      String            @default("INR")
+  gatewayOrderId String?         @unique
+  gatewayPaymentId String?       @unique
+  gatewaySignature String?
+  status        TransactionStatus @default(CREATED)
+  failureReason String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  commission Commission?
+  invoice    Invoice?
+  payments   Payment[]
+
+  @@index([leadId])
+  @@index([status])
+  @@map("transactions")
+}
+
+// Sequence for Transaction IDs
+model TransactionSequence {
+  id      String @id @default(cuid())
+  date    String // YYYYMMDD
+  lastSeq Int    @default(0)
+
+  @@unique([date])
+  @@map("transaction_sequences")
+}
+
+model Payment {
+  id            String            @id @default(cuid())
+  transactionId String
+  leadId        String?
+  payerId       String
+  amount        Decimal
+  status        TransactionStatus @default(PENDING)
+  gateway       String            @default("RAZORPAY")
+  metadata      Json?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+  lead        Lead?       @relation(fields: [leadId], references: [id])
+
+  @@index([transactionId])
+  @@index([leadId])
+  @@map("payments")
+}
+
+model CommissionRule {
+  id             String         @id @default(cuid())
+  name           String
+  type           CommissionType @default(PERCENTAGE)
+  rate           Decimal        // percentage or flat amount
+  minAmount      Decimal?
+  maxAmount      Decimal?
+  isActive       Boolean        @default(true)
+  applicableTo   String         // "PROPERTY_SELL", "PROPERTY_RENT", "SERVICE_BOOKING"
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  commissions Commission[]
+
+  @@map("commission_rules")
+}
+
+model Commission {
+  id              String     @id @default(cuid())
+  transactionId   String     @unique
+  ruleId          String
+  grossAmount     Decimal
+  commissionAmount Decimal
+  gstAmount       Decimal
+  netPayoutAmount  Decimal
+  createdAt       DateTime   @default(now())
+
+  transaction     Transaction    @relation(fields: [transactionId], references: [id])
+  rule            CommissionRule @relation(fields: [ruleId], references: [id])
+  payouts         Payout[]
+
+  @@index([transactionId])
+  @@map("commissions")
+}
+
+model Invoice {
+  id             String   @id @default(cuid())
+  invoiceNumber  String   @unique // JVH-INV-{year}-{seq}
+  transactionId  String   @unique
+  recipientId    String
+  totalAmount    Decimal
+  commissionAmount Decimal
+  gstAmount      Decimal
+  pdfUrl         String?
+  createdAt      DateTime @default(now())
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+
+  @@map("invoices")
+}
+
+model Payout {
+  id           String       @id @default(cuid())
+  userId       String
+  commissionId String
+  amount       Decimal
+  status       PayoutStatus @default(PENDING)
+  gatewayRef   String?
+  processedAt  DateTime?
+  notes        String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id])
+  commission Commission @relation(fields: [commissionId], references: [id])
+
+  @@index([userId, status])
+  @@map("payouts")
+}
+
+// ============================================================
+// HOME SERVICES (Seeded for Phase 1, booking in Phase 2)
+// ============================================================
+
+model ServiceCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  services Service[]
+
+  @@map("service_categories")
+}
+
+model Service {
+  id              String   @id @default(cuid())
+  categoryId      String
+  name            String
+  slug            String   @unique
+  description     String?
+  basePrice       Decimal?
+  durationMinutes Int?
+  isActive        Boolean  @default(true)
+  order           Int      @default(0)
+  imageUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  category        ServiceCategory  @relation(fields: [categoryId], references: [id])
+  serviceBookings ServiceBooking[]
+
+  @@index([categoryId])
+  @@map("services")
+}
+
+model ServiceBooking {
+  id                   String   @id @default(cuid())
+  bookingRef           String   @unique // JVH-SVC-{date}-{seq}
+  serviceId            String
+  customerId           String
+  serviceProviderId    String?
+  scheduledAt          DateTime
+  address              String
+  city                 String
+  pincode              String
+  status               String   @default("PENDING") // PENDING/ASSIGNED/IN_PROGRESS/COMPLETED/CANCELLED
+  totalAmount          Decimal?
+  notes                String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  service         Service                @relation(fields: [serviceId], references: [id])
+  serviceProvider ServiceProviderProfile? @relation(fields: [serviceProviderId], references: [id])
+  reviews         Review[]               @relation("BookingReviews")
+
+  @@index([customerId])
+  @@index([serviceProviderId])
+  @@map("service_bookings")
+}
+
+model ProviderAvailability {
+  id                   String   @id @default(cuid())
+  serviceProviderId    String
+  dayOfWeek            Int      // 0=Sunday ... 6=Saturday
+  startTime            String   // "09:00"
+  endTime              String   // "18:00"
+  isAvailable          Boolean  @default(true)
+
+  serviceProvider ServiceProviderProfile @relation(fields: [serviceProviderId], references: [id])
+
+  @@unique([serviceProviderId, dayOfWeek])
+  @@map("provider_availability")
+}
+
+// ============================================================
+// REVIEWS (Verified interactions only)
+// ============================================================
+
+model Review {
+  id                    String           @id @default(cuid())
+  reviewerId            String
+  reviewedUserId        String?
+  targetType            ReviewTargetType
+  // Verified interaction — must have one of these set
+  leadId                String?
+  serviceBookingId      String?
+  // Content
+  rating                Int              // 1-5
+  comment               String?
+  isVerified            Boolean          @default(false) // set true when interaction confirmed
+  isApproved            Boolean          @default(false) // admin moderation
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  reviewer     User           @relation("ReviewerUser", fields: [reviewerId], references: [id])
+  reviewedUser User?          @relation("ReviewedUser", fields: [reviewedUserId], references: [id])
+  lead         Lead?          @relation("LeadReviews", fields: [leadId], references: [id])
+  serviceBooking ServiceBooking? @relation("BookingReviews", fields: [serviceBookingId], references: [id])
+
+  @@index([reviewedUserId])
+  @@index([leadId])
+  @@map("reviews")
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+model Notification {
+  id        String              @id @default(cuid())
+  userId    String
+  type      NotificationType
+  channel   NotificationChannel
+  title     String
+  body      String
+  payload   Json?               // extra data for deep links, etc.
+  isRead    Boolean             @default(false)
+  readAt    DateTime?
+  sentAt    DateTime?
+  error     String?
+  createdAt DateTime            @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+// ============================================================
+// ADMIN AUDIT LOG
+// ============================================================
+
+model AuditLog {
+  id         String      @id @default(cuid())
+  adminId    String
+  action     AuditAction
+  entityType String      // "User", "Property", "Lead", etc.
+  entityId   String
+  before     Json?       // State before change
+  after      Json?       // State after change
+  reason     String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime    @default(now())
+
+  admin User @relation("AdminAuditLogs", fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  key   String @id
+  value String
+
+  @@map("system_settings")
+}
+
+model LeadStatusHistory {
+  id          String   @id @default(cuid())
+  leadId      String
+  oldStatus   String?
+  newStatus   String
+  changedById String
+  changedAt   DateTime @default(now())
+  reason      String?
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@map("lead_status_history")
+}
+
+model BypassIncident {
+  id               String   @id @default(cuid())
+  leadId           String
+  senderId         String
+  messageRaw       String
+  detectedPatterns Json
+  policyApplied    String   // "WARN" | "MASK" | "BLOCK"
+  createdAt        DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@map("bypass_incidents")
+}
+
+model AdminAlert {
+  id          String   @id @default(cuid())
+  type        String   // "DUPLICATE_PHONE", "DUPLICATE_PHOTOS", "DUPLICATE_LISTING", "PRICE_OUTLIER", "MULTIPLE_ACCOUNTS", "SPAM_ENQUIRY"
+  severity    String   // "LOW", "MEDIUM", "HIGH"
+  details     String
+  entityType  String?  // "Property", "User", "Lead"
+  entityId    String?
+  isResolved  Boolean  @default(false)
+  resolvedBy  String?
+  createdAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([isResolved])
+  @@map("admin_alerts")
+}
+
+model TermsAcceptance {
+  id         String   @id @default(cuid())
+  userId     String
+  version    String
+  acceptedAt DateTime @default(now())
+  ipAddress  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, version])
+  @@map("terms_acceptances")
+}
+
+model SupportTicket {
+  id          String           @id @default(cuid())
+  userId      String
+  subject     String
+  description String
+  category    String           // e.g. "PROPERTY", "SERVICES", "BILLING", "OTHER"
+  status      String           @default("OPEN") // "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED"
+  priority    String           @default("MEDIUM") // "LOW" | "MEDIUM" | "HIGH" | "URGENT"
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  messages    SupportMessage[]
+
+  user User @relation("UserSupportTickets", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id         String   @id @default(cuid())
+  ticketId   String
+  senderId   String
+  message    String
+  isInternal Boolean  @default(false) // internal admin-only note vs customer reply
+  createdAt  DateTime @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender User          @relation("UserSupportMessages", fields: [senderId], references: [id])
+
+  @@index([ticketId])
+  @@map("support_messages")
+}
+

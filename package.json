@@ -1,5 +1,5 @@
 {
-  "name": "Ziva Housing",
+  "name": "Ziva-housing",
   "private": true,
   "scripts": {
     "build": "turbo run build",
