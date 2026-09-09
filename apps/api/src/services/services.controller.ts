@@ -72,7 +72,7 @@ export class ServicesController {
   }
 
   @ApiBearerAuth()
-  @Post('provider/resubmit')
+  @Patch('provider/resubmit')
   @ApiOperation({ summary: 'Resubmit vendor application after changes requested' })
   resubmitProviderProfile(
     @CurrentUser('id') userId: string,

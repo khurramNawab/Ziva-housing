@@ -1,8 +1,9 @@
-import { Controller, Post, Get, Body, Headers, RawBodyRequest, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, Headers, RawBodyRequest, Req } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Request } from 'express';
 
 @ApiTags('payments')
@@ -19,7 +20,9 @@ export class PaymentsController {
     return this.paymentsService.createOrder(body.leadId, userId, body.amount);
   }
 
+  // 🔒 ADMIN only — mock payment success (dev/testing tool, protected in production)
   @ApiBearerAuth()
+  @Roles('ADMIN')
   @Post('mock-success')
   mockSuccess(
     @CurrentUser('id') userId: string,
@@ -30,8 +33,12 @@ export class PaymentsController {
 
   @ApiBearerAuth()
   @Get('commission-preview')
-  previewCommission(@Body() body: { amount: number; type: 'PROPERTY_SELL' | 'PROPERTY_RENT' | 'SERVICE_BOOKING' }) {
-    return this.paymentsService.calculateCommission(body.amount, body.type);
+  previewCommission(
+    // Fixed: GET requests use @Query, not @Body
+    @Query('amount') amount: string,
+    @Query('type') type: 'PROPERTY_SELL' | 'PROPERTY_RENT' | 'SERVICE_BOOKING',
+  ) {
+    return this.paymentsService.calculateCommission(Number(amount), type);
   }
 
   @ApiBearerAuth()

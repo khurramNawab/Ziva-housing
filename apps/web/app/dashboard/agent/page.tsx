@@ -89,8 +89,10 @@ export default function AgentDashboard() {
       {/* ── Sidebar ── */}
       <aside className="hidden md:flex bg-[#f2f4f6] flex-col h-full p-6 w-64 shrink-0 z-20">
         <div className="mb-6">
-          <h1 className="text-[20px] leading-[28px] font-semibold text-[#4500b4]">Ziva Dashboard</h1>
-          <p className="text-[14px] leading-[20px] text-[#494455] mt-1">Manage your properties</p>
+          <Link href="/" className="inline-block mb-1">
+            <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
+          </Link>
+          <p className="text-[12px] leading-[16px] text-[#494455] font-medium">Agent Portal</p>
         </div>
         <nav className="flex-1 space-y-1">
           {sidebarLinks.map((link) => (
@@ -150,6 +152,17 @@ export default function AgentDashboard() {
               <div className="w-10 h-10 rounded-full bg-[#5e23dc] flex items-center justify-center text-white font-bold text-sm shrink-0">
                 {currentUser?.firstName?.[0] || 'A'}
               </div>
+            </div>
+          </div>
+
+          {/* ⚠️ Agent Backend Coming Soon Banner */}
+          <div className="flex items-start gap-3 bg-[#fff8e6] border border-[#f5c518]/40 rounded-xl p-4">
+            <span className="material-symbols-outlined text-[#b45309] mt-0.5" style={{ fontSize: '20px' }}>construction</span>
+            <div>
+              <p className="text-[13px] font-bold text-[#b45309]">Agent Portal — Live Data Coming Soon</p>
+              <p className="text-[12px] text-[#78350f] mt-0.5 leading-relaxed">
+                The agent backend APIs are currently under development. The pipeline, leads, and commission data shown below are demo previews. Your real data will appear here once the agent module is live.
+              </p>
             </div>
           </div>
 

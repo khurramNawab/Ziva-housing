@@ -22,46 +22,6 @@ const SERVICE_CATEGORIES = [
   'Beautician', "Women's Spa", "Men's Spa",
 ];
 
-const DUMMY_PENDING_VENDORS = [
-  {
-    id: 'vnd-demo-1', firstName: 'Suresh', lastName: 'Yadav', phone: '+91 98765 00001', email: 'suresh.yadav@example.com', createdAt: new Date().toISOString(),
-    serviceProviderProfile: {
-      id: 'prof-demo-1',
-      categoryName: 'Electrician', serviceArea: ['Bangalore', 'Mysore'], verificationStatus: 'PENDING',
-      requiresBackgroundCheck: true, backgroundCheckStatus: 'PENDING', verificationNotes: null,
-      bankAccountName: 'Suresh Yadav', bankAccountNo: '1234567890', bankIfscCode: 'SBIN0001234',
-      idProofUrl: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
-      addressProofUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
-      rating: 0, totalJobs: 0,
-    },
-  },
-  {
-    id: 'vnd-demo-2', firstName: 'Meena', lastName: 'Kumari', phone: '+91 98765 00002', email: 'meena.k@example.com', createdAt: new Date(Date.now() - 86400000).toISOString(),
-    serviceProviderProfile: {
-      id: 'prof-demo-2',
-      categoryName: 'Deep Cleaning', serviceArea: ['Noida', 'Greater Noida'], verificationStatus: 'CHANGES_REQUESTED',
-      requiresBackgroundCheck: false, backgroundCheckStatus: 'NOT_REQUIRED', verificationNotes: 'ID proof is blurry, please re-upload.',
-      bankAccountName: null, bankAccountNo: null, bankIfscCode: null,
-      idProofUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
-      rating: 0, totalJobs: 0,
-    },
-  },
-];
-
-const DUMMY_APPROVED_VENDORS = [
-  {
-    id: 'vnd-demo-3', firstName: 'Rajesh', lastName: 'Kumar', phone: '+91 98765 00003', email: 'rajesh.k@example.com', createdAt: new Date(Date.now() - 604800000).toISOString(),
-    serviceProviderProfile: {
-      id: 'prof-demo-3',
-      categoryName: 'Electrician', serviceArea: ['Bangalore'], verificationStatus: 'APPROVED',
-      requiresBackgroundCheck: true, backgroundCheckStatus: 'PASSED', verificationNotes: null,
-      bankAccountName: 'Rajesh Kumar', bankAccountNo: '9876543210', bankIfscCode: 'HDFC0001234',
-      idProofUrl: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
-      rating: 4.9, totalJobs: 342,
-    },
-  },
-];
-
 export default function AdminUsersPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -70,16 +30,23 @@ export default function AdminUsersPage() {
   // Tab Selection
   const [adminSubTab, setAdminSubTab] = useState<'USERS' | 'VENDORS' | 'PAYOUTS' | 'BROADCAST' | 'DISPATCHER'>('VENDORS');
 
-  // User States
+  // User States & Pagination
   const [usersList, setUsersList] = useState<User[]>([]);
   const [userRoleFilter, setUserRoleFilter] = useState('CUSTOMER');
   const [userSearch, setUserSearch] = useState('');
   const [userActionReason, setUserActionReason] = useState('');
+  const [userPage, setUserPage] = useState(1);
+  const [userPageSize, setUserPageSize] = useState(10);
+  const [totalUsersCount, setTotalUsersCount] = useState(0);
 
   // Vendor States
   const [pendingVendors, setPendingVendors] = useState<any[]>([]);
   const [approvedVendors, setApprovedVendors] = useState<any[]>([]);
   const [adminNote, setAdminNote] = useState('');
+
+  // Vendor Search & Filter
+  const [vendorSearch, setVendorSearch] = useState('');
+  const [vendorCategoryFilter, setVendorCategoryFilter] = useState('');
 
   // KYC Preview Modal (Feature 6a)
   const [previewDoc, setPreviewDoc] = useState<{ url: string; title: string } | null>(null);
@@ -120,20 +87,26 @@ export default function AdminUsersPage() {
   useEffect(() => {
     const accToken = localStorage.getItem('Ziva_access');
     if (!accToken) {
-      router.push('/auth/login');
+      router.push('/admin/login');
       return;
     }
     setToken(accToken);
-    fetchData(accToken);
-  }, [router, userRoleFilter]);
+    fetchData(accToken, userPage);
+  }, [router, userRoleFilter, userPage, userPageSize]);
 
-  const fetchData = async (accToken: string) => {
+  const fetchData = async (accToken: string, page = userPage) => {
     setLoading(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const userParams = new URLSearchParams({
+        page: String(page),
+        limit: String(userPageSize),
+      });
+      if (userSearch.trim()) userParams.append('search', userSearch.trim());
+      if (userRoleFilter.trim()) userParams.append('role', userRoleFilter.trim());
 
       const [usersRes, pendingRes, approvedRes, payoutsRes, bookingsRes] = await Promise.all([
-        fetch(`${apiBase}/api/v1/admin/users?limit=50&search=${userSearch}&role=${userRoleFilter}`, { headers: { Authorization: `Bearer ${accToken}` } }),
+        fetch(`${apiBase}/api/v1/admin/users?${userParams.toString()}`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/vendors/pending`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/vendors/approved`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/payouts`, { headers: { Authorization: `Bearer ${accToken}` } }),
@@ -142,29 +115,40 @@ export default function AdminUsersPage() {
 
       if (usersRes.ok) {
         const uJson = await usersRes.json();
-        setUsersList(uJson.data?.users || uJson.users || []);
+        const list = uJson.data?.users || uJson.users || [];
+        setUsersList(list);
+        setTotalUsersCount(uJson.data?.total ?? uJson.total ?? list.length);
+      } else {
+        setUsersList([]);
+        setTotalUsersCount(0);
       }
       if (pendingRes.ok) {
         const pJson = await pendingRes.json();
         setPendingVendors(pJson.data || pJson || []);
+      } else {
+        setPendingVendors([]);
       }
       if (approvedRes.ok) {
         const aJson = await approvedRes.json();
         setApprovedVendors(aJson.data || aJson || []);
+      } else {
+        setApprovedVendors([]);
       }
       if (payoutsRes.ok) {
         const payJson = await payoutsRes.json();
-        setPayoutsList(payJson.payouts || []);
-        setPayoutStats(payJson.stats || { pendingPayoutAmount: 0, processedPayoutAmount: 0 });
+        setPayoutsList(payJson.payouts || payJson.data?.payouts || []);
+        setPayoutStats(payJson.stats || payJson.data?.stats || { pendingPayoutAmount: 0, processedPayoutAmount: 0 });
       }
       if (bookingsRes.ok) {
         const bJson = await bookingsRes.json();
         setServiceBookings(bJson.data || bJson || []);
       }
     } catch {
-      // Offline fallback
-      setPendingVendors(DUMMY_PENDING_VENDORS);
-      setApprovedVendors(DUMMY_APPROVED_VENDORS);
+      // Genuine offline: show honest empty states, never fabricated dummy records
+      setUsersList([]);
+      setTotalUsersCount(0);
+      setPendingVendors([]);
+      setApprovedVendors([]);
     } finally {
       setLoading(false);
     }
@@ -172,7 +156,7 @@ export default function AdminUsersPage() {
 
   const handleUserAction = async (userId: string, action: 'BLOCK' | 'UNBLOCK' | 'SUSPEND' | 'VERIFY') => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/users/${userId}/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -181,18 +165,19 @@ export default function AdminUsersPage() {
       if (res.ok) {
         alert(`User status updated to ${action} successfully.`);
         setUserActionReason('');
-        fetchData(token);
+        fetchData(token, userPage);
       } else {
-        alert('Action failed.');
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || `Failed to perform ${action} on user.`);
       }
-    } catch {
-      alert('Failed to process user action.');
+    } catch (err: any) {
+      alert(`Failed to process user action: ${err.message || 'Network error'}`);
     }
   };
 
   const handleVendorAction = async (vendorUserId: string, action: 'APPROVE' | 'CHANGES_REQUESTED' | 'REJECT') => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const endpoint = action === 'APPROVE' ? 'approve' : action === 'CHANGES_REQUESTED' ? 'changes-requested' : 'reject';
       const res = await fetch(`${apiBase}/api/v1/admin/vendors/${vendorUserId}/${endpoint}`, {
         method: 'POST',
@@ -202,16 +187,19 @@ export default function AdminUsersPage() {
       if (res.ok) {
         alert(`Vendor document status updated: ${action}`);
         setAdminNote('');
-        fetchData(token);
+        fetchData(token, userPage);
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || `Failed to update vendor status to ${action}.`);
       }
-    } catch {
-      // Silent
+    } catch (err: any) {
+      alert(`Error updating vendor: ${err.message || 'Network error'}`);
     }
   };
 
   const handleBackgroundCheckAction = async (vendorUserId: string, status: 'PASSED' | 'FAILED') => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/vendors/${vendorUserId}/background-check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -220,10 +208,72 @@ export default function AdminUsersPage() {
       if (res.ok) {
         alert(`Trust & Safety Background Check updated to ${status}.`);
         setAdminNote('');
-        fetchData(token);
+        fetchData(token, userPage);
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to update background check status.');
       }
-    } catch {
-      alert('Error updating background check status.');
+    } catch (err: any) {
+      alert(`Error updating background check status: ${err.message || 'Network error'}`);
+    }
+  };
+
+  const handleVendorSuspend = async (vendorUserId: string) => {
+    if (!confirm('Are you sure you want to suspend / revoke approval for this vendor?')) return;
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${apiBase}/api/v1/admin/vendors/${vendorUserId}/suspend`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ notes: adminNote || 'Vendor status revoked/suspended by Admin' }),
+      });
+      if (res.ok) {
+        alert('Vendor approval has been suspended.');
+        setAdminNote('');
+        fetchData(token, userPage);
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to suspend vendor.');
+      }
+    } catch (err: any) {
+      alert(`Error suspending vendor: ${err.message || 'Network error'}`);
+    }
+  };
+
+  const handleSaveVendorProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingVendor) return;
+    setEditLoading(true);
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${apiBase}/api/v1/admin/vendors/${editingVendor.id}/profile`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          categoryName: editForm.categoryName,
+          serviceArea: typeof editForm.serviceArea === 'string'
+            ? editForm.serviceArea.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : editForm.serviceArea,
+          bankAccountName: editForm.bankAccountName,
+          bankAccountNo: editForm.bankAccountNo,
+          bankIfscCode: editForm.bankIfscCode,
+          rating: parseFloat(editForm.rating) || 5.0,
+          totalJobs: parseInt(editForm.totalJobs) || 0,
+          verificationNotes: editForm.verificationNotes,
+        }),
+      });
+      if (res.ok) {
+        alert('Vendor profile updated successfully!');
+        setEditingVendor(null);
+        fetchData(token, userPage);
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to update vendor profile.');
+      }
+    } catch (err: any) {
+      alert(`Error updating vendor profile: ${err.message || 'Network error'}`);
+    } finally {
+      setEditLoading(false);
     }
   };
 
@@ -231,7 +281,7 @@ export default function AdminUsersPage() {
   const handleReleasePayout = async (payoutId: string) => {
     setReleasingPayoutId(payoutId);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/payouts/${payoutId}/release`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -239,12 +289,13 @@ export default function AdminUsersPage() {
       });
       if (res.ok) {
         alert('Payout marked as PROCESSED successfully!');
-        fetchData(token);
+        fetchData(token, userPage);
       } else {
-        alert('Failed to release payout.');
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to release payout.');
       }
-    } catch {
-      alert('Error releasing payout.');
+    } catch (err: any) {
+      alert(`Error releasing payout: ${err.message || 'Network error'}`);
     } finally {
       setReleasingPayoutId(null);
     }
@@ -259,7 +310,7 @@ export default function AdminUsersPage() {
     }
     setBroadcastLoading(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/notifications/broadcast`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -270,10 +321,10 @@ export default function AdminUsersPage() {
         alert(`Broadcast sent successfully! Reached ${json.recipientsCount || 0} users.`);
         setBroadcastForm({ audience: 'ALL', title: '', body: '' });
       } else {
-        alert('Failed to send broadcast notification.');
+        alert(json.message || 'Failed to send broadcast notification.');
       }
-    } catch {
-      alert('Error sending broadcast notification.');
+    } catch (err: any) {
+      alert(`Error sending broadcast notification: ${err.message || 'Network error'}`);
     } finally {
       setBroadcastLoading(false);
     }
@@ -287,7 +338,7 @@ export default function AdminUsersPage() {
     }
     setReassigningBookingId(bookingId);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/service-bookings/${bookingId}/reassign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -296,12 +347,13 @@ export default function AdminUsersPage() {
       if (res.ok) {
         alert('Service booking reassigned successfully!');
         setTargetProviderId('');
-        fetchData(token);
+        fetchData(token, userPage);
       } else {
-        alert('Failed to reassign booking.');
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to reassign booking.');
       }
-    } catch {
-      alert('Error reassigning booking.');
+    } catch (err: any) {
+      alert(`Error reassigning booking: ${err.message || 'Network error'}`);
     } finally {
       setReassigningBookingId(null);
     }
@@ -312,7 +364,7 @@ export default function AdminUsersPage() {
     e.preventDefault();
     setCreateLoading(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/vendors/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -324,10 +376,13 @@ export default function AdminUsersPage() {
       if (res.ok) {
         alert('Vendor created successfully!');
         setShowCreateVendor(false);
-        fetchData(token);
+        fetchData(token, userPage);
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to create vendor.');
       }
-    } catch {
-      alert('Error creating vendor.');
+    } catch (err: any) {
+      alert(`Error creating vendor: ${err.message || 'Network error'}`);
     } finally {
       setCreateLoading(false);
     }
@@ -387,89 +442,249 @@ export default function AdminUsersPage() {
             </button>
           </div>
 
+          {/* Vendor Search & Filter Bar */}
+          <div className="flex flex-wrap gap-3 bg-[#f8f9fb] border border-[#eceef0] rounded-2xl p-3 items-center">
+            <span className="material-symbols-outlined text-[#7a7487] text-lg">search</span>
+            <input
+              type="text"
+              placeholder="Search vendor by name or phone..."
+              value={vendorSearch}
+              onChange={(e) => setVendorSearch(e.target.value)}
+              className="flex-1 min-w-[180px] bg-white border border-[#cbc3d8] rounded-xl px-3 py-2 text-xs text-[#191c1e] outline-none focus:border-[#5e23dc] transition"
+            />
+            <select
+              value={vendorCategoryFilter}
+              onChange={(e) => setVendorCategoryFilter(e.target.value)}
+              className="bg-white border border-[#cbc3d8] rounded-xl px-3 py-2 text-xs text-[#191c1e] outline-none focus:border-[#5e23dc] transition"
+            >
+              <option value="">All Categories</option>
+              {SERVICE_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+            {(vendorSearch || vendorCategoryFilter) && (
+              <button
+                onClick={() => { setVendorSearch(''); setVendorCategoryFilter(''); }}
+                className="text-xs font-bold text-[#5e23dc] hover:underline flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-sm">close</span> Clear
+              </button>
+            )}
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pending Approvals */}
-            <div className="bg-white p-5 rounded-2xl border border-[#eceef0] shadow-sm space-y-4">
-              <h3 className="font-bold text-xs text-[#4500b4] uppercase tracking-wider border-b border-[#eceef0] pb-2 flex justify-between">
-                <span>Pending Verification ({pendingVendors.length})</span>
-                <span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">In Queue</span>
-              </h3>
+            {(() => {
+              const filteredPending = pendingVendors.filter((v) => {
+                const prof = v.serviceProviderProfile || {};
+                const nameMatch = !vendorSearch || `${v.firstName} ${v.lastName} ${v.phone}`.toLowerCase().includes(vendorSearch.toLowerCase());
+                const catMatch = !vendorCategoryFilter || (prof.categoryName || '').toLowerCase().includes(vendorCategoryFilter.toLowerCase());
+                return nameMatch && catMatch;
+              });
+              return (
+                <div className="bg-white p-5 rounded-2xl border border-[#eceef0] shadow-sm space-y-4">
+                  <h3 className="font-bold text-xs text-[#4500b4] uppercase tracking-wider border-b border-[#eceef0] pb-2 flex justify-between">
+                    <span>Pending Verification ({filteredPending.length}{vendorSearch || vendorCategoryFilter ? ` of ${pendingVendors.length}` : ''})</span>
+                    <span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">In Queue</span>
+                  </h3>
 
-              <div className="space-y-4">
-                {pendingVendors.map((vendor) => {
-                  const prof = vendor.serviceProviderProfile || {};
-                  return (
-                    <div key={vendor.id} className="border border-[#eceef0] p-4 rounded-xl space-y-3 bg-[#f8f9fb]">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-bold text-xs text-[#191c1e]">{vendor.firstName} {vendor.lastName}</h4>
-                          <p className="text-[10px] text-gray-500">📞 {vendor.phone} • 📧 {vendor.email || 'N/A'}</p>
-                          <p className="text-[10px] font-bold text-[#5e23dc] mt-0.5">Category: {prof.categoryName || 'General'}</p>
-                        </div>
-                        <span className="bg-amber-100 text-amber-800 text-[8px] font-extrabold px-2 py-0.5 rounded uppercase">{prof.verificationStatus || 'PENDING'}</span>
+                  {filteredPending.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-10 space-y-3">
+                      <div className="w-14 h-14 rounded-2xl bg-[#f2f4f6] flex items-center justify-center">
+                        <span className="material-symbols-outlined text-3xl text-[#7a7487]">manage_search</span>
                       </div>
-
-                      {/* FEATURE 6A: KYC DOCUMENT PREVIEW BUTTONS */}
-                      <div className="bg-white p-2.5 rounded-lg border border-[#eceef0] space-y-2">
-                        <span className="text-[9px] font-bold text-[#7a7487] uppercase tracking-wider block">Uploaded KYC Proofs:</span>
-                        <div className="flex gap-2 flex-wrap">
-                          {prof.idProofUrl ? (
-                            <button
-                              onClick={() => setPreviewDoc({ url: prof.idProofUrl, title: `ID Proof — ${vendor.firstName}` })}
-                              className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
-                            >
-                              <span className="material-symbols-outlined text-xs">visibility</span> View ID Proof
-                            </button>
-                          ) : (
-                            <span className="text-[9px] text-gray-400 italic">No ID proof</span>
-                          )}
-                          {prof.addressProofUrl ? (
-                            <button
-                              onClick={() => setPreviewDoc({ url: prof.addressProofUrl, title: `Address Proof — ${vendor.firstName}` })}
-                              className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
-                            >
-                              <span className="material-symbols-outlined text-xs">visibility</span> View Address Proof
-                            </button>
-                          ) : (
-                            <span className="text-[9px] text-gray-400 italic">No address proof</span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Verification Actions */}
-                      <div className="flex gap-2">
-                        <button onClick={() => handleVendorAction(vendor.id, 'APPROVE')} className="flex-1 bg-[#16a373] text-white hover:bg-[#0f6e4d] py-1.5 rounded-lg text-[10px] font-bold transition">Approve Docs</button>
-                        <button onClick={() => handleVendorAction(vendor.id, 'CHANGES_REQUESTED')} className="flex-1 bg-amber-500 text-white hover:bg-amber-600 py-1.5 rounded-lg text-[10px] font-bold transition">Req Changes</button>
-                        <button onClick={() => handleVendorAction(vendor.id, 'REJECT')} className="bg-red-600 text-white hover:bg-red-700 px-3 py-1.5 rounded-lg text-[10px] font-bold transition">Reject</button>
-                      </div>
+                      <p className="text-xs font-bold text-[#191c1e]">
+                        {vendorSearch || vendorCategoryFilter ? 'No vendors match your search' : 'No Pending Applications'}
+                      </p>
+                      <p className="text-[11px] text-gray-400 text-center max-w-[200px]">
+                        {vendorSearch || vendorCategoryFilter
+                          ? 'Try adjusting your search or filter.'
+                          : 'All vendor applications have been reviewed, or no one has applied yet. New applications appear here automatically.'}
+                      </p>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {filteredPending.map((vendor) => {
+                        const prof = vendor.serviceProviderProfile || {};
+                        return (
+                          <div key={vendor.id} className="border border-[#eceef0] p-4 rounded-xl space-y-3 bg-[#f8f9fb]">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <h4 className="font-bold text-xs text-[#191c1e]">{vendor.firstName} {vendor.lastName}</h4>
+                                <p className="text-[10px] text-gray-500">📞 {vendor.phone} • 📧 {vendor.email || 'N/A'}</p>
+                                <p className="text-[10px] font-bold text-[#5e23dc] mt-0.5">Category: {prof.categoryName || 'General'}</p>
+                              </div>
+                              <span className="bg-amber-100 text-amber-800 text-[8px] font-extrabold px-2 py-0.5 rounded uppercase">{prof.verificationStatus || 'PENDING'}</span>
+                            </div>
+
+                            {/* Trust & Safety Background Check */}
+                            <div className="bg-white p-2.5 rounded-lg border border-[#eceef0] flex items-center justify-between">
+                              <div>
+                                <span className="text-[9px] font-bold text-[#7a7487] uppercase tracking-wider block">Trust &amp; Safety Background Check:</span>
+                                <span className={`text-[10px] font-bold ${prof.backgroundCheckStatus === 'PASSED' ? 'text-[#16a373]' : prof.backgroundCheckStatus === 'FAILED' ? 'text-red-600' : 'text-amber-600'}`}>
+                                  {prof.backgroundCheckStatus || (prof.requiresBackgroundCheck ? 'PENDING' : 'NOT_REQUIRED')}
+                                </span>
+                              </div>
+                              <div className="flex gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => handleBackgroundCheckAction(vendor.id, 'PASSED')}
+                                  className="bg-[#e8faf4] text-[#16a373] hover:bg-[#16a373] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition border border-[#16a373]/30"
+                                >
+                                  Pass ✓
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleBackgroundCheckAction(vendor.id, 'FAILED')}
+                                  className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition border border-red-300"
+                                >
+                                  Fail ✕
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* KYC Document Preview Buttons */}
+                            <div className="bg-white p-2.5 rounded-lg border border-[#eceef0] space-y-2">
+                              <span className="text-[9px] font-bold text-[#7a7487] uppercase tracking-wider block">Uploaded KYC Proofs:</span>
+                              <div className="flex gap-2 flex-wrap">
+                                {prof.idProofUrl ? (
+                                  <button
+                                    onClick={() => setPreviewDoc({ url: prof.idProofUrl, title: `ID Proof — ${vendor.firstName}` })}
+                                    className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">visibility</span> View ID Proof
+                                  </button>
+                                ) : (
+                                  <span className="text-[9px] text-gray-400 italic">No ID proof uploaded</span>
+                                )}
+                                {prof.addressProofUrl ? (
+                                  <button
+                                    onClick={() => setPreviewDoc({ url: prof.addressProofUrl, title: `Address Proof — ${vendor.firstName}` })}
+                                    className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">visibility</span> View Address Proof
+                                  </button>
+                                ) : (
+                                  <span className="text-[9px] text-gray-400 italic">No address proof uploaded</span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Admin note input */}
+                            <input
+                              type="text"
+                              placeholder="Optional admin note for vendor (e.g. 'ID document blurry')..."
+                              value={adminNote}
+                              onChange={(e) => setAdminNote(e.target.value)}
+                              className="w-full text-[10px] border border-[#eceef0] rounded-lg px-3 py-1.5 outline-none focus:border-[#5e23dc] bg-white"
+                            />
+
+                            {/* Verification Actions */}
+                            <div className="flex gap-2">
+                              <button onClick={() => handleVendorAction(vendor.id, 'APPROVE')} className="flex-1 bg-[#16a373] text-white hover:bg-[#0f6e4d] py-1.5 rounded-lg text-[10px] font-bold transition">✓ Approve Docs</button>
+                              <button onClick={() => handleVendorAction(vendor.id, 'CHANGES_REQUESTED')} className="flex-1 bg-amber-500 text-white hover:bg-amber-600 py-1.5 rounded-lg text-[10px] font-bold transition">↩ Req Changes</button>
+                              <button onClick={() => handleVendorAction(vendor.id, 'REJECT')} className="bg-red-600 text-white hover:bg-red-700 px-3 py-1.5 rounded-lg text-[10px] font-bold transition">✕</button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Approved Vendors */}
-            <div className="bg-white p-5 rounded-2xl border border-[#eceef0] shadow-sm space-y-4">
-              <h3 className="font-bold text-xs text-[#16a373] uppercase tracking-wider border-b border-[#eceef0] pb-2 flex justify-between">
-                <span>Active Approved Vendors ({approvedVendors.length})</span>
-                <span className="bg-[#e8faf4] text-[#16a373] text-[10px] px-2 py-0.5 rounded-full font-bold">Verified</span>
-              </h3>
-              <div className="space-y-3 max-h-[500px] overflow-y-auto">
-                {approvedVendors.map((vendor) => {
-                  const prof = vendor.serviceProviderProfile || {};
-                  return (
-                    <div key={vendor.id} className="border border-[#eceef0] p-3 rounded-xl bg-[#f8f9fb] flex justify-between items-center text-xs">
-                      <div>
-                        <h4 className="font-bold text-[#191c1e]">{vendor.firstName} {vendor.lastName}</h4>
-                        <p className="text-[10px] text-gray-500">Category: {prof.categoryName} • Phone: {vendor.phone}</p>
-                        <p className="text-[10px] text-gray-400">Bank: {prof.bankAccountName || 'N/A'} ({prof.bankAccountNo || 'No A/C'})</p>
+            {(() => {
+              const filteredApproved = approvedVendors.filter((v) => {
+                const prof = v.serviceProviderProfile || {};
+                const nameMatch = !vendorSearch || `${v.firstName} ${v.lastName} ${v.phone}`.toLowerCase().includes(vendorSearch.toLowerCase());
+                const catMatch = !vendorCategoryFilter || (prof.categoryName || '').toLowerCase().includes(vendorCategoryFilter.toLowerCase());
+                return nameMatch && catMatch;
+              });
+              return (
+                <div className="bg-white p-5 rounded-2xl border border-[#eceef0] shadow-sm space-y-4">
+                  <h3 className="font-bold text-xs text-[#16a373] uppercase tracking-wider border-b border-[#eceef0] pb-2 flex justify-between">
+                    <span>Active Approved Vendors ({filteredApproved.length}{vendorSearch || vendorCategoryFilter ? ` of ${approvedVendors.length}` : ''})</span>
+                    <span className="bg-[#e8faf4] text-[#16a373] text-[10px] px-2 py-0.5 rounded-full font-bold">Verified</span>
+                  </h3>
+
+                  {filteredApproved.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-10 space-y-3">
+                      <div className="w-14 h-14 rounded-2xl bg-[#e8faf4] flex items-center justify-center">
+                        <span className="material-symbols-outlined text-3xl text-[#16a373]">verified_user</span>
                       </div>
-                      <span className="bg-[#e8faf4] text-[#16a373] text-[9px] font-bold px-2 py-1 rounded-full uppercase border border-[#16a373]/20">Active</span>
+                      <p className="text-xs font-bold text-[#191c1e]">
+                        {vendorSearch || vendorCategoryFilter ? 'No vendors match your search' : 'No Approved Vendors Yet'}
+                      </p>
+                      <p className="text-[11px] text-gray-400 text-center max-w-[200px]">
+                        {vendorSearch || vendorCategoryFilter
+                          ? 'Try adjusting your search or filter criteria.'
+                          : 'Once you approve vendors from the Pending queue, they will appear here as active service providers.'}
+                      </p>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                  ) : (
+                    <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                      {filteredApproved.map((vendor) => {
+                        const prof = vendor.serviceProviderProfile || {};
+                        return (
+                          <div key={vendor.id} className="border border-[#eceef0] p-3 rounded-xl bg-[#f8f9fb] space-y-2 text-xs">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-bold text-[#191c1e]">{vendor.firstName} {vendor.lastName}</h4>
+                                  <span className="bg-[#e8faf4] text-[#16a373] text-[9px] font-bold px-2 py-0.5 rounded-full uppercase border border-[#16a373]/20">Active</span>
+                                </div>
+                                <p className="text-[10px] text-gray-500 mt-0.5">📞 {vendor.phone} • Category: <strong className="text-[#5e23dc]">{prof.categoryName}</strong></p>
+                                <p className="text-[10px] text-gray-400">Area: {Array.isArray(prof.serviceArea) ? prof.serviceArea.join(', ') : prof.serviceArea || 'Bangalore'} • Bank: {prof.bankAccountName || 'N/A'} ({prof.bankAccountNo || 'No A/C'})</p>
+                                <p className="text-[10px] text-amber-600 font-semibold">Rating: ★ {prof.rating || '5.0'} • Jobs: {prof.totalJobs ?? 0}</p>
+                              </div>
+                            </div>
+
+                            {/* Action buttons for Approved Vendor */}
+                            <div className="flex gap-2 pt-1 border-t border-[#eceef0]/80">
+                              {(prof.idProofUrl || prof.addressProofUrl) && (
+                                <button
+                                  type="button"
+                                  onClick={() => setPreviewDoc({ url: prof.idProofUrl || prof.addressProofUrl, title: `KYC Proof — ${vendor.firstName}` })}
+                                  className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
+                                >
+                                  <span className="material-symbols-outlined text-xs">visibility</span> KYC
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingVendor(vendor);
+                                  setEditForm({
+                                    categoryName: prof.categoryName || 'Electrician',
+                                    serviceArea: Array.isArray(prof.serviceArea) ? prof.serviceArea.join(', ') : prof.serviceArea || '',
+                                    bankAccountName: prof.bankAccountName || '',
+                                    bankAccountNo: prof.bankAccountNo || '',
+                                    bankIfscCode: prof.bankIfscCode || '',
+                                    rating: prof.rating || 5.0,
+                                    totalJobs: prof.totalJobs ?? 0,
+                                    verificationNotes: prof.verificationNotes || '',
+                                  });
+                                }}
+                                className="flex-1 bg-white border border-[#cbc3d8] hover:bg-[#f2f4f6] text-[#191c1e] py-1 rounded text-[10px] font-bold transition flex items-center justify-center gap-1"
+                              >
+                                <span className="material-symbols-outlined text-xs">edit</span> Edit Profile
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleVendorSuspend(vendor.id)}
+                                className="bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined text-xs">block</span> Suspend
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         </section>
       )}
@@ -479,31 +694,137 @@ export default function AdminUsersPage() {
          ═══════════════════════════════════════════════════════════════════════ */}
       {adminSubTab === 'USERS' && (
         <section className="bg-white border border-[#eceef0] rounded-2xl shadow-sm p-5 space-y-4">
-          <div className="flex justify-between items-center border-b border-[#eceef0] pb-4">
-            <h2 className="text-sm font-bold text-[#191c1e]">Registered System Users</h2>
-            <div className="flex gap-2">
-              {['CUSTOMER', 'OWNER', 'AGENT', 'SERVICE_PROVIDER'].map(r => (
-                <button key={r} onClick={() => setUserRoleFilter(r)} className={`px-3 py-1 rounded-lg text-[10px] font-bold ${userRoleFilter === r ? 'bg-[#5e23dc] text-white' : 'bg-[#f2f4f6] text-gray-600'}`}>{r}</button>
-              ))}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-[#eceef0] pb-4">
+            <div>
+              <h2 className="text-sm font-bold text-[#191c1e]">Registered System Users</h2>
+              <p className="text-[11px] text-gray-500">Search by phone, email, name, and filter by user role.</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search user..."
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setUserPage(1);
+                      fetchData(token, 1);
+                    }
+                  }}
+                  className="h-8 bg-[#f2f4f6] border border-[#cbc3d8] rounded-lg px-3 text-xs text-[#191c1e] outline-none focus:border-[#5e23dc] w-44"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setUserPage(1);
+                  fetchData(token, 1);
+                }}
+                className="h-8 bg-[#5e23dc] hover:bg-[#4500b4] text-white px-3 rounded-lg text-xs font-bold transition"
+              >
+                Search
+              </button>
+              <div className="flex gap-1 bg-[#f2f4f6] p-1 rounded-xl">
+                {['CUSTOMER', 'OWNER', 'AGENT', 'SERVICE_PROVIDER'].map(r => (
+                  <button
+                    key={r}
+                    onClick={() => {
+                      setUserRoleFilter(r);
+                      setUserPage(1);
+                    }}
+                    className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition ${userRoleFilter === r ? 'bg-[#5e23dc] text-white shadow-sm' : 'text-gray-600 hover:text-black'}`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#f2f4f6] text-[#494455] font-bold uppercase text-[10px]">
-              <tr><th className="p-3">User</th><th className="p-3">Contact</th><th className="p-3">Status</th><th className="p-3 text-center">Actions</th></tr>
-            </thead>
-            <tbody className="divide-y divide-[#eceef0]">
-              {usersList.map(u => (
-                <tr key={u.id}>
-                  <td className="p-3 font-semibold">{u.firstName} {u.lastName}</td>
-                  <td className="p-3">{u.phone}<br/><span className="text-[10px] text-gray-400">{u.email}</span></td>
-                  <td className="p-3"><span className="bg-[#e8faf4] text-[#16a373] text-[9px] font-bold px-2 py-0.5 rounded">{u.status}</span></td>
-                  <td className="p-3 text-center">
-                    <button onClick={() => handleUserAction(u.id, u.status === 'ACTIVE' ? 'BLOCK' : 'UNBLOCK')} className="bg-red-500 text-white text-[9px] font-bold px-2.5 py-1 rounded">{u.status === 'ACTIVE' ? 'Block' : 'Unblock'}</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+          {usersList.length === 0 && !loading ? (
+            <div className="p-8 text-center text-gray-500 space-y-2">
+              <span className="material-symbols-outlined text-4xl text-gray-400">person_off</span>
+              <p className="text-xs font-bold text-[#191c1e]">No Users Found</p>
+              <p className="text-[11px] text-gray-400">No registered users matched the role or search query.</p>
+            </div>
+          ) : (
+            <>
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#f2f4f6] text-[#494455] font-bold uppercase text-[10px]">
+                  <tr><th className="p-3">User</th><th className="p-3">Contact</th><th className="p-3">Status</th><th className="p-3 text-center">Actions</th></tr>
+                </thead>
+                <tbody className="divide-y divide-[#eceef0]">
+                  {usersList.map(u => (
+                    <tr key={u.id}>
+                      <td className="p-3 font-semibold">{u.firstName} {u.lastName}</td>
+                      <td className="p-3">{u.phone}<br/><span className="text-[10px] text-gray-400">{u.email || 'N/A'}</span></td>
+                      <td className="p-3"><span className={`text-[9px] font-bold px-2 py-0.5 rounded ${u.status === 'ACTIVE' ? 'bg-[#e8faf4] text-[#16a373]' : 'bg-rose-100 text-rose-800'}`}>{u.status}</span></td>
+                      <td className="p-3 text-center">
+                        <button onClick={() => handleUserAction(u.id, u.status === 'ACTIVE' ? 'BLOCK' : 'UNBLOCK')} className="bg-red-500 text-white text-[9px] font-bold px-2.5 py-1 rounded hover:bg-red-600 transition">{u.status === 'ACTIVE' ? 'Block' : 'Unblock'}</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Users Pagination */}
+              <div className="border-t border-[#eceef0] pt-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
+                <div className="text-gray-500 font-medium">
+                  Showing <span className="font-bold text-[#191c1e]">{totalUsersCount === 0 ? 0 : (userPage - 1) * userPageSize + 1}</span> to{' '}
+                  <span className="font-bold text-[#191c1e]">{Math.min(userPage * userPageSize, totalUsersCount)}</span> of{' '}
+                  <span className="font-bold text-[#191c1e]">{totalUsersCount}</span> users
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-gray-500 text-[11px]">Per page:</span>
+                    <select
+                      value={userPageSize}
+                      onChange={(e) => {
+                        setUserPageSize(Number(e.target.value));
+                        setUserPage(1);
+                      }}
+                      className="bg-[#f2f4f6] border border-[#cbc3d8] rounded-lg px-2 py-1 text-xs outline-none font-bold"
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      disabled={userPage <= 1}
+                      onClick={() => {
+                        const newP = Math.max(1, userPage - 1);
+                        setUserPage(newP);
+                        fetchData(token, newP);
+                      }}
+                      className="px-3 py-1 rounded-lg border border-[#cbc3d8] text-[#191c1e] font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 transition text-[11px]"
+                    >
+                      Previous
+                    </button>
+                    <span className="px-2 font-bold text-[#4500b4]">
+                      {userPage} / {Math.max(1, Math.ceil(totalUsersCount / userPageSize))}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={userPage >= Math.ceil(totalUsersCount / userPageSize)}
+                      onClick={() => {
+                        const newP = userPage + 1;
+                        setUserPage(newP);
+                        fetchData(token, newP);
+                      }}
+                      className="px-3 py-1 rounded-lg border border-[#cbc3d8] text-[#191c1e] font-bold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-100 transition text-[11px]"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </section>
       )}
 
@@ -773,6 +1094,139 @@ export default function AdminUsersPage() {
               <div className="flex justify-end gap-2 pt-3 border-t border-[#eceef0]">
                 <button type="button" onClick={() => setShowCreateVendor(false)} className="px-4 py-2 text-xs font-bold text-gray-500">Cancel</button>
                 <button type="submit" disabled={createLoading} className="bg-[#5e23dc] text-white px-5 py-2 rounded-xl text-xs font-bold">{createLoading ? 'Creating...' : 'Create Vendor'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT VENDOR PROFILE MODAL */}
+      {editingVendor && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-150" onClick={() => setEditingVendor(null)}>
+          <div className="bg-white rounded-3xl shadow-2xl border border-[#eceef0] w-full max-w-lg p-6 space-y-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center border-b border-[#eceef0] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-[#191c1e]">Edit Vendor Profile — {editingVendor.firstName} {editingVendor.lastName}</h3>
+                <p className="text-[10px] text-gray-500">Update category, service coverage, bank accounts &amp; verification notes.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingVendor(null)}
+                className="w-7 h-7 rounded-full bg-[#f2f4f6] hover:bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600 transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveVendorProfile} className="space-y-3">
+              <div>
+                <label className={labelCls}>Service Category</label>
+                <select
+                  value={editForm.categoryName}
+                  onChange={(e) => setEditForm({ ...editForm, categoryName: e.target.value })}
+                  className={inputCls}
+                >
+                  {SERVICE_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className={labelCls}>Service Areas (Comma-separated)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Bangalore North, Hebbal, Yelahanka"
+                  value={editForm.serviceArea}
+                  onChange={(e) => setEditForm({ ...editForm, serviceArea: e.target.value })}
+                  className={inputCls}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className={labelCls}>Star Rating (0 - 5.0)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="1"
+                    max="5"
+                    value={editForm.rating}
+                    onChange={(e) => setEditForm({ ...editForm, rating: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+                <div>
+                  <label className={labelCls}>Total Completed Jobs</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editForm.totalJobs}
+                    onChange={(e) => setEditForm({ ...editForm, totalJobs: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+
+              <div className="border-t border-[#eceef0] pt-3 space-y-3">
+                <span className="text-[10px] font-bold text-[#4500b4] uppercase tracking-wider block">Direct Deposit Bank Details:</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className={labelCls}>Account Holder</label>
+                    <input
+                      placeholder="Account Name"
+                      value={editForm.bankAccountName}
+                      onChange={(e) => setEditForm({ ...editForm, bankAccountName: e.target.value })}
+                      className={inputCls}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>IFSC Code</label>
+                    <input
+                      placeholder="IFSC Code"
+                      value={editForm.bankIfscCode}
+                      onChange={(e) => setEditForm({ ...editForm, bankIfscCode: e.target.value })}
+                      className={inputCls}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className={labelCls}>Account Number</label>
+                  <input
+                    placeholder="Bank Account Number"
+                    value={editForm.bankAccountNo}
+                    onChange={(e) => setEditForm({ ...editForm, bankAccountNo: e.target.value })}
+                    className={inputCls}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className={labelCls}>Admin Verification Remarks</label>
+                <textarea
+                  rows={2}
+                  placeholder="Internal audit notes or instructions..."
+                  value={editForm.verificationNotes}
+                  onChange={(e) => setEditForm({ ...editForm, verificationNotes: e.target.value })}
+                  className="w-full bg-white border border-[#cbc3d8] rounded-lg p-2 text-xs text-[#191c1e] outline-none focus:border-[#5e23dc]"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-[#eceef0]">
+                <button
+                  type="button"
+                  onClick={() => setEditingVendor(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-500 hover:text-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={editLoading}
+                  className="bg-[#5e23dc] hover:bg-[#4500b4] text-white px-5 py-2 rounded-xl text-xs font-bold transition shadow-md"
+                >
+                  {editLoading ? 'Saving Profile...' : 'Save Changes'}
+                </button>
               </div>
             </form>
           </div>

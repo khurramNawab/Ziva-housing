@@ -27,10 +27,7 @@ async function bootstrap() {
 
   // ─── CORS ──────────────────────────────────────────────────
   app.enableCors({
-    origin: [
-      process.env.APP_URL || 'http://localhost:3000',
-      'http://localhost:3001',
-    ],
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
@@ -65,7 +62,7 @@ async function bootstrap() {
   }
 
   const port = process.env.PORT || 4000;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`🚀 Ziva Housing API running on: http://localhost:${port}/api/v1`);
 }
 

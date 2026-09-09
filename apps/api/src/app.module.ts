@@ -21,6 +21,7 @@ import { ServicesModule } from './services/services.module';
 import { OffersModule } from './offers/offers.module';
 import { AssistanceModule } from './assistance/assistance.module';
 import { CommonModule } from './common/common.module';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -59,6 +60,10 @@ import { CommonModule } from './common/common.module';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,  // Global RBAC guard — use @Roles('ADMIN') etc. to restrict
     },
     {
       provide: APP_INTERCEPTOR,

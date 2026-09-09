@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import io from 'socket.io-client';
+import NotificationCenter from '../../../components/NotificationCenter';
 
 interface Message {
   id: string;
@@ -250,6 +251,7 @@ export default function ChatPage() {
 
   // Payment Mock Modal State
   const [showPaymentMockModal, setShowPaymentMockModal] = useState(false);
+  const [escrowAmountInput, setEscrowAmountInput] = useState<string>('15000');
   const [activeTransactionId, setActiveTransactionId] = useState('');
   const [simulatingPayment, setSimulatingPayment] = useState(false);
 
@@ -320,49 +322,66 @@ export default function ChatPage() {
   }, [id]);
 
   const getFallbackLead = (leadId?: string, user?: any) => {
-    const safeLeadId = String(leadId || id || 'lead-mock-rent-2');
+    const isOwner = user?.role === 'OWNER';
+    const safeLeadId = String(leadId || id || 'lead-mock-rent-1');
     const cleanPropId = safeLeadId.replace(/^lead-/, '');
     const matched = MOCK_PROPERTIES_DICT[cleanPropId] || {
       id: cleanPropId,
-      title: cleanPropId.startsWith('pg-') ? 'Premium Urban PG Living' : cleanPropId.startsWith('mock-rent') ? 'Prestige Langlee High-Rise' : 'Luxury Villa Residence',
-      expectedPrice: cleanPropId.startsWith('mock-rent') ? 65000 : 18500000,
+      title: cleanPropId.startsWith('pg-') ? 'Premium Urban PG Living' : cleanPropId.startsWith('mock-rent') ? 'Modern 3BHK Penthouse with Skyline View' : 'Luxury 4BHK Gated Villa with Private Garden',
+      expectedPrice: cleanPropId.startsWith('mock-rent') ? 65000 : 28500000,
       monthlyRent: cleanPropId.startsWith('mock-rent') ? 65000 : undefined,
-      locality: 'HSR Layout Sector 1',
+      locality: 'Indiranagar 100ft Road',
       city: 'Bangalore',
-      ownerProfile: { user: { firstName: 'Rajesh', lastName: 'Verma', phone: '+91 98860 23456' } }
+      ownerProfile: { user: { firstName: isOwner ? (user?.firstName || 'Owner') : 'Rajesh', lastName: isOwner ? '' : 'Verma', phone: '+91 98860 23456' } }
     };
 
-    const ownerName = matched.ownerProfile?.user?.firstName || 'Rajesh';
+    const ownerName = isOwner ? (user?.firstName || 'Owner') : (matched.ownerProfile?.user?.firstName || 'Rajesh');
 
     return {
       id: safeLeadId,
       propertyId: matched.id,
       property: matched,
       status: 'NEW',
-      customerId: user?.sub || 'usr-customer-1',
+      customerId: isOwner ? 'user-renter-1' : (user?.sub || 'usr-customer-1'),
+      ownerId: isOwner ? (user?.sub || 'usr-owner-1') : 'owner-auto',
       customer: {
-        firstName: user?.firstName || 'Khurram',
-        lastName: user?.lastName || 'Customer',
-        phone: user?.phone || '+91 98765 43210',
+        firstName: isOwner ? 'Ananya' : (user?.firstName || 'Khurram'),
+        lastName: isOwner ? 'Sharma' : (user?.lastName || 'Customer'),
+        phone: isOwner ? '+91 98765 43210' : (user?.phone || '+91 98765 43210'),
       },
-      visits: [
-        {
-          id: 'vis-1',
-          scheduledAt: new Date(Date.now() + 86400000 * 2).toISOString(),
-          status: 'REQUESTED',
-          notes: 'Looking forward to viewing the flat and amenities.'
-        }
-      ],
+      visits: [],
       offers: [
         {
           id: 'off-1',
-          price: matched.expectedPrice || matched.monthlyRent || 65000,
+          price: matched.monthlyRent || matched.expectedPrice || 62000,
           status: 'PENDING',
-          createdByRole: 'CUSTOMER',
-          createdAt: new Date().toISOString()
+          createdByRole: isOwner ? 'CUSTOMER' : 'OWNER',
+          createdAt: new Date().toISOString(),
         }
       ],
-      initialMessages: [
+      initialMessages: isOwner ? [
+        {
+          id: 'msg-sys-1',
+          senderId: 'system',
+          senderName: 'Ziva Housing Compliance',
+          content: 'Welcome to the Secure Deal Room. You are logged in as the Property Owner negotiating with tenant Ananya Sharma.',
+          timestamp: '11:00 AM'
+        },
+        {
+          id: 'msg-tenant-1',
+          senderId: 'user-renter-1',
+          senderName: 'Ananya Sharma (Tenant)',
+          content: `Hello! I am very interested in your property (${matched.title}) and would like to finalize the lease terms.`,
+          timestamp: '11:02 AM'
+        },
+        {
+          id: 'msg-owner-1',
+          senderId: user?.sub || 'usr-owner-1',
+          senderName: `${user?.firstName || 'You'} (Owner)`,
+          content: `Hi Ananya! Welcome. Happy to discuss terms or arrange a site visit walkthrough.`,
+          timestamp: '11:05 AM'
+        }
+      ] : [
         {
           id: 'msg-sys-1',
           senderId: 'system',
@@ -388,11 +407,74 @@ export default function ChatPage() {
     };
   };
 
+  const syncEnquiryToLocalStorage = (leadObj: any) => {
+    if (typeof window === 'undefined' || !leadObj) return;
+    try {
+      const stored = JSON.parse(localStorage.getItem('Ziva_user_enquiries') || '[]');
+      const existingIdx = stored.findIndex((item: any) => item.id === leadObj.id);
+      const leadEntry = {
+        id: leadObj.id,
+        status: leadObj.status || 'NEW',
+        createdAt: leadObj.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        property: {
+          id: leadObj.property?.id || leadObj.propertyId,
+          title: leadObj.property?.title || 'Verified Property',
+          city: leadObj.property?.city || 'Bangalore',
+          locality: leadObj.property?.locality || 'Prime Locality',
+          purpose: leadObj.property?.purpose || (leadObj.property?.monthlyRent ? 'RENT' : 'SELL'),
+          photos: leadObj.property?.photos || [{ url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80' }],
+        },
+        counterparty: {
+          id: 'owner-1',
+          firstName: leadObj.property?.ownerProfile?.user?.firstName || 'Owner',
+        },
+        lastMessage: {
+          contentSanitized: 'Deal room active for inquiries and negotiations.',
+          createdAt: new Date().toISOString(),
+        },
+        messageCount: 3,
+      };
+
+      if (existingIdx >= 0) {
+        stored[existingIdx] = { ...stored[existingIdx], ...leadEntry };
+      } else {
+        stored.unshift(leadEntry);
+      }
+      localStorage.setItem('Ziva_user_enquiries', JSON.stringify(stored));
+    } catch (e) {
+      console.warn('Could not sync enquiry to localStorage', e);
+    }
+  };
+
   const fetchLeadAndChatData = async (accToken: string, user?: any) => {
     setLoading(true);
     setError('');
     const u = user || currentUser || { sub: 'usr-customer-1', firstName: 'Khurram', role: 'CUSTOMER' };
     const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+    // Local dynamic caches
+    let localOffers: Offer[] = [];
+    let localVisits: Visit[] = [];
+    let localTx: Transaction[] = [];
+    let localMsgs: Message[] = [];
+
+    if (typeof window !== 'undefined') {
+      try {
+        localOffers = JSON.parse(localStorage.getItem(`Ziva_user_offers_${id}`) || '[]');
+      } catch (e) {}
+      try {
+        const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+        localVisits = allVisits.filter((v: any) => v.leadId === id || v.propertyId === String(id).replace(/^lead-/, ''));
+      } catch (e) {}
+      try {
+        const allTx = JSON.parse(localStorage.getItem('Ziva_user_transactions') || '[]');
+        localTx = allTx.filter((t: any) => t.leadId === id);
+      } catch (e) {}
+      try {
+        localMsgs = JSON.parse(localStorage.getItem(`Ziva_chat_messages_${id}`) || '[]');
+      } catch (e) {}
+    }
 
     try {
       // 1. Attempt Fetch Lead details from backend
@@ -406,8 +488,23 @@ export default function ChatPage() {
         if (leadData && leadData.id) {
           setLead(leadData);
           setPipelineStatus(leadData.status || 'NEW');
-          setVisits(leadData.visits || []);
-          setOffers(leadData.offers || []);
+          syncEnquiryToLocalStorage(leadData);
+
+          // Merge backend visits with local visits
+          const backendVisits = leadData.visits || [];
+          const mergedVisits = [...backendVisits];
+          localVisits.forEach((lv) => {
+            if (!mergedVisits.some((mv: any) => mv.id === lv.id)) mergedVisits.push(lv);
+          });
+          setVisits(mergedVisits);
+
+          // Merge backend offers with local offers
+          const backendOffers = leadData.offers || [];
+          const mergedOffers = [...backendOffers];
+          localOffers.forEach((lo) => {
+            if (!mergedOffers.some((mo: any) => mo.id === lo.id)) mergedOffers.push(lo);
+          });
+          setOffers(mergedOffers);
 
           // Fetch message history
           const msgRes = await fetch(`${apiBase}/api/v1/chat/leads/${id}/messages`, {
@@ -422,9 +519,10 @@ export default function ChatPage() {
               content: m.contentSanitized || '',
               timestamp: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             }));
-            setMessages(history.length > 0 ? history : getFallbackLead(String(id), u).initialMessages);
+            const combinedMsgs = history.length > 0 ? history : (localMsgs.length > 0 ? localMsgs : getFallbackLead(String(id), u).initialMessages);
+            setMessages(combinedMsgs);
           } else {
-            setMessages(getFallbackLead(String(id), u).initialMessages);
+            setMessages(localMsgs.length > 0 ? localMsgs : getFallbackLead(String(id), u).initialMessages);
           }
 
           // Fetch Transactions
@@ -433,8 +531,14 @@ export default function ChatPage() {
           });
           if (txRes.ok) {
             const txJson = await txRes.json();
-            const leadTx = (txJson.data || txJson || []).filter((tx: any) => tx.leadId === id);
-            setTransactions(leadTx);
+            const backendTx = (txJson.data || txJson || []).filter((tx: any) => tx.leadId === id);
+            const mergedTx = [...backendTx];
+            localTx.forEach((lt) => {
+              if (!mergedTx.some((mt: any) => mt.id === lt.id)) mergedTx.push(lt);
+            });
+            setTransactions(mergedTx);
+          } else {
+            setTransactions(localTx);
           }
 
           // 2. Initialize Socket.io WebSockets
@@ -444,16 +548,18 @@ export default function ChatPage() {
         }
       }
     } catch (err: any) {
-      console.warn('API Lead fetch offline/unavailable, using robust Deal Room fallback:', err);
+      console.warn('API Lead fetch offline/unavailable, using robust dynamic Deal Room fallback:', err);
     }
 
-    // Resilient Fallback - deal room always loads
+    // Resilient Dynamic Fallback
     const fallback = getFallbackLead(String(id), u);
     setLead(fallback);
     setPipelineStatus(fallback.status);
-    setVisits(fallback.visits);
-    setOffers(fallback.offers);
-    setMessages(fallback.initialMessages);
+    syncEnquiryToLocalStorage(fallback);
+    setVisits(localVisits);
+    setOffers(localOffers);
+    setTransactions(localTx);
+    setMessages(localMsgs.length > 0 ? localMsgs : fallback.initialMessages);
     setLoading(false);
 
     // Try socket connect in background anyway
@@ -527,7 +633,13 @@ export default function ChatPage() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => {
+      const updated = [...prev, userMsg];
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`Ziva_chat_messages_${id}`, JSON.stringify(updated));
+      }
+      return updated;
+    });
 
     if (socketRef.current?.connected) {
       socketRef.current.emit('send_message', {
@@ -545,7 +657,13 @@ export default function ChatPage() {
           content: `Got it! I have noted your message regarding "${lead?.property?.title || 'the property'}". I am available for a visit or to discuss terms.`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         };
-        setMessages((prev) => [...prev, autoReply]);
+        setMessages((prev) => {
+          const updated = [...prev, autoReply];
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(`Ziva_chat_messages_${id}`, JSON.stringify(updated));
+          }
+          return updated;
+        });
       }, 1000);
     }
   };
@@ -570,6 +688,16 @@ export default function ChatPage() {
     } catch (err) {}
   };
 
+  const persistVisitToLocal = (newV: any) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+      const filtered = allVisits.filter((v: any) => v.id !== newV.id);
+      filtered.push(newV);
+      localStorage.setItem('Ziva_user_visits', JSON.stringify(filtered));
+    } catch (e) {}
+  };
+
   // Visit Scheduling APIs
   const handleRequestVisit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -581,6 +709,20 @@ export default function ChatPage() {
       scheduledAt: new Date(visitDate).toISOString(),
       status: 'REQUESTED',
       notes: visitNotes,
+    };
+
+    const fullVisitForStorage = {
+      ...newVisit,
+      leadId: id,
+      propertyId: lead?.propertyId || lead?.property?.id,
+      property: lead?.property || {
+        id: lead?.propertyId || 'mock-prop',
+        title: lead?.property?.title || 'Verified Property',
+        city: lead?.property?.city || 'Bangalore',
+        locality: lead?.property?.locality || 'Prime Locality',
+        photos: lead?.property?.photos || [],
+      },
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -603,7 +745,9 @@ export default function ChatPage() {
 
         if (res && res.ok) {
           const data = await res.json();
-          setVisits((prev) => [...prev, data.data || data]);
+          const savedVisit = data.data || data;
+          setVisits((prev) => [...prev, savedVisit]);
+          persistVisitToLocal({ ...fullVisitForStorage, ...savedVisit });
           setShowVisitModal(false);
           setVisitDate('');
           alert('Visit appointment scheduled successfully! Owner will review.');
@@ -616,6 +760,7 @@ export default function ChatPage() {
 
     // Fallback local update
     setVisits((prev) => [...prev, newVisit]);
+    persistVisitToLocal(fullVisitForStorage);
     setShowVisitModal(false);
     setVisitDate('');
     alert('Visit requested! Owner will review and accept your viewing appointment.');
@@ -624,6 +769,11 @@ export default function ChatPage() {
 
   const handleAcceptVisit = async (visitId: string) => {
     setVisits((prev) => prev.map((v) => (v.id === visitId ? { ...v, status: 'ACCEPTED' } : v)));
+    if (typeof window !== 'undefined') {
+      const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+      const updated = allVisits.map((v: any) => v.id === visitId ? { ...v, status: 'ACCEPTED' } : v);
+      localStorage.setItem('Ziva_user_visits', JSON.stringify(updated));
+    }
     alert('Visit request accepted.');
 
     const token = localStorage.getItem('Ziva_access');
@@ -639,6 +789,11 @@ export default function ChatPage() {
 
   const handleRejectVisit = async (visitId: string) => {
     setVisits((prev) => prev.map((v) => (v.id === visitId ? { ...v, status: 'REJECTED' } : v)));
+    if (typeof window !== 'undefined') {
+      const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+      const updated = allVisits.map((v: any) => v.id === visitId ? { ...v, status: 'REJECTED' } : v);
+      localStorage.setItem('Ziva_user_visits', JSON.stringify(updated));
+    }
     alert('Visit request rejected.');
 
     const token = localStorage.getItem('Ziva_access');
@@ -654,6 +809,11 @@ export default function ChatPage() {
 
   const handleCancelVisit = async (visitId: string) => {
     setVisits((prev) => prev.map((v) => (v.id === visitId ? { ...v, status: 'CANCELLED' } : v)));
+    if (typeof window !== 'undefined') {
+      const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+      const updated = allVisits.map((v: any) => v.id === visitId ? { ...v, status: 'CANCELLED' } : v);
+      localStorage.setItem('Ziva_user_visits', JSON.stringify(updated));
+    }
     alert('Visit successfully cancelled.');
 
     const token = localStorage.getItem('Ziva_access');
@@ -674,7 +834,13 @@ export default function ChatPage() {
     }
 
     setProcessingReschedule(true);
-    setVisits((prev) => prev.map((v) => (v.id === visitId ? { ...v, status: 'REQUESTED', scheduledAt: new Date(rescheduleDate).toISOString() } : v)));
+    const updatedDate = new Date(rescheduleDate).toISOString();
+    setVisits((prev) => prev.map((v) => (v.id === visitId ? { ...v, status: 'REQUESTED', scheduledAt: updatedDate } : v)));
+    if (typeof window !== 'undefined') {
+      const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+      const updated = allVisits.map((v: any) => v.id === visitId ? { ...v, status: 'REQUESTED', scheduledAt: updatedDate } : v);
+      localStorage.setItem('Ziva_user_visits', JSON.stringify(updated));
+    }
     setReschedulingVisitId(null);
     setRescheduleDate('');
     alert('Reschedule request sent to owner.');
@@ -690,7 +856,7 @@ export default function ChatPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ scheduledAt: new Date(rescheduleDate).toISOString() }),
+        body: JSON.stringify({ scheduledAt: updatedDate }),
       });
     } catch (err) {}
   };
@@ -708,6 +874,14 @@ export default function ChatPage() {
       createdByRole: currentUser?.role || 'CUSTOMER',
       parentOfferId: counteringOfferId || undefined,
       createdAt: new Date().toISOString(),
+    };
+
+    const persistOffer = (off: Offer) => {
+      if (typeof window !== 'undefined') {
+        const stored = JSON.parse(localStorage.getItem(`Ziva_user_offers_${id}`) || '[]');
+        stored.push(off);
+        localStorage.setItem(`Ziva_user_offers_${id}`, JSON.stringify(stored));
+      }
     };
 
     try {
@@ -734,7 +908,9 @@ export default function ChatPage() {
         if (res.ok) {
           const data = await res.json();
           alert('Offer submitted successfully.');
-          setOffers((prev) => [...prev, data]);
+          const finalOff = data.data || data;
+          setOffers((prev) => [...prev, finalOff]);
+          persistOffer(finalOff);
           setOfferPrice('');
           setCounteringOfferId(null);
           setSubmittingOffer(false);
@@ -745,6 +921,7 @@ export default function ChatPage() {
 
     // Fallback local update
     setOffers((prev) => [...prev, newOffer]);
+    persistOffer(newOffer);
     setOfferPrice('');
     setCounteringOfferId(null);
     alert('Offer submitted successfully to the property owner.');
@@ -753,6 +930,11 @@ export default function ChatPage() {
 
   const handleRespondOffer = async (offerId: string, status: 'ACCEPTED' | 'REJECTED') => {
     setOffers((prev) => prev.map((o) => (o.id === offerId ? { ...o, status } : o)));
+    if (typeof window !== 'undefined') {
+      const stored = JSON.parse(localStorage.getItem(`Ziva_user_offers_${id}`) || '[]');
+      const updated = stored.map((o: any) => o.id === offerId ? { ...o, status } : o);
+      localStorage.setItem(`Ziva_user_offers_${id}`, JSON.stringify(updated));
+    }
     alert(`Offer successfully ${status.toLowerCase()}.`);
 
     const token = localStorage.getItem('Ziva_access');
@@ -772,30 +954,39 @@ export default function ChatPage() {
 
   // Secure deposit Escrow Pay
   const handleMakeEscrowPayment = async () => {
+    const depositAmount = Number(escrowAmountInput);
+    if (!depositAmount || isNaN(depositAmount) || depositAmount < 5000) {
+      alert('Minimum holding deposit amount must be at least ₹5,000.');
+      return;
+    }
     setActiveTransactionId(`tx-${Date.now()}`);
     setShowPaymentMockModal(true);
   };
 
   const handleConfirmMockPayment = async (status: 'SUCCESS' | 'FAILED') => {
     setSimulatingPayment(true);
+    const depositAmount = Math.max(Number(escrowAmountInput) || 15000, 5000);
     setTimeout(() => {
       setSimulatingPayment(false);
       setShowPaymentMockModal(false);
 
       if (status === 'SUCCESS') {
         const txId = activeTransactionId || `tx-${Date.now()}`;
-        setTransactions((prev) => [
-          ...prev,
-          {
-            id: txId,
-            amount: 15000,
-            status: 'SUCCESS',
-            createdAt: new Date().toISOString(),
-          },
-        ]);
+        const newTx: Transaction = {
+          id: txId,
+          amount: depositAmount,
+          status: 'SUCCESS',
+          createdAt: new Date().toISOString(),
+        };
+        setTransactions((prev) => [...prev, newTx]);
+        if (typeof window !== 'undefined') {
+          const allTx = JSON.parse(localStorage.getItem('Ziva_user_transactions') || '[]');
+          allTx.push({ ...newTx, leadId: id, propertyId: lead?.propertyId || lead?.property?.id });
+          localStorage.setItem('Ziva_user_transactions', JSON.stringify(allTx));
+        }
         setPaymentConfirmation({
           transactionId: txId,
-          amount: 15000,
+          amount: depositAmount,
           date: new Date().toISOString(),
         });
       } else {
@@ -838,18 +1029,19 @@ export default function ChatPage() {
       {/* TopNavBar */}
       <nav className="bg-white shadow-sm border-b border-[#eceef0] h-16 flex items-center px-6 justify-between w-full sticky top-0 z-40">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-bold text-lg text-[#4500b4] tracking-tight">
-            Ziva Housing
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
           </Link>
           <span className="bg-[#5e23dc]/10 text-[#5e23dc] text-[9px] font-extrabold px-2 py-0.5 rounded tracking-wider uppercase">
             SECURE DEAL ROOM
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-semibold text-[#494455]">
-          <span>Lead ID: {lead.id}</span>
+          <span className="hidden sm:inline">Lead ID: {lead.id}</span>
+          <NotificationCenter />
           <button
             onClick={() => router.push(isOwnerViewer ? '/dashboard/owner' : '/dashboard/customer')}
-            className="text-[#5e23dc] hover:underline"
+            className="bg-[#5e23dc]/10 text-[#5e23dc] hover:bg-[#5e23dc]/20 px-3 py-1.5 rounded-lg font-bold transition"
           >
             Dashboard
           </button>
@@ -1044,7 +1236,9 @@ export default function ChatPage() {
               Appointments Calendar
             </h4>
 
-            {visits.length > 0 && (
+            {visits.length === 0 ? (
+              <p className="text-[10px] text-gray-400 italic">No visits scheduled yet.</p>
+            ) : (
               <div className="space-y-2 border-b border-[#eceef0] pb-3 max-h-[140px] overflow-y-auto">
                 {visits.map((visit) => {
                   const visitDate = new Date(visit.scheduledAt);
@@ -1150,8 +1344,10 @@ export default function ChatPage() {
               Allocate holding deposit securely. Transactions are covered under Ziva Protecting Escrow.
             </p>
 
-            {transactions.length > 0 && (
-              <div className="space-y-1.5 border-t border-[#eceef0] pt-2">
+            {transactions.length === 0 ? (
+              <p className="text-[10px] text-gray-400 italic">No payments processed yet.</p>
+            ) : (
+              <div className="space-y-1.5 border-t border-[#eceef0] pt-2 max-h-[120px] overflow-y-auto">
                 {transactions.map((tx) => (
                   <div key={tx.id} className="flex justify-between items-center text-[10px] bg-white p-2 rounded-lg border border-[#eceef0] font-mono">
                     <span className="font-bold text-gray-700">₹ {Number(tx.amount).toLocaleString('en-IN')}</span>
@@ -1163,12 +1359,58 @@ export default function ChatPage() {
             )}
 
             {!isOwnerViewer && (
-              <button
-                onClick={handleMakeEscrowPayment}
-                className="w-full bg-transparent border-2 border-[#5e23dc] text-[#5e23dc] py-2 rounded-lg text-xs font-bold hover:bg-[#5e23dc]/5 transition"
-              >
-                Pay Booking Deposit (₹15,000)
-              </button>
+              <div className="space-y-2.5 pt-2 border-t border-[#eceef0]">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[9px] font-bold text-gray-500 uppercase flex justify-between">
+                    <span>Enter Deposit Amount (₹)</span>
+                    {Number(escrowAmountInput) < 5000 && (
+                      <span className="text-red-500 font-bold">Min ₹5,000 required</span>
+                    )}
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-2 text-xs font-bold text-gray-400">₹</span>
+                    <input
+                      type="number"
+                      min={5000}
+                      step={500}
+                      value={escrowAmountInput}
+                      onChange={(e) => setEscrowAmountInput(e.target.value)}
+                      placeholder="5000"
+                      className={`w-full h-8 pl-7 pr-3 text-xs font-bold rounded-lg border outline-none transition ${
+                        Number(escrowAmountInput) < 5000
+                          ? 'border-red-300 focus:border-red-500 bg-red-50/30 text-red-700'
+                          : 'border-[#cbc3d8] focus:border-[#5e23dc] bg-white text-[#191c1e]'
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                {/* Quick preset chips */}
+                <div className="flex flex-wrap gap-1.5">
+                  {[5000, 10000, 15000, 25000, 50000].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => setEscrowAmountInput(String(preset))}
+                      className={`px-2 py-0.5 rounded text-[9px] font-bold border transition ${
+                        Number(escrowAmountInput) === preset
+                          ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
+                          : 'bg-white text-gray-600 border-[#eceef0] hover:border-[#5e23dc]/50'
+                      }`}
+                    >
+                      ₹{preset >= 1000 ? `${preset / 1000}k` : preset}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleMakeEscrowPayment}
+                  disabled={!Number(escrowAmountInput) || Number(escrowAmountInput) < 5000}
+                  className="w-full bg-transparent border-2 border-[#5e23dc] text-[#5e23dc] py-2 rounded-lg text-xs font-bold hover:bg-[#5e23dc]/5 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Pay Booking Deposit (₹{Number(escrowAmountInput || 0).toLocaleString('en-IN')})
+                </button>
+              </div>
             )}
           </div>
         </section>
@@ -1226,7 +1468,7 @@ export default function ChatPage() {
             <div className="space-y-2">
               <h3 className="text-sm font-bold text-[#4500b4] uppercase">Ziva Sandbox Checkout</h3>
               <p className="text-xs text-[#7a7487] max-w-xs mx-auto leading-normal">
-                Use the sandbox controls below to simulate instant payment gateway captures.
+                Amount to Deposit: <span className="font-bold text-[#5e23dc]">₹ {Number(escrowAmountInput || 15000).toLocaleString('en-IN')}</span>
               </p>
             </div>
 
@@ -1236,7 +1478,7 @@ export default function ChatPage() {
                 disabled={simulatingPayment}
                 className="w-full bg-[#16a373] hover:bg-[#0f6e4d] text-white font-bold py-2.5 rounded-xl transition disabled:opacity-50"
               >
-                {simulatingPayment ? 'Processing...' : 'Simulate SUCCESS'}
+                {simulatingPayment ? 'Processing...' : `Simulate SUCCESS (₹ ${Number(escrowAmountInput || 15000).toLocaleString('en-IN')})`}
               </button>
               <button
                 onClick={() => handleConfirmMockPayment('FAILED')}

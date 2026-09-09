@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import * as nodemailer from 'nodemailer';
+import * as path from 'path';
+import * as fs from 'fs';
 
 interface NotificationPayload {
   userId: string;
@@ -92,31 +94,29 @@ class InAppChannel implements NotificationChannel {
   }
 }
 
-// ─── Email Channel (SMTP + Resend) ──────────────────────────────────────────
+// ─── Email Channel (Nodemailer SMTP / Resend) ─────────────────────────────────
 class EmailChannel implements NotificationChannel {
   private smtpTransporter: nodemailer.Transporter | null = null;
+  private resend: Resend | null = null;
 
   constructor(
-    private resend: Resend | null,
+    private resendClient: Resend | null,
     private config: ConfigService,
     private logger: Logger,
   ) {
+    this.resend = resendClient;
     const smtpHost = this.config.get('SMTP_HOST');
+    const smtpPort = Number(this.config.get('SMTP_PORT', 587));
     const smtpUser = this.config.get('SMTP_USER');
     const smtpPass = this.config.get('SMTP_PASS');
+    const smtpSecure = this.config.get('SMTP_SECURE') === 'true' || smtpPort === 465;
 
     if (smtpHost && smtpUser && smtpPass) {
-      const smtpPort = Number(this.config.get('SMTP_PORT', 587));
-      const smtpSecure = this.config.get('SMTP_SECURE') === 'true' || smtpPort === 465;
-
       this.smtpTransporter = nodemailer.createTransport({
         host: smtpHost,
         port: smtpPort,
         secure: smtpSecure,
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
+        auth: { user: smtpUser, pass: smtpPass },
       });
       this.logger.log(`EmailChannel configured with SMTP: ${smtpHost}:${smtpPort}`);
     } else if (this.resend) {
@@ -129,8 +129,26 @@ class EmailChannel implements NotificationChannel {
   async send(n: NotificationPayload & { user: any }) {
     if (!n.user.email) return;
 
-    const fromAddress = this.config.get('EMAIL_FROM', 'Ziva Housing <noreply@zivahousing.com>');
+    const fromAddress = this.config.get('EMAIL_FROM', 'Ziva Housing <zivahousing@gmail.com>');
     const htmlContent = this.buildEmailHtml(n);
+
+    // Resolve local logo file for CID inline embedding
+    const possibleLogoPaths = [
+      path.resolve(process.cwd(), '../web/public/logo.png'),
+      path.resolve(process.cwd(), 'public/logo.png'),
+      path.resolve(__dirname, '../../../../apps/web/public/logo.png'),
+    ];
+    let logoFilePath: string | null = null;
+    for (const p of possibleLogoPaths) {
+      if (fs.existsSync(p)) {
+        logoFilePath = p;
+        break;
+      }
+    }
+
+    const attachments = logoFilePath
+      ? [{ filename: 'logo.png', path: logoFilePath, cid: 'zivaLogo' }]
+      : [];
 
     // 1. Try SMTP if configured
     if (this.smtpTransporter) {
@@ -140,6 +158,7 @@ class EmailChannel implements NotificationChannel {
           to: n.user.email,
           subject: n.title,
           html: htmlContent,
+          attachments,
         });
         this.logger.log(`SMTP email sent successfully to ${n.user.email}`);
         return;
@@ -169,35 +188,73 @@ class EmailChannel implements NotificationChannel {
   }
 
   private buildEmailHtml(n: NotificationPayload & { user: any }): string {
+    const appUrl = this.config.get('APP_URL', 'http://localhost:3000');
     return `
       <!DOCTYPE html>
-      <html>
-      <body style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fb;">
-        <div style="background: #2d3133; padding: 24px; border-radius: 12px 12px 0 0; text-align: center;">
-          <h1 style="color: #37e09b; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">Ziva Housing</h1>
-          <p style="color: #c9c7c6; font-size: 11px; margin: 4px 0 0 0;">Verified Marketplace &amp; Home Services</p>
-        </div>
-        <div style="background: #ffffff; padding: 32px; border-radius: 0 0 12px 12px; border: 1px solid #eceef0; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
-          <p style="color: #191c1e; font-size: 14px; font-weight: 600; margin-top: 0;">Hi ${n.user.firstName || 'Valued User'},</p>
-          <h2 style="color: #5e23dc; font-size: 18px; font-weight: 700; margin-top: 8px;">${n.title}</h2>
-          <p style="color: #494455; font-size: 13px; line-height: 1.6;">${n.body}</p>
-          
-          <div style="text-align: center; margin: 28px 0;">
-            <a href="${this.config.get('APP_URL', 'http://localhost:3000')}" 
-               style="display: inline-block; background: #5e23dc; color: #ffffff; font-weight: bold; font-size: 13px; padding: 14px 28px; border-radius: 10px; text-decoration: none; box-shadow: 0 4px 10px rgba(94, 35, 220, 0.25);">
-              Access Your Ziva Account
-            </a>
-          </div>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${n.title}</title>
+      </head>
+      <body style="margin: 0; padding: 0; background-color: #f4f5f8; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f4f5f8; padding: 30px 10px;">
+          <tr>
+            <td align="center">
+              <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 580px; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #eceef0;">
+                
+                <!-- Header Banner -->
+                <tr>
+                  <td style="background: linear-gradient(135deg, #0f0c1b 0%, #2a1b4e 50%, #4500b4 100%); padding: 32px 28px; text-align: center;">
+                    <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center">
+                      <tr>
+                        <td style="vertical-align: middle;">
+                          <img src="cid:zivaLogo" alt="Ziva Housing Logo" style="height: 44px; width: auto; display: block; max-height: 44px;" />
+                        </td>
+                        <td style="vertical-align: middle; padding-left: 14px;">
+                          <span style="color: #ffffff; font-size: 24px; font-weight: 800; font-family: 'Segoe UI', sans-serif; letter-spacing: -0.5px;">Ziva Housing</span>
+                        </td>
+                      </tr>
+                    </table>
+                    <p style="color: #cfbfff; font-size: 11px; margin: 8px 0 0 0; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">VERIFIED REAL ESTATE MARKETPLACE &amp; SERVICES</p>
+                  </td>
+                </tr>
 
-          <div style="border-top: 1px solid #eceef0; padding-top: 16px; margin-top: 24px;">
-            <p style="color: #7a7487; font-size: 11px; margin: 0; text-align: center;">
-              This is an automated notification from Ziva Housing platform. If you did not request this, please contact support.
-            </p>
-          </div>
-        </div>
-        <p style="color: #7a7487; font-size: 11px; text-align: center; margin-top: 20px;">
-          &copy; 2026 Ziva Housing Technologies Pvt. Ltd. | All rights reserved.
-        </p>
+                <!-- Main Body -->
+                <tr>
+                  <td style="padding: 36px 32px; background-color: #ffffff;">
+                    <p style="color: #191c1e; font-size: 15px; font-weight: 700; margin-top: 0;">Hi ${n.user.firstName || 'Valued User'},</p>
+                    <h2 style="color: #5e23dc; font-size: 18px; font-weight: 700; margin: 12px 0;">${n.title}</h2>
+                    <p style="color: #494455; font-size: 13px; line-height: 1.6; margin: 0 0 24px 0;">${n.body}</p>
+                    
+                    <div style="text-align: center; margin: 28px 0;">
+                      <a href="${appUrl}/auth/login" 
+                         style="display: inline-block; background: linear-gradient(135deg, #5e23dc 0%, #4500b4 100%); color: #ffffff; font-weight: 700; font-size: 13px; padding: 14px 32px; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 14px rgba(94, 35, 220, 0.35);">
+                        Access Your Ziva Account →
+                      </a>
+                    </div>
+
+                    <div style="border-top: 1px solid #eceef0; padding-top: 16px; margin-top: 28px;">
+                      <p style="color: #7a7487; font-size: 11px; margin: 0; text-align: center; line-height: 1.5;">
+                        This is an automated notification from Ziva Housing platform. If you did not request this, please contact support.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td style="background-color: #f8f9fb; padding: 20px 28px; text-align: center; border-top: 1px solid #eceef0;">
+                    <p style="color: #a09ab5; font-size: 10px; margin: 0; font-weight: 500;">
+                      &copy; 2026 Ziva Housing Technologies Pvt. Ltd. | All rights reserved.
+                    </p>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `;

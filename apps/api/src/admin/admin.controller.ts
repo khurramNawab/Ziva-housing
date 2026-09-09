@@ -2,9 +2,11 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestj
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @ApiTags('admin')
 @ApiBearerAuth()
+@Roles('ADMIN') // 🔒 All admin routes require ADMIN role — enforced by global RolesGuard
 @Controller('admin')
 export class AdminController {
   constructor(private adminService: AdminService) {}
@@ -84,6 +86,47 @@ export class AdminController {
     @Param('id') propertyId: string,
   ) {
     return this.adminService.deleteProperty(adminId, propertyId);
+  }
+
+  @Patch('properties/:id')
+  @ApiOperation({ summary: 'Direct edit property listing details (Admin only)' })
+  editProperty(
+    @CurrentUser('id') adminId: string,
+    @Param('id') propertyId: string,
+    @Body() body: any,
+  ) {
+    return this.adminService.editPropertyListing(adminId, propertyId, body);
+  }
+
+  @Post('properties/:id/flags')
+  @ApiOperation({ summary: 'Update fraud and duplicate flags for a property (Admin only)' })
+  setPropertyFlags(
+    @CurrentUser('id') adminId: string,
+    @Param('id') propertyId: string,
+    @Body() body: { fraudFlag?: boolean; duplicateFlag?: boolean; fraudNotes?: string },
+  ) {
+    return this.adminService.setPropertyFlags(adminId, propertyId, body);
+  }
+
+  @Post('properties/:id/documents/:docId/verify')
+  @ApiOperation({ summary: 'Granular verification of a property document (Admin only)' })
+  verifyDocument(
+    @CurrentUser('id') adminId: string,
+    @Param('id') propertyId: string,
+    @Param('docId') docId: string,
+    @Body() body: { isVerified: boolean; notes?: string },
+  ) {
+    return this.adminService.verifyPropertyDocument(adminId, propertyId, docId, body.isVerified, body.notes);
+  }
+
+  @Post('properties/:id/toggle-featured')
+  @ApiOperation({ summary: 'Toggle featured boost status for a property (Admin only)' })
+  toggleFeatured(
+    @CurrentUser('id') adminId: string,
+    @Param('id') propertyId: string,
+    @Body() body: { isFeatured: boolean; notes?: string },
+  ) {
+    return this.adminService.togglePropertyFeatured(adminId, propertyId, body.isFeatured, body.notes);
   }
 
   // ─── Leads CRM ─────────────────────────────────────────────────────────────
@@ -192,6 +235,16 @@ export class AdminController {
     return this.adminService.vendorAction(adminId, vendorUserId, 'REJECT', body.notes);
   }
 
+  @Post('vendors/:id/suspend')
+  @ApiOperation({ summary: 'Suspend / Revoke vendor approval (Admin only)' })
+  suspendVendor(
+    @CurrentUser('id') adminId: string,
+    @Param('id') vendorUserId: string,
+    @Body() body: { notes?: string },
+  ) {
+    return this.adminService.vendorAction(adminId, vendorUserId, 'SUSPEND', body.notes);
+  }
+
   @Post('vendors/:id/background-check')
   @ApiOperation({ summary: 'Update vendor Trust & Safety background check status (Admin only)' })
   vendorBackgroundCheck(
@@ -289,15 +342,6 @@ export class AdminController {
     return this.adminService.getAuditLogs(adminId, +page, +limit, action, entityType);
   }
 
-  @Patch('leads/:id/stage')
-  @ApiOperation({ summary: 'Override lead status stage (Admin only)' })
-  overrideLeadStage(
-    @CurrentUser('id') adminId: string,
-    @Param('id') leadId: string,
-    @Body() body: { status: string; reason?: string },
-  ) {
-    return this.adminService.overrideLeadStage(adminId, leadId, body.status, body.reason);
-  }
 
   @Get('alerts')
   @ApiOperation({ summary: 'Get all fraud and bypass alerts (Admin only)' })

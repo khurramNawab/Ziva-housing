@@ -445,6 +445,31 @@ export default function PostPropertyPage() {
 
       if (res.ok) {
         localStorage.removeItem('post_property_draft');
+        try {
+          const newPropObj = {
+            id: data.data?.id || data.id || `prop-${Date.now()}`,
+            title: form.title,
+            purpose: form.purpose,
+            propertyType: form.propertyType,
+            status: data.data?.status || data.status || 'PENDING_REVIEW',
+            locality: form.locality,
+            city: form.city,
+            bhk: Number(form.bhk),
+            expectedPrice: form.purpose === 'SELL' ? Number(form.expectedPrice) : null,
+            monthlyRent: form.purpose === 'RENT' ? Number(form.expectedPrice) : null,
+            viewCount: 0,
+            enquiryCount: 0,
+            isZivaVerified: false,
+            isFeatured: false,
+            photos: form.photos.map((url) => ({ url })),
+            createdAt: new Date().toISOString(),
+          };
+          const raw = localStorage.getItem('Ziva_custom_properties') || '[]';
+          const list = Array.isArray(JSON.parse(raw)) ? JSON.parse(raw) : [];
+          list.unshift(newPropObj);
+          localStorage.setItem('Ziva_custom_properties', JSON.stringify(list));
+          localStorage.setItem('Ziva_owner_properties', JSON.stringify(list));
+        } catch {}
         setSubmitted(true);
       } else {
         setError(data.message || 'Submission failed. Please check required fields.');

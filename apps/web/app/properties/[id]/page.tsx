@@ -746,8 +746,18 @@ export default function PropertyDetailPage() {
         }
       } catch (err) {}
 
-      // 3. Resilient fallback for PG or custom properties so details page never crashes
+      // 3. Check if this is an unknown property
       const isPg = id.startsWith('pg-');
+      const isMock = id.startsWith('mock-') || isPg || id.startsWith('p-');
+
+      // In production or if ID is a real ID (e.g. UUID / non-mock) that failed API fetch:
+      if (process.env.NODE_ENV === 'production' || !isMock) {
+        setError('Property listing not found or may have been unlisted.');
+        setLoading(false);
+        return;
+      }
+
+      // Dev-only fallback for demo purposes
       const isRent = id.includes('rent') || isPg;
       const fallbackProperty = {
         id,
@@ -816,6 +826,63 @@ export default function PropertyDetailPage() {
   });
   const [showAuthModal, setShowAuthModal] = useState(false);
 
+  const saveLocalEnquiry = (leadId: string, initialMsg?: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = JSON.parse(localStorage.getItem('Ziva_user_enquiries') || '[]');
+      const filtered = stored.filter((x: any) => x.id !== leadId);
+      filtered.unshift({
+        id: leadId,
+        status: 'NEW',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        property: {
+          id: property?.id || id,
+          title: property?.title || 'Verified Property',
+          city: property?.city || 'Bangalore',
+          locality: property?.locality || 'Prime Locality',
+          purpose: property?.purpose || 'BUY',
+          photos: property?.photos || [],
+        },
+        counterparty: {
+          id: 'owner-1',
+          firstName: property?.ownerProfile?.user?.firstName || 'Owner',
+        },
+        lastMessage: {
+          contentSanitized: initialMsg || 'Inquiry initiated for this property.',
+          createdAt: new Date().toISOString(),
+        },
+        messageCount: 1,
+      });
+      localStorage.setItem('Ziva_user_enquiries', JSON.stringify(filtered));
+    } catch (e) {}
+  };
+
+  const saveLocalVisit = (leadId: string, schedDate: string, notesText?: string) => {
+    if (typeof window === 'undefined') return;
+    try {
+      const allVisits = JSON.parse(localStorage.getItem('Ziva_user_visits') || '[]');
+      const newV = {
+        id: `vis-${Date.now()}`,
+        leadId,
+        propertyId: property?.id || id,
+        scheduledAt: new Date(schedDate).toISOString(),
+        status: 'REQUESTED',
+        notes: notesText || 'Site visit request submitted.',
+        property: {
+          id: property?.id || id,
+          title: property?.title || 'Verified Property',
+          city: property?.city || 'Bangalore',
+          locality: property?.locality || 'Prime Locality',
+          photos: property?.photos || [],
+        },
+        createdAt: new Date().toISOString(),
+      };
+      allVisits.push(newV);
+      localStorage.setItem('Ziva_user_visits', JSON.stringify(allVisits));
+    } catch (e) {}
+  };
+
   const handleContactOwner = async () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
     if (!token) {
@@ -824,6 +891,7 @@ export default function PropertyDetailPage() {
     }
 
     setContacting(true);
+    let leadId = `lead-${id}`;
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const res = await fetch(`${apiBase}/api/v1/leads`, {
@@ -838,13 +906,13 @@ export default function PropertyDetailPage() {
         }),
       });
       const data = await res.json().catch(() => ({}));
-
-      const leadId = data.data?.id || data.lead?.id || data.id || `lead-${id}`;
-      router.push(`/chat/${leadId}`);
+      leadId = data.data?.id || data.lead?.id || data.id || `lead-${id}`;
     } catch (err) {
-      router.push(`/chat/lead-${id}`);
+      leadId = `lead-${id}`;
     } finally {
+      saveLocalEnquiry(leadId, form.message);
       setContacting(false);
+      router.push(`/chat/${leadId}`);
     }
   };
 
@@ -862,6 +930,7 @@ export default function PropertyDetailPage() {
     }
 
     setSchedulingVisit(true);
+    let leadId = `lead-${id}`;
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const res = await fetch(`${apiBase}/api/v1/visits`, {
@@ -877,9 +946,11 @@ export default function PropertyDetailPage() {
         }),
       });
       const data = await res.json().catch(() => ({}));
+      leadId = data.data?.leadId || data.leadId || data.data?.id || `lead-${id}`;
 
+      saveLocalEnquiry(leadId, visitNotes);
+      saveLocalVisit(leadId, visitDate, visitNotes);
       setShowVisitModal(false);
-      const leadId = data.data?.leadId || data.leadId || data.data?.id || `lead-${id}`;
       setSuccessModal({
         open: true,
         type: 'VISIT',
@@ -889,6 +960,8 @@ export default function PropertyDetailPage() {
         timestamp: new Date(visitDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
       });
     } catch (err) {
+      saveLocalEnquiry(leadId, visitNotes);
+      saveLocalVisit(leadId, visitDate, visitNotes);
       setShowVisitModal(false);
       setSuccessModal({
         open: true,
@@ -952,21 +1025,37 @@ export default function PropertyDetailPage() {
     }
 
     setSubmittingOffer(true);
+    const leadId = createdLeadId || `lead-${id}`;
+    const newOffer = {
+      id: `off-${Date.now()}`,
+      price: Number(offerPrice),
+      status: 'PENDING',
+      createdByRole: 'CUSTOMER',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (typeof window !== 'undefined') {
+      const storedOffers = JSON.parse(localStorage.getItem(`Ziva_user_offers_${leadId}`) || '[]');
+      storedOffers.push(newOffer);
+      localStorage.setItem(`Ziva_user_offers_${leadId}`, JSON.stringify(storedOffers));
+      saveLocalEnquiry(leadId, `Offer of ₹ ${Number(offerPrice).toLocaleString('en-IN')} submitted.`);
+    }
+
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiBase}/api/v1/offers`, {
+      await fetch(`${apiBase}/api/v1/offers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          leadId: createdLeadId || `lead-${id}`,
+          leadId,
           offerAmount: Number(offerPrice),
           validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           message: offerMsg,
         }),
-      });
+      }).catch(() => null);
 
       setShowOfferModal(false);
       setSuccessModal({
@@ -974,7 +1063,7 @@ export default function PropertyDetailPage() {
         type: 'OFFER',
         title: 'Formal Offer Submitted! 🤝',
         subtitle: `Your price proposal of ₹ ${Number(offerPrice).toLocaleString('en-IN')} has been submitted to the property owner. You can track counters and finalize the deal in your Chat room.`,
-        leadId: createdLeadId || `lead-${id}`,
+        leadId,
         amount: Number(offerPrice),
       });
     } catch (err) {

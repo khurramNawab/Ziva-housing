@@ -229,17 +229,26 @@ export class PaymentsService {
   }
 
   async getTransactions(userId: string) {
-    // Get leads for this user first, then find related transactions
-    const leads = await this.prisma.lead.findMany({
-      where: { OR: [{ customerId: userId }, { ownerId: userId }] },
-      select: { id: true },
-    });
-    const leadIds = leads.map((l) => l.id);
+    if (!this.prisma.isConnected) {
+      return [];
+    }
 
-    return this.prisma.transaction.findMany({
-      where: { leadId: { in: leadIds } },
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-    });
+    try {
+      // Get leads for this user first, then find related transactions
+      const leads = await this.prisma.lead.findMany({
+        where: { OR: [{ customerId: userId }, { ownerId: userId }] },
+        select: { id: true },
+      });
+      const leadIds = leads.map((l) => l.id);
+
+      return await this.prisma.transaction.findMany({
+        where: { leadId: { in: leadIds } },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      });
+    } catch (err: any) {
+      this.prisma.isConnected = false;
+      return [];
+    }
   }
 }

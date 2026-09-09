@@ -129,8 +129,16 @@ export default function AdminLeadsPage() {
 
   const fetchLeadsAndTickets = async (accToken: string) => {
     setLoading(true);
+    let localLeads: Lead[] = [];
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('Ziva_user_enquiries') || localStorage.getItem('Ziva_owner_leads');
+        if (raw) localLeads = JSON.parse(raw);
+      } catch {}
+    }
+
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
 
       // Fetch CRM Leads
       const leadsRes = await fetch(`${apiBase}/api/v1/admin/leads?limit=100`, {
@@ -138,7 +146,11 @@ export default function AdminLeadsPage() {
       });
       const leadsJson = await leadsRes.json();
       if (leadsRes.ok) {
-        setLeadsList(leadsJson.data?.leads || leadsJson.leads || []);
+        const apiLeads = leadsJson.data?.leads || leadsJson.leads || [];
+        const merged = [...localLeads, ...apiLeads.filter((al: any) => !localLeads.some(ll => ll.id === al.id))];
+        setLeadsList(merged.length > 0 ? merged : localLeads);
+      } else {
+        setLeadsList(localLeads);
       }
 
       // Fetch Tickets
@@ -150,7 +162,7 @@ export default function AdminLeadsPage() {
         setTicketsList(ticketsJson.data || ticketsJson || []);
       }
     } catch {
-      // Graceful fallback
+      setLeadsList(localLeads);
     } finally {
       setLoading(false);
     }
@@ -158,7 +170,7 @@ export default function AdminLeadsPage() {
 
   const fetchOptions = async (accToken: string) => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
 
       // Fetch users for dropdown
       const usersRes = await fetch(`${apiBase}/api/v1/admin/users?limit=100`, {
@@ -191,7 +203,7 @@ export default function AdminLeadsPage() {
 
     setCreatingLead(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/leads`, {
         method: 'POST',
         headers: {
@@ -230,7 +242,7 @@ export default function AdminLeadsPage() {
 
     setOverriding(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/leads/${selectedLead.id}/status`, {
         method: 'PATCH',
         headers: {
@@ -261,7 +273,7 @@ export default function AdminLeadsPage() {
     setSelectedTicket(ticket);
     setReplyMessage('');
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/assistance/tickets/${ticket.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -279,7 +291,7 @@ export default function AdminLeadsPage() {
 
     setSendingReply(true);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/assistance/tickets/${selectedTicket.id}/messages`, {
         method: 'POST',
         headers: {
@@ -306,7 +318,7 @@ export default function AdminLeadsPage() {
     if (!selectedTicket) return;
 
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/assistance/tickets/${selectedTicket.id}/status`, {
         method: 'PATCH',
         headers: {

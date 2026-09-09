@@ -59,6 +59,10 @@ export default function AdminOverviewPage() {
   const [invoicesList, setInvoicesList] = useState<Invoice[]>([]);
   const [commissionStats, setCommissionStats] = useState<CommissionStats | null>(null);
 
+  // Vendor pipeline KPIs
+  const [vendorPendingCount, setVendorPendingCount] = useState(0);
+  const [vendorApprovedCount, setVendorApprovedCount] = useState(0);
+
   // New Rule Form
   const [newRuleName, setNewRuleName] = useState('');
   const [newRuleType, setNewRuleType] = useState('PERCENTAGE');
@@ -81,13 +85,29 @@ export default function AdminOverviewPage() {
     setLoading(true);
     setError('');
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const statsRes = await fetch(`${apiBase}/api/v1/admin/dashboard`, {
         headers: { Authorization: `Bearer ${accToken}` },
       });
       const statsJson = await statsRes.json();
       if (statsRes.ok) {
         setStats(statsJson.data || statsJson);
+      }
+
+      // Vendor pipeline counts
+      const [pendingVRes, approvedVRes] = await Promise.allSettled([
+        fetch(`${apiBase}/api/v1/admin/vendors/pending`, { headers: { Authorization: `Bearer ${accToken}` } }),
+        fetch(`${apiBase}/api/v1/admin/vendors/approved`, { headers: { Authorization: `Bearer ${accToken}` } }),
+      ]);
+      if (pendingVRes.status === 'fulfilled' && pendingVRes.value.ok) {
+        const json = await pendingVRes.value.json();
+        const list = json.data || json || [];
+        setVendorPendingCount(Array.isArray(list) ? list.length : 0);
+      }
+      if (approvedVRes.status === 'fulfilled' && approvedVRes.value.ok) {
+        const json = await approvedVRes.value.json();
+        const list = json.data || json || [];
+        setVendorApprovedCount(Array.isArray(list) ? list.length : 0);
       }
 
       // Commissions
@@ -120,6 +140,8 @@ export default function AdminOverviewPage() {
         propertiesByStatus: { ACTIVE: 412, PENDING_REVIEW: 45, SUSPENDED: 32, REJECTED: 23 },
         usersByRole: { CUSTOMER: 950, OWNER: 320, AGENT: 110, SERVICE_PROVIDER: 40 }
       });
+      setVendorPendingCount(2);
+      setVendorApprovedCount(2);
       setRulesList([
         { id: 'rule-1', name: 'Standard Property Sale Commission', type: 'PERCENTAGE', rate: 2.5, isActive: true, applicableTo: 'PROPERTY_SELL' },
         { id: 'rule-2', name: 'Standard Rental Commission', type: 'PERCENTAGE', rate: 5, isActive: true, applicableTo: 'PROPERTY_RENT' },
@@ -161,7 +183,7 @@ export default function AdminOverviewPage() {
     e.preventDefault();
     if (!newRuleName.trim() || !newRuleRate) return;
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
       const res = await fetch(`${apiBase}/api/v1/admin/commissions/rules`, {
         method: 'POST',
         headers: {
@@ -272,6 +294,43 @@ export default function AdminOverviewPage() {
           <div className="text-[11px] leading-[20px] text-[#16A373] flex items-center gap-1 mt-1 font-bold">
             <span className="material-symbols-outlined text-[14px]">trending_up</span>
             +8.4% vs last month
+          </div>
+        </div>
+      </section>
+
+      {/* Vendor Pipeline KPI Row */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-amber-200 flex flex-col gap-1">
+          <div className="flex justify-between items-center">
+            <span className="text-[13px] leading-[20px] text-[#7a7487] font-semibold">Pending Vendor Applications</span>
+            <span className="material-symbols-outlined text-amber-700 bg-amber-100 p-1.5 rounded-full text-sm">hourglass_empty</span>
+          </div>
+          <div className="text-[20px] leading-[28px] font-semibold text-[#191c1e] mt-1">
+            {vendorPendingCount}
+          </div>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[11px] text-amber-700 font-bold flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">schedule</span>
+              {vendorPendingCount > 0 ? 'Awaiting admin review' : 'All clear — no pending applications'}
+            </span>
+            <a href="/admin/users" className="text-[10px] text-[#5e23dc] font-bold hover:underline">Review →</a>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-[#16a373]/20 flex flex-col gap-1">
+          <div className="flex justify-between items-center">
+            <span className="text-[13px] leading-[20px] text-[#7a7487] font-semibold">Active Verified Vendors</span>
+            <span className="material-symbols-outlined text-[#16a373] bg-[#e8faf4] p-1.5 rounded-full text-sm">verified_user</span>
+          </div>
+          <div className="text-[20px] leading-[28px] font-semibold text-[#191c1e] mt-1">
+            {vendorApprovedCount}
+          </div>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-[11px] text-[#16a373] font-bold flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]">check_circle</span>
+              Live on service marketplace
+            </span>
+            <a href="/admin/users" className="text-[10px] text-[#5e23dc] font-bold hover:underline">Manage →</a>
           </div>
         </div>
       </section>

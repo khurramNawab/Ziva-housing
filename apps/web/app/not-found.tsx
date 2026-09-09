@@ -8,9 +8,8 @@ export default function NotFound() {
     <div className="min-h-screen bg-[#f8f9fb] text-[#191c1e] font-[Rubik] antialiased flex flex-col justify-between">
       {/* Brand Header */}
       <header className="bg-white border-b border-[#eceef0] h-16 flex items-center px-6 md:px-12 justify-between">
-        <Link href="/" className="font-bold text-xl text-[#4500b4] flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-[#5e23dc] text-white flex items-center justify-center text-sm font-bold">J</span>
-          Ziva Housing
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/logo.png" alt="Ziva Housing Logo" className="h-10 w-auto object-contain" />
         </Link>
         <Link href="/" className="text-xs font-bold text-[#5e23dc] hover:underline">
           Return Home

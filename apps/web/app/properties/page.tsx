@@ -41,6 +41,88 @@ function SearchResultsContent() {
   // New Projects Builder Filter
   const [builderFilter, setBuilderFilter] = useState('');
 
+  // Interactive Map State & Coordinates
+  const [selectedMapPinId, setSelectedMapPinId] = useState<string | null>(null);
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({ lat: 12.9716, lng: 77.5946 });
+  const [mapZoom, setMapZoom] = useState<number>(13);
+  const [isLocating, setIsLocating] = useState<boolean>(false);
+  const [userLocationMarker, setUserLocationMarker] = useState<{ lat: number; lng: number } | null>(null);
+  const [mapToast, setMapToast] = useState<string | null>(null);
+
+  const LOCALITY_COORDS: Record<string, { lat: number; lng: number }> = {
+    koramangala: { lat: 12.9352, lng: 77.6245 },
+    indiranagar: { lat: 12.9784, lng: 77.6408 },
+    hsr: { lat: 12.9121, lng: 77.6446 },
+    'hsr layout': { lat: 12.9121, lng: 77.6446 },
+    whitefield: { lat: 12.9698, lng: 77.7500 },
+    btm: { lat: 12.9166, lng: 77.6101 },
+    'btm layout': { lat: 12.9166, lng: 77.6101 },
+    hebbal: { lat: 13.0358, lng: 77.5970 },
+    marathahalli: { lat: 12.9591, lng: 77.6974 },
+    malleshwaram: { lat: 13.0031, lng: 77.5643 },
+    bellandur: { lat: 12.9260, lng: 77.6762 },
+    'electronic city': { lat: 12.8399, lng: 77.6770 },
+    sarjapur: { lat: 12.9248, lng: 77.6853 },
+    noida: { lat: 28.5355, lng: 77.3910 },
+    gurgaon: { lat: 28.4595, lng: 77.0266 },
+    'cyber city': { lat: 28.4950, lng: 77.0895 },
+    mumbai: { lat: 19.0760, lng: 72.8777 },
+  };
+
+  const handleZoomIn = () => {
+    setMapZoom((z) => Math.min(z + 1, 18));
+  };
+
+  const handleZoomOut = () => {
+    setMapZoom((z) => Math.max(z - 1, 9));
+  };
+
+  const handleGpsLocate = () => {
+    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+      setIsLocating(true);
+      setMapToast('Locating your GPS coordinates...');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          setMapCenter({ lat, lng });
+          setUserLocationMarker({ lat, lng });
+          setMapZoom(15);
+          setIsLocating(false);
+          setMapToast('📍 Centered on your current location');
+          setTimeout(() => setMapToast(null), 3500);
+        },
+        () => {
+          setIsLocating(false);
+          setMapCenter({ lat: 12.9716, lng: 77.5946 });
+          setMapToast('⚠️ GPS location unavailable, centered on Bangalore');
+          setTimeout(() => setMapToast(null), 3500);
+        },
+        { timeout: 7000 }
+      );
+    } else {
+      setMapToast('GPS not supported on your browser');
+      setTimeout(() => setMapToast(null), 3000);
+    }
+  };
+
+  const handleSelectMapProperty = (prop: any) => {
+    setSelectedMapPinId(prop.id);
+    const locKey = Object.keys(LOCALITY_COORDS).find((k) =>
+      (prop.locality || '').toLowerCase().includes(k)
+    );
+    const coords =
+      prop.latitude && prop.longitude
+        ? { lat: Number(prop.latitude), lng: Number(prop.longitude) }
+        : locKey
+        ? LOCALITY_COORDS[locKey]
+        : null;
+    if (coords) {
+      setMapCenter(coords);
+      setMapZoom(14);
+    }
+  };
+
   // API Property states
   const [apiProperties, setApiProperties] = useState<any[]>([]);
   const [apiLoading, setApiLoading] = useState(false);
@@ -202,7 +284,7 @@ function SearchResultsContent() {
         params.append('page', '1');
         params.append('limit', '20');
 
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
         const res = await fetch(`${apiBase}/api/v1/properties?${params.toString()}`).catch(() => null);
         if (res && res.ok) {
           const json = await res.json().catch(() => null);
@@ -233,6 +315,7 @@ function SearchResultsContent() {
       propertyType: 'House/Villa',
       builtUpArea: '3,850 sqft',
       isZivaVerified: true,
+      isFeatured: true,
       img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
     },
     {
@@ -701,8 +784,6 @@ function SearchResultsContent() {
     },
   ];
 
-  const [selectedMapPinId, setSelectedMapPinId] = useState<string | null>(null);
-
   const getRenderProperties = () => {
     let list: any[] = [];
     if (purposeParam === 'PG') {
@@ -794,6 +875,7 @@ function SearchResultsContent() {
           bhk: p.bhk ? `${p.bhk} BHK` : '2 BHK',
           builtUpArea: p.builtUpArea ? `${Number(p.builtUpArea).toLocaleString()} sqft` : '1,400 sqft',
           isZivaVerified: p.isZivaVerified ?? true,
+          isFeatured: !!(p.isFeatured || (p.adminNotes && p.adminNotes.includes('[FEATURED]'))),
           img: p.photos?.[0]?.url || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80',
         };
       });
@@ -822,11 +904,26 @@ function SearchResultsContent() {
       list = list.filter((p) => (p.priceNum || 0) <= Number(maxPrice));
     }
 
-    // Apply sorting
+    // Apply sorting with Featured Boost
     if (sortOption === 'PRICE_LOW_HIGH') {
-      list.sort((a, b) => (a.priceNum || 0) - (b.priceNum || 0));
+      list.sort((a, b) => {
+        if (a.isFeatured && !b.isFeatured) return -1;
+        if (!a.isFeatured && b.isFeatured) return 1;
+        return (a.priceNum || 0) - (b.priceNum || 0);
+      });
     } else if (sortOption === 'PRICE_HIGH_LOW') {
-      list.sort((a, b) => (b.priceNum || 0) - (a.priceNum || 0));
+      list.sort((a, b) => {
+        if (a.isFeatured && !b.isFeatured) return -1;
+        if (!a.isFeatured && b.isFeatured) return 1;
+        return (b.priceNum || 0) - (a.priceNum || 0);
+      });
+    } else {
+      // RELEVANCE default: Featured first
+      list.sort((a, b) => {
+        if (a.isFeatured && !b.isFeatured) return -1;
+        if (!a.isFeatured && b.isFeatured) return 1;
+        return 0;
+      });
     }
 
     return list;
@@ -1289,7 +1386,7 @@ function SearchResultsContent() {
                     <div
                       key={prop.id}
                       onClick={() => {
-                        setSelectedMapPinId(prop.id);
+                        handleSelectMapProperty(prop);
                         if (prop.id.startsWith('proj-')) {
                           router.push('/projects/p-prestige-falcon');
                         } else {
@@ -1304,6 +1401,11 @@ function SearchResultsContent() {
                     >
                       <div className="w-28 h-24 rounded-xl overflow-hidden bg-[#f2f4f6] shrink-0 relative">
                         <img src={prop.img} alt={prop.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        {prop.isFeatured && (
+                          <span className="absolute top-1 right-1 bg-amber-400 text-amber-950 text-[7px] font-black px-1 py-0.5 rounded shadow z-10">
+                            ⭐ FEATURED
+                          </span>
+                        )}
                         {prop.isZivaVerified && (
                           <span className="absolute top-1 left-1 bg-[#e8faf4] text-[#16a373] text-[8px] font-extrabold px-1.5 py-0.5 rounded uppercase">
                             Verified
@@ -1328,62 +1430,111 @@ function SearchResultsContent() {
                 </div>
 
                 {/* Right Column: Live OpenStreetMap with Interactive Pins */}
-                <div className="lg:col-span-7 bg-[#e8eaf6] rounded-2xl overflow-hidden border border-[#cbc3d8] relative shadow-inner flex flex-col min-h-[500px]">
-                  <iframe
-                    title="Live Discovery Map"
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=77.5000%2C12.8500%2C77.7800%2C13.1000&layer=mapnik"
-                    className="w-full h-[calc(100%+38px)] border-none absolute inset-0 pointer-events-auto"
-                    loading="lazy"
-                  />
+                {(() => {
+                  const deltaLng = (360 / Math.pow(2, mapZoom)) * 0.45;
+                  const deltaLat = deltaLng * 0.65;
+                  const minLng = (mapCenter.lng - deltaLng).toFixed(5);
+                  const maxLng = (mapCenter.lng + deltaLng).toFixed(5);
+                  const minLat = (mapCenter.lat - deltaLat).toFixed(5);
+                  const maxLat = (mapCenter.lat + deltaLat).toFixed(5);
+                  const mapEmbedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${minLng}%2C${minLat}%2C${maxLng}%2C${maxLat}&layer=mapnik${
+                    userLocationMarker ? `&marker=${userLocationMarker.lat}%2C${userLocationMarker.lng}` : ''
+                  }`;
 
-                  {/* Dynamic Property Pins Overlay on Map */}
-                  <div className="absolute inset-0 p-4 pointer-events-none flex flex-col justify-between z-10">
-                    <div className="flex flex-wrap gap-2 pointer-events-auto max-w-full">
-                      {getRenderProperties().slice(0, 6).map((p) => (
+                  return (
+                    <div className="lg:col-span-7 bg-[#e8eaf6] rounded-2xl overflow-hidden border border-[#cbc3d8] relative shadow-inner flex flex-col min-h-[500px]">
+                      <iframe
+                        key={`${mapCenter.lat}-${mapCenter.lng}-${mapZoom}-${userLocationMarker?.lat || ''}`}
+                        title="Live Discovery Map"
+                        src={mapEmbedUrl}
+                        className="w-full h-[calc(100%+38px)] border-none absolute inset-0 pointer-events-auto"
+                        loading="lazy"
+                      />
+
+                      {/* Toast Notification */}
+                      {mapToast && (
+                        <div className="absolute top-4 left-4 right-18 z-30 pointer-events-none">
+                          <div className="bg-[#191c1e]/95 backdrop-blur-md text-white text-xs font-semibold px-3.5 py-2 rounded-xl shadow-xl inline-flex items-center gap-2 border border-white/10">
+                            <span>{mapToast}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Dynamic Property Pins Overlay on Map */}
+                      <div className="absolute inset-0 p-4 pointer-events-none flex flex-col justify-between z-10">
+                        <div className="flex flex-wrap gap-2 pointer-events-auto max-w-full">
+                          {getRenderProperties().slice(0, 6).map((p) => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => handleSelectMapProperty(p)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-lg transition-all flex items-center gap-1 cursor-pointer ${
+                                selectedMapPinId === p.id
+                                  ? 'bg-[#191c1e] text-white ring-2 ring-white scale-105'
+                                  : 'bg-[#5e23dc] text-white hover:bg-[#4500b4]'
+                              }`}
+                            >
+                              <span className="material-symbols-outlined text-xs">location_on</span>
+                              <span>{p.price} • {p.locality}</span>
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="self-end bg-white/95 backdrop-blur-md border border-[#cbc3d8] px-3.5 py-1.5 rounded-xl text-[11px] font-bold text-[#191c1e] shadow-md pointer-events-auto flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#16a373] animate-ping" />
+                          <span>{getRenderProperties().length} Live Properties Mapped</span>
+                        </div>
+                      </div>
+
+                      {/* Map Control Overlay (+, -, GPS) */}
+                      <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-1.5 shadow-lg flex flex-col gap-1.5 border border-[#cbc3d8] pointer-events-auto z-20">
                         <button
-                          key={p.id}
                           type="button"
-                          onClick={() => setSelectedMapPinId(p.id)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-lg transition-all flex items-center gap-1 cursor-pointer ${
-                            selectedMapPinId === p.id
-                              ? 'bg-[#191c1e] text-white ring-2 ring-white scale-105'
-                              : 'bg-[#5e23dc] text-white hover:bg-[#4500b4]'
+                          onClick={handleZoomIn}
+                          title="Zoom in (+)"
+                          className="w-8 h-8 rounded-lg hover:bg-[#ede9fe] text-[#191c1e] hover:text-[#5e23dc] flex items-center justify-center transition active:scale-90 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-base font-bold">add</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleZoomOut}
+                          title="Zoom out (-)"
+                          className="w-8 h-8 rounded-lg hover:bg-[#ede9fe] text-[#191c1e] hover:text-[#5e23dc] flex items-center justify-center transition active:scale-90 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-base font-bold">remove</span>
+                        </button>
+                        <div className="h-px bg-[#eceef0] my-0.5" />
+                        <button
+                          type="button"
+                          onClick={handleGpsLocate}
+                          title="Locate me (GPS)"
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center transition active:scale-90 cursor-pointer ${
+                            isLocating
+                              ? 'bg-[#5e23dc] text-white animate-pulse'
+                              : 'hover:bg-[#ede9fe] text-[#5e23dc]'
                           }`}
                         >
-                          <span className="material-symbols-outlined text-xs">location_on</span>
-                          <span>{p.price} • {p.locality}</span>
+                          <span className={`material-symbols-outlined text-base ${isLocating ? 'animate-spin' : ''}`}>
+                            {isLocating ? 'progress_activity' : 'gps_fixed'}
+                          </span>
                         </button>
-                      ))}
-                    </div>
+                      </div>
 
-                    <div className="self-end bg-white/95 backdrop-blur-md border border-[#cbc3d8] px-3.5 py-1.5 rounded-xl text-[11px] font-bold text-[#191c1e] shadow-md pointer-events-auto flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-[#16a373] animate-ping" />
-                      <span>{getRenderProperties().length} Live Properties Mapped</span>
+                      {/* Bottom Map Info Footer */}
+                      <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-3 shadow-lg border border-[#cbc3d8] flex justify-between items-center pointer-events-auto z-10">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[#5e23dc]">map</span>
+                          <span className="text-xs font-bold text-[#191c1e]">OpenStreetMap Area View</span>
+                          <span className="text-[10px] bg-[#f2f4f6] text-[#494455] px-2 py-0.5 rounded-full font-semibold">
+                            Zoom {mapZoom}x
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-[#7a7487] font-semibold">{getRenderProperties().length} Pins Loaded</span>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Map Control Overlay */}
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md rounded-xl p-2 shadow-md flex flex-col gap-1 border border-[#cbc3d8] pointer-events-auto z-10">
-                    <button className="w-8 h-8 rounded-lg hover:bg-[#f2f4f6] flex items-center justify-center text-[#191c1e]">
-                      <span className="material-symbols-outlined text-sm">add</span>
-                    </button>
-                    <button className="w-8 h-8 rounded-lg hover:bg-[#f2f4f6] flex items-center justify-center text-[#191c1e]">
-                      <span className="material-symbols-outlined text-sm">remove</span>
-                    </button>
-                    <button className="w-8 h-8 rounded-lg hover:bg-[#f2f4f6] flex items-center justify-center text-[#5e23dc]">
-                      <span className="material-symbols-outlined text-sm">gps_fixed</span>
-                    </button>
-                  </div>
-
-                  {/* Bottom Map Info Footer */}
-                  <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md rounded-xl p-3 shadow-lg border border-[#cbc3d8] flex justify-between items-center pointer-events-auto z-10">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[#5e23dc]">map</span>
-                      <span className="text-xs font-bold text-[#191c1e]">OpenStreetMap Area View</span>
-                    </div>
-                    <span className="text-[10px] text-[#7a7487] font-semibold">{getRenderProperties().length} Pins Loaded</span>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
@@ -1407,9 +1558,16 @@ function SearchResultsContent() {
                           alt={prop.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
+                        {/* Featured Deal Gold Badge */}
+                        {prop.isFeatured && (
+                          <span className="absolute top-3 left-3 bg-amber-400 text-amber-950 font-black text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 shadow-md uppercase tracking-wider z-10">
+                            <span className="material-symbols-outlined text-xs">star</span>
+                            Featured Deal
+                          </span>
+                        )}
                         {/* Gender Tag for PG */}
                         {prop.gender && (
-                          <div className="absolute top-3 left-3 flex flex-col gap-1">
+                          <div className={`absolute ${prop.isFeatured ? 'top-10' : 'top-3'} left-3 flex flex-col gap-1`}>
                             <span className="bg-white text-[#5e23dc] font-bold text-[11px] px-3 py-1 rounded-full shadow-md flex items-center gap-1">
                               <span className="material-symbols-outlined text-[14px]">
                                 {prop.gender === 'Boys' ? 'male' : prop.gender === 'Girls' ? 'female' : 'wc'}

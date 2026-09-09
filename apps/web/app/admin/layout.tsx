@@ -27,11 +27,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         router.push('/admin/login');
         return;
       }
+
+      if (payload.exp && payload.exp * 1000 < Date.now()) {
+        localStorage.removeItem('Ziva_access');
+        localStorage.removeItem('Ziva_refresh');
+        router.push('/admin/login?reason=expired');
+        return;
+      }
+
       setToken(accToken);
       const initials = (payload.firstName?.substring(0, 2) || 'AD').toUpperCase();
       setUserInitials(initials);
       setLoading(false);
     } catch (err) {
+      localStorage.removeItem('Ziva_access');
+      localStorage.removeItem('Ziva_refresh');
       router.push('/admin/login');
     }
   }, [router, pathname]);
@@ -70,11 +80,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ── SideNavBar ── */}
       <aside className="hidden md:flex flex-col h-full p-6 bg-[#f2f4f6] w-64 text-[#494455] shrink-0 border-r border-[#cbc3d8]">
         <div className="mb-6 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#5e23dc] text-white flex items-center justify-center font-semibold text-lg">J</div>
-          <div>
-            <h1 className="text-[16px] leading-[24px] font-semibold text-[#4500b4]">Ziva Dashboard</h1>
-            <p className="text-[14px] leading-[20px] text-[#6D7278]">Admin Console</p>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
+          </Link>
         </div>
         <button
           onClick={() => router.push('/')}

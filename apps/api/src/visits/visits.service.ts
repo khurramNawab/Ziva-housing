@@ -155,24 +155,33 @@ export class VisitsService {
   }
 
   async getMyVisits(userId: string, role: string) {
+    if (!this.prisma.isConnected) {
+      return [];
+    }
+
     const where =
       role === 'OWNER' ? { ownerId: userId } : { customerId: userId };
 
-    return this.prisma.propertyVisit.findMany({
-      where,
-      orderBy: { scheduledAt: 'asc' },
-      include: {
-        property: {
-          select: {
-            id: true,
-            title: true,
-            city: true,
-            locality: true,
-            photos: { where: { isPrimary: true }, take: 1, select: { url: true } },
+    try {
+      return await this.prisma.propertyVisit.findMany({
+        where,
+        orderBy: { scheduledAt: 'asc' },
+        include: {
+          property: {
+            select: {
+              id: true,
+              title: true,
+              city: true,
+              locality: true,
+              photos: { where: { isPrimary: true }, take: 1, select: { url: true } },
+            },
           },
         },
-      },
-    });
+      });
+    } catch (err: any) {
+      this.prisma.isConnected = false;
+      return [];
+    }
   }
 
   async completeVisit(visitId: string, userId: string) {

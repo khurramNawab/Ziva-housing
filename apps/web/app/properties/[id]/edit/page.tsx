@@ -358,8 +358,8 @@ export default function PropertyEditPage() {
       {/* Navbar Header */}
       <header className="bg-white border-b border-[#eceef0] shadow-sm h-16 flex items-center px-6 justify-between w-full sticky top-0 z-40">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-bold text-lg text-[#4500b4] tracking-tight">
-            Ziva Housing
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
           </Link>
           <span className="bg-[#5e23dc]/10 text-[#5e23dc] text-[9px] font-extrabold px-2.5 py-0.5 rounded tracking-wider uppercase">
             Property Management

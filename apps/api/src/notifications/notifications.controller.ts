@@ -17,11 +17,18 @@ export class NotificationsController {
   async getMyNotifications(
     @CurrentUser('id') userId: string,
   ) {
-    return this.prisma.notification.findMany({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-    });
+    if (!this.prisma.isDbAvailable()) {
+      return [];
+    }
+    try {
+      return await this.prisma.notification.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      });
+    } catch {
+      return [];
+    }
   }
 
   @Get('unread-count')

@@ -9,7 +9,7 @@ export default function Navbar() {
   const router = useRouter();
   const [token, setToken] = useState('');
   const [userRole, setUserRole] = useState('');
-  const [city, setCity] = useState('Detecting...');
+  const [city, setCity] = useState('Select Location');
   const [locating, setLocating] = useState(false);
   const [showLocModal, setShowLocModal] = useState(false);
   const [areaSearch, setAreaSearch] = useState('');

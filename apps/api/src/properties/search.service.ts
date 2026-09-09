@@ -203,28 +203,32 @@ export class SearchService {
       orderBy.push({ createdAt: 'desc' });
     }
 
-    try {
-      const [properties, total] = await Promise.all([
-        this.prisma.property.findMany({
-          where,
-          select: SAFE_PROPERTY_SELECT,
-          orderBy,
-          skip: (page - 1) * limit,
-          take: limit,
-        }),
-        this.prisma.property.count({ where }),
-      ]);
+    if (this.prisma.isConnected) {
+      try {
+        const [properties, total] = await Promise.all([
+          this.prisma.property.findMany({
+            where,
+            select: SAFE_PROPERTY_SELECT,
+            orderBy,
+            skip: (page - 1) * limit,
+            take: limit,
+          }),
+          this.prisma.property.count({ where }),
+        ]);
 
-      return {
-        properties,
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-        hasNext: page * limit < total,
-      };
-    } catch (err: any) {
-      this.logger.warn(`Database search unavailable (${err.message}). Returning resilient properties dataset.`);
+        return {
+          properties,
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+          hasNext: page * limit < total,
+        };
+      } catch (err: any) {
+        this.prisma.isConnected = false;
+        this.logger.warn(`Database search query failed (${err.message}). Switching to resilient dataset.`);
+      }
+    }
       
       const mockProperties = [
         {
@@ -321,7 +325,6 @@ export class SearchService {
         totalPages: 1,
         hasNext: false,
       };
-    }
   }
 
   /**

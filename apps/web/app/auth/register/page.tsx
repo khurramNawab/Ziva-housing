@@ -4,6 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+function getApiBaseUrl(): string {
+  if (typeof window !== 'undefined') return '';
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+}
+
 type Step = 'form' | 'otp';
 type Role = 'CUSTOMER' | 'OWNER' | 'AGENT' | 'SERVICE_PROVIDER';
 
@@ -15,6 +20,7 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [form, setForm] = useState({
     firstName: '', lastName: '', phone: '', email: '', password: '',
   });
@@ -23,9 +29,11 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccessMsg('');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/auth/register`, {
+      const apiBase = getApiBaseUrl();
+      const res = await fetch(`${apiBase}/api/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, role }),
@@ -33,6 +41,7 @@ export default function RegisterPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
       setStep('otp');
+      setSuccessMsg(data.message || `Verification code sent to +91 ${form.phone} and ${form.email}`);
     } catch (err: any) {
       if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
         setError('Unable to connect to server. Please ensure the app is running or try again later.');
@@ -46,77 +55,104 @@ export default function RegisterPage() {
 
   const handleVerifyOtp = async () => {
     const otpCode = otpValues.join('');
-    if (otpCode.length !== 6) return;
-    setLoading(true);
-    setError('');
-
-    // OTP Bypass check for 123456 or dev fallback
-    if (otpCode === '123456') {
-      const mockPayload = btoa(JSON.stringify({ role: role, sub: 'user-123' }));
-      const mockToken = `header.${mockPayload}.signature`;
-      localStorage.setItem('Ziva_access', mockToken);
-      localStorage.setItem('Ziva_refresh', mockToken);
-
-      if (role === 'CUSTOMER') router.push('/dashboard/customer');
-      else if (role === 'OWNER') router.push('/dashboard/owner');
-      else if (role === 'AGENT') router.push('/dashboard/agent');
-      else if (role === 'SERVICE_PROVIDER') router.push('/dashboard/provider');
-      else router.push('/dashboard/customer');
-      setLoading(false);
+    if (otpCode.length !== 6) {
+      setError('Please enter all 6 digits of your verification code.');
       return;
     }
+    setLoading(true);
+    setError('');
+    setSuccessMsg('');
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/auth/verify-otp`, {
+      const apiBase = getApiBaseUrl();
+      const cleanPhone = form.phone.replace(/\D/g, '');
+      const res = await fetch(`${apiBase}/api/v1/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: form.phone, otp: otpCode }),
+        body: JSON.stringify({
+          phone: cleanPhone,
+          email: form.email ? form.email.trim() : undefined,
+          otp: otpCode,
+        }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Invalid OTP');
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.message || 'Invalid or expired OTP code. Please check your email or phone and try again.');
+      }
 
       const accessToken = data.data?.accessToken || data.accessToken;
       const refreshToken = data.data?.refreshToken || data.refreshToken;
 
-      if (!accessToken) throw new Error(data.message || 'OTP verification succeeded but no token received');
+      if (!accessToken) {
+        throw new Error(data.message || 'OTP verification succeeded but no token received.');
+      }
 
       localStorage.setItem('Ziva_access', accessToken);
       if (refreshToken) localStorage.setItem('Ziva_refresh', refreshToken);
 
-      const payload = JSON.parse(atob(accessToken.split('.')[1] || '{}'));
-      const r = payload.role || role;
+      let payload: any = {};
+      try {
+        payload = JSON.parse(atob(accessToken.split('.')[1] || '{}'));
+      } catch {}
 
-      if (r === 'CUSTOMER') router.push('/dashboard/customer');
-      else if (r === 'OWNER') router.push('/dashboard/owner');
-      else if (r === 'AGENT') router.push('/dashboard/agent');
-      else if (r === 'SERVICE_PROVIDER') router.push('/dashboard/provider');
-      else if (r === 'ADMIN') router.push('/admin');
-      else router.push('/');
-    } catch (err: any) {
-      // Dev bypass fallback if API is offline
-      const mockPayload = btoa(JSON.stringify({ role: role, sub: 'user-123' }));
-      const mockToken = `header.${mockPayload}.signature`;
-      localStorage.setItem('Ziva_access', mockToken);
-      localStorage.setItem('Ziva_refresh', mockToken);
-
-      if (role === 'CUSTOMER') router.push('/dashboard/customer');
-      else if (role === 'OWNER') router.push('/dashboard/owner');
-      else if (role === 'AGENT') router.push('/dashboard/agent');
-      else if (role === 'SERVICE_PROVIDER') router.push('/dashboard/provider');
+      const targetRole = payload.role || role;
+      if (targetRole === 'CUSTOMER') router.push('/dashboard/customer');
+      else if (targetRole === 'OWNER') router.push('/dashboard/owner');
+      else if (targetRole === 'AGENT') router.push('/dashboard/agent');
+      else if (targetRole === 'SERVICE_PROVIDER') router.push('/dashboard/provider');
+      else if (targetRole === 'ADMIN') router.push('/admin');
       else router.push('/dashboard/customer');
+    } catch (err: any) {
+      setError(err?.message || 'OTP verification failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) return;
+    const digitsOnly = value.replace(/\D/g, '');
+    if (digitsOnly.length > 1) {
+      // Handle paste of full 6-digit code
+      const pasted = digitsOnly.slice(0, 6).split('');
+      const newOtp = [...otpValues];
+      pasted.forEach((char, idx) => {
+        if (idx < 6) newOtp[idx] = char;
+      });
+      setOtpValues(newOtp);
+      const lastIdx = Math.min(pasted.length, 5);
+      const next = document.getElementById(`otp-${lastIdx}`);
+      next?.focus();
+      return;
+    }
+
     const newValues = [...otpValues];
-    newValues[index] = value;
+    newValues[index] = digitsOnly;
     setOtpValues(newValues);
-    if (value && index < 5) {
+    if (digitsOnly && index < 5) {
       const next = document.getElementById(`otp-${index + 1}`);
       next?.focus();
+    }
+  };
+
+  const handleResendOtp = async () => {
+    setLoading(true);
+    setError('');
+    setSuccessMsg('');
+    try {
+      const apiBase = getApiBaseUrl();
+      const res = await fetch(`${apiBase}/api/v1/auth/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone.replace(/\D/g, ''), email: form.email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to resend OTP');
+      setSuccessMsg(`Fresh OTP resent successfully to +91 ${form.phone} and ${form.email}`);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to resend OTP');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -132,9 +168,8 @@ export default function RegisterPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#191919]/90 via-[#191919]/40 to-transparent" />
 
           <div className="relative z-10">
-            <Link href="/" className="font-bold text-2xl text-white tracking-tight flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-[#5e23dc] flex items-center justify-center text-base font-bold text-white">J</div>
-              Ziva Housing
+            <Link href="/" className="flex items-center gap-2">
+              <img src="/logo.png" alt="Ziva Housing Logo" className="h-10 w-auto object-contain" />
             </Link>
           </div>
 
@@ -150,32 +185,32 @@ export default function RegisterPage() {
         <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col bg-white justify-center">
           {/* Mobile Brand Header */}
           <div className="md:hidden mb-4 text-center">
-            <Link href="/" className="font-bold text-xl text-[#4500b4] tracking-tight inline-flex items-center gap-2">
-              <span className="w-7 h-7 rounded-full bg-[#5e23dc] text-white flex items-center justify-center text-xs">J</span>
-              Ziva Housing
+            <Link href="/" className="inline-flex items-center gap-2">
+              <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
             </Link>
           </div>
 
           <div className="mb-4">
             <h2 className="text-[24px] leading-[32px] font-bold text-[#191c1e]">Create Account</h2>
             <p className="text-[13px] leading-[18px] text-[#494455] mt-0.5">
-              {step === 'form' ? 'Sign up to discover verified properties & services.' : `Enter 6-digit OTP sent to +91 ${form.phone}`}
+              {step === 'form' ? 'Sign up to discover verified properties & services.' : `Enter 6-digit OTP sent to +91 ${form.phone} and ${form.email}`}
             </p>
           </div>
 
-          {/* Tab Toggle */}
+          {/* Tab Toggle as direct Links */}
           <div className="flex bg-[#f2f4f6] rounded-xl p-1 mb-4">
-            <button
-              onClick={() => router.push('/auth/login')}
-              className="flex-1 py-1.5 text-[12px] leading-[16px] tracking-[0.05em] font-semibold text-[#494455] hover:text-[#4500b4] transition-all rounded-lg"
+            <Link
+              href="/auth/login"
+              className="flex-1 py-2 text-center text-[12px] leading-[16px] tracking-[0.05em] font-semibold text-[#494455] hover:text-[#4500b4] transition-all rounded-lg"
             >
               Login
-            </button>
-            <button
-              className="flex-1 py-1.5 text-[12px] leading-[16px] tracking-[0.05em] font-semibold bg-white text-[#4500b4] shadow-sm rounded-lg transition-all"
+            </Link>
+            <Link
+              href="/auth/register"
+              className="flex-1 py-2 text-center text-[12px] leading-[16px] tracking-[0.05em] font-semibold bg-white text-[#4500b4] shadow-sm rounded-lg transition-all"
             >
               Sign Up
-            </button>
+            </Link>
           </div>
 
           {step === 'form' ? (
@@ -304,7 +339,16 @@ export default function RegisterPage() {
           ) : (
             <div className="space-y-4">
               {error && (
-                <div className="bg-[#ffdad6] text-[#9300a] p-2.5 rounded-lg text-xs font-semibold">{error}</div>
+                <div className="bg-[#ffdad6] text-[#93000a] p-3 rounded-xl text-xs font-semibold border border-[#ffb4ab]">
+                  {error}
+                </div>
+              )}
+
+              {successMsg && (
+                <div className="bg-[#d7f9e5] text-[#006e3a] p-3 rounded-xl text-xs font-semibold border border-[#9df2c2] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-base">check_circle</span>
+                  <span>{successMsg}</span>
+                </div>
               )}
 
               <div className="flex gap-2 justify-center py-2">
@@ -335,9 +379,14 @@ export default function RegisterPage() {
                 {loading ? 'Verifying...' : 'Verify OTP & Complete Registration'}
               </button>
 
-              <button onClick={() => setStep('form')} className="w-full text-center text-xs font-bold text-[#5e23dc] hover:underline">
-                Go back to edit details
-              </button>
+              <div className="flex justify-between items-center text-xs pt-1">
+                <button type="button" onClick={handleResendOtp} disabled={loading} className="text-[#5e23dc] font-bold hover:underline">
+                  Resend OTP Code via Email/SMS
+                </button>
+                <button type="button" onClick={() => setStep('form')} className="text-[#7a7487] font-semibold hover:underline">
+                  Edit details
+                </button>
+              </div>
             </div>
           )}
         </div>

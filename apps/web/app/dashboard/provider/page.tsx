@@ -98,8 +98,8 @@ export default function VendorDashboard() {
         setProviderProfile(profJson.data || profJson);
       }
 
-      // 2. Fetch bookings
-      const res = await fetch(`${apiBase}/api/v1/services/bookings/provider`, {
+      // 2. Fetch bookings (role-aware — returns provider's assigned bookings)
+      const res = await fetch(`${apiBase}/api/v1/services/bookings/my`, {
         headers: { Authorization: `Bearer ${accToken}` },
       });
       if (res.ok) {
@@ -121,8 +121,9 @@ export default function VendorDashboard() {
     setResubmitSuccess('');
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      // Must use PATCH — backend endpoint is @Patch('provider/resubmit')
       const res = await fetch(`${apiBase}/api/v1/services/provider/resubmit`, {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ notes: 'Updated verification documents re-uploaded by vendor.' }),
       });
@@ -146,9 +147,11 @@ export default function VendorDashboard() {
   const handleAcceptJob = async (bookingId: string) => {
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${apiBase}/api/v1/services/bookings/${bookingId}/accept`, {
+      // Correct endpoint: PATCH /bookings/:id/status with body {status:'ASSIGNED'}
+      const res = await fetch(`${apiBase}/api/v1/services/bookings/${bookingId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status: 'ASSIGNED' }),
       });
       if (res.ok) fetchProviderData(token);
     } catch (err) {
@@ -184,16 +187,11 @@ export default function VendorDashboard() {
       <nav className="hidden md:flex flex-col h-full w-64 bg-white border-r border-[#eceef0] shrink-0 z-10 shadow-sm">
         {/* Pinned header */}
         <div className="p-6 pb-4 flex-shrink-0">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#5e23dc] flex items-center justify-center overflow-hidden shadow-sm">
-              <span className="text-white font-bold text-sm">
-                {currentUser?.firstName?.[0] || 'V'}
-              </span>
-            </div>
-            <div>
-              <h1 className="text-[16px] font-bold text-[#4500b4] leading-tight">Ziva Dashboard</h1>
-              <p className="text-[12px] text-[#494455]">Vendor Hub</p>
-            </div>
+          <div className="mb-5 flex flex-col gap-1">
+            <Link href="/" className="inline-block">
+              <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
+            </Link>
+            <p className="text-[12px] text-[#494455] font-medium">Vendor & Service Hub</p>
           </div>
 
           <Link
@@ -459,7 +457,7 @@ export default function VendorDashboard() {
                   Incoming Requests
                 </h3>
                 <span className="bg-[#ffdad6] text-[#ba1a1a] px-3 py-1 rounded-full text-[12px] font-bold border border-[#ba1a1a]/20">
-                  {openJobs.length || 2} Pending
+                  {openJobs.length} Pending
                 </span>
               </div>
 
@@ -515,21 +513,23 @@ export default function VendorDashboard() {
           {/* Right Column (3 cols): Earnings & Stats */}
           <div className="md:col-span-3 flex flex-col gap-4">
             <div className="bg-white rounded-xl p-5 border border-[#eceef0] flex flex-col shadow-sm">
-              <h3 className="text-[11px] font-bold text-[#494455] uppercase tracking-wider mb-3">Today&apos;s Earnings</h3>
-              <div className="text-[36px] font-bold text-[#191c1e] leading-none mb-1">₹6,800</div>
-              <div className="text-[13px] text-[#16a373] flex items-center gap-1 mb-4 font-semibold">
-                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>trending_up</span>
-                +15% vs yesterday
+              <h3 className="text-[11px] font-bold text-[#494455] uppercase tracking-wider mb-3">Total Jobs Done</h3>
+              <div className="text-[36px] font-bold text-[#191c1e] leading-none mb-1">{providerProfile?.totalJobs ?? 0}</div>
+              <div className="text-[13px] text-[#494455] flex items-center gap-1 mb-4 font-semibold">
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>work_history</span>
+                {isFullyVerified ? 'Active & Verified' : 'Pending Verification'}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white rounded-xl p-4 border border-[#eceef0] shadow-sm">
-                <div className="text-[22px] font-bold text-[#191c1e]">{providerProfile?.totalJobs || 47}</div>
-                <div className="text-[11px] text-[#494455] font-semibold">Jobs Done</div>
+                <div className="text-[22px] font-bold text-[#191c1e]">{activeJobs.length}</div>
+                <div className="text-[11px] text-[#494455] font-semibold">Active Jobs</div>
               </div>
               <div className="bg-white rounded-xl p-4 border border-[#eceef0] shadow-sm">
-                <div className="text-[22px] font-bold text-[#16a373]">{providerProfile?.rating?.toFixed(1) || '4.8'}</div>
+                <div className="text-[22px] font-bold text-[#16a373]">
+                  {providerProfile?.rating != null ? providerProfile.rating.toFixed(1) : '—'}
+                </div>
                 <div className="text-[11px] text-[#494455] font-semibold">⭐ Rating</div>
               </div>
             </div>

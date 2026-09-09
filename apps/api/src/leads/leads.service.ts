@@ -121,69 +121,78 @@ export class LeadsService {
 
   // ─── Get Leads (customer or owner view) ───────────────────────────────────
   async findAll(userId: string, role: string, page = 1, limit = 20) {
+    if (!this.prisma.isConnected) {
+      return { leads: [], total: 0, page, limit, totalPages: 0 };
+    }
+
     const where =
       role === 'OWNER'
         ? { ownerId: userId }
         : { customerId: userId };
 
-    const [leads, total] = await Promise.all([
-      this.prisma.lead.findMany({
-        where,
-        orderBy: { updatedAt: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-        select: {
-          id: true,
-          status: true,
-          customerId: true,
-          createdAt: true,
-          updatedAt: true,
-          property: {
-            select: {
-              id: true,
-              title: true,
-              city: true,
-              locality: true,
-              purpose: true,
-              photos: {
-                where: { isPrimary: true },
-                take: 1,
-                select: { url: true, thumbnailUrl: true },
-              },
-              // NEVER expose owner contact info
-              ownerProfile: {
-                select: {
-                  user: {
-                    select: { id: true, firstName: true },
+    try {
+      const [leads, total] = await Promise.all([
+        this.prisma.lead.findMany({
+          where,
+          orderBy: { updatedAt: 'desc' },
+          skip: (page - 1) * limit,
+          take: limit,
+          select: {
+            id: true,
+            status: true,
+            customerId: true,
+            createdAt: true,
+            updatedAt: true,
+            property: {
+              select: {
+                id: true,
+                title: true,
+                city: true,
+                locality: true,
+                purpose: true,
+                photos: {
+                  where: { isPrimary: true },
+                  take: 1,
+                  select: { url: true, thumbnailUrl: true },
+                },
+                // NEVER expose owner contact info
+                ownerProfile: {
+                  select: {
+                    user: {
+                      select: { id: true, firstName: true },
+                    },
                   },
                 },
               },
             },
-          },
-          customer: {
-            select: {
-              id: true,
-              firstName: true,
+            customer: {
+              select: {
+                id: true,
+                firstName: true,
+              },
             },
+            messages: {
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+              select: { contentSanitized: true, createdAt: true },
+            },
+            _count: { select: { messages: true } },
           },
-          messages: {
-            orderBy: { createdAt: 'desc' },
-            take: 1,
-            select: { contentSanitized: true, createdAt: true },
-          },
-          _count: { select: { messages: true } },
-        },
-      }),
-      this.prisma.lead.count({ where }),
-    ]);
+        }),
+        this.prisma.lead.count({ where }),
+      ]);
 
-    return {
-      leads: leads.map((l) => this.sanitizeLeadResponse(l, userId, role)),
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    };
+      return {
+        leads: leads.map((l) => this.sanitizeLeadResponse(l, userId, role)),
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      };
+    } catch (err: any) {
+      this.prisma.isConnected = false;
+      return { leads: [], total: 0, page, limit, totalPages: 0 };
+    }
   }
 
   // ─── Get Lead Detail ───────────────────────────────────────────────────────
