@@ -1,6 +1,7 @@
 {
   "name": "Ziva-housing",
   "private": true,
+  "packageManager": "npm@11.9.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
