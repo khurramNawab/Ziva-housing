@@ -163,6 +163,60 @@ export class ServicesService {
     return this.inMemoryCategories;
   }
 
+  // ─── GET /categories/:id/menu — Grouped Response ───────────────────────
+  async getCategoryMenu(categoryId: string) {
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const category = await this.prisma.serviceCategory.findFirst({
+          where: { OR: [{ id: categoryId }, { slug: categoryId }], isActive: true },
+          include: {
+            serviceGroups: {
+              orderBy: { displayOrder: 'asc' },
+              include: {
+                subOptions: { where: { isActive: true }, orderBy: { displayOrder: 'asc' } },
+              },
+            },
+            services: {
+              where: { isActive: true },
+              orderBy: { order: 'asc' },
+              include: {
+                subOptions: { where: { isActive: true }, orderBy: { displayOrder: 'asc' } },
+              },
+            },
+          },
+        });
+
+        if (category) {
+          // Build grouped response: if serviceGroups exist, group services under them
+          const groups =
+            category.serviceGroups.length > 0
+              ? category.serviceGroups.map((g) => ({
+                  groupName: g.groupName,
+                  services: category.services.filter((s) =>
+                    s.subOptions.some((so) => so.groupId === g.id),
+                  ),
+                }))
+              : [{ groupName: category.name, services: category.services }];
+
+          return { category, groups };
+        }
+      } catch (err: any) {
+        this.logger.warn(`Remote DB error in getCategoryMenu: ${err?.message}`);
+      }
+    }
+
+    // In-memory fallback
+    const cat = this.inMemoryCategories.find(
+      (c) => c.id === categoryId || c.slug === categoryId,
+    );
+    if (!cat) return null;
+    const services = this.inMemoryServices.filter((s) => s.categoryId === cat.id);
+    return {
+      category: cat,
+      groups: [{ groupName: cat.name, services }],
+    };
+  }
+
   async getServices(categorySlug?: string) {
     if (this.prisma.isDbAvailable()) {
       try {

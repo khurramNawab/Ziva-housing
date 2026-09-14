@@ -17,6 +17,13 @@ export class ServicesController {
   }
 
   @Public()
+  @Get('categories/:id/menu')
+  @ApiOperation({ summary: 'Get grouped service menu for a category (public)' })
+  getCategoryMenu(@Param('id') categoryId: string) {
+    return this.servicesService.getCategoryMenu(categoryId);
+  }
+
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get services list (public, optional filter by category slug)' })
   getServices(@Query('category') categorySlug?: string) {

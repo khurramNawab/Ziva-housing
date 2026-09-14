@@ -22,6 +22,12 @@ import { OffersModule } from './offers/offers.module';
 import { AssistanceModule } from './assistance/assistance.module';
 import { CommonModule } from './common/common.module';
 import { RolesGuard } from './common/guards/roles.guard';
+import { BookingsModule } from './bookings/bookings.module';
+import { AgentsModule } from './agents/agents.module';
+import { ProvidersModule } from './providers/providers.module';
+import { ProjectsModule } from './projects/projects.module';
+import { FraudModule } from './fraud/fraud.module';
+import { PayoutsModule } from './payouts/payouts.module';
 
 @Module({
   imports: [
@@ -51,6 +57,12 @@ import { RolesGuard } from './common/guards/roles.guard';
     ServicesModule,
     OffersModule,
     AssistanceModule,
+    BookingsModule,
+    AgentsModule,
+    ProvidersModule,
+    ProjectsModule,
+    FraudModule,
+    PayoutsModule,
   ],
   providers: [
     {
