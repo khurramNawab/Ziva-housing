@@ -1,9 +1,13 @@
 import { Injectable, BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class OffersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   /**
    * Submit a new purchase/rent offer or counter-offer
@@ -95,6 +99,18 @@ export class OffersService {
       },
     });
 
+    // 6. Notify the counter-party
+    const recipientId = userId === lead.customerId ? lead.ownerId : lead.customerId;
+    if (recipientId) {
+      this.notificationsService.sendNotification({
+        userId: recipientId,
+        type: 'OFFER_RECEIVED',
+        title: `New ${label} Received: ₹ ${Number(offeredPrice).toLocaleString('en-IN')}`,
+        body: `A new ${label.toLowerCase()} of ₹ ${Number(offeredPrice).toLocaleString('en-IN')} was submitted for your property discussion.`,
+        payload: { leadId: lead.id, offerId: offer.id, amount: offeredPrice },
+      }).catch(() => {});
+    }
+
     return offer;
   }
 
@@ -115,6 +131,67 @@ export class OffersService {
       where: { leadId },
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  /**
+   * Get full negotiation timeline and history for an offer
+   */
+  async getOfferHistory(userId: string, offerId: string) {
+    const offer = await this.prisma.offer.findUnique({
+      where: { id: offerId },
+      include: { lead: true },
+    });
+
+    if (!offer) throw new NotFoundException('Offer not found');
+    if (offer.lead.customerId !== userId && offer.lead.ownerId !== userId) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    return this.prisma.offer.findMany({
+      where: { leadId: offer.leadId },
+      orderBy: { createdAt: 'asc' },
+    });
+  }
+
+  /**
+   * Handle offer actions: ACCEPT, REJECT, or COUNTER
+   */
+  async handleOfferAction(
+    userId: string,
+    role: string,
+    offerId: string,
+    dto: { action: 'ACCEPT' | 'REJECT' | 'COUNTER'; counterAmount?: number; message?: string; validUntil?: string },
+  ) {
+    if (dto.action === 'ACCEPT') {
+      return this.acceptOffer(userId, offerId);
+    }
+    if (dto.action === 'REJECT') {
+      return this.rejectOffer(userId, offerId);
+    }
+    if (dto.action === 'COUNTER') {
+      if (!dto.counterAmount || dto.counterAmount <= 0) {
+        throw new BadRequestException('Counter amount must be a positive number');
+      }
+      const parent = await this.prisma.offer.findUnique({
+        where: { id: offerId },
+        include: { lead: true },
+      });
+      if (!parent) throw new NotFoundException('Offer not found');
+      if (parent.lead.customerId !== userId && parent.lead.ownerId !== userId) {
+        throw new ForbiddenException('Access denied');
+      }
+
+      const validUntil = dto.validUntil || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+      return this.createOffer(userId, role, {
+        leadId: parent.leadId,
+        offerAmount: dto.counterAmount,
+        validUntil,
+        message: dto.message,
+        parentOfferId: offerId,
+      });
+    }
+
+    throw new BadRequestException('Invalid offer action');
   }
 
   /**
@@ -139,6 +216,7 @@ export class OffersService {
       data: {
         isAccepted: true,
         isRejected: false,
+        status: 'ACCEPTED',
       },
     });
 
@@ -152,6 +230,7 @@ export class OffersService {
       data: {
         isRejected: true,
         isAccepted: false,
+        status: 'REJECTED',
       },
     });
 
@@ -171,6 +250,18 @@ export class OffersService {
         contentSanitized: msgText,
       },
     });
+
+    // Notify the other party
+    const recipientId = userId === offer.lead.customerId ? offer.lead.ownerId : offer.lead.customerId;
+    if (recipientId) {
+      this.notificationsService.sendNotification({
+        userId: recipientId,
+        type: 'OFFER_ACCEPTED',
+        title: 'Offer Accepted! 🎉',
+        body: `Your offer of ₹ ${Number(offer.offerAmount).toLocaleString('en-IN')} has been accepted! You can now proceed to booking.`,
+        payload: { leadId: offer.leadId, offerId },
+      }).catch(() => {});
+    }
 
     return updatedOffer;
   }
@@ -194,6 +285,7 @@ export class OffersService {
       data: {
         isRejected: true,
         isAccepted: false,
+        status: 'REJECTED',
       },
     });
 
@@ -207,6 +299,18 @@ export class OffersService {
         contentSanitized: msgText,
       },
     });
+
+    // Notify the other party
+    const recipientId = userId === offer.lead.customerId ? offer.lead.ownerId : offer.lead.customerId;
+    if (recipientId) {
+      this.notificationsService.sendNotification({
+        userId: recipientId,
+        type: 'OFFER_REJECTED',
+        title: 'Offer Rejected',
+        body: `The offer of ₹ ${Number(offer.offerAmount).toLocaleString('en-IN')} was declined. You can submit a revised counter-offer.`,
+        payload: { leadId: offer.leadId, offerId },
+      }).catch(() => {});
+    }
 
     return updatedOffer;
   }

@@ -175,7 +175,7 @@ export class BookingsService {
 
   /**
    * PATCH /bookings/:id/confirm
-   * Confirm booking after successful payment (called from webhook or manual trigger)
+   * Confirm booking after verified payment success (called from webhook or seller after payment)
    */
   async confirmBooking(userId: string, id: string) {
     const booking = await this.prisma.propertyBooking.findUnique({ where: { id } });
@@ -185,6 +185,23 @@ export class BookingsService {
     }
     if (booking.status !== 'PENDING_PAYMENT') {
       throw new BadRequestException(`Booking is in ${booking.status} state, cannot confirm`);
+    }
+
+    // MANDATORY SECURITY GATE: Verify payment transaction actually succeeded
+    if (!booking.transactionId) {
+      throw new BadRequestException(
+        'Cannot confirm booking: No payment transaction record is linked to this booking.',
+      );
+    }
+
+    const txn = await this.prisma.transaction.findUnique({
+      where: { id: booking.transactionId },
+    });
+
+    if (!txn || txn.status !== 'SUCCESS') {
+      throw new BadRequestException(
+        'Cannot confirm booking: Payment transaction has not been completed successfully or is pending gateway verification.',
+      );
     }
 
     const updated = await this.prisma.propertyBooking.update({
@@ -197,7 +214,7 @@ export class BookingsService {
       userId: booking.buyerId,
       type: 'BOOKING_CONFIRMED',
       title: 'Booking Confirmed! 🎉',
-      body: `Your booking (${booking.bookingRef}) has been confirmed by the seller.`,
+      body: `Your booking (${booking.bookingRef}) has been confirmed. Token payment verified.`,
     }).catch(() => {});
 
     return updated;

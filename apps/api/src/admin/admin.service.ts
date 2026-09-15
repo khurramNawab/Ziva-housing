@@ -1067,7 +1067,11 @@ export class AdminService {
           },
           select: {
             id: true, firstName: true, lastName: true, phone: true, email: true, createdAt: true,
-            serviceProviderProfile: true,
+            serviceProviderProfile: {
+              include: {
+                verificationDocs: { orderBy: { submittedAt: 'desc' } },
+              },
+            },
           },
           orderBy: { createdAt: 'asc' },
         });
@@ -1092,7 +1096,11 @@ export class AdminService {
           },
           select: {
             id: true, firstName: true, lastName: true, phone: true, email: true, createdAt: true,
-            serviceProviderProfile: true,
+            serviceProviderProfile: {
+              include: {
+                verificationDocs: { orderBy: { submittedAt: 'desc' } },
+              },
+            },
           },
           orderBy: { createdAt: 'asc' },
         });
@@ -1244,6 +1252,61 @@ export class AdminService {
 
     await this.logAction(adminId, action as any, 'ServiceProviderProfile', inMem.serviceProviderProfile.id, {}, inMem.serviceProviderProfile);
     return { success: true, profile: inMem.serviceProviderProfile };
+  }
+
+  async reviewKycDocument(
+    adminId: string,
+    docId: string,
+    status: 'APPROVED' | 'VERIFIED' | 'REJECTED',
+    rejectionReason?: string,
+  ) {
+    await this.assertAdmin(adminId);
+    const targetStatus = status === 'REJECTED' ? 'REJECTED' : 'APPROVED';
+
+    if (this.prisma.isDbAvailable()) {
+      const doc = await this.prisma.providerVerificationDocument.findUnique({
+        where: { id: docId },
+        include: { provider: { include: { user: true } } },
+      });
+      if (!doc) throw new NotFoundException('Verification document not found');
+
+      const updated = await this.prisma.providerVerificationDocument.update({
+        where: { id: docId },
+        data: {
+          status: targetStatus as any,
+          reviewerId: adminId,
+          reviewerNotes: rejectionReason || (targetStatus === 'APPROVED' ? 'Approved by Admin' : null),
+          reviewedAt: new Date(),
+        },
+      });
+
+      await this.logAction(
+        adminId,
+        targetStatus === 'APPROVED' ? 'APPROVE_KYC' : 'REJECT_KYC',
+        'ProviderVerificationDocument',
+        docId,
+        { status: doc.status },
+        { status: targetStatus, rejectionReason },
+      );
+
+      // Check if all docs for this provider are approved
+      if (targetStatus === 'APPROVED') {
+        const allDocs = await this.prisma.providerVerificationDocument.findMany({
+          where: { providerId: doc.providerId },
+        });
+        const allVerified = allDocs.length > 0 && allDocs.every((d) => d.status === 'APPROVED');
+        if (allVerified) {
+          await this.prisma.serviceProviderProfile.update({
+            where: { id: doc.providerId },
+            data: { isVerified: true, verificationStatus: 'APPROVED' },
+          });
+        }
+      }
+
+      return updated;
+    }
+
+    return { id: docId, status: targetStatus, reviewedAt: new Date(), reviewerNotes: rejectionReason };
   }
 
   async createVendor(

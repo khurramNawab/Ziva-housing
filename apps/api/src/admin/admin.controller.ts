@@ -255,6 +255,16 @@ export class AdminController {
     return this.adminService.vendorBackgroundCheckAction(adminId, vendorUserId, body.status, body.notes);
   }
 
+  @Post('vendors/documents/:docId/review')
+  @ApiOperation({ summary: 'Review/verify individual vendor KYC document (Admin only)' })
+  reviewVendorDocument(
+    @CurrentUser('id') adminId: string,
+    @Param('docId') docId: string,
+    @Body() body: { status: 'APPROVED' | 'VERIFIED' | 'REJECTED'; rejectionReason?: string },
+  ) {
+    return this.adminService.reviewKycDocument(adminId, docId, body.status, body.rejectionReason);
+  }
+
   @Post('vendors/create')
   @ApiOperation({ summary: 'Create a new vendor user + profile from admin panel (Admin only)' })
   createVendor(

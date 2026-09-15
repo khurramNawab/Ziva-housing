@@ -10,6 +10,7 @@ import { UpdatePropertyDto } from './dto/update-property.dto';
 import { PropertySearchDto } from './dto/property-search.dto';
 import { Prisma } from '@prisma/client';
 import { FraudDetectorService } from '../common/services/fraud-detector.service';
+import { FraudService } from '../fraud/fraud.service';
 
 // CRITICAL: This selector is used in ALL property list/detail responses.
 // It NEVER includes owner phone, email, whatsapp, or any contact info.
@@ -79,6 +80,7 @@ export class PropertiesService {
   constructor(
     private prisma: PrismaService,
     private fraudDetector: FraudDetectorService,
+    private fraudService: FraudService,
   ) { }
 
   // ─── Create / Update Draft (Wizard) ───────────────────────────────────────
@@ -173,7 +175,8 @@ export class PropertiesService {
       data: { totalProperties: { increment: 1 } },
     });
 
-    // Run fraud & duplicate checks asynchronously
+    // Run comprehensive fraud & duplicate checks asynchronously
+    this.fraudService.checkProperty(property.id).catch(() => { });
     this.fraudDetector.checkDuplicateListing(property.id).catch(() => { });
     this.fraudDetector.checkPriceOutlier(property.id).catch(() => { });
 
@@ -191,11 +194,16 @@ export class PropertiesService {
       throw new BadRequestException('At least 5 photos are required to submit the property for review.');
     }
 
-    return this.prisma.property.update({
+    const updated = await this.prisma.property.update({
       where: { id: propertyId },
       data: { status: 'PENDING_REVIEW' },
       select: { id: true, status: true },
     });
+
+    // Re-run fraud checks upon submission
+    this.fraudService.checkProperty(propertyId).catch(() => { });
+
+    return updated;
   }
 
   // ─── Search & Filter ───────────────────────────────────────────────────────

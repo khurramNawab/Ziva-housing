@@ -1,15 +1,25 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { PaymentsService } from '../payments/payments.service';
 
 @Injectable()
-export class PayoutsService {
+export class PayoutsService implements OnModuleInit {
   private readonly logger = new Logger(PayoutsService.name);
 
   constructor(
     private prisma: PrismaService,
     private notifications: NotificationsService,
+    private payments: PaymentsService,
   ) {}
+
+  async onModuleInit() {
+    if (this.prisma.isDbAvailable()) {
+      await this.seedPremiumPlans().catch((err) => {
+        this.logger.warn(`Could not seed premium plans on init: ${err?.message}`);
+      });
+    }
+  }
 
   /**
    * GET /payouts/my/earnings
@@ -110,7 +120,7 @@ export class PayoutsService {
 
   /**
    * POST /premium/subscribe
-   * Subscribe a property to a premium plan
+   * Subscribe a property to a premium plan via payment gateway
    */
   async subscribePropertyToPremium(
     userId: string,
@@ -131,25 +141,34 @@ export class PayoutsService {
       throw new NotFoundException('Property not found for this user');
     }
 
-    // Deactivate any existing premium
-    await this.prisma.propertyPremium.updateMany({
-      where: { propertyId: dto.propertyId, isActive: true },
-      data: { isActive: false },
-    });
+    // 1. Create Razorpay Payment Order via PaymentsService
+    const order = await this.payments.createPremiumOrder(
+      userId,
+      dto.propertyId,
+      dto.planId,
+      Number(plan.price),
+    );
 
+    // 2. Create pending PropertyPremium entry (activated upon webhook payment confirmation)
     const startsAt = new Date();
     const expiresAt = new Date(Date.now() + plan.durationDays * 24 * 60 * 60 * 1000);
 
-    return this.prisma.propertyPremium.create({
+    const premium = await this.prisma.propertyPremium.create({
       data: {
         propertyId: dto.propertyId,
         planId: dto.planId,
         userId,
         startsAt,
         expiresAt,
-        isActive: true,
+        isActive: false, // Activated only upon verified gateway payment
+        transactionId: order.transactionId,
       },
     });
+
+    return {
+      premium,
+      paymentOrder: order,
+    };
   }
 
   /**

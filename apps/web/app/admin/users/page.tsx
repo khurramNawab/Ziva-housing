@@ -218,6 +218,29 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handleReviewDoc = async (docId: string, status: 'APPROVED' | 'VERIFIED' | 'REJECTED') => {
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const reason = status === 'REJECTED' ? prompt('Enter rejection reason for this document:') : undefined;
+      if (status === 'REJECTED' && !reason) return;
+
+      const res = await fetch(`${apiBase}/api/v1/admin/vendors/documents/${docId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status, rejectionReason: reason }),
+      });
+      if (res.ok) {
+        alert(`Document ${status === 'REJECTED' ? 'Rejected' : 'Approved'} successfully.`);
+        fetchData(token, userPage);
+      } else {
+        const errJson = await res.json().catch(() => ({}));
+        alert(errJson.message || 'Failed to review document.');
+      }
+    } catch (err: any) {
+      alert(`Error reviewing document: ${err.message || 'Network error'}`);
+    }
+  };
+
   const handleVendorSuspend = async (vendorUserId: string) => {
     if (!confirm('Are you sure you want to suspend / revoke approval for this vendor?')) return;
     try {
@@ -541,31 +564,78 @@ export default function AdminUsersPage() {
                               </div>
                             </div>
 
-                            {/* KYC Document Preview Buttons */}
+                            {/* KYC Document Preview & Granular Review */}
                             <div className="bg-white p-2.5 rounded-lg border border-[#eceef0] space-y-2">
                               <span className="text-[9px] font-bold text-[#7a7487] uppercase tracking-wider block">Uploaded KYC Proofs:</span>
-                              <div className="flex gap-2 flex-wrap">
-                                {prof.idProofUrl ? (
-                                  <button
-                                    onClick={() => setPreviewDoc({ url: prof.idProofUrl, title: `ID Proof — ${vendor.firstName}` })}
-                                    className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
-                                  >
-                                    <span className="material-symbols-outlined text-xs">visibility</span> View ID Proof
-                                  </button>
-                                ) : (
-                                  <span className="text-[9px] text-gray-400 italic">No ID proof uploaded</span>
-                                )}
-                                {prof.addressProofUrl ? (
-                                  <button
-                                    onClick={() => setPreviewDoc({ url: prof.addressProofUrl, title: `Address Proof — ${vendor.firstName}` })}
-                                    className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
-                                  >
-                                    <span className="material-symbols-outlined text-xs">visibility</span> View Address Proof
-                                  </button>
-                                ) : (
-                                  <span className="text-[9px] text-gray-400 italic">No address proof uploaded</span>
-                                )}
-                              </div>
+                              {Array.isArray(prof.verificationDocs) && prof.verificationDocs.length > 0 ? (
+                                <div className="space-y-1.5">
+                                  {prof.verificationDocs.map((doc: any) => (
+                                    <div key={doc.id} className="flex items-center justify-between bg-[#f8f9fb] p-1.5 rounded-lg border border-[#eceef0] text-[10px]">
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-bold text-[#191c1e]">{doc.docType.replace(/_/g, ' ')}</span>
+                                        <span className={`px-1.5 py-0.2 text-[8px] font-extrabold rounded uppercase ${
+                                          doc.status === 'APPROVED' || doc.status === 'VERIFIED' ? 'bg-[#e8faf4] text-[#16a373]' :
+                                          doc.status === 'REJECTED' ? 'bg-red-50 text-red-600' : 'bg-amber-100 text-amber-800'
+                                        }`}>
+                                          {doc.status}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1.5">
+                                        <button
+                                          type="button"
+                                          onClick={() => setPreviewDoc({ url: doc.fileUrl, title: `${doc.docType.replace(/_/g, ' ')} — ${vendor.firstName}` })}
+                                          className="text-[#4500b4] hover:underline font-bold text-[9px] flex items-center gap-0.5"
+                                        >
+                                          <span className="material-symbols-outlined text-xs">visibility</span> View
+                                        </button>
+                                        {doc.status !== 'APPROVED' && doc.status !== 'VERIFIED' && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleReviewDoc(doc.id, 'APPROVED')}
+                                            className="bg-[#e8faf4] text-[#16a373] hover:bg-[#16a373] hover:text-white px-1.5 py-0.5 rounded text-[8px] font-bold transition"
+                                            title="Approve Document"
+                                          >
+                                            ✓
+                                          </button>
+                                        )}
+                                        {doc.status !== 'REJECTED' && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleReviewDoc(doc.id, 'REJECTED')}
+                                            className="bg-red-50 text-red-600 hover:bg-red-600 hover:text-white px-1.5 py-0.5 rounded text-[8px] font-bold transition"
+                                            title="Reject Document"
+                                          >
+                                            ✕
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="flex gap-2 flex-wrap">
+                                  {prof.idProofUrl ? (
+                                    <button
+                                      onClick={() => setPreviewDoc({ url: prof.idProofUrl, title: `ID Proof — ${vendor.firstName}` })}
+                                      className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
+                                    >
+                                      <span className="material-symbols-outlined text-xs">visibility</span> View ID Proof
+                                    </button>
+                                  ) : (
+                                    <span className="text-[9px] text-gray-400 italic">No ID proof uploaded</span>
+                                  )}
+                                  {prof.addressProofUrl ? (
+                                    <button
+                                      onClick={() => setPreviewDoc({ url: prof.addressProofUrl, title: `Address Proof — ${vendor.firstName}` })}
+                                      className="bg-[#e8ddff] text-[#4500b4] hover:bg-[#5e23dc] hover:text-white px-2.5 py-1 rounded text-[10px] font-bold transition flex items-center gap-1"
+                                    >
+                                      <span className="material-symbols-outlined text-xs">visibility</span> View Address Proof
+                                    </button>
+                                  ) : (
+                                    <span className="text-[9px] text-gray-400 italic">No address proof uploaded</span>
+                                  )}
+                                </div>
+                              )}
                             </div>
 
                             {/* Admin note input */}

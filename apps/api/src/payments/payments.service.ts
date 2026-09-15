@@ -99,6 +99,44 @@ export class PaymentsService {
     };
   }
 
+  // ─── Create Premium Listing Order ─────────────────────────────────────────
+  async createPremiumOrder(
+    userId: string,
+    propertyId: string,
+    planId: string,
+    amount: number,
+  ) {
+    const txnId = await this.generateTransactionId();
+
+    let gatewayOrderId: string | null = null;
+    if (this.razorpay) {
+      const order = await this.razorpay.orders.create({
+        amount: Math.round(amount * 100),
+        currency: 'INR',
+        receipt: txnId,
+        notes: { userId, propertyId, planId, txnId, type: 'PREMIUM_LISTING' },
+      });
+      gatewayOrderId = order.id;
+    }
+
+    await this.prisma.transaction.create({
+      data: {
+        id: txnId,
+        amount,
+        gatewayOrderId,
+        status: 'CREATED',
+      },
+    });
+
+    return {
+      transactionId: txnId,
+      razorpayOrderId: gatewayOrderId,
+      amount,
+      currency: 'INR',
+      keyId: this.config.get('RAZORPAY_KEY_ID'),
+    };
+  }
+
   // ─── Webhook Handler ──────────────────────────────────────────────────────
   async handleWebhook(payload: string, signature: string) {
     const secret = this.config.get('RAZORPAY_WEBHOOK_SECRET');
@@ -136,7 +174,13 @@ export class PaymentsService {
       },
     });
 
-    // Auto-calculate commission
+    // 1. Activate Premium Listing if linked to this transaction
+    await this.prisma.propertyPremium.updateMany({
+      where: { transactionId: transaction.id },
+      data: { isActive: true },
+    });
+
+    // 2. Auto-calculate commission
     const applicableTo = transaction.leadId ? 'PROPERTY_SELL' : 'SERVICE_BOOKING';
     const commission = await this.calculateCommission(
       Number(transaction.amount),
@@ -147,7 +191,7 @@ export class PaymentsService {
       where: { applicableTo, isActive: true },
     });
 
-    await this.prisma.commission.create({
+    const createdCommission = await this.prisma.commission.create({
       data: {
         transactionId: transaction.id,
         ruleId: rule!.id,
@@ -158,8 +202,41 @@ export class PaymentsService {
       },
     });
 
-    // Generate invoice number
-    const invoiceSeq = await this.prisma.invoice.count() + 1;
+    // 3. Agent Commission Split Automation (Tier 3)
+    if (transaction.leadId) {
+      try {
+        const lead = await this.prisma.lead.findUnique({
+          where: { id: transaction.leadId },
+          include: { property: true },
+        });
+
+        if (lead?.propertyId) {
+          const agentAssociation = await this.prisma.agentProperty.findFirst({
+            where: { propertyId: lead.propertyId, status: 'ACTIVE' },
+          });
+
+          if (agentAssociation) {
+            const splitPercent = Number(agentAssociation.splitPercent) || 50;
+            const agentPayoutAmount = (commission.commissionAmount * splitPercent) / 100;
+
+            await this.prisma.payout.create({
+              data: {
+                userId: agentAssociation.agentId,
+                commissionId: createdCommission.id,
+                amount: Math.round(agentPayoutAmount * 100) / 100,
+                status: 'PENDING',
+              },
+            });
+            this.logger.log(`💰 Agent payout created for agent ${agentAssociation.agentId}: ₹${agentPayoutAmount}`);
+          }
+        }
+      } catch (err: any) {
+        this.logger.warn(`Agent commission split calculation failed: ${err?.message}`);
+      }
+    }
+
+    // 4. Generate invoice number
+    const invoiceSeq = (await this.prisma.invoice.count()) + 1;
     const invoiceNumber = `JVH-INV-${new Date().getFullYear()}-${String(invoiceSeq).padStart(6, '0')}`;
 
     await this.prisma.invoice.create({

@@ -1,5 +1,5 @@
--- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('CUSTOMER', 'OWNER', 'AGENT', 'SERVICE_PROVIDER', 'ADMIN');
+﻿-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('CUSTOMER', 'OWNER', 'AGENT', 'SERVICE_PROVIDER', 'BUILDER', 'ADMIN');
 
 -- CreateEnum
 CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'PENDING_VERIFICATION', 'SUSPENDED', 'BLOCKED', 'DELETED');
@@ -11,7 +11,7 @@ CREATE TYPE "PropertyPurpose" AS ENUM ('SELL', 'RENT', 'LEASE', 'PG');
 CREATE TYPE "PropertyType" AS ENUM ('APARTMENT', 'INDEPENDENT_HOUSE', 'VILLA', 'PLOT', 'COMMERCIAL_OFFICE', 'COMMERCIAL_SHOP', 'COMMERCIAL_WAREHOUSE', 'FARM_HOUSE', 'STUDIO');
 
 -- CreateEnum
-CREATE TYPE "PropertyStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'ACTIVE', 'SOLD', 'RENTED', 'REJECTED', 'ARCHIVED');
+CREATE TYPE "PropertyStatus" AS ENUM ('DRAFT', 'PENDING_REVIEW', 'ACTIVE', 'SOLD', 'RENTED', 'REJECTED', 'ARCHIVED', 'SUSPENDED');
 
 -- CreateEnum
 CREATE TYPE "FurnishingStatus" AS ENUM ('UNFURNISHED', 'SEMI_FURNISHED', 'FULLY_FURNISHED');
@@ -32,7 +32,7 @@ CREATE TYPE "PayoutStatus" AS ENUM ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILE
 CREATE TYPE "NotificationChannel" AS ENUM ('EMAIL', 'SMS', 'PUSH', 'WHATSAPP', 'IN_APP');
 
 -- CreateEnum
-CREATE TYPE "NotificationType" AS ENUM ('ENQUIRY_CREATED', 'NEW_MESSAGE', 'MESSAGE_FLAGGED', 'VISIT_REQUESTED', 'VISIT_ACCEPTED', 'VISIT_REJECTED', 'VISIT_COMPLETED', 'OFFER_RECEIVED', 'BOOKING_CONFIRMED', 'PAYMENT_RECEIVED', 'PROPERTY_APPROVED', 'PROPERTY_REJECTED', 'ACCOUNT_VERIFIED', 'ACCOUNT_SUSPENDED', 'JOB_ASSIGNED', 'REVIEW_REQUESTED');
+CREATE TYPE "NotificationType" AS ENUM ('ENQUIRY_CREATED', 'NEW_MESSAGE', 'MESSAGE_FLAGGED', 'VISIT_REQUESTED', 'VISIT_ACCEPTED', 'VISIT_REJECTED', 'VISIT_COMPLETED', 'OFFER_RECEIVED', 'OFFER_ACCEPTED', 'OFFER_REJECTED', 'BOOKING_CONFIRMED', 'BOOKING_CANCELLED', 'PAYMENT_RECEIVED', 'PROPERTY_APPROVED', 'PROPERTY_REJECTED', 'ACCOUNT_VERIFIED', 'ACCOUNT_SUSPENDED', 'JOB_ASSIGNED', 'JOB_COMPLETED', 'REVIEW_REQUESTED', 'KYC_APPROVED', 'KYC_REJECTED', 'PAYOUT_PROCESSED', 'PREMIUM_ACTIVATED');
 
 -- CreateEnum
 CREATE TYPE "AuditAction" AS ENUM ('CREATE', 'UPDATE', 'DELETE', 'APPROVE', 'REJECT', 'SUSPEND', 'BLOCK', 'UNBLOCK', 'VERIFY', 'ASSIGN', 'PAYOUT');
@@ -45,6 +45,18 @@ CREATE TYPE "CommissionType" AS ENUM ('PERCENTAGE', 'FLAT_FEE');
 
 -- CreateEnum
 CREATE TYPE "ReviewTargetType" AS ENUM ('PROPERTY', 'SERVICE_BOOKING', 'OWNER', 'AGENT', 'SERVICE_PROVIDER');
+
+-- CreateEnum
+CREATE TYPE "PropertyBookingStatus" AS ENUM ('PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED', 'REFUNDED');
+
+-- CreateEnum
+CREATE TYPE "KycDocType" AS ENUM ('AADHAAR', 'PAN', 'POLICE_VERIFICATION', 'TRADE_CERTIFICATE', 'BANK_STATEMENT', 'OTHER');
+
+-- CreateEnum
+CREATE TYPE "KycDocStatus" AS ENUM ('SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "ProjectStatus" AS ENUM ('UPCOMING', 'UNDER_CONSTRUCTION', 'READY_TO_MOVE', 'COMPLETED');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -138,6 +150,14 @@ CREATE TABLE "service_provider_profiles" (
     "bankAccountName" TEXT,
     "bankAccountNo" TEXT,
     "bankIfscCode" TEXT,
+    "categoryName" TEXT,
+    "requiresBackgroundCheck" BOOLEAN NOT NULL DEFAULT false,
+    "verificationStatus" TEXT NOT NULL DEFAULT 'PENDING',
+    "backgroundCheckStatus" TEXT NOT NULL DEFAULT 'NOT_REQUIRED',
+    "verificationNotes" TEXT,
+    "idProofUrl" TEXT,
+    "addressProofUrl" TEXT,
+    "certificateUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -307,9 +327,14 @@ CREATE TABLE "property_visits" (
 CREATE TABLE "offers" (
     "id" TEXT NOT NULL,
     "leadId" TEXT NOT NULL,
+    "propertyId" TEXT,
     "customerId" TEXT NOT NULL,
     "offerAmount" DECIMAL(65,30) NOT NULL,
+    "counterPrice" DECIMAL(65,30),
     "validUntil" TIMESTAMP(3) NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'PENDING',
+    "createdByRole" TEXT NOT NULL DEFAULT 'CUSTOMER',
+    "parentOfferId" TEXT,
     "message" TEXT,
     "isAccepted" BOOLEAN NOT NULL DEFAULT false,
     "isRejected" BOOLEAN NOT NULL DEFAULT false,
@@ -540,6 +565,271 @@ CREATE TABLE "audit_logs" (
     CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "system_settings" (
+    "key" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+
+    CONSTRAINT "system_settings_pkey" PRIMARY KEY ("key")
+);
+
+-- CreateTable
+CREATE TABLE "lead_status_history" (
+    "id" TEXT NOT NULL,
+    "leadId" TEXT NOT NULL,
+    "oldStatus" TEXT,
+    "newStatus" TEXT NOT NULL,
+    "changedById" TEXT NOT NULL,
+    "changedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reason" TEXT,
+
+    CONSTRAINT "lead_status_history_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bypass_incidents" (
+    "id" TEXT NOT NULL,
+    "leadId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "messageRaw" TEXT NOT NULL,
+    "detectedPatterns" JSONB NOT NULL,
+    "policyApplied" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "bypass_incidents_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "admin_alerts" (
+    "id" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "severity" TEXT NOT NULL,
+    "details" TEXT NOT NULL,
+    "entityType" TEXT,
+    "entityId" TEXT,
+    "isResolved" BOOLEAN NOT NULL DEFAULT false,
+    "resolvedBy" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "admin_alerts_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "terms_acceptances" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "version" TEXT NOT NULL,
+    "acceptedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ipAddress" TEXT,
+
+    CONSTRAINT "terms_acceptances_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "support_tickets" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'OPEN',
+    "priority" TEXT NOT NULL DEFAULT 'MEDIUM',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "support_tickets_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "support_messages" (
+    "id" TEXT NOT NULL,
+    "ticketId" TEXT NOT NULL,
+    "senderId" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "isInternal" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "support_messages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "service_groups" (
+    "id" TEXT NOT NULL,
+    "categoryId" TEXT NOT NULL,
+    "groupName" TEXT NOT NULL,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "service_groups_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "service_sub_options" (
+    "id" TEXT NOT NULL,
+    "serviceId" TEXT NOT NULL,
+    "groupId" TEXT,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "priceAdjust" DECIMAL(65,30),
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "displayOrder" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "service_sub_options_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "property_bookings" (
+    "id" TEXT NOT NULL,
+    "bookingRef" TEXT NOT NULL,
+    "propertyId" TEXT NOT NULL,
+    "buyerId" TEXT NOT NULL,
+    "sellerId" TEXT NOT NULL,
+    "agreedPrice" DECIMAL(65,30) NOT NULL,
+    "tokenAmount" DECIMAL(65,30) NOT NULL,
+    "status" "PropertyBookingStatus" NOT NULL DEFAULT 'PENDING_PAYMENT',
+    "offerId" TEXT,
+    "transactionId" TEXT,
+    "notes" TEXT,
+    "confirmedAt" TIMESTAMP(3),
+    "cancelledAt" TIMESTAMP(3),
+    "cancelReason" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "property_bookings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "agent_properties" (
+    "id" TEXT NOT NULL,
+    "agentId" TEXT NOT NULL,
+    "propertyId" TEXT NOT NULL,
+    "ownerConsent" BOOLEAN NOT NULL DEFAULT false,
+    "consentAt" TIMESTAMP(3),
+    "splitPercent" DECIMAL(65,30),
+    "status" TEXT NOT NULL DEFAULT 'PENDING',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "agent_properties_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "agent_lead_notes" (
+    "id" TEXT NOT NULL,
+    "agentId" TEXT NOT NULL,
+    "leadId" TEXT NOT NULL,
+    "note" TEXT NOT NULL,
+    "followUpAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "agent_lead_notes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "provider_verification_documents" (
+    "id" TEXT NOT NULL,
+    "providerId" TEXT NOT NULL,
+    "docType" "KycDocType" NOT NULL,
+    "fileUrl" TEXT NOT NULL,
+    "status" "KycDocStatus" NOT NULL DEFAULT 'SUBMITTED',
+    "reviewerId" TEXT,
+    "reviewerNotes" TEXT,
+    "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reviewedAt" TIMESTAMP(3),
+
+    CONSTRAINT "provider_verification_documents_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "builder_profiles" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "companyName" TEXT NOT NULL,
+    "reraNumber" TEXT,
+    "websiteUrl" TEXT,
+    "logoUrl" TEXT,
+    "established" INTEGER,
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "builder_profiles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "projects" (
+    "id" TEXT NOT NULL,
+    "builderProfileId" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "location" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
+    "pincode" TEXT NOT NULL,
+    "latitude" DECIMAL(65,30),
+    "longitude" DECIMAL(65,30),
+    "startingPrice" DECIMAL(65,30),
+    "constructionStatus" "ProjectStatus" NOT NULL DEFAULT 'UNDER_CONSTRUCTION',
+    "possessionDate" TIMESTAMP(3),
+    "brochureUrl" TEXT,
+    "reraNumber" TEXT,
+    "totalUnits" INTEGER,
+    "availableUnits" INTEGER,
+    "amenities" TEXT[],
+    "floorPlans" JSONB,
+    "photos" TEXT[],
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "projects_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "project_enquiries" (
+    "id" TEXT NOT NULL,
+    "projectId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "message" TEXT,
+    "phone" TEXT,
+    "status" TEXT NOT NULL DEFAULT 'NEW',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "project_enquiries_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "premium_listing_plans" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "price" DECIMAL(65,30) NOT NULL,
+    "durationDays" INTEGER NOT NULL,
+    "boostScore" INTEGER NOT NULL DEFAULT 10,
+    "features" TEXT[],
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "premium_listing_plans_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "property_premiums" (
+    "id" TEXT NOT NULL,
+    "propertyId" TEXT NOT NULL,
+    "planId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "startsAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "transactionId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "property_premiums_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -631,6 +921,9 @@ CREATE INDEX "property_visits_scheduledAt_idx" ON "property_visits"("scheduledAt
 CREATE INDEX "offers_leadId_idx" ON "offers"("leadId");
 
 -- CreateIndex
+CREATE INDEX "offers_propertyId_idx" ON "offers"("propertyId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "transactions_gatewayOrderId_key" ON "transactions"("gatewayOrderId");
 
 -- CreateIndex
@@ -711,6 +1004,90 @@ CREATE INDEX "audit_logs_entityType_entityId_idx" ON "audit_logs"("entityType", 
 -- CreateIndex
 CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
 
+-- CreateIndex
+CREATE INDEX "lead_status_history_leadId_idx" ON "lead_status_history"("leadId");
+
+-- CreateIndex
+CREATE INDEX "bypass_incidents_leadId_idx" ON "bypass_incidents"("leadId");
+
+-- CreateIndex
+CREATE INDEX "admin_alerts_type_idx" ON "admin_alerts"("type");
+
+-- CreateIndex
+CREATE INDEX "admin_alerts_isResolved_idx" ON "admin_alerts"("isResolved");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "terms_acceptances_userId_version_key" ON "terms_acceptances"("userId", "version");
+
+-- CreateIndex
+CREATE INDEX "support_tickets_userId_idx" ON "support_tickets"("userId");
+
+-- CreateIndex
+CREATE INDEX "support_messages_ticketId_idx" ON "support_messages"("ticketId");
+
+-- CreateIndex
+CREATE INDEX "service_groups_categoryId_idx" ON "service_groups"("categoryId");
+
+-- CreateIndex
+CREATE INDEX "service_sub_options_serviceId_idx" ON "service_sub_options"("serviceId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "property_bookings_bookingRef_key" ON "property_bookings"("bookingRef");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "property_bookings_transactionId_key" ON "property_bookings"("transactionId");
+
+-- CreateIndex
+CREATE INDEX "property_bookings_buyerId_idx" ON "property_bookings"("buyerId");
+
+-- CreateIndex
+CREATE INDEX "property_bookings_sellerId_idx" ON "property_bookings"("sellerId");
+
+-- CreateIndex
+CREATE INDEX "property_bookings_propertyId_idx" ON "property_bookings"("propertyId");
+
+-- CreateIndex
+CREATE INDEX "agent_properties_agentId_idx" ON "agent_properties"("agentId");
+
+-- CreateIndex
+CREATE INDEX "agent_properties_propertyId_idx" ON "agent_properties"("propertyId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "agent_properties_agentId_propertyId_key" ON "agent_properties"("agentId", "propertyId");
+
+-- CreateIndex
+CREATE INDEX "agent_lead_notes_agentId_idx" ON "agent_lead_notes"("agentId");
+
+-- CreateIndex
+CREATE INDEX "agent_lead_notes_leadId_idx" ON "agent_lead_notes"("leadId");
+
+-- CreateIndex
+CREATE INDEX "provider_verification_documents_providerId_idx" ON "provider_verification_documents"("providerId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "builder_profiles_userId_key" ON "builder_profiles"("userId");
+
+-- CreateIndex
+CREATE INDEX "projects_city_isActive_idx" ON "projects"("city", "isActive");
+
+-- CreateIndex
+CREATE INDEX "projects_builderProfileId_idx" ON "projects"("builderProfileId");
+
+-- CreateIndex
+CREATE INDEX "project_enquiries_projectId_idx" ON "project_enquiries"("projectId");
+
+-- CreateIndex
+CREATE INDEX "project_enquiries_userId_idx" ON "project_enquiries"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "premium_listing_plans_name_key" ON "premium_listing_plans"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "property_premiums_transactionId_key" ON "property_premiums"("transactionId");
+
+-- CreateIndex
+CREATE INDEX "property_premiums_propertyId_isActive_idx" ON "property_premiums"("propertyId", "isActive");
+
 -- AddForeignKey
 ALTER TABLE "refresh_tokens" ADD CONSTRAINT "refresh_tokens_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -766,6 +1143,9 @@ ALTER TABLE "property_visits" ADD CONSTRAINT "property_visits_propertyId_fkey" F
 ALTER TABLE "offers" ADD CONSTRAINT "offers_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "leads"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "offers" ADD CONSTRAINT "offers_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "properties"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "payments" ADD CONSTRAINT "payments_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "transactions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -815,3 +1195,82 @@ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_userId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "lead_status_history" ADD CONSTRAINT "lead_status_history_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "leads"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bypass_incidents" ADD CONSTRAINT "bypass_incidents_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "leads"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "terms_acceptances" ADD CONSTRAINT "terms_acceptances_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "support_tickets" ADD CONSTRAINT "support_tickets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "support_messages" ADD CONSTRAINT "support_messages_ticketId_fkey" FOREIGN KEY ("ticketId") REFERENCES "support_tickets"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "support_messages" ADD CONSTRAINT "support_messages_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "service_groups" ADD CONSTRAINT "service_groups_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "service_categories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "service_sub_options" ADD CONSTRAINT "service_sub_options_serviceId_fkey" FOREIGN KEY ("serviceId") REFERENCES "services"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "service_sub_options" ADD CONSTRAINT "service_sub_options_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "service_groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_bookings" ADD CONSTRAINT "property_bookings_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_bookings" ADD CONSTRAINT "property_bookings_buyerId_fkey" FOREIGN KEY ("buyerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_bookings" ADD CONSTRAINT "property_bookings_sellerId_fkey" FOREIGN KEY ("sellerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_bookings" ADD CONSTRAINT "property_bookings_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "transactions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "agent_properties" ADD CONSTRAINT "agent_properties_agentId_fkey" FOREIGN KEY ("agentId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "agent_properties" ADD CONSTRAINT "agent_properties_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "agent_lead_notes" ADD CONSTRAINT "agent_lead_notes_agentId_fkey" FOREIGN KEY ("agentId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "agent_lead_notes" ADD CONSTRAINT "agent_lead_notes_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "leads"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "provider_verification_documents" ADD CONSTRAINT "provider_verification_documents_providerId_fkey" FOREIGN KEY ("providerId") REFERENCES "service_provider_profiles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "builder_profiles" ADD CONSTRAINT "builder_profiles_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "projects" ADD CONSTRAINT "projects_builderProfileId_fkey" FOREIGN KEY ("builderProfileId") REFERENCES "builder_profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "project_enquiries" ADD CONSTRAINT "project_enquiries_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "projects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "project_enquiries" ADD CONSTRAINT "project_enquiries_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_premiums" ADD CONSTRAINT "property_premiums_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_premiums" ADD CONSTRAINT "property_premiums_planId_fkey" FOREIGN KEY ("planId") REFERENCES "premium_listing_plans"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_premiums" ADD CONSTRAINT "property_premiums_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "property_premiums" ADD CONSTRAINT "property_premiums_transactionId_fkey" FOREIGN KEY ("transactionId") REFERENCES "transactions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+

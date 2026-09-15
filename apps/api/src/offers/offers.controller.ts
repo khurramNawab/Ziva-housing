@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { OffersService } from './offers.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -26,6 +26,26 @@ export class OffersController {
     @Param('leadId') leadId: string,
   ) {
     return this.offersService.getOffersByLead(userId, leadId);
+  }
+
+  @Get(':id/history')
+  @ApiOperation({ summary: 'Get full negotiation timeline and history for an offer' })
+  getOfferHistory(
+    @CurrentUser('id') userId: string,
+    @Param('id') offerId: string,
+  ) {
+    return this.offersService.getOfferHistory(userId, offerId);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Combined action on an offer (ACCEPT, REJECT, or COUNTER)' })
+  handleOfferAction(
+    @CurrentUser('id') userId: string,
+    @CurrentUser('role') role: string,
+    @Param('id') offerId: string,
+    @Body() dto: { action: 'ACCEPT' | 'REJECT' | 'COUNTER'; counterAmount?: number; message?: string; validUntil?: string },
+  ) {
+    return this.offersService.handleOfferAction(userId, role, offerId, dto);
   }
 
   @Post(':id/accept')

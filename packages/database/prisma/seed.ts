@@ -452,6 +452,39 @@ async function main() {
     console.log('✅ Seeded 3 active properties');
   }
 
+  // ─── Premium Listing Plans ──────────────────────────────────────────────────
+  const premiumPlans = [
+    {
+      name: 'Basic',
+      price: 999,
+      durationDays: 30,
+      boostScore: 10,
+      features: ['Featured badge', 'Top placement in search', 'Priority support'],
+    },
+    {
+      name: 'Pro',
+      price: 1999,
+      durationDays: 60,
+      boostScore: 25,
+      features: ['Featured badge', 'Top placement in search', 'Homepage banner slot', 'Priority support', 'Analytics dashboard'],
+    },
+    {
+      name: 'Elite',
+      price: 4999,
+      durationDays: 90,
+      boostScore: 50,
+      features: ['Featured badge', '#1 search placement', 'Homepage banner slot', 'Dedicated account manager', 'Analytics dashboard', 'Social media promotion'],
+    },
+  ];
+
+  for (const plan of premiumPlans) {
+    const existing = await prisma.premiumListingPlan.findFirst({ where: { name: plan.name } });
+    if (!existing) {
+      await prisma.premiumListingPlan.create({ data: plan });
+    }
+  }
+  console.log(`✅ Seeded ${premiumPlans.length} premium listing plans`);
+
   console.log('\n🎉 Seed completed successfully!');
 }
 

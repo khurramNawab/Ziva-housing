@@ -20,6 +20,9 @@ interface ProjectDetail {
   configs: string;
   minPrice: string;
   description: string;
+  constructionStatus: string;
+  reraNumber?: string;
+  brochureUrl?: string;
   constructionUpdates: { title: string; date: string; desc?: string; active: boolean }[];
   images: string[];
 }
@@ -61,10 +64,10 @@ export default function ProjectDetailPage() {
       } else {
         const itemObj = {
           id: projectId,
-          title: project?.name || 'Prestige Falcon City',
-          locality: project?.location || 'Kanakapura Road',
-          city: project?.city || 'Bangalore',
-          purpose: 'SELL',
+          title: project?.name || 'New Project',
+          locality: project?.location || 'Prime Location',
+          city: project?.city || 'City',
+          purpose: 'NEW_PROJECTS',
           expectedPrice: 12500000,
           photos: [{ url: project?.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80' }]
         };
@@ -93,30 +96,34 @@ export default function ProjectDetailPage() {
       setLoading(true);
       try {
         const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-        const res = await fetch(`${apiBase}/api/v1/properties/${projectId}`);
+        // 1. Try real Project API endpoint first
+        const res = await fetch(`${apiBase}/api/v1/projects/${projectId}`);
         if (res.ok) {
           const json = await res.json();
           const p = json.data || json;
-          if (p && p.title) {
+          if (p && p.name) {
             setProject({
               id: p.id,
-              name: p.title,
-              builderName: p.ownerProfile?.user?.firstName ? `${p.ownerProfile.user.firstName}'s Development` : 'Prestige Group',
-              builderRating: '4.8 ★ (120+ Reviews)',
-              builderExperience: '30+ Years Experience',
-              location: `${p.locality || 'Kanakapura Road'}, ${p.city || 'Bangalore'}`,
+              name: p.name,
+              builderName: p.builderProfile?.companyName || 'Verified Builder',
+              builderRating: '4.9 ★ (RERA Verified)',
+              builderExperience: p.builderProfile?.established ? `${new Date().getFullYear() - p.builderProfile.established}+ Years Experience` : '15+ Years Experience',
+              location: `${p.location || ''}, ${p.city || ''}`,
               city: p.city || 'Bangalore',
-              possessionDate: 'Dec 2025',
-              totalArea: p.builtUpArea ? `${p.builtUpArea} sqft` : '41 Acres',
-              units: '2520',
-              configs: p.bhk ? `${p.bhk} BHK` : '2, 3, 4 BHK',
-              minPrice: p.expectedPrice ? `₹ ${(p.expectedPrice / 10000000).toFixed(2)} Cr` : '₹ 1.25 Cr',
-              description: p.description || 'Prestige Falcon City is a state-of-the-art compendium of high-rise residential apartments situated on Kanakapura Road, Bangalore. Spread across 41 acres, this mixed-use development offers a world-class living experience.',
+              possessionDate: p.possessionDate ? new Date(p.possessionDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Under Construction',
+              totalArea: 'Master Plan Available',
+              units: p.totalUnits ? `${p.totalUnits} Units (${p.availableUnits ?? p.totalUnits} Available)` : 'Premium Residences',
+              configs: Array.isArray(p.amenities) && p.amenities.length > 0 ? p.amenities.slice(0, 3).join(', ') : '2, 3, 4 BHK',
+              minPrice: p.startingPrice ? (p.startingPrice >= 10000000 ? `₹ ${(p.startingPrice / 10000000).toFixed(2)} Cr` : `₹ ${(p.startingPrice / 100000).toFixed(2)} Lac`) : '₹ 1.25 Cr',
+              description: p.description || `${p.name} is a premier master-planned development offering world-class living with top-tier infrastructure and modern amenities.`,
+              constructionStatus: (p.constructionStatus || 'UNDER_CONSTRUCTION').replace(/_/g, ' '),
+              reraNumber: p.reraNumber,
+              brochureUrl: p.brochureUrl,
               constructionUpdates: [
-                { title: 'Superstructure Near Completion', date: 'October 2024', desc: 'Block A and B structural work is 90% complete. Interior masonry has commenced on lower floors.', active: true },
-                { title: 'Foundation Laid', date: 'March 2023', active: false },
+                { title: 'Superstructure Work in Progress', date: 'Recent', desc: 'Structural civil work and elevation architecture actively on track.', active: true },
+                { title: 'Excavation & Foundation Completed', date: 'Phase 1', active: false },
               ],
-              images: p.photos && p.photos.length > 0 ? p.photos.map((photo: any) => photo.url) : [
+              images: Array.isArray(p.photos) && p.photos.length > 0 ? p.photos : [
                 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
                 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80',
@@ -140,9 +147,12 @@ export default function ProjectDetailPage() {
         city: projectId === 'p-premium-noida' ? 'Noida' : 'Bangalore',
         possessionDate: 'Dec 2025',
         totalArea: '41 Acres',
-        units: '2520',
+        units: '2520 Units',
         configs: '2, 3, 4 BHK',
         minPrice: projectId === 'p-premium-noida' ? '₹ 1.85 Cr' : '₹ 1.25 Cr',
+        constructionStatus: 'Under Construction',
+        reraNumber: 'PRM/KA/RERA/1251/310/PR/170916/000114',
+        brochureUrl: '',
         description: 'Prestige Falcon City is a state-of-the-art compendium of high-rise residential apartments situated on Kanakapura Road, Bangalore. Spread across 41 acres, this mixed-use development offers a world-class living experience combined with a massive retail area and an expansive clubhouse. Designed to provide ample natural light and ventilation, these homes are a perfect blend of luxury and comfort.',
         constructionUpdates: [
           { title: 'Superstructure Near Completion', date: 'October 2024', desc: 'Block A and B structural work is 90% complete. Interior masonry has commenced on lower floors.', active: true },
@@ -171,24 +181,13 @@ export default function ProjectDetailPage() {
       const token = localStorage.getItem('Ziva_access');
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       if (token) {
-        // 1. Create Lead in CRM for Owner & Admin
-        await fetch(`${apiBase}/api/v1/leads`, {
+        // 1. Submit Project Enquiry to /api/v1/projects/:id/enquiry
+        await fetch(`${apiBase}/api/v1/projects/${projectId}/enquiry`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({
-            propertyId: projectId,
-            message: `Site visit inquiry from ${inquiryName} (+91 ${inquiryPhone}) for project: ${project?.name || 'Prestige Falcon City'}`,
-          }),
-        }).catch(() => null);
-
-        // 2. Schedule Visit in backend
-        await fetch(`${apiBase}/api/v1/visits`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({
-            propertyId: projectId,
-            scheduledAt: new Date(Date.now() + 86400000).toISOString(),
-            notes: `Site visit requested by ${inquiryName} (+91 ${inquiryPhone}) for ${project?.name || 'Project'}`,
+            phone: inquiryPhone,
+            message: `Site visit inquiry from ${inquiryName} (+91 ${inquiryPhone}) for project: ${project?.name || 'Project'}`,
           }),
         }).catch(() => null);
       }
@@ -204,8 +203,12 @@ export default function ProjectDetailPage() {
     setDownloadingBrochure(true);
     setTimeout(() => {
       setDownloadingBrochure(false);
-      // Trigger download of official sample brochure PDF
-      window.open('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', '_blank');
+      if (project?.brochureUrl) {
+        window.open(project.brochureUrl, '_blank');
+      } else {
+        // Trigger download of official sample brochure PDF
+        window.open('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', '_blank');
+      }
     }, 800);
   };
 
@@ -239,9 +242,9 @@ export default function ProjectDetailPage() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="bg-[#e8faf4] text-[#16a373] px-2.5 py-1 rounded-full text-[12px] font-bold tracking-wide flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[14px]">verified</span> RERA Approved
+                  <span className="material-symbols-outlined text-[14px]">verified</span> {project.reraNumber ? `RERA: ${project.reraNumber}` : 'RERA Approved'}
                 </span>
-                <span className="bg-[#e6e8ea] text-[#494455] px-2.5 py-1 rounded-full text-[12px] font-bold">Under Construction</span>
+                <span className="bg-[#e6e8ea] text-[#494455] px-2.5 py-1 rounded-full text-[12px] font-bold capitalize">{project.constructionStatus}</span>
               </div>
               <div className="flex items-center gap-3">
                 <h1 className="text-[28px] md:text-[36px] leading-[36px] md:leading-[44px] font-bold text-[#191c1e] mb-1">{project.name}</h1>
