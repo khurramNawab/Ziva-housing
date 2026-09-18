@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -24,6 +24,33 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     firstName: '', lastName: '', phone: '', email: '', password: '',
   });
+
+  const [regSettings, setRegSettings] = useState({
+    allowCustomerRegistration: true,
+    allowOwnerRegistration: true,
+    allowAgentRegistration: true,
+    allowVendorRegistration: true,
+  });
+
+  // Fetch live Admin registration On/Off settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const apiBase = getApiBaseUrl();
+        const res = await fetch(`${apiBase}/api/v1/auth/registration-settings`);
+        if (res.ok) {
+          const json = await res.json();
+          setRegSettings({
+            allowCustomerRegistration: json.allowCustomerRegistration !== false,
+            allowOwnerRegistration: json.allowOwnerRegistration !== false,
+            allowAgentRegistration: json.allowAgentRegistration !== false,
+            allowVendorRegistration: json.allowVendorRegistration !== false,
+          });
+        }
+      } catch {}
+    };
+    fetchSettings();
+  }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,13 +203,13 @@ export default function RegisterPage() {
           <div className="relative z-10 max-w-md space-y-2">
             <h2 className="text-[28px] lg:text-[32px] leading-[36px] lg:leading-[40px] font-bold text-white">Find Your Next Horizon.</h2>
             <p className="text-[14px] leading-[20px] text-[#e0e3e5]">
-              Join thousands of users discovering premium properties and reliable home services seamlessly integrated into one platform.
+              Join thousands of customers, owners, agents, and service vendors on India&apos;s leading property &amp; doorstep service platform.
             </p>
           </div>
         </div>
 
         {/* Right Side: Form */}
-        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col bg-white justify-center">
+        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col bg-white justify-center overflow-y-auto max-h-[90vh]">
           {/* Mobile Brand Header */}
           <div className="md:hidden mb-4 text-center">
             <Link href="/" className="inline-flex items-center gap-2">
@@ -216,44 +243,46 @@ export default function RegisterPage() {
           {step === 'form' ? (
             <form onSubmit={handleRegister} className="flex flex-col gap-3">
               {error && (
-                <div className="bg-[#ffdad6] text-[#9300a] p-2.5 rounded-lg text-xs font-semibold">
+                <div className="bg-[#ffdad6] text-[#93000a] p-2.5 rounded-lg text-xs font-semibold">
                   {error}
                 </div>
               )}
 
-              {/* Role Selection */}
+              {/* Role Selection (All 4 roles with dynamic Admin On/Off controls) */}
               <div>
-                <label className="block text-[11px] leading-[14px] tracking-[0.05em] font-semibold text-[#191c1e] mb-1">Account Role</label>
+                <label className="block text-[11px] leading-[14px] tracking-[0.05em] font-semibold text-[#191c1e] mb-1.5">Select Account Role</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {(['CUSTOMER', 'OWNER'] as const).map((r) => (
-                    <button
-                      suppressHydrationWarning
-                      key={r}
-                      type="button"
-                      onClick={() => setRole(r)}
-                      className={`py-2.5 rounded-xl font-bold text-xs transition-all border flex items-center justify-center gap-1.5 ${role === r
-                          ? 'border-[#5e23dc] bg-[#e8ddff] text-[#4500b4] shadow-sm'
-                          : 'border-[#cbc3d8] bg-white text-[#494455] hover:bg-[#f2f4f6]'
+                  {[
+                    { id: 'CUSTOMER', label: '🏠 Customer / Buyer', allowed: regSettings.allowCustomerRegistration },
+                    { id: 'OWNER', label: '🏗️ Property Owner', allowed: regSettings.allowOwnerRegistration },
+                    { id: 'AGENT', label: '🤝 Agent / Broker', allowed: regSettings.allowAgentRegistration },
+                    { id: 'SERVICE_PROVIDER', label: '🛠️ Service Vendor', allowed: regSettings.allowVendorRegistration },
+                  ].map((r) => {
+                    const isSelected = role === r.id;
+                    return (
+                      <button
+                        suppressHydrationWarning
+                        key={r.id}
+                        type="button"
+                        disabled={!r.allowed}
+                        onClick={() => {
+                          if (!r.allowed) return;
+                          setRole(r.id as Role);
+                        }}
+                        title={!r.allowed ? 'Registration temporarily disabled by Admin' : undefined}
+                        className={`py-2 px-2 rounded-xl font-bold text-xs transition-all border flex flex-col sm:flex-row items-center justify-center gap-1 ${
+                          !r.allowed
+                            ? 'opacity-40 bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed'
+                            : isSelected
+                            ? 'border-[#5e23dc] bg-[#e8ddff] text-[#4500b4] shadow-sm cursor-pointer'
+                            : 'border-[#cbc3d8] bg-white text-[#494455] hover:bg-[#f2f4f6] cursor-pointer'
                         }`}
-                    >
-                      {r === 'CUSTOMER' ? '🏠 Buyer / Renter' : '🏗️ Property Owner'}
-                    </button>
-                  ))}
-                  {/* Agent & Service Partner commented out as requested
-                  {(['AGENT', 'SERVICE_PROVIDER'] as const).map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => setRole(r)}
-                      className={`py-2 rounded-xl font-bold text-xs transition-all border ${role === r
-                          ? 'border-[#5e23dc] bg-[#e8ddff] text-[#4500b4]'
-                          : 'border-[#cbc3d8] bg-white text-[#494455] hover:bg-[#f2f4f6]'
-                        }`}
-                    >
-                      {r === 'AGENT' ? '💼 Agent' : '🔧 Service Partner'}
-                    </button>
-                  ))}
-                  */}
+                      >
+                        <span>{r.label}</span>
+                        {!r.allowed && <span className="text-[9px] text-rose-600 font-bold uppercase">(Disabled)</span>}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -330,11 +359,23 @@ export default function RegisterPage() {
                 suppressHydrationWarning
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold text-xs rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-1"
+                className="w-full py-2.5 bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold text-xs rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-1 cursor-pointer"
               >
                 {loading ? 'Creating Account...' : 'Get Verification OTP'}
                 <span className="material-symbols-outlined text-sm">arrow_forward</span>
               </button>
+
+              <p className="text-[11px] text-[#7a7487] text-center mt-2">
+                By registering, you agree to Ziva Housing&apos;s{' '}
+                <Link href="/terms" target="_blank" className="text-[#4500b4] underline hover:text-[#5e23dc] font-semibold">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" target="_blank" className="text-[#4500b4] underline hover:text-[#5e23dc] font-semibold">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
             </form>
           ) : (
             <div className="space-y-4">
@@ -374,16 +415,16 @@ export default function RegisterPage() {
               <button
                 onClick={handleVerifyOtp}
                 disabled={loading || otpValues.join('').length !== 6}
-                className="w-full py-2.5 bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold text-xs rounded-xl transition-all shadow-sm disabled:opacity-50"
+                className="w-full py-2.5 bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold text-xs rounded-xl transition-all shadow-sm disabled:opacity-50 cursor-pointer"
               >
                 {loading ? 'Verifying...' : 'Verify OTP & Complete Registration'}
               </button>
 
               <div className="flex justify-between items-center text-xs pt-1">
-                <button type="button" onClick={handleResendOtp} disabled={loading} className="text-[#5e23dc] font-bold hover:underline">
+                <button type="button" onClick={handleResendOtp} disabled={loading} className="text-[#5e23dc] font-bold hover:underline cursor-pointer">
                   Resend OTP Code via Email/SMS
                 </button>
-                <button type="button" onClick={() => setStep('form')} className="text-[#7a7487] font-semibold hover:underline">
+                <button type="button" onClick={() => setStep('form')} className="text-[#7a7487] font-semibold hover:underline cursor-pointer">
                   Edit details
                 </button>
               </div>

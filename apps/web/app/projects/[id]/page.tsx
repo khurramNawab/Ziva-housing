@@ -47,6 +47,11 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
+      if (!token) {
+        setIsSaved(false);
+        return;
+      }
       const saved = JSON.parse(localStorage.getItem('Ziva_saved_properties') || '[]');
       const savedIds = saved.map((x: any) => (typeof x === 'string' ? x : x?.id));
       setIsSaved(savedIds.includes(projectId));
@@ -54,6 +59,14 @@ export default function ProjectDetailPage() {
   }, [projectId]);
 
   const handleToggleSave = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
+    if (!token) {
+      if (confirm('Please log in to save properties to your wishlist. Would you like to log in now?')) {
+        router.push('/auth/login');
+      }
+      return;
+    }
+
     try {
       const saved = JSON.parse(localStorage.getItem('Ziva_saved_properties') || '[]');
       const isAlready = saved.some((x: any) => (typeof x === 'string' ? x === projectId : x?.id === projectId));
@@ -251,12 +264,15 @@ export default function ProjectDetailPage() {
                 <button
                   type="button"
                   onClick={handleToggleSave}
-                  className={`w-10 h-10 rounded-full border border-[#cbc3d8] flex items-center justify-center transition-all shadow-sm hover:scale-105 ${
-                    isSaved ? 'bg-red-50 text-red-500 border-red-200' : 'bg-white text-gray-400 hover:text-red-500'
+                  className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all shadow-sm hover:scale-105 cursor-pointer ${
+                    isSaved ? 'bg-red-50 text-red-600 border-red-200' : 'bg-white border-[#cbc3d8] text-gray-400 hover:text-red-500'
                   }`}
-                  title={isSaved ? 'Remove from Saved' : 'Save to Wishlist'}
+                  title={isSaved ? 'Remove from Wishlist' : 'Add to Wishlist'}
                 >
-                  <span className={`material-symbols-outlined text-xl ${isSaved ? 'font-fill text-red-500' : ''}`}>
+                  <span
+                    className={`material-symbols-outlined text-xl ${isSaved ? 'font-fill text-red-600' : 'text-gray-400 hover:text-red-500'}`}
+                    style={{ fontVariationSettings: isSaved ? "'FILL' 1, 'wght' 700" : "'FILL' 0, 'wght' 400" }}
+                  >
                     favorite
                   </span>
                 </button>

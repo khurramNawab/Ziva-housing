@@ -45,176 +45,366 @@ async function main() {
   }
   console.log(`✅ Seeded ${amenities.length} amenities`);
 
-  // ─── Service Categories & Services ─────────────────────────────────────────
+  // ─── Service Categories, Groups & Services (Urban Company Model) ──────────────
   const serviceData = [
+    // 1. Cleaning (ACTIVE)
     {
-      name: 'Baby Sitting & Childcare',
-      slug: 'babysitting-childcare',
-      icon: '👶',
+      name: 'Cleaning',
+      slug: 'cleaning',
+      icon: 'vacuum',
+      isActive: true,
       order: 1,
-      services: [
-        { name: 'Full Day Babysitter', slug: 'full-day-babysitter', basePrice: 800, durationMinutes: 480 },
-        { name: 'Half Day Babysitter', slug: 'half-day-babysitter', basePrice: 500, durationMinutes: 240 },
-        { name: 'Night Care', slug: 'night-care', basePrice: 1000, durationMinutes: 600 },
-        { name: 'Creche Service', slug: 'creche-service', basePrice: 6000 },
+      description: 'Professional deep cleaning, bathroom sanitization, sofa and carpet care with industrial equipment.',
+      groups: [
+        {
+          groupName: 'Bathroom & Toilet Cleaning',
+          displayOrder: 1,
+          services: [
+            { name: 'Bathroom Deep Cleaning (1 Bathroom)', slug: 'bathroom-deep-cleaning', basePrice: 499, durationMinutes: 60, description: 'Intense tile scrubbing, descaling of taps, shower glass & toilet sanitization.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Bathroom Descaling & Stain Removal', slug: 'bathroom-descaling', basePrice: 699, durationMinutes: 75, description: 'Hard water stain removal from tiles, mirrors, and glass partitions.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Full Bathroom + Toilet Combo (2 Bathrooms)', slug: 'bathroom-combo-cleaning', basePrice: 899, durationMinutes: 110, description: 'Complete deep cleaning and odor treatment for 2 bathrooms.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Full Home Deep Cleaning',
+          displayOrder: 2,
+          services: [
+            { name: '1 BHK Full Home Deep Cleaning', slug: '1bhk-deep-cleaning', basePrice: 1999, durationMinutes: 240, description: 'Thorough cleaning of living room, bedroom, kitchen, bathroom & balcony.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+            { name: '2 BHK Full Home Deep Cleaning', slug: '2bhk-deep-cleaning', basePrice: 2899, durationMinutes: 300, description: 'Mechanized floor scrubbing, dusting, kitchen degreasing & 2 bathroom washes.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+            { name: '3 BHK Full Home Deep Cleaning', slug: '3bhk-deep-cleaning', basePrice: 3899, durationMinutes: 360, description: 'Complete sanitization and mechanized polishing for 3 BHK apartments.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Move-in / Vacant House Cleaning', slug: 'move-in-cleaning', basePrice: 2499, durationMinutes: 300, description: 'Deep dusting, vacuuming of cabinets, windows & intensive sanitization.', imageUrl: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Sofa & Carpet Cleaning',
+          displayOrder: 3,
+          services: [
+            { name: '3-Seater Sofa Fabric Shampoo & Vacuum', slug: 'sofa-shampoo-3seater', basePrice: 699, durationMinutes: 60, description: 'Dry vacuuming, foam shampoo & moisture extraction for fabric sofas.', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
+            { name: '5-Seater Sofa Deep Spa Treatment', slug: 'sofa-shampoo-5seater', basePrice: 1099, durationMinutes: 90, description: 'Stain treatment and sanitization for 5-seater sofas & cushions.', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Living Room Carpet Deep Shampoo', slug: 'carpet-deep-shampoo', basePrice: 799, durationMinutes: 60, description: 'Industrial extraction wash for large carpets and rugs.', imageUrl: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Kitchen Deep Cleaning',
+          displayOrder: 4,
+          services: [
+            { name: 'Kitchen Degreasing & Deep Clean', slug: 'kitchen-degreasing', basePrice: 999, durationMinutes: 120, description: 'Oil & grease removal from tiles, slab, sink, gas stove & cabinets exterior.', imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Chimney & Exhaust Fan Deep Cleaning', slug: 'chimney-cleaning', basePrice: 599, durationMinutes: 60, description: 'Filter mesh dismantling, caustic degreasing and motor baffle cleanup.', imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Balcony & Glass Cleaning',
+          displayOrder: 5,
+          services: [
+            { name: 'Balcony Jet Wash & Floor Scrubbing', slug: 'balcony-jet-wash', basePrice: 399, durationMinutes: 45, description: 'High pressure wash of balcony floor, railings and drainage clearance.', imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
+
+    // 2. Women's Salon & Spa (ACTIVE)
     {
-      name: 'Elderly Care',
-      slug: 'elderly-care',
-      icon: '🧓',
+      name: "Women's Salon & Spa",
+      slug: 'womens-salon-spa',
+      icon: 'face_retouching_natural',
+      isActive: true,
       order: 2,
-      services: [
-        { name: 'Day Caregiver', slug: 'day-caregiver', basePrice: 900, durationMinutes: 480 },
-        { name: 'Night Caregiver', slug: 'night-caregiver', basePrice: 1100, durationMinutes: 600 },
-        { name: '24/7 Home Nurse', slug: '24x7-home-nurse', basePrice: 15000 },
-        { name: 'Physiotherapy at Home', slug: 'physiotherapy-home', basePrice: 700, durationMinutes: 60 },
+      description: 'Salon and luxury spa at home with single-use kits, certified beauticians and top brands.',
+      groups: [
+        {
+          groupName: 'Waxing & Threading',
+          displayOrder: 1,
+          services: [
+            { name: 'Full Arms + Full Legs + Underarms (Rica Wax)', slug: 'rica-wax-combo', basePrice: 899, durationMinutes: 60, description: 'Painless Italian Rica wax for gentle hair removal & skin brightening.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Eyebrow + Upper Lip + Forehead Threading', slug: 'threading-combo', basePrice: 99, durationMinutes: 20, description: 'Precision facial hair threading and aloe vera soothing massage.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Facial & Cleanup',
+          displayOrder: 2,
+          services: [
+            { name: "O3+ Bridal Glow Facial", slug: 'o3-bridal-facial', basePrice: 1699, durationMinutes: 75, description: 'Multi-step radiant facial with peeling, brightening serum and mask.', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Sara Fruit Detox Cleanup', slug: 'sara-detox-cleanup', basePrice: 699, durationMinutes: 45, description: 'Fruit scrub, blackhead extraction, massage & hydration pack.', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Manicure & Pedicure',
+          displayOrder: 3,
+          services: [
+            { name: 'Sara Luxury Pedicure', slug: 'sara-luxury-pedicure', basePrice: 599, durationMinutes: 45, description: 'Foot soak, cuticle care, dead skin scrubbing and relaxing massage.', imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Spa Manicure & Pedicure Duo', slug: 'spa-mani-pedi-duo', basePrice: 999, durationMinutes: 80, description: 'Complete hand and feet pampering package with organic scrub.', imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Hair Care & Styling',
+          displayOrder: 4,
+          services: [
+            { name: "L'Oreal Deep Conditioning Hair Spa", slug: 'loreal-hair-spa', basePrice: 899, durationMinutes: 60, description: 'Intensive scalp massage, steam treatment and split end repair.', imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Spa & Body Massage',
+          displayOrder: 5,
+          services: [
+            { name: 'Aroma Oil Full Body Relaxation Massage (60 min)', slug: 'aroma-full-body-massage', basePrice: 1299, durationMinutes: 60, description: 'Calming lavender oil massage with pressure point therapy.', imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
+
+    // 3. Men's Salon & Massage (ACTIVE)
     {
-      name: 'Home Cleaning',
-      slug: 'home-cleaning',
-      icon: '🧹',
+      name: "Men's Salon & Massage",
+      slug: 'mens-salon-massage',
+      icon: 'person_grooming',
+      isActive: true,
       order: 3,
-      services: [
-        { name: 'Full House Deep Cleaning', slug: 'full-house-deep-cleaning', basePrice: 1999, durationMinutes: 300 },
-        { name: 'Regular Home Cleaning', slug: 'regular-home-cleaning', basePrice: 599, durationMinutes: 120 },
-        { name: 'Kitchen Deep Cleaning', slug: 'kitchen-deep-cleaning', basePrice: 799, durationMinutes: 180 },
-        { name: 'Bathroom Cleaning', slug: 'bathroom-cleaning', basePrice: 399, durationMinutes: 60 },
-        { name: 'Sofa Cleaning', slug: 'sofa-cleaning', basePrice: 699, durationMinutes: 90 },
-        { name: 'Carpet Cleaning', slug: 'carpet-cleaning', basePrice: 899, durationMinutes: 120 },
-        { name: 'Move-In/Move-Out Cleaning', slug: 'move-in-out-cleaning', basePrice: 2499, durationMinutes: 360 },
+      description: "Men's grooming, styled haircuts, beard shaping, charcoal cleanups & head/body massages at home.",
+      groups: [
+        {
+          groupName: 'Haircut & Beard Grooming',
+          displayOrder: 1,
+          services: [
+            { name: "Men's Haircut + Beard Styling", slug: 'mens-haircut-beard', basePrice: 349, durationMinutes: 45, description: 'Trendy scissor/clipper haircut, beard styling & neck cleanup.', imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Beard Trimming & Hot Towel Shave', slug: 'beard-hot-towel', basePrice: 199, durationMinutes: 30, description: 'Razor precision lining, herbal balm and hot towel hydration.', imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: "Men's Facial & Cleanup",
+          displayOrder: 2,
+          services: [
+            { name: 'Activated Charcoal Pollution De-Tan Cleanup', slug: 'mens-charcoal-cleanup', basePrice: 549, durationMinutes: 40, description: 'Pore cleansing, dirt extraction, blackhead removal and mask.', imageUrl: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Relaxing Head & Body Massage',
+          displayOrder: 3,
+          services: [
+            { name: 'Stress Relief Head, Neck & Shoulder Massage (30 min)', slug: 'mens-head-shoulder-massage', basePrice: 399, durationMinutes: 30, description: 'Ayurvedic cooling oil head massage with shoulder relaxation.', imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Full Body Deep Tissue Massage for Men (60 min)', slug: 'mens-deep-tissue-massage', basePrice: 1199, durationMinutes: 60, description: 'Firm pressure muscle relief massage for back pain and fatigue.', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
-    {
-      name: 'Painting & Waterproofing',
-      slug: 'painting-waterproofing',
-      icon: '🎨',
-      order: 4,
-      services: [
-        { name: 'Interior Painting', slug: 'interior-painting', basePrice: 8 },
-        { name: 'Exterior Painting', slug: 'exterior-painting', basePrice: 12 },
-        { name: 'Waterproofing', slug: 'waterproofing', basePrice: 25 },
-        { name: 'Texture/Design Paint', slug: 'texture-paint', basePrice: 35 },
-        { name: 'Wood Polish', slug: 'wood-polish', basePrice: 15 },
-      ],
-    },
-    {
-      name: 'Electrician',
-      slug: 'electrician',
-      icon: '⚡',
-      order: 5,
-      services: [
-        { name: 'Switch/Socket Repair', slug: 'switch-socket-repair', basePrice: 199, durationMinutes: 30 },
-        { name: 'Fan Installation/Repair', slug: 'fan-install-repair', basePrice: 299, durationMinutes: 45 },
-        { name: 'Light/Tube Installation', slug: 'light-installation', basePrice: 149, durationMinutes: 30 },
-        { name: 'MCB/Fuse Repair', slug: 'mcb-fuse-repair', basePrice: 299, durationMinutes: 45 },
-        { name: 'Full Home Wiring', slug: 'full-home-wiring', basePrice: 15000 },
-      ],
-    },
-    {
-      name: 'Plumber',
-      slug: 'plumber',
-      icon: '🔧',
-      order: 6,
-      services: [
-        { name: 'Tap/Faucet Repair', slug: 'tap-faucet-repair', basePrice: 199, durationMinutes: 30 },
-        { name: 'Pipe Leak Repair', slug: 'pipe-leak-repair', basePrice: 299, durationMinutes: 45 },
-        { name: 'Toilet Repair', slug: 'toilet-repair', basePrice: 349, durationMinutes: 60 },
-        { name: 'Water Tank Cleaning', slug: 'water-tank-cleaning', basePrice: 799, durationMinutes: 120 },
-        { name: 'Geyser Installation', slug: 'geyser-installation', basePrice: 499, durationMinutes: 60 },
-        { name: 'Basin/Sink Installation', slug: 'basin-sink-install', basePrice: 599, durationMinutes: 90 },
-      ],
-    },
-    {
-      name: 'Carpenter',
-      slug: 'carpenter',
-      icon: '🪚',
-      order: 7,
-      services: [
-        { name: 'Door Repair/Fitting', slug: 'door-repair-fitting', basePrice: 399, durationMinutes: 60 },
-        { name: 'Furniture Assembly', slug: 'furniture-assembly', basePrice: 499, durationMinutes: 90 },
-        { name: 'Wardrobe Installation', slug: 'wardrobe-installation', basePrice: 799, durationMinutes: 120 },
-        { name: 'Window Repair', slug: 'window-repair', basePrice: 349, durationMinutes: 60 },
-      ],
-    },
+
+    // 4. AC & Appliance Repair (DISABLED - Phase 2)
     {
       name: 'AC & Appliance Repair',
       slug: 'ac-appliance-repair',
-      icon: '❄️',
-      order: 8,
-      services: [
-        { name: 'AC Servicing', slug: 'ac-servicing', basePrice: 499, durationMinutes: 90 },
-        { name: 'AC Installation', slug: 'ac-installation', basePrice: 999, durationMinutes: 120 },
-        { name: 'AC Gas Refill', slug: 'ac-gas-refill', basePrice: 1499, durationMinutes: 60 },
-        { name: 'Washing Machine Repair', slug: 'washing-machine-repair', basePrice: 399, durationMinutes: 60 },
-        { name: 'Refrigerator Repair', slug: 'refrigerator-repair', basePrice: 449, durationMinutes: 60 },
-        { name: 'Microwave Repair', slug: 'microwave-repair', basePrice: 349, durationMinutes: 45 },
-        { name: 'Geyser Repair', slug: 'geyser-repair', basePrice: 299, durationMinutes: 45 },
+      icon: 'ac_unit',
+      isActive: false,
+      order: 4,
+      description: 'Expert diagnostics, servicing, gas recharge & PCB repair for household appliances.',
+      groups: [
+        {
+          groupName: 'AC Service & Repair',
+          displayOrder: 1,
+          services: [
+            { name: 'Split AC Power Jet Service', slug: 'split-ac-power-jet', basePrice: 499, durationMinutes: 60, description: 'Deep water foam jet cleaning of indoor cooling coil & outdoor unit.', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80' },
+            { name: 'AC Gas Refill & Leak Inspection', slug: 'ac-gas-leak-check', basePrice: 1499, durationMinutes: 60, description: 'Complete Freon/R32 gas charging and leak braze repair.', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Washing Machine & Fridge Repair',
+          displayOrder: 2,
+          services: [
+            { name: 'Washing Machine Checkup & Repair', slug: 'washing-machine-checkup', basePrice: 299, durationMinutes: 45, description: 'Diagnosis of motor, spin cycle, drainage or PCB motherboard error.', imageUrl: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Refrigerator Cooling Repair', slug: 'refrigerator-cooling-repair', basePrice: 349, durationMinutes: 45, description: 'Thermostat, compressor relay and gas circulation diagnostic.', imageUrl: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
+
+    // 5. Electrician, Plumber & Carpenter (DISABLED - Phase 2)
     {
-      name: 'Packers & Movers',
-      slug: 'packers-movers',
-      icon: '📦',
-      order: 9,
-      services: [
-        { name: '1 BHK Moving (Local)', slug: '1bhk-local-move', basePrice: 3500 },
-        { name: '2 BHK Moving (Local)', slug: '2bhk-local-move', basePrice: 5500 },
-        { name: '3 BHK Moving (Local)', slug: '3bhk-local-move', basePrice: 8000 },
-        { name: 'Office Relocation', slug: 'office-relocation', basePrice: 12000 },
-        { name: 'Vehicle Transport', slug: 'vehicle-transport', basePrice: 4000 },
+      name: 'Electrician, Plumber & Carpenter',
+      slug: 'electrician-plumber-carpenter',
+      icon: 'home_repair_service',
+      isActive: false,
+      order: 5,
+      description: 'Doorstep certified handymen for home electrical, plumbing and woodwork repairs.',
+      groups: [
+        {
+          groupName: 'Electrician Services',
+          displayOrder: 1,
+          services: [
+            { name: 'Switchboard / Socket Repair & Install', slug: 'switchboard-repair', basePrice: 149, durationMinutes: 30, description: 'Fix faulty modular switches, MCB trips and socket replacements.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Ceiling Fan Installation / Repair', slug: 'fan-install-repair-handy', basePrice: 249, durationMinutes: 45, description: 'Assembly, regulator wiring and ceiling fan mount.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Plumbing Services',
+          displayOrder: 2,
+          services: [
+            { name: 'Tap / Faucet Leak Repair', slug: 'tap-leak-repair', basePrice: 199, durationMinutes: 30, description: 'Spindle change, washer replacement and faucet fixing.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Drainage & Pipe Blockage Clearing', slug: 'drain-block-clearing', basePrice: 399, durationMinutes: 45, description: 'Mechanical unclogging of kitchen sink, floor traps & bathroom drains.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+        {
+          groupName: 'Carpentry Services',
+          displayOrder: 3,
+          services: [
+            { name: 'Door Lock Repair & Handle Fitting', slug: 'door-lock-fitting', basePrice: 299, durationMinutes: 45, description: 'Mortise lock, latch replacement and hinges realignment.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Drill & Hang (Shelves, Curtains, TV)', slug: 'drill-hang-service', basePrice: 199, durationMinutes: 30, description: 'Wall mounting of frames, mirrors, rods and brackets.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
+
+    // 6. Painting & Waterproofing (DISABLED - Phase 2)
+    {
+      name: 'Painting & Waterproofing',
+      slug: 'painting-waterproofing',
+      icon: 'format_paint',
+      isActive: false,
+      order: 6,
+      description: 'Complete interior & exterior home painting with laser measurement and waterproofing solutions.',
+      groups: [
+        {
+          groupName: 'Home Painting',
+          displayOrder: 1,
+          services: [
+            { name: 'Full Home Interior Painting Consultation', slug: 'interior-painting-consult', basePrice: 499, durationMinutes: 60, description: 'Laser wall measurement, color visualization and detailed quotation.', imageUrl: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+      ],
+    },
+
+    // 7. InstaHelp (Cooks, Maids & Care) (DISABLED - Phase 2)
+    {
+      name: 'InstaHelp',
+      slug: 'instahelp',
+      icon: 'support_agent',
+      isActive: false,
+      order: 7,
+      description: 'Instant and verified on-demand helpers, daily cooks, babysitters & elderly caregivers.',
+      groups: [
+        {
+          groupName: 'Daily Home Help',
+          displayOrder: 1,
+          services: [
+            { name: 'Cook for 1 Meal (Up to 4 Persons)', slug: 'cook-single-meal', basePrice: 399, durationMinutes: 90, description: 'Freshly prepared home-style food (Roti, Sabzi, Dal, Rice).', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Emergency Housekeeper / Maid (2 Hours)', slug: 'emergency-maid-2hr', basePrice: 349, durationMinutes: 120, description: 'Vetted helper for utensil washing, sweeping and mopping.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
+      ],
+    },
+
+    // 8. Pest Control (DISABLED - Phase 2)
     {
       name: 'Pest Control',
       slug: 'pest-control',
-      icon: '🐛',
-      order: 10,
-      services: [
-        { name: 'Cockroach Control', slug: 'cockroach-control', basePrice: 599, durationMinutes: 60 },
-        { name: 'Mosquito Control', slug: 'mosquito-control', basePrice: 799, durationMinutes: 90 },
-        { name: 'Termite Control', slug: 'termite-control', basePrice: 1999, durationMinutes: 180 },
-        { name: 'Bed Bug Control', slug: 'bed-bug-control', basePrice: 1499, durationMinutes: 150 },
-        { name: 'Rodent Control', slug: 'rodent-control', basePrice: 999, durationMinutes: 120 },
-        { name: 'Full Home Pest Control', slug: 'full-home-pest-control', basePrice: 2999, durationMinutes: 240 },
+      icon: 'pest_control',
+      isActive: false,
+      order: 8,
+      description: 'Odorless chemical and gel treatments with government approved safe chemicals.',
+      groups: [
+        {
+          groupName: 'Pest Extermination',
+          displayOrder: 1,
+          services: [
+            { name: 'Cockroach & Ant Gel Treatment', slug: 'cockroach-gel-treatment', basePrice: 599, durationMinutes: 45, description: 'Bayer herbal gel spots in kitchen and bathrooms with 6-month warranty.', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
+
+    // 9. Packers & Movers (DISABLED - Phase 2)
     {
-      name: 'Interior & Modular Kitchen',
-      slug: 'interior-modular-kitchen',
-      icon: '🏠',
-      order: 11,
-      services: [
-        { name: 'Home Interior Consultation', slug: 'interior-consultation', basePrice: 999, durationMinutes: 120 },
-        { name: 'Modular Kitchen Design', slug: 'modular-kitchen-design', basePrice: 2999 },
-        { name: 'False Ceiling (POP/Gypsum)', slug: 'false-ceiling', basePrice: 45 },
-        { name: 'Wardrobe Design', slug: 'wardrobe-design', basePrice: 1999 },
-        { name: 'TV Unit Design', slug: 'tv-unit-design', basePrice: 1499 },
+      name: 'Packers & Movers',
+      slug: 'packers-movers',
+      icon: 'local_shipping',
+      isActive: false,
+      order: 9,
+      description: 'Hassle-free household goods relocation with 3-layer bubble packaging and dedicated trucks.',
+      groups: [
+        {
+          groupName: 'Home Shifting',
+          displayOrder: 1,
+          services: [
+            { name: 'Local Within-City Moving Consultation', slug: 'local-moving-survey', basePrice: 299, durationMinutes: 45, description: 'Free inventory evaluation and confirmed flat quotation.', imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80' },
+          ],
+        },
       ],
     },
   ];
 
   for (const catData of serviceData) {
-    const { services, ...categoryFields } = catData;
+    const { groups, ...categoryFields } = catData;
     const category = await prisma.serviceCategory.upsert({
       where: { slug: catData.slug },
-      update: {},
+      update: {
+        name: catData.name,
+        icon: catData.icon,
+        isActive: catData.isActive,
+        order: catData.order,
+        description: catData.description,
+      },
       create: {
         ...categoryFields,
-        description: `Professional ${catData.name} services`,
       },
     });
 
-    for (const svc of services) {
-      await prisma.service.upsert({
-        where: { slug: svc.slug },
-        update: {},
-        create: { ...svc, categoryId: category.id },
+    for (const grp of groups) {
+      let group = await prisma.serviceGroup.findFirst({
+        where: { categoryId: category.id, groupName: grp.groupName },
       });
+
+      if (!group) {
+        group = await prisma.serviceGroup.create({
+          data: {
+            categoryId: category.id,
+            groupName: grp.groupName,
+            displayOrder: grp.displayOrder,
+          },
+        });
+      } else {
+        await prisma.serviceGroup.update({
+          where: { id: group.id },
+          data: { displayOrder: grp.displayOrder },
+        });
+      }
+
+      for (const svc of grp.services) {
+        const createdSvc = await prisma.service.upsert({
+          where: { slug: svc.slug },
+          update: {
+            name: svc.name,
+            basePrice: svc.basePrice,
+            durationMinutes: svc.durationMinutes,
+            description: svc.description,
+            imageUrl: svc.imageUrl,
+            isActive: catData.isActive,
+            categoryId: category.id,
+          },
+          create: {
+            ...svc,
+            categoryId: category.id,
+            isActive: catData.isActive,
+          },
+        });
+
+        const existingSubOpt = await prisma.serviceSubOption.findFirst({
+          where: { serviceId: createdSvc.id, name: 'Standard Service' },
+        });
+
+        if (!existingSubOpt) {
+          await prisma.serviceSubOption.create({
+            data: {
+              serviceId: createdSvc.id,
+              groupId: group.id,
+              name: 'Standard Service',
+              description: 'Standard verified professional delivery with safety kit',
+              priceAdjust: 0,
+              isActive: true,
+              displayOrder: 1,
+            },
+          });
+        }
+      }
     }
   }
-  console.log(`✅ Seeded ${serviceData.length} service categories`);
+  console.log(`✅ Seeded ${serviceData.length} Urban Company service categories with groups & services`);
 
   // ─── Commission Rules ───────────────────────────────────────────────────────
   const commissionRules = [
@@ -256,24 +446,30 @@ async function main() {
 
   // ─── Admin User ─────────────────────────────────────────────────────────────
   const adminPhone = '9999999999';
-  const existingAdmin = await prisma.user.findUnique({ where: { phone: adminPhone } });
-  if (!existingAdmin) {
-    const passwordHash = await bcrypt.hash('Admin@Ziva2024!', 12);
-    await prisma.user.create({
-      data: {
-        phone: adminPhone,
-        email: 'admin@Zivahousing.com',
-        firstName: 'Ziva',
-        lastName: 'Admin',
-        role: 'ADMIN',
-        status: 'ACTIVE',
-        isPhoneVerified: true,
-        isEmailVerified: true,
-        passwordHash,
-      },
-    });
-    console.log('✅ Created admin user (phone: 9999999999, pass: Admin@Ziva2024!)');
-  }
+  const adminPasswordHash = await bcrypt.hash('Password@123', 12);
+  await prisma.user.upsert({
+    where: { phone: adminPhone },
+    update: {
+      email: 'admin@zivahousing.com',
+      passwordHash: adminPasswordHash,
+      role: 'ADMIN',
+      status: 'ACTIVE',
+      isPhoneVerified: true,
+      isEmailVerified: true,
+    },
+    create: {
+      phone: adminPhone,
+      email: 'admin@zivahousing.com',
+      firstName: 'Ziva',
+      lastName: 'Admin',
+      role: 'ADMIN',
+      status: 'ACTIVE',
+      isPhoneVerified: true,
+      isEmailVerified: true,
+      passwordHash: adminPasswordHash,
+    },
+  });
+  console.log('✅ Upserted admin user (id: admin@zivahousing.com, pass: Password@123)');
 
   // ─── Owner User & Profile ──────────────────────────────────────────────────
   const ownerPhone = '9876543210';
@@ -450,6 +646,295 @@ async function main() {
     });
 
     console.log('✅ Seeded 3 active properties');
+  }
+
+  // ─── Pending Properties for Admin Review Queue ──────────────────────────────
+  const pendingProp = await prisma.property.findFirst({ where: { status: 'PENDING_REVIEW' } });
+  if (!pendingProp) {
+    await prisma.property.create({
+      data: {
+        ownerProfileId: ownerProfile.id,
+        title: 'Modern 3 BHK High-Rise in Golf City (Pending Approval)',
+        description: 'Brand new luxury apartment awaiting admin verification. Premium modular kitchen with granite tops, wooden flooring in master bedroom, and panoramic city views.',
+        purpose: 'SELL',
+        propertyType: 'APARTMENT',
+        status: 'PENDING_REVIEW',
+        isZivaVerified: false,
+        addressLine1: 'Tower C-402, Golf City Heights',
+        addressLine2: 'Sector 150',
+        locality: 'Sector 150',
+        city: 'Noida',
+        state: 'Uttar Pradesh',
+        pincode: '201310',
+        bhk: 3,
+        bathrooms: 3,
+        balconies: 3,
+        totalFloors: 24,
+        floorNumber: 4,
+        builtUpArea: 1850,
+        carpetArea: 1550,
+        furnishing: 'SEMI_FURNISHED',
+        expectedPrice: 16500000,
+        pricePerSqft: 8918,
+        photos: {
+          create: [
+            {
+              url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+              isPrimary: true,
+              order: 0,
+            },
+            {
+              url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+              isPrimary: false,
+              order: 1,
+            },
+          ],
+        },
+      },
+    });
+
+    await prisma.property.create({
+      data: {
+        ownerProfileId: ownerProfile.id,
+        title: 'Spacious 2 BHK Builder Floor near Cyber Hub',
+        description: 'Independent builder floor with separate terrace access and 24/7 dedicated security guard. Ready for immediate move-in.',
+        purpose: 'RENT',
+        propertyType: 'INDEPENDENT_HOUSE',
+        status: 'PENDING_REVIEW',
+        isZivaVerified: false,
+        addressLine1: 'Plot 45-B, DLF Phase 2',
+        locality: 'DLF Phase 2',
+        city: 'Gurgaon',
+        state: 'Haryana',
+        pincode: '122002',
+        bhk: 2,
+        bathrooms: 2,
+        balconies: 2,
+        totalFloors: 4,
+        floorNumber: 2,
+        builtUpArea: 1200,
+        carpetArea: 1050,
+        furnishing: 'FULLY_FURNISHED',
+        monthlyRent: 35000,
+        securityDeposit: 70000,
+        photos: {
+          create: [
+            {
+              url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80',
+              isPrimary: true,
+              order: 0,
+            },
+          ],
+        },
+      },
+    });
+    console.log('✅ Seeded 2 PENDING_REVIEW properties for admin approval queue');
+  }
+
+  // ─── Additional Mock Users (Customer, Agent, Providers) ────────────────────
+  const customerPhone = '9711223344';
+  let customer = await prisma.user.findUnique({ where: { phone: customerPhone } });
+  if (!customer) {
+    customer = await prisma.user.create({
+      data: {
+        phone: customerPhone,
+        email: 'rahul.kapoor@example.com',
+        firstName: 'Rahul',
+        lastName: 'Kapoor',
+        role: 'CUSTOMER',
+        status: 'ACTIVE',
+        isPhoneVerified: true,
+        isEmailVerified: true,
+        customerProfile: { create: {} },
+      },
+    });
+    console.log('✅ Created mock customer user (Rahul Kapoor)');
+  }
+
+  const providerPhone = '9411223344';
+  let providerUser = await prisma.user.findUnique({ where: { phone: providerPhone } });
+  if (!providerUser) {
+    providerUser = await prisma.user.create({
+      data: {
+        phone: providerPhone,
+        email: 'ramesh.cleaner@example.com',
+        firstName: 'Ramesh',
+        lastName: 'Kumar',
+        role: 'SERVICE_PROVIDER',
+        status: 'ACTIVE',
+        isPhoneVerified: true,
+        isEmailVerified: true,
+        serviceProviderProfile: {
+          create: {
+            categoryName: 'Cleaning',
+            serviceArea: ['Noida', 'Greater Noida', 'Delhi NCR'],
+            isVerified: true,
+            verificationStatus: 'APPROVED',
+            rating: 4.9,
+            totalJobs: 142,
+          },
+        },
+      },
+    });
+    console.log('✅ Created mock service provider (Ramesh Kumar - Cleaning)');
+  }
+
+  const providerUser2Phone = '9311223344';
+  let providerUser2 = await prisma.user.findUnique({ where: { phone: providerUser2Phone } });
+  if (!providerUser2) {
+    providerUser2 = await prisma.user.create({
+      data: {
+        phone: providerUser2Phone,
+        email: 'sunita.beauty@example.com',
+        firstName: 'Sunita',
+        lastName: 'Mehra',
+        role: 'SERVICE_PROVIDER',
+        status: 'ACTIVE',
+        isPhoneVerified: true,
+        isEmailVerified: true,
+        serviceProviderProfile: {
+          create: {
+            categoryName: "Women's Salon & Spa",
+            serviceArea: ['Lucknow', 'Gomti Nagar', 'Aliganj'],
+            isVerified: false,
+            verificationStatus: 'PENDING',
+            rating: 4.8,
+            totalJobs: 48,
+          },
+        },
+      },
+    });
+    console.log('✅ Created mock service provider (Sunita Mehra - Salon)');
+  }
+
+  // ─── KYC Verification Documents ───────────────────────────────────────────
+  const provProf = await prisma.serviceProviderProfile.findUnique({ where: { userId: providerUser.id } });
+  if (provProf) {
+    const kycDoc = await prisma.providerVerificationDocument.findFirst({ where: { providerId: provProf.id } });
+    if (!kycDoc) {
+      await prisma.providerVerificationDocument.create({
+        data: {
+          providerId: provProf.id,
+          docType: 'AADHAAR',
+          fileUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=600&q=80',
+          status: 'APPROVED',
+          submittedAt: new Date(),
+        },
+      });
+      await prisma.providerVerificationDocument.create({
+        data: {
+          providerId: provProf.id,
+          docType: 'TRADE_CERTIFICATE',
+          fileUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
+          status: 'APPROVED',
+          submittedAt: new Date(),
+        },
+      });
+    }
+  }
+
+  const provProf2 = await prisma.serviceProviderProfile.findUnique({ where: { userId: providerUser2.id } });
+  if (provProf2) {
+    const kycDoc2 = await prisma.providerVerificationDocument.findFirst({ where: { providerId: provProf2.id } });
+    if (!kycDoc2) {
+      await prisma.providerVerificationDocument.create({
+        data: {
+          providerId: provProf2.id,
+          docType: 'AADHAAR',
+          fileUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+          status: 'SUBMITTED',
+          submittedAt: new Date(),
+        },
+      });
+      console.log('✅ Seeded provider KYC verification documents for Admin review');
+    }
+  }
+
+  // ─── Mock CRM Leads & Support Tickets ─────────────────────────────────────
+  const firstProperty = await prisma.property.findFirst({ where: { status: 'ACTIVE' } });
+  if (firstProperty && customer && owner) {
+    const existingLead = await prisma.lead.findFirst({ where: { customerId: customer.id } });
+    if (!existingLead) {
+      const createdLead = await prisma.lead.create({
+        data: {
+          id: 'JVH-NOI-2026-00001',
+          customerId: customer.id,
+          ownerId: owner.id,
+          propertyId: firstProperty.id,
+          status: 'CONTACTED',
+          notes: 'Customer looking for urgent site visit on Saturday',
+        },
+      });
+
+      await prisma.leadMessage.create({
+        data: {
+          leadId: createdLead.id,
+          senderId: customer.id,
+          contentRaw: 'Can we schedule a visit on Saturday at 4 PM?',
+          contentSanitized: 'Can we schedule a visit on Saturday at 4 PM?',
+        },
+      });
+
+      await prisma.leadMessage.create({
+        data: {
+          leadId: createdLead.id,
+          senderId: owner.id,
+          contentRaw: 'Yes sure Rahul, please feel free to come over.',
+          contentSanitized: 'Yes sure Rahul, please feel free to come over.',
+        },
+      });
+      console.log('✅ Seeded mock lead & chat messages for CRM');
+    }
+  }
+
+  // ─── Support Tickets ───────────────────────────────────────────────────────
+  const existingTicket = await prisma.supportTicket.findFirst();
+  if (!existingTicket && customer) {
+    await prisma.supportTicket.create({
+      data: {
+        userId: customer.id,
+        subject: 'Inquiry regarding token payment guarantee',
+        description: 'I want to make a token booking on a property. How is my advance protected under Ziva Escrow policy?',
+        category: 'PROPERTY',
+        status: 'OPEN',
+        priority: 'HIGH',
+      },
+    });
+
+    await prisma.supportTicket.create({
+      data: {
+        userId: customer.id,
+        subject: 'Service slot reschedule request',
+        description: 'Need to move my bathroom deep cleaning appointment by 2 hours tomorrow.',
+        category: 'SERVICES',
+        status: 'IN_PROGRESS',
+        priority: 'MEDIUM',
+      },
+    });
+    console.log('✅ Seeded support tickets for Admin CRM');
+  }
+
+  // ─── Admin Alerts ──────────────────────────────────────────────────────────
+  const existingAlert = await prisma.adminAlert.findFirst();
+  if (!existingAlert) {
+    await prisma.adminAlert.create({
+      data: {
+        type: 'PRICE_OUTLIER',
+        severity: 'MEDIUM',
+        details: 'Sector 62 Noida 3 BHK listed at ₹1.35 Cr is 12% below average locality index.',
+        entityType: 'Property',
+      },
+    });
+
+    await prisma.adminAlert.create({
+      data: {
+        type: 'DUPLICATE_PHONE',
+        severity: 'LOW',
+        details: 'Vendor phone registered in 2 different sub-categories.',
+        entityType: 'User',
+      },
+    });
+    console.log('✅ Seeded admin compliance alerts');
   }
 
   // ─── Premium Listing Plans ──────────────────────────────────────────────────

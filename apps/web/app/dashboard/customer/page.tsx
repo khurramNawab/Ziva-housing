@@ -1016,10 +1016,15 @@ export default function CustomerDashboard() {
                             <button
                               type="button"
                               onClick={(e) => removeSavedProperty(prop.id, e)}
-                              className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center text-red-500 shadow-md hover:scale-110 transition-all z-10"
+                              className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center text-red-600 shadow-md hover:scale-110 transition-all z-10 cursor-pointer"
                               title="Remove from saved"
                             >
-                              <span className="material-symbols-outlined text-sm font-fill">favorite</span>
+                              <span
+                                className="material-symbols-outlined text-sm font-fill text-red-600"
+                                style={{ fontVariationSettings: "'FILL' 1, 'wght' 700" }}
+                              >
+                                favorite
+                              </span>
                             </button>
                           </div>
                           <div className="p-4 space-y-2">

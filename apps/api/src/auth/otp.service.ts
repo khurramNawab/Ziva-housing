@@ -112,22 +112,21 @@ export class OtpService {
     await this.sendViaMSG91(cleanPhone, otp);
   }
 
-  async verifyOtp(phone: string, otp: string): Promise<boolean> {
-    const rawDigits = phone.replace(/\D/g, '');
-    const cleanPhone = rawDigits.length >= 10 ? rawDigits.slice(-10) : phone.trim();
+  async verifyOtp(phone: string, otp: string, email?: string): Promise<boolean> {
+    const rawDigits = (phone || '').replace(/\D/g, '');
+    const cleanPhone = rawDigits.length >= 10 ? rawDigits.slice(-10) : (phone || '').trim();
 
     // Dev mode universal testing OTP fallback — NEVER runs in production
     if (process.env.NODE_ENV !== 'production' && (otp === '123456' || otp === '000000')) {
-      this.logger.warn(`[DEV ONLY] Universal OTP bypass used for phone: ${cleanPhone}`);
+      this.logger.warn(`[DEV ONLY] Universal OTP bypass used for identifier: ${cleanPhone || email}`);
       return true;
     }
 
     const user = await this.prisma.user.findFirst({
       where: {
         OR: [
-          { phone: cleanPhone },
-          { phone },
-          { phone: `+91${cleanPhone}` },
+          ...(cleanPhone ? [{ phone: cleanPhone }, { phone }, { phone: `+91${cleanPhone}` }] : []),
+          ...(email ? [{ email: email.trim().toLowerCase() }] : []),
         ],
       },
     });
@@ -268,19 +267,30 @@ export class OtpService {
       try {
         const smtpPort = Number(this.config.get('SMTP_PORT', 587));
         const smtpSecure = this.config.get('SMTP_SECURE') === 'true' || smtpPort === 465;
-        const transporter = nodemailer.createTransport({
-          host: smtpHost,
-          port: smtpPort,
-          secure: smtpSecure,
-          auth: { user: smtpUser, pass: smtpPass },
-        });
+        const isGmail = smtpHost.includes('gmail');
+
+        const transporter = nodemailer.createTransport(
+          isGmail
+            ? {
+                service: 'gmail',
+                auth: { user: smtpUser, pass: smtpPass },
+                tls: { rejectUnauthorized: false },
+              }
+            : {
+                host: smtpHost,
+                port: smtpPort,
+                secure: smtpSecure,
+                auth: { user: smtpUser, pass: smtpPass },
+                tls: { rejectUnauthorized: false },
+              },
+        );
 
         const attachments = logoFilePath
           ? [{ filename: 'logo.png', path: logoFilePath, cid: 'zivaLogo' }]
           : [];
 
         await transporter.sendMail({
-          from: fromAddress,
+          from: fromAddress || `"Ziva Housing" <${smtpUser}>`,
           to: email,
           subject,
           html,

@@ -26,22 +26,29 @@ interface ProviderMock {
 // Exact base starting prices map for all 18 services to eliminate price mismatches
 const serviceBasePrices: Record<string, number> = {
   'home-cleaning': 1499,
+  'cleaning': 1499,
   'pest-control': 899,
   'ac-repair': 699,
+  'ac-appliance-repair': 699,
   'electrician': 299,
+  'electrician-plumber-carpenter': 299,
   'plumbing': 349,
   'carpenter': 399,
   'painting': 799,
+  'painting-waterproofing': 799,
   'baby-sitting': 499,
   'elderly-care': 799,
   'cook-chef': 599,
+  'instahelp': 599,
   'driver': 699,
   'packers-movers': 4999,
   'gardening': 799,
   'solar-installation': 45000,
   'beautician': 499,
+  'womens-salon-spa': 499,
   'womens-spa': 1199,
   'mens-spa': 999,
+  'mens-salon-massage': 999,
   'yoga-at-home': 399,
 };
 
@@ -291,7 +298,7 @@ const serviceMetadata: Record<string, {
     tagline: 'Deep tissue sports massage, head relaxation, facial cleanup, and beard styling for men at home.',
     duration: '60-90 mins',
     team: '1 Male Therapist',
-    heroImg: 'https://images.unsplash.com/photo-1591019052241-e4d84ee73c4e?auto=format&fit=crop&w=1200&q=80',
+    heroImg: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80',
     badges: ['Men Only', 'Deep Tissue'],
     includes: [
       { icon: 'fitness_center', title: 'Deep Tissue Muscle Release', desc: 'Targeted pressure on sore shoulders, lower back, and legs.' },
@@ -315,6 +322,15 @@ const serviceMetadata: Record<string, {
   },
 };
 
+// Aliases for unified route handling
+if (serviceMetadata['home-cleaning']) serviceMetadata['cleaning'] = serviceMetadata['home-cleaning'];
+if (serviceMetadata['ac-repair']) serviceMetadata['ac-appliance-repair'] = serviceMetadata['ac-repair'];
+if (serviceMetadata['electrician']) serviceMetadata['electrician-plumber-carpenter'] = serviceMetadata['electrician'];
+if (serviceMetadata['painting']) serviceMetadata['painting-waterproofing'] = serviceMetadata['painting'];
+if (serviceMetadata['beautician']) serviceMetadata['womens-salon-spa'] = serviceMetadata['beautician'];
+if (serviceMetadata['mens-spa']) serviceMetadata['mens-salon-massage'] = serviceMetadata['mens-spa'];
+if (serviceMetadata['cook-chef']) serviceMetadata['instahelp'] = serviceMetadata['cook-chef'];
+
 const defaultMeta = {
   title: 'Professional Home Service',
   icon: 'home_repair_service',
@@ -329,15 +345,28 @@ const defaultMeta = {
   ],
 };
 
+const getInitialServices = (slug: string): ServiceItem[] => {
+  const baseStartingPrice = serviceBasePrices[slug] || 499;
+  const metaTitle = serviceMetadata[slug]?.title || slug.replace(/-/g, ' ');
+  return [
+    { id: 'svc-essential', name: `Standard ${metaTitle}`, slug: `basic-${slug}`, basePrice: baseStartingPrice, description: 'Essential service package covering all core requirements.' },
+    { id: 'svc-deep', name: `Premium ${metaTitle} (Deep Care)`, slug: `premium-${slug}`, basePrice: Math.round(baseStartingPrice * 1.6), description: 'Enhanced package with specialized treatment and 30-day warranty.' },
+    { id: 'svc-move', name: `Complete ${metaTitle} & Safety Audit`, slug: `complete-${slug}`, basePrice: Math.round(baseStartingPrice * 2.4), description: 'Full top-to-bottom service with premium products and expert team.' },
+  ];
+};
+
 export default function DynamicServiceDetailPage() {
   const router = useRouter();
   const params = useParams();
   const serviceSlug = (params?.serviceSlug as string) || 'home-cleaning';
 
   const [token, setToken] = useState('');
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [categoryName, setCategoryName] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState<ServiceItem[]>(() => getInitialServices(serviceSlug));
+  const [categoryName, setCategoryName] = useState(() => {
+    const rawName = serviceSlug.replace(/-/g, ' ');
+    return rawName.charAt(0).toUpperCase() + rawName.slice(1);
+  });
+  const [loading, setLoading] = useState(false);
 
   const [bookingStep, setBookingStep] = useState(0);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
@@ -366,41 +395,34 @@ export default function DynamicServiceDetailPage() {
   useEffect(() => {
     const accToken = localStorage.getItem('Ziva_access');
     if (accToken) setToken(accToken);
+    setServices(getInitialServices(serviceSlug));
+    const rawName = serviceSlug.replace(/-/g, ' ');
+    setCategoryName(rawName.charAt(0).toUpperCase() + rawName.slice(1));
     fetchServices();
   }, [serviceSlug]);
 
   const fetchServices = async () => {
-    setLoading(true);
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       const [res, provRes] = await Promise.all([
         fetch(`${apiBase}/api/v1/services?category=${serviceSlug}`),
         fetch(`${apiBase}/api/v1/services/providers/public?category=${serviceSlug}`),
       ]);
-      const json = await res.json();
       if (res.ok) {
+        const json = await res.json();
         const list = json.data || json || [];
-        setServices(list);
-      } else { fallbackMockData(); }
+        if (Array.isArray(list) && list.length > 0) {
+          setServices(list);
+        }
+      }
 
       if (provRes.ok) {
         const provJson = await provRes.json();
         setPublicProviders(provJson.data || provJson || []);
       }
-    } catch { fallbackMockData(); }
-    finally { setLoading(false); }
-    const rawName = serviceSlug.replace(/-/g, ' ');
-    setCategoryName(rawName.charAt(0).toUpperCase() + rawName.slice(1));
-  };
-
-  const fallbackMockData = () => {
-    const baseStartingPrice = serviceBasePrices[serviceSlug] || 499;
-    const metaTitle = serviceMetadata[serviceSlug]?.title || serviceSlug.replace(/-/g, ' ');
-    setServices([
-      { id: 'svc-essential', name: `Standard ${metaTitle}`, slug: `basic-${serviceSlug}`, basePrice: baseStartingPrice, description: 'Essential service package covering all core requirements.' },
-      { id: 'svc-deep', name: `Premium ${metaTitle} (Deep Care)`, slug: `premium-${serviceSlug}`, basePrice: Math.round(baseStartingPrice * 1.6), description: 'Enhanced package with specialized treatment and 30-day warranty.' },
-      { id: 'svc-move', name: `Complete ${metaTitle} & Safety Audit`, slug: `complete-${serviceSlug}`, basePrice: Math.round(baseStartingPrice * 2.4), description: 'Full top-to-bottom service with premium products and expert team.' },
-    ]);
+    } catch {
+      // Keep initial mock services seamlessly without breaking UI
+    }
   };
 
   const handleSelectPackage = (id: string) => {
@@ -539,13 +561,16 @@ export default function DynamicServiceDetailPage() {
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 h-64 sm:h-80 lg:h-full relative overflow-hidden">
+                <div className="lg:col-span-5 min-h-[220px] sm:min-h-[280px] lg:h-full relative overflow-hidden bg-[#e8ddff]/30">
                   <img
                     src={meta.heroImg}
                     alt={meta.title || categoryName}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80';
+                    }}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent lg:bg-gradient-to-r lg:from-white lg:via-transparent lg:to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent lg:bg-gradient-to-r lg:from-white lg:via-transparent lg:to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>

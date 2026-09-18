@@ -112,13 +112,23 @@ class EmailChannel implements NotificationChannel {
     const smtpSecure = this.config.get('SMTP_SECURE') === 'true' || smtpPort === 465;
 
     if (smtpHost && smtpUser && smtpPass) {
-      this.smtpTransporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpSecure,
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-      this.logger.log(`EmailChannel configured with SMTP: ${smtpHost}:${smtpPort}`);
+      const isGmail = smtpHost.includes('gmail');
+      this.smtpTransporter = nodemailer.createTransport(
+        isGmail
+          ? {
+              service: 'gmail',
+              auth: { user: smtpUser, pass: smtpPass },
+              tls: { rejectUnauthorized: false },
+            }
+          : {
+              host: smtpHost,
+              port: smtpPort,
+              secure: smtpSecure,
+              auth: { user: smtpUser, pass: smtpPass },
+              tls: { rejectUnauthorized: false },
+            },
+      );
+      this.logger.log(`EmailChannel configured with SMTP (${isGmail ? 'Gmail' : smtpHost}:${smtpPort})`);
     } else if (this.resend) {
       this.logger.log('EmailChannel configured with Resend API');
     } else {

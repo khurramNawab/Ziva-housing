@@ -24,6 +24,10 @@ export const sharedSystemSettings = new Map<string, string>([
   ['bypassPolicy', 'MASK'],
   ['maintenanceMode', 'false'],
   ['minCommissionRate', '1.5'],
+  ['allowCustomerRegistration', 'true'],
+  ['allowOwnerRegistration', 'true'],
+  ['allowAgentRegistration', 'true'],
+  ['allowVendorRegistration', 'true'],
 ]);
 
 export const sharedIncidents: BypassIncidentRecord[] = [

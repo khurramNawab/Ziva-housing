@@ -1886,4 +1886,144 @@ export class AdminService {
     await this.logAction(adminId, 'UPDATE', 'ServiceBooking', bookingId, null, { newProviderId: newProviderProfileId });
     return { success: true, booking: booking || { id: bookingId, serviceProviderId: newProviderProfileId } };
   }
+
+  // ─── Service Category & Item On/Off Controls ──────────────────────────────
+  async getAdminServiceCategories(adminId: string) {
+    await this.assertAdmin(adminId);
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const categories = await this.prisma.serviceCategory.findMany({
+          include: {
+            serviceGroups: {
+              orderBy: { displayOrder: 'asc' },
+              include: {
+                subOptions: {
+                  include: { service: true },
+                  orderBy: { displayOrder: 'asc' },
+                },
+              },
+            },
+            services: {
+              orderBy: { order: 'asc' },
+            },
+          },
+          orderBy: { order: 'asc' },
+        });
+        if (categories && categories.length > 0) return categories;
+      } catch (err: any) {
+        this.logger.warn(`Remote DB error in getAdminServiceCategories: ${err?.message}`);
+      }
+    }
+    return [];
+  }
+
+  async toggleServiceCategory(adminId: string, categoryId: string, requestedState?: boolean) {
+    await this.assertAdmin(adminId);
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const category = await this.prisma.serviceCategory.findFirst({
+          where: { OR: [{ id: categoryId }, { slug: categoryId }] },
+        });
+        if (!category) throw new NotFoundException('Service category not found');
+
+        const newStatus = requestedState !== undefined ? requestedState : !category.isActive;
+        const updated = await this.prisma.serviceCategory.update({
+          where: { id: category.id },
+          data: { isActive: newStatus },
+        });
+
+        // Also cascade update services under this category if disabled
+        if (!newStatus) {
+          await this.prisma.service.updateMany({
+            where: { categoryId: category.id },
+            data: { isActive: false },
+          });
+        } else {
+          await this.prisma.service.updateMany({
+            where: { categoryId: category.id },
+            data: { isActive: true },
+          });
+        }
+
+        await this.logAction(adminId, 'UPDATE', 'ServiceCategory', category.id, { isActive: category.isActive }, { isActive: newStatus });
+        return { success: true, category: updated };
+      } catch (err: any) {
+        if (err instanceof NotFoundException) throw err;
+        this.logger.warn(`Remote DB error in toggleServiceCategory: ${err?.message}`);
+      }
+    }
+
+    throw new BadRequestException('Failed to toggle service category status');
+  }
+
+  async toggleServiceItem(adminId: string, serviceId: string, requestedState?: boolean) {
+    await this.assertAdmin(adminId);
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const service = await this.prisma.service.findFirst({
+          where: { OR: [{ id: serviceId }, { slug: serviceId }] },
+        });
+        if (!service) throw new NotFoundException('Service item not found');
+
+        const newStatus = requestedState !== undefined ? requestedState : !service.isActive;
+        const updated = await this.prisma.service.update({
+          where: { id: service.id },
+          data: { isActive: newStatus },
+        });
+
+        await this.logAction(adminId, 'UPDATE', 'Service', service.id, { isActive: service.isActive }, { isActive: newStatus });
+        return { success: true, service: updated };
+      } catch (err: any) {
+        if (err instanceof NotFoundException) throw err;
+        this.logger.warn(`Remote DB error in toggleServiceItem: ${err?.message}`);
+      }
+    }
+
+    throw new BadRequestException('Failed to toggle service item status');
+  }
+
+  // ─── Role Registration On/Off Controls (Feature) ─────────────────────────
+  async getRegistrationSettings(adminId: string) {
+    await this.assertAdmin(adminId);
+    return {
+      allowCustomerRegistration: sharedSystemSettings.get('allowCustomerRegistration') !== 'false',
+      allowOwnerRegistration: sharedSystemSettings.get('allowOwnerRegistration') !== 'false',
+      allowAgentRegistration: sharedSystemSettings.get('allowAgentRegistration') !== 'false',
+      allowVendorRegistration: sharedSystemSettings.get('allowVendorRegistration') !== 'false',
+    };
+  }
+
+  async updateRegistrationSettings(
+    adminId: string,
+    settings: {
+      allowCustomerRegistration?: boolean;
+      allowOwnerRegistration?: boolean;
+      allowAgentRegistration?: boolean;
+      allowVendorRegistration?: boolean;
+    },
+  ) {
+    await this.assertAdmin(adminId);
+    const before = await this.getRegistrationSettings(adminId);
+
+    if (settings.allowCustomerRegistration !== undefined) {
+      sharedSystemSettings.set('allowCustomerRegistration', settings.allowCustomerRegistration ? 'true' : 'false');
+    }
+    if (settings.allowOwnerRegistration !== undefined) {
+      sharedSystemSettings.set('allowOwnerRegistration', settings.allowOwnerRegistration ? 'true' : 'false');
+    }
+    if (settings.allowAgentRegistration !== undefined) {
+      sharedSystemSettings.set('allowAgentRegistration', settings.allowAgentRegistration ? 'true' : 'false');
+    }
+    if (settings.allowVendorRegistration !== undefined) {
+      sharedSystemSettings.set('allowVendorRegistration', settings.allowVendorRegistration ? 'true' : 'false');
+    }
+
+    const after = await this.getRegistrationSettings(adminId);
+    await this.logAction(adminId, 'UPDATE', 'SystemSettings', 'role-registration', before, after);
+
+    return {
+      success: true,
+      settings: after,
+    };
+  }
 }

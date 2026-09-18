@@ -796,17 +796,54 @@ export default function PropertyDetailPage() {
     fetchProperty();
   }, [id]);
 
-  const handleToggleSave = () => {
-    const saved = JSON.parse(localStorage.getItem('Ziva_saved_properties') || '[]');
-    let updated;
-    if (saved.includes(id)) {
-      updated = saved.filter((x: string) => x !== id);
-      setIsSaved(false);
-    } else {
-      updated = [...saved, id];
-      setIsSaved(true);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && id) {
+      const token = localStorage.getItem('Ziva_access');
+      if (!token) {
+        setIsSaved(false);
+        return;
+      }
+      try {
+        const saved = JSON.parse(localStorage.getItem('Ziva_saved_properties') || '[]');
+        setIsSaved(saved.some((x: any) => (typeof x === 'string' ? x === id : x?.id === id)));
+      } catch {}
     }
-    localStorage.setItem('Ziva_saved_properties', JSON.stringify(updated));
+  }, [id]);
+
+  const handleToggleSave = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
+    if (!token) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('Ziva_saved_properties') || '[]');
+      const isAlreadySaved = saved.some((x: any) => (typeof x === 'string' ? x === id : x?.id === id));
+      let updated;
+      if (isAlreadySaved) {
+        updated = saved.filter((x: any) => (typeof x === 'string' ? x !== id : x?.id !== id));
+        setIsSaved(false);
+      } else {
+        const saveItem = property ? {
+          id: property.id || id,
+          title: property.title,
+          expectedPrice: property.expectedPrice || property.monthlyRent || 0,
+          monthlyRent: property.monthlyRent || 0,
+          locality: property.locality || '',
+          city: property.city || '',
+          purpose: property.purpose || 'BUY',
+          bhk: property.bhk,
+          builtUpArea: property.builtUpArea || '',
+          photos: property.photos || [],
+        } : id;
+        updated = [...saved, saveItem];
+        setIsSaved(true);
+      }
+      localStorage.setItem('Ziva_saved_properties', JSON.stringify(updated));
+    } catch (err) {
+      console.error('Error saving property', err);
+    }
   };
 
   // High-End Interactive Success & Auth Modals
@@ -1286,13 +1323,16 @@ export default function PropertyDetailPage() {
                 <div className="flex items-center gap-3">
                   <h1 className="text-3xl font-bold text-on-surface">{property.title}</h1>
                   <button
+                    type="button"
                     onClick={handleToggleSave}
-                    className="p-2 rounded-full border border-outline-variant hover:bg-gray-100 transition-colors flex items-center justify-center shrink-0"
-                    title={isSaved ? 'Remove from Saved' : 'Save Property'}
+                    className={`p-2.5 rounded-full border transition-all flex items-center justify-center shrink-0 cursor-pointer ${
+                      isSaved ? 'bg-red-50 border-red-200 text-red-600 shadow-sm' : 'border-outline-variant hover:bg-gray-100 text-gray-400 hover:text-red-500'
+                    }`}
+                    title={isSaved ? 'Remove from Wishlist' : 'Add to Wishlist'}
                   >
                     <span
-                      className={`material-symbols-outlined text-xl ${isSaved ? 'text-red-500 font-filled' : 'text-gray-400'}`}
-                      style={isSaved ? { fontVariationSettings: "'FILL' 1" } : undefined}
+                      className={`material-symbols-outlined text-xl ${isSaved ? 'font-fill text-red-600' : 'text-gray-400 hover:text-red-500'}`}
+                      style={{ fontVariationSettings: isSaved ? "'FILL' 1, 'wght' 700" : "'FILL' 0, 'wght' 400" }}
                     >
                       favorite
                     </span>

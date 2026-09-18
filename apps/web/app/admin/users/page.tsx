@@ -28,7 +28,16 @@ export default function AdminUsersPage() {
   const [token, setToken] = useState('');
 
   // Tab Selection
-  const [adminSubTab, setAdminSubTab] = useState<'USERS' | 'VENDORS' | 'PAYOUTS' | 'BROADCAST' | 'DISPATCHER'>('VENDORS');
+  const [adminSubTab, setAdminSubTab] = useState<'USERS' | 'VENDORS' | 'ROLE_CONTROLS' | 'PAYOUTS' | 'BROADCAST' | 'DISPATCHER'>('VENDORS');
+
+  // Role Registration On/Off Settings State
+  const [roleSettings, setRoleSettings] = useState({
+    allowCustomerRegistration: true,
+    allowOwnerRegistration: true,
+    allowAgentRegistration: true,
+    allowVendorRegistration: true,
+  });
+  const [roleSettingLoading, setRoleSettingLoading] = useState(false);
 
   // User States & Pagination
   const [usersList, setUsersList] = useState<User[]>([]);
@@ -105,12 +114,13 @@ export default function AdminUsersPage() {
       if (userSearch.trim()) userParams.append('search', userSearch.trim());
       if (userRoleFilter.trim()) userParams.append('role', userRoleFilter.trim());
 
-      const [usersRes, pendingRes, approvedRes, payoutsRes, bookingsRes] = await Promise.all([
+      const [usersRes, pendingRes, approvedRes, payoutsRes, bookingsRes, regRes] = await Promise.all([
         fetch(`${apiBase}/api/v1/admin/users?${userParams.toString()}`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/vendors/pending`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/vendors/approved`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/payouts`, { headers: { Authorization: `Bearer ${accToken}` } }),
         fetch(`${apiBase}/api/v1/admin/service-bookings`, { headers: { Authorization: `Bearer ${accToken}` } }),
+        fetch(`${apiBase}/api/v1/admin/registration-settings`, { headers: { Authorization: `Bearer ${accToken}` } }),
       ]);
 
       if (usersRes.ok) {
@@ -143,6 +153,15 @@ export default function AdminUsersPage() {
         const bJson = await bookingsRes.json();
         setServiceBookings(bJson.data || bJson || []);
       }
+      if (regRes.ok) {
+        const regJson = await regRes.json();
+        setRoleSettings({
+          allowCustomerRegistration: regJson.allowCustomerRegistration !== false,
+          allowOwnerRegistration: regJson.allowOwnerRegistration !== false,
+          allowAgentRegistration: regJson.allowAgentRegistration !== false,
+          allowVendorRegistration: regJson.allowVendorRegistration !== false,
+        });
+      }
     } catch {
       // Genuine offline: show honest empty states, never fabricated dummy records
       setUsersList([]);
@@ -151,6 +170,37 @@ export default function AdminUsersPage() {
       setApprovedVendors([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleRoleSetting = async (roleKey: string, currentValue: boolean) => {
+    setRoleSettingLoading(true);
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const res = await fetch(`${apiBase}/api/v1/admin/registration-settings`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          [roleKey]: !currentValue,
+        }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.settings) {
+          setRoleSettings(json.settings);
+        } else {
+          setRoleSettings((prev) => ({ ...prev, [roleKey]: !currentValue }));
+        }
+      } else {
+        alert('Failed to update registration setting.');
+      }
+    } catch {
+      alert('Error updating setting.');
+    } finally {
+      setRoleSettingLoading(false);
     }
   };
 
@@ -425,6 +475,7 @@ export default function AdminUsersPage() {
         <div className="flex gap-2 bg-[#f2f4f6] p-1.5 rounded-2xl">
           {[
             { key: 'VENDORS', label: 'Vendor Verification', icon: 'verified_user' },
+            { key: 'ROLE_CONTROLS', label: 'Role On/Off Controls', icon: 'tune' },
             { key: 'USERS', label: 'User Database', icon: 'group' },
             { key: 'PAYOUTS', label: 'Payout Ledger', icon: 'payments' },
             { key: 'DISPATCHER', label: 'Job Dispatcher', icon: 'local_shipping' },
@@ -445,6 +496,191 @@ export default function AdminUsersPage() {
           ))}
         </div>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          SUB-TAB: ROLE ON/OFF REGISTRATION CONTROLS
+         ═══════════════════════════════════════════════════════════════════════ */}
+      {adminSubTab === 'ROLE_CONTROLS' && (
+        <section className="space-y-6">
+          <div className="bg-gradient-to-r from-[#5e23dc]/10 via-[#4500b4]/5 to-transparent border-l-4 border-[#5e23dc] rounded-xl p-4 flex items-start justify-between">
+            <div className="flex items-start gap-3">
+              <span className="material-symbols-outlined text-[#5e23dc] text-2xl">tune</span>
+              <div>
+                <h3 className="font-bold text-sm text-[#191c1e]">Public Role Registration Controls</h3>
+                <p className="text-xs text-[#494455] mt-0.5">
+                  Control which user types are allowed to self-register on the platform. Turning a role OFF disables public signups for that role while existing accounts can still log in.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Agent / Broker Toggle */}
+            <div className="bg-white border border-[#eceef0] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-[#e8ddff] text-[#5e23dc] flex items-center justify-center font-bold text-xl shrink-0">
+                    <span className="material-symbols-outlined">handshake</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm text-[#191c1e]">Real Estate Agent / Broker</h3>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${roleSettings.allowAgentRegistration ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                        {roleSettings.allowAgentRegistration ? 'Live / Active' : 'Disabled / Off'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#494455] mt-1">
+                      Controls whether agents and brokers can self-register from the public registration screen.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-[#eceef0]">
+                <span className="text-xs font-semibold text-[#7a7487]">Agent Registration Status</span>
+                <button
+                  type="button"
+                  disabled={roleSettingLoading}
+                  onClick={() => handleToggleRoleSetting('allowAgentRegistration', roleSettings.allowAgentRegistration)}
+                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    roleSettings.allowAgentRegistration
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {roleSettings.allowAgentRegistration ? 'toggle_on' : 'toggle_off'}
+                  </span>
+                  {roleSettings.allowAgentRegistration ? 'Registration ON' : 'Registration OFF'}
+                </button>
+              </div>
+            </div>
+
+            {/* Service Vendor / Partner Toggle */}
+            <div className="bg-white border border-[#eceef0] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-[#e8ddff] text-[#5e23dc] flex items-center justify-center font-bold text-xl shrink-0">
+                    <span className="material-symbols-outlined">handyman</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm text-[#191c1e]">Service Vendor / Professional</h3>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${roleSettings.allowVendorRegistration ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                        {roleSettings.allowVendorRegistration ? 'Live / Active' : 'Disabled / Off'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#494455] mt-1">
+                      Controls whether service technicians &amp; home care vendors can self-register.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-[#eceef0]">
+                <span className="text-xs font-semibold text-[#7a7487]">Vendor Registration Status</span>
+                <button
+                  type="button"
+                  disabled={roleSettingLoading}
+                  onClick={() => handleToggleRoleSetting('allowVendorRegistration', roleSettings.allowVendorRegistration)}
+                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    roleSettings.allowVendorRegistration
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {roleSettings.allowVendorRegistration ? 'toggle_on' : 'toggle_off'}
+                  </span>
+                  {roleSettings.allowVendorRegistration ? 'Registration ON' : 'Registration OFF'}
+                </button>
+              </div>
+            </div>
+
+            {/* Property Owner Toggle */}
+            <div className="bg-white border border-[#eceef0] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-[#e8ddff] text-[#5e23dc] flex items-center justify-center font-bold text-xl shrink-0">
+                    <span className="material-symbols-outlined">real_estate_agent</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm text-[#191c1e]">Property Owner</h3>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${roleSettings.allowOwnerRegistration ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                        {roleSettings.allowOwnerRegistration ? 'Live / Active' : 'Disabled / Off'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#494455] mt-1">
+                      Controls whether property owners can register to list properties for rent or sale.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-[#eceef0]">
+                <span className="text-xs font-semibold text-[#7a7487]">Owner Registration Status</span>
+                <button
+                  type="button"
+                  disabled={roleSettingLoading}
+                  onClick={() => handleToggleRoleSetting('allowOwnerRegistration', roleSettings.allowOwnerRegistration)}
+                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    roleSettings.allowOwnerRegistration
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {roleSettings.allowOwnerRegistration ? 'toggle_on' : 'toggle_off'}
+                  </span>
+                  {roleSettings.allowOwnerRegistration ? 'Registration ON' : 'Registration OFF'}
+                </button>
+              </div>
+            </div>
+
+            {/* Customer Toggle */}
+            <div className="bg-white border border-[#eceef0] rounded-2xl p-5 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-[#e8ddff] text-[#5e23dc] flex items-center justify-center font-bold text-xl shrink-0">
+                    <span className="material-symbols-outlined">person</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm text-[#191c1e]">Customer / Buyer / Renter</h3>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${roleSettings.allowCustomerRegistration ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                        {roleSettings.allowCustomerRegistration ? 'Live / Active' : 'Disabled / Off'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#494455] mt-1">
+                      Controls whether regular buyers and renters can sign up on the storefront.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-[#eceef0]">
+                <span className="text-xs font-semibold text-[#7a7487]">Customer Registration Status</span>
+                <button
+                  type="button"
+                  disabled={roleSettingLoading}
+                  onClick={() => handleToggleRoleSetting('allowCustomerRegistration', roleSettings.allowCustomerRegistration)}
+                  className={`px-4 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                    roleSettings.allowCustomerRegistration
+                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                      : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {roleSettings.allowCustomerRegistration ? 'toggle_on' : 'toggle_off'}
+                  </span>
+                  {roleSettings.allowCustomerRegistration ? 'Registration ON' : 'Registration OFF'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════════════
           SUB-TAB 1: VENDOR VERIFICATION & ONBOARDING (FEATURE 6A KYC MODAL INCLUDED)

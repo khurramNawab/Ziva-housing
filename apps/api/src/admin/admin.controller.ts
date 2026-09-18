@@ -440,21 +440,54 @@ export class AdminController {
     return this.adminService.releasePayout(adminId, payoutId, body.notes);
   }
 
-  // ─── Service Booking Dispatcher ───────────────────────────────────────────
-  @Get('service-bookings')
-  @ApiOperation({ summary: 'Get all service bookings for dispatcher (Admin only)' })
-  getAllServiceBookings(@CurrentUser('id') adminId: string) {
-    return this.adminService.getAllServiceBookings(adminId);
+  // ─── Service Category & Item Toggle Management (Admin Only) ──────────────
+  @Get('services/categories')
+  @ApiOperation({ summary: 'Get all service categories with services & groups for admin management' })
+  getServiceCategories(@CurrentUser('id') adminId: string) {
+    return this.adminService.getAdminServiceCategories(adminId);
   }
 
-  @Post('service-bookings/:id/reassign')
-  @ApiOperation({ summary: 'Reassign service booking to vendor (Admin only)' })
-  reassignServiceBooking(
+  @Patch('services/categories/:id/toggle')
+  @ApiOperation({ summary: 'Toggle service category active status (ON/OFF)' })
+  toggleServiceCategory(
     @CurrentUser('id') adminId: string,
-    @Param('id') bookingId: string,
-    @Body() body: { newProviderId: string },
+    @Param('id') categoryId: string,
+    @Body() body?: { isActive?: boolean },
   ) {
-    return this.adminService.reassignServiceBooking(adminId, bookingId, body.newProviderId);
+    return this.adminService.toggleServiceCategory(adminId, categoryId, body?.isActive);
+  }
+
+  @Patch('services/items/:id/toggle')
+  @ApiOperation({ summary: 'Toggle service item active status (ON/OFF)' })
+  toggleServiceItem(
+    @CurrentUser('id') adminId: string,
+    @Param('id') serviceId: string,
+    @Body() body?: { isActive?: boolean },
+  ) {
+    return this.adminService.toggleServiceItem(adminId, serviceId, body?.isActive);
+  }
+
+  // ─── Role Registration On/Off Controls (Admin Only) ───────────────────────
+  @Get('registration-settings')
+  @ApiOperation({ summary: 'Get current allowed role registration toggles (Admin only)' })
+  getRegistrationSettings(@CurrentUser('id') adminId: string) {
+    return this.adminService.getRegistrationSettings(adminId);
+  }
+
+  @Patch('registration-settings')
+  @ApiOperation({ summary: 'Update allowed role registration toggles (Agent, Vendor, Owner, Customer) (Admin only)' })
+  updateRegistrationSettings(
+    @CurrentUser('id') adminId: string,
+    @Body()
+    body: {
+      allowCustomerRegistration?: boolean;
+      allowOwnerRegistration?: boolean;
+      allowAgentRegistration?: boolean;
+      allowVendorRegistration?: boolean;
+    },
+  ) {
+    return this.adminService.updateRegistrationSettings(adminId, body);
   }
 }
+
 

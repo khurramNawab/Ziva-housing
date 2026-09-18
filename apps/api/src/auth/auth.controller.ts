@@ -14,6 +14,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { SendOtpDto } from './dto/send-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Public } from '../common/decorators/public.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -24,8 +25,15 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
+  @Get('registration-settings')
+  @ApiOperation({ summary: 'Get current allowed role registration toggles' })
+  getRegistrationSettings() {
+    return this.authService.getRegistrationSettings();
+  }
+
+  @Public()
   @Post('register')
-  @ApiOperation({ summary: 'Register a new user (Customer or Owner)' })
+  @ApiOperation({ summary: 'Register a new user (Customer, Owner, Agent, Provider)' })
   register(@Body() dto: RegisterDto, @Ip() ip: string) {
     return this.authService.register(dto, ip);
   }
@@ -33,7 +41,7 @@ export class AuthController {
   @Public()
   @Post('send-otp')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Send OTP to phone number' })
+  @ApiOperation({ summary: 'Send OTP to phone number or email' })
   sendOtp(@Body() dto: SendOtpDto) {
     return this.authService.sendOtp(dto);
   }
@@ -44,6 +52,14 @@ export class AuthController {
   @ApiOperation({ summary: 'Verify OTP and get JWT tokens' })
   verifyOtp(@Body() dto: VerifyOtpDto, @Ip() ip: string) {
     return this.authService.verifyOtp(dto, ip);
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reset account password using OTP verification' })
+  resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
   }
 
   @Public()

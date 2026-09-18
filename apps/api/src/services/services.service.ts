@@ -16,31 +16,29 @@ const BACKGROUND_CHECK_CATEGORIES = [
 ];
 
 const SEED_CATEGORIES = [
-  { id: 'cat-1', name: 'Electrician', slug: 'electrician', icon: 'electrical_services', order: 1, isActive: true },
-  { id: 'cat-2', name: 'Plumber', slug: 'plumber', icon: 'plumbing', order: 2, isActive: true },
-  { id: 'cat-3', name: 'Deep Cleaning', slug: 'deep-cleaning', icon: 'cleaning_services', order: 3, isActive: true },
-  { id: 'cat-4', name: 'Pest Control', slug: 'pest-control', icon: 'pest_control', order: 4, isActive: true },
-  { id: 'cat-5', name: 'AC Repair', slug: 'ac-repair', icon: 'hvac', order: 5, isActive: true },
-  { id: 'cat-6', name: 'Carpenter', slug: 'carpenter', icon: 'carpenter', order: 6, isActive: true },
-  { id: 'cat-7', name: 'Painter', slug: 'painter', icon: 'format_paint', order: 7, isActive: true },
-  { id: 'cat-8', name: 'Cook / Chef', slug: 'cook', icon: 'skillet', order: 8, isActive: true },
-  { id: 'cat-9', name: 'Babysitter', slug: 'babysitter', icon: 'child_care', order: 9, isActive: true },
-  { id: 'cat-10', name: 'Elderly Caregiver', slug: 'elderly-care', icon: 'elderly', order: 10, isActive: true },
-  { id: 'cat-11', name: 'Driver', slug: 'driver', icon: 'directions_car', order: 11, isActive: true },
-  { id: 'cat-12', name: 'Packers & Movers', slug: 'packers-movers', icon: 'local_shipping', order: 12, isActive: true },
-  { id: 'cat-13', name: 'Gardening', slug: 'gardening', icon: 'yard', order: 13, isActive: true },
-  { id: 'cat-14', name: 'Solar Installation', slug: 'solar', icon: 'solar_power', order: 14, isActive: true },
-  { id: 'cat-15', name: 'Beautician', slug: 'beautician', icon: 'face', order: 15, isActive: true },
-  { id: 'cat-16', name: "Women's Spa", slug: 'womens-spa', icon: 'spa', order: 16, isActive: true },
-  { id: 'cat-17', name: "Men's Spa", slug: 'mens-spa', icon: 'self_improvement', order: 17, isActive: true },
+  { id: 'cat-clean', name: 'Cleaning', slug: 'cleaning', icon: 'vacuum', order: 1, isActive: true },
+  { id: 'cat-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: 'face_retouching_natural', order: 2, isActive: true },
+  { id: 'cat-msalon', name: "Men's Salon & Massage", slug: 'mens-salon-massage', icon: 'person_grooming', order: 3, isActive: true },
+  { id: 'cat-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: 'ac_unit', order: 4, isActive: false },
+  { id: 'cat-handy', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: 'home_repair_service', order: 5, isActive: false },
+  { id: 'cat-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: 'format_paint', order: 6, isActive: false },
+  { id: 'cat-help', name: 'InstaHelp', slug: 'instahelp', icon: 'support_agent', order: 7, isActive: false },
+  { id: 'cat-pest', name: 'Pest Control', slug: 'pest-control', icon: 'pest_control', order: 8, isActive: false },
+  { id: 'cat-movers', name: 'Packers & Movers', slug: 'packers-movers', icon: 'local_shipping', order: 9, isActive: false },
 ];
 
 const SEED_SERVICES = [
-  { id: 'svc-1', categoryId: 'cat-1', name: 'Complete Home Wiring Inspection', slug: 'home-wiring', description: 'Comprehensive diagnostic and safety check of home wiring, MCB switches, and earth leakage.', basePrice: 499, isActive: true, order: 1 },
-  { id: 'svc-2', categoryId: 'cat-1', name: 'Switchboard & Socket Installation', slug: 'switchboard-install', description: 'Repair or replacement of modular switch plates, sockets, and regulators.', basePrice: 199, isActive: true, order: 2 },
-  { id: 'svc-3', categoryId: 'cat-2', name: 'Plumbing Leakage & Pipe Repair', slug: 'pipe-leakage', description: 'Fix concealed pipeline leaks, taps, sink blockages, and diverters.', basePrice: 349, isActive: true, order: 1 },
-  { id: 'svc-4', categoryId: 'cat-3', name: 'Full 3BHK Deep Home Sanitization', slug: 'deep-home-clean', description: 'Professional mechanized scrubbing, bathroom descaling, kitchen degreasing, and balcony wash.', basePrice: 3499, isActive: true, order: 1 },
-  { id: 'svc-5', categoryId: 'cat-5', name: 'Split AC Foam Jet Service & Gas Check', slug: 'ac-foam-service', description: 'High-pressure foam jet wash of indoor and outdoor coils with gas pressure testing.', basePrice: 899, isActive: true, order: 1 },
+  // Cleaning
+  { id: 'svc-clean-1', categoryId: 'cat-clean', name: 'Bathroom Deep Cleaning (1 Bathroom)', slug: 'bathroom-deep-cleaning', description: 'Intense tile scrubbing, descaling of taps & toilet sanitization.', basePrice: 499, durationMinutes: 60, isActive: true, order: 1, imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+  { id: 'svc-clean-2', categoryId: 'cat-clean', name: '1 BHK Full Home Deep Cleaning', slug: '1bhk-deep-cleaning', description: 'Thorough mechanized scrubbing of all rooms, kitchen, and bathroom.', basePrice: 1999, durationMinutes: 240, isActive: true, order: 2, imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+  { id: 'svc-clean-3', categoryId: 'cat-clean', name: '3-Seater Sofa Fabric Shampoo & Vacuum', slug: 'sofa-shampoo-3seater', description: 'Foam shampoo & moisture extraction for fabric sofas.', basePrice: 699, durationMinutes: 60, isActive: true, order: 3, imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
+  { id: 'svc-clean-4', categoryId: 'cat-clean', name: 'Kitchen Degreasing & Deep Clean', slug: 'kitchen-degreasing', description: 'Oil & grease removal from tiles, slab, gas stove & cabinets.', basePrice: 999, durationMinutes: 120, isActive: true, order: 4, imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
+  // Women's Salon
+  { id: 'svc-wsalon-1', categoryId: 'cat-wsalon', name: 'Full Arms + Full Legs Rica Wax Combo', slug: 'rica-wax-combo', description: 'Painless Italian Rica wax for gentle hair removal.', basePrice: 899, durationMinutes: 60, isActive: true, order: 1, imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+  { id: 'svc-wsalon-2', categoryId: 'cat-wsalon', name: 'O3+ Bridal Glow Facial', slug: 'o3-bridal-facial', description: 'Multi-step radiant facial with peeling & brightening serum.', basePrice: 1699, durationMinutes: 75, isActive: true, order: 2, imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80' },
+  // Men's Salon
+  { id: 'svc-msalon-1', categoryId: 'cat-msalon', name: "Men's Haircut + Beard Styling", slug: 'mens-haircut-beard', description: 'Trendy scissor/clipper haircut, beard styling & neck cleanup.', basePrice: 349, durationMinutes: 45, isActive: true, order: 1, imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80' },
+  { id: 'svc-msalon-2', categoryId: 'cat-msalon', name: 'Activated Charcoal Pollution De-Tan Cleanup', slug: 'mens-charcoal-cleanup', description: 'Pore cleansing, dirt extraction, blackhead removal and mask.', basePrice: 549, durationMinutes: 40, isActive: true, order: 2, imageUrl: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=600&q=80' },
 ];
 
 @Injectable()

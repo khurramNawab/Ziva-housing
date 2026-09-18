@@ -428,17 +428,6 @@ export default function Navbar() {
             </>
           )}
 
-          <Link
-            href="/services"
-            className={`transition-all py-1 border-b-2 font-bold ${
-              isTabActive('SERVICES')
-                ? 'text-[#5e23dc] border-[#5e23dc]'
-                : 'border-transparent hover:text-[#4500b4]'
-            }`}
-          >
-            Home Services
-          </Link>
-
           {userRole === 'SERVICE_PROVIDER' && (
             <Link
               href="/become-professional/status"
@@ -641,19 +630,6 @@ export default function Navbar() {
                 </Link>
               </>
             )}
-
-            <Link
-              href="/services"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
-                isTabActive('SERVICES')
-                  ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
-                  : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
-              }`}
-            >
-              <span className="material-symbols-outlined text-sm">construction</span>
-              Home Services
-            </Link>
 
             {userRole === 'SERVICE_PROVIDER' && (
               <Link

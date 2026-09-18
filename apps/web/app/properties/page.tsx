@@ -130,6 +130,11 @@ function SearchResultsContent() {
 
   useEffect(() => {
     try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
+      if (!token) {
+        setSavedIds([]);
+        return;
+      }
       const raw = localStorage.getItem('Ziva_saved_properties');
       if (raw) {
         const parsed = JSON.parse(raw);
@@ -142,6 +147,14 @@ function SearchResultsContent() {
   const toggleSaveProperty = (prop: any, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('Ziva_access') : null;
+    if (!token) {
+      if (confirm('Please log in to save properties to your wishlist. Would you like to log in now?')) {
+        router.push('/auth/login');
+      }
+      return;
+    }
 
     try {
       const raw = localStorage.getItem('Ziva_saved_properties');
@@ -1586,12 +1599,15 @@ function SearchResultsContent() {
                         <button
                           type="button"
                           onClick={(e) => toggleSaveProperty(prop, e)}
-                          className={`absolute top-3 right-3 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-md transition-all z-10 hover:scale-110 ${
-                            savedIds.includes(prop.id) ? 'text-[#ba1a1a]' : 'text-[#7a7487] hover:text-[#ba1a1a]'
+                          className={`absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center shadow-md transition-all z-10 hover:scale-110 cursor-pointer ${
+                            savedIds.includes(prop.id) ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-white/95 text-gray-400 hover:text-red-500'
                           }`}
-                          title={savedIds.includes(prop.id) ? 'Remove from Saved' : 'Save Property'}
+                          title={savedIds.includes(prop.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
                         >
-                          <span className={`material-symbols-outlined text-sm ${savedIds.includes(prop.id) ? 'font-fill text-red-500' : ''}`}>
+                          <span
+                            className={`material-symbols-outlined text-lg ${savedIds.includes(prop.id) ? 'font-fill text-red-600' : 'text-gray-400 hover:text-red-500'}`}
+                            style={{ fontVariationSettings: savedIds.includes(prop.id) ? "'FILL' 1, 'wght' 700" : "'FILL' 0, 'wght' 400" }}
+                          >
                             favorite
                           </span>
                         </button>

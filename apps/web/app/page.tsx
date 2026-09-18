@@ -5,11 +5,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import UrbanCompanyHero from './components/UrbanCompanyHero';
+import UrbanCompanyModal from './components/UrbanCompanyModal';
 
 export default function LandingPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [purpose, setPurpose] = useState<'BUY' | 'RENT'>('BUY');
+  const [isUrbanModalOpen, setIsUrbanModalOpen] = useState(false);
+  const [urbanInitialCategory, setUrbanInitialCategory] = useState<string | undefined>(undefined);
+
+  const openServiceModal = (categorySlug?: string) => {
+    setUrbanInitialCategory(categorySlug);
+    setIsUrbanModalOpen(true);
+  };
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -25,7 +34,10 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-grow">
-        {/* Motion Hero Section */}
+        {/* Urban Company Hero & Doorstep Service Section */}
+        <UrbanCompanyHero onSelectCategory={openServiceModal} />
+
+        {/* Real Estate Search & Explore Section */}
         <section className="relative h-[520px] md:h-[600px] flex items-center justify-center bg-[#191919] overflow-hidden">
           <div className="absolute inset-0 z-0">
             <img
@@ -109,41 +121,42 @@ export default function LandingPage() {
                 <p className="text-[14px] leading-[20px] text-[#494455]">
                   From deep cleaning to electrical setups, book verified professionals instantly with Ziva Guarantee.
                 </p>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center gap-2 text-[#4500b4] font-bold text-xs hover:underline pt-2"
+                <button
+                  suppressHydrationWarning
+                  type="button"
+                  onClick={() => openServiceModal('cleaning')}
+                  className="inline-flex items-center gap-2 text-[#4500b4] font-bold text-xs hover:underline pt-2 cursor-pointer"
                 >
                   Explore Home Services
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                </Link>
+                </button>
               </div>
 
               {/* Service Cards Responsive Grid (No horizontal scrolling) */}
               <div className="flex gap-4 overflow-x-auto pb-3 w-full mt-4 md:mt-0 snap-x scrollbar-thin scrollbar-thumb-gray-200">
                 {[
-                  { slug: 'home-cleaning', title: 'Deep Cleaning', img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'ac-repair', title: 'AC Service', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'electrician', title: 'Electrician', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'plumbing', title: 'Plumber', img: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'carpenter', title: 'Carpenter', img: 'https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'packers-movers', title: 'Packers & Movers', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'pest-control', title: 'Pest Control', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'baby-sitting', title: 'Baby Sitting', img: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'elderly-care', title: 'Elderly Care', img: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'painting', title: 'Wall Painting', img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'barber', title: 'Barber at Home', img: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'salon', title: 'Women\'s Salon', img: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'cleaning', title: 'Deep Cleaning', img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'womens-salon-spa', title: 'Women\'s Salon', img: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'mens-salon-massage', title: 'Men\'s Grooming', img: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'ac-appliance-repair', title: 'AC Service', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'electrician-plumber-carpenter', title: 'Electrician & Handy', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'painting-waterproofing', title: 'Wall Painting', img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'instahelp', title: 'InstaHelp', img: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'cleaning', title: 'Pest Control', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'electrician-plumber-carpenter', title: 'Packers & Movers', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80' },
                 ].map((svc) => (
-                  <Link
-                    key={svc.slug}
-                    href={['home-cleaning', 'ac-repair', 'electrician', 'plumbing', 'carpenter', 'packers-movers', 'pest-control', 'baby-sitting', 'elderly-care'].includes(svc.slug) ? `/services/${svc.slug}` : `/services`}
-                    className="w-32 shrink-0 snap-start h-36 bg-white border border-[#cbc3d8] hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 shadow-sm hover:shadow-md transition-all group overflow-hidden"
+                  <button
+                    suppressHydrationWarning
+                    key={svc.title}
+                    type="button"
+                    onClick={() => openServiceModal(svc.slug)}
+                    className="w-32 shrink-0 snap-start h-36 bg-white border border-[#cbc3d8] hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 shadow-sm hover:shadow-md transition-all group overflow-hidden text-left cursor-pointer"
                   >
                     <div className="w-full h-24 rounded-xl overflow-hidden bg-gray-100">
                       <img src={svc.img} alt={svc.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                     </div>
                     <span className="text-[11px] font-bold text-[#191c1e] group-hover:text-[#4500b4] transition-colors py-1 text-center truncate w-full">{svc.title}</span>
-                  </Link>
+                  </button>
                 ))}
               </div>
             </div>
@@ -194,6 +207,13 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
+
+      {/* Urban Company Service Taxonomy Modal */}
+      <UrbanCompanyModal
+        isOpen={isUrbanModalOpen}
+        onClose={() => setIsUrbanModalOpen(false)}
+        initialCategory={urbanInitialCategory}
+      />
 
       {/* Dark Footer */}
       <Footer />
