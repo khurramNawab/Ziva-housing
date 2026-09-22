@@ -7,6 +7,8 @@
     "dev": "turbo run dev",
     "start:api": "npm run --prefix apps/api start:prod",
     "start:web": "npm run --prefix apps/web start",
+    "db:seed": "npm --prefix packages/database run db:seed",
+    "seed": "npm --prefix packages/database run db:seed",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
