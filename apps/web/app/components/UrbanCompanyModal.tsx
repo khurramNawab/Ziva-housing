@@ -73,6 +73,274 @@ const TIER_IMAGES: Record<string, string> = {
   'stress-relief': 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=80',
 };
 
+const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
+  'mens-salon-massage': [
+    {
+      id: 'sub-m-salon',
+      name: 'Salon for Men',
+      slug: 'salon-for-men',
+      icon: '💈',
+      badge: '30 mins',
+      groupHeader: null,
+      displayOrder: 1,
+    },
+    {
+      id: 'sub-m-massage',
+      name: 'Massage for Men',
+      slug: 'massage-for-men',
+      icon: '💆‍♂️',
+      badge: '45 mins',
+      groupHeader: null,
+      displayOrder: 2,
+      tiers: [
+        {
+          id: 'tier-m-luxe',
+          name: 'Luxe Deep Tissue',
+          slug: 'luxe-deep-tissue',
+          description: 'Intensive muscle recovery with hot oil & acupressure points by senior therapists',
+          badge: 'Top rated',
+          startingPrice: 999,
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          features: ['Deep muscle relief', 'Warm lavender aromatics', 'Certified senior masseurs'],
+          displayOrder: 1,
+        },
+        {
+          id: 'tier-m-prime',
+          name: 'Prime Relaxation',
+          slug: 'prime-relaxation',
+          description: 'Swedish & reflexology blend designed to melt away corporate stress & fatigue',
+          badge: 'Popular',
+          startingPrice: 999,
+          imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=80',
+          features: ['Swedish rhythmic strokes', 'Organic carrier oils', 'Post-session hot towel wipe'],
+          displayOrder: 2,
+        },
+        {
+          id: 'tier-m-classic',
+          name: 'Classic Relax',
+          slug: 'classic-relax',
+          description: 'Head, neck, shoulder and back express destress therapy for quick relief',
+          badge: null,
+          startingPrice: 699,
+          imageUrl: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=80',
+          features: ['Quick stress relief', 'Almond oil scalp nourish', '30-min targeted session'],
+          displayOrder: 3,
+        },
+        {
+          id: 'tier-m-ayurveda',
+          name: 'Stress Relief Ayurvedic',
+          slug: 'stress-relief-ayurvedic',
+          description: 'Traditional herbal tailam oil therapies for joint comfort and rejuvenation',
+          badge: 'Herbal',
+          startingPrice: 799,
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          features: ['Ayurvedic medicated oils', 'Joint mobility strokes', 'Detoxifying relaxation'],
+          displayOrder: 4,
+        },
+      ],
+    },
+  ],
+  'womens-salon-spa': [
+    {
+      id: 'sub-w-salon',
+      name: 'Salon for Women',
+      slug: 'salon-for-women',
+      icon: '💇‍♀️',
+      badge: '30 mins',
+      groupHeader: null,
+      displayOrder: 1,
+    },
+    {
+      id: 'sub-w-spa',
+      name: 'Spa for Women',
+      slug: 'spa-for-women',
+      icon: '🧖‍♀️',
+      badge: '45 mins',
+      groupHeader: null,
+      displayOrder: 2,
+      tiers: [
+        {
+          id: 'tier-w-luxe',
+          name: 'Luxe',
+          slug: 'luxe',
+          description: 'Curated therapies with only Highly rated therapists & oils',
+          badge: 'Top rated',
+          startingPrice: 898,
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          features: ['Top 1% rated therapists', 'Cold-pressed almond & sesame oils', 'Calming ambient aroma & music'],
+          displayOrder: 1,
+        },
+        {
+          id: 'tier-w-prime',
+          name: 'Prime',
+          slug: 'prime',
+          description: 'Quality experience with branded aroma oils by verified therapists',
+          badge: null,
+          startingPrice: 699,
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          features: ['Background-verified therapists', 'Pure organic essential oils', 'Single-use hygienic kit'],
+          displayOrder: 2,
+        },
+        {
+          id: 'tier-w-ayurveda',
+          name: 'Ayurveda',
+          slug: 'ayurveda',
+          description: 'Healing Ayurvedic therapies with authentic herbal tailam and oils',
+          badge: 'Herbal',
+          startingPrice: 699,
+          imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=80',
+          features: ['Classical Ayurvedic oils', 'Pressure-point marmas therapy', 'Muscle fatigue relief'],
+          displayOrder: 3,
+        },
+      ],
+    },
+    {
+      id: 'sub-w-hair',
+      name: 'Hair Studio for Women',
+      slug: 'hair-studio-women',
+      icon: '💆‍♀️',
+      badge: '45 mins',
+      groupHeader: null,
+      displayOrder: 3,
+    },
+    {
+      id: 'sub-w-makeup',
+      name: 'Makeup, Saree & Styling',
+      slug: 'makeup-saree-styling',
+      icon: '💄',
+      badge: '60 mins',
+      groupHeader: null,
+      displayOrder: 4,
+    },
+  ],
+  'cleaning': [
+    {
+      id: 'sub-c-bk',
+      name: 'Bathroom & Kitchen Cleaning',
+      slug: 'bathroom-kitchen-cleaning',
+      icon: '🧼',
+      badge: '44 mins',
+      groupHeader: null,
+      displayOrder: 1,
+    },
+    {
+      id: 'sub-c-full',
+      name: 'Full Home Deep Cleaning',
+      slug: 'full-home-cleaning',
+      icon: '🏠',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 2,
+    },
+    {
+      id: 'sub-c-sofa',
+      name: 'Sofa & Carpet Cleaning',
+      slug: 'sofa-carpet-cleaning',
+      icon: '🛋️',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 3,
+    },
+    {
+      id: 'sub-c-pest',
+      name: 'Pest Control',
+      slug: 'pest-control-sub',
+      icon: '🐜',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 4,
+    },
+  ],
+  'cleaning-pest-control': [
+    {
+      id: 'sub-c-bk-2',
+      name: 'Bathroom & Kitchen Cleaning',
+      slug: 'bathroom-kitchen-cleaning',
+      icon: '🧼',
+      badge: '44 mins',
+      groupHeader: null,
+      displayOrder: 1,
+    },
+    {
+      id: 'sub-c-full-2',
+      name: 'Full Home Deep Cleaning',
+      slug: 'full-home-cleaning',
+      icon: '🏠',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 2,
+    },
+    {
+      id: 'sub-c-sofa-2',
+      name: 'Sofa & Carpet Cleaning',
+      slug: 'sofa-carpet-cleaning',
+      icon: '🛋️',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 3,
+    },
+    {
+      id: 'sub-c-pest-2',
+      name: 'Pest Control',
+      slug: 'pest-control-sub',
+      icon: '🐜',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 4,
+    },
+  ],
+  'ac-appliance-repair': [
+    { id: 'sub-ac-1', name: 'AC Service & Repair', slug: 'ac-service-sub', icon: '❄️', badge: '44 mins', groupHeader: null, displayOrder: 1 },
+    { id: 'sub-ac-2', name: 'Washing Machine', slug: 'washing-machine', icon: '🧺', badge: null, groupHeader: null, displayOrder: 2 },
+    { id: 'sub-ac-3', name: 'Refrigerator', slug: 'refrigerator', icon: '🧊', badge: null, groupHeader: null, displayOrder: 3 },
+    { id: 'sub-ac-4', name: 'Chimney', slug: 'chimney', icon: '🍳', badge: null, groupHeader: null, displayOrder: 4 },
+    { id: 'sub-ac-5', name: 'RO/Water Purifier', slug: 'ro-water-purifier', icon: '💧', badge: null, groupHeader: null, displayOrder: 5 },
+    { id: 'sub-ac-6', name: 'Geyser', slug: 'geyser', icon: '♨️', badge: null, groupHeader: null, displayOrder: 6 },
+    { id: 'sub-ac-7', name: 'Television', slug: 'television', icon: '📺', badge: null, groupHeader: null, displayOrder: 7 },
+  ],
+  'electrician-plumber-carpenter': [
+    { id: 'sub-e-1', name: 'Electrician', slug: 'electrician-sub', icon: '⚡', badge: '19 mins', groupHeader: null, displayOrder: 1 },
+    { id: 'sub-e-2', name: 'Plumber', slug: 'plumber-sub', icon: '🔧', badge: '19 mins', groupHeader: null, displayOrder: 2 },
+    { id: 'sub-e-3', name: 'Carpenter', slug: 'carpenter-sub', icon: '🪚', badge: '19 mins', groupHeader: null, displayOrder: 3 },
+    { id: 'sub-e-4', name: 'Fan Installation', slug: 'fan-installation', icon: '🌀', badge: null, groupHeader: null, displayOrder: 4 },
+    { id: 'sub-e-5', name: 'Furniture Assembly', slug: 'furniture-assembly', icon: '🪑', badge: null, groupHeader: null, displayOrder: 5 },
+  ],
+  'painting-waterproofing': [
+    { id: 'sub-p-1', name: 'Painting & Waterproofing', slug: 'painting', icon: '🖌️', badge: null, groupHeader: null, displayOrder: 1 },
+    { id: 'sub-p-2', name: 'Wall Painting & Waterproofing', slug: 'wall-painting-sub', icon: '🎨', badge: null, groupHeader: null, displayOrder: 2 },
+  ],
+  'instahelp': [
+    { id: 'sub-ih-1', name: 'Daily Helpers & Cooks', slug: 'daily-helpers-sub', icon: '👩‍🍳', badge: null, groupHeader: null, displayOrder: 1 },
+    { id: 'sub-ih-2', name: 'InstaHelp Daily Helper', slug: 'cook-chef', icon: '🧹', badge: 'Instant', groupHeader: null, displayOrder: 2 },
+  ],
+  'baby-sitting-childcare': [
+    { id: 'sub-b-1', name: 'Nanny & Infant Care', slug: 'nanny-infant-care', icon: '👶', badge: 'Verified', groupHeader: null, displayOrder: 1 },
+  ],
+  'elderly-care': [
+    { id: 'sub-el-1', name: 'Senior Living Assistance', slug: 'senior-living-assistance', icon: '👵', badge: 'Trained', groupHeader: null, displayOrder: 1 },
+  ],
+  'packers-movers': [
+    { id: 'sub-pm-1', name: 'Home Shifting', slug: 'home-shifting', icon: '📦', badge: null, groupHeader: null, displayOrder: 1 },
+  ],
+  'interior-modular-kitchen': [
+    { id: 'sub-imk-1', name: 'Modular Kitchen & Woodwork', slug: 'modular-kitchen-woodwork', icon: '📐', badge: null, groupHeader: null, displayOrder: 1 },
+  ],
+};
+
+const DEFAULT_CATEGORIES: ServiceCategory[] = [
+  { id: 'c-clean', name: 'Cleaning & Pest Control', slug: 'cleaning', icon: '🧹', badge: '44 mins', order: 1, subCategories: DEFAULT_TAXONOMY['cleaning'] },
+  { id: 'c-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: '🧖‍♀️', badge: null, order: 2, subCategories: DEFAULT_TAXONOMY['womens-salon-spa'] },
+  { id: 'c-msalon', name: "Men's Salon & Massage", slug: 'mens-salon-massage', icon: '🧔‍♂️', badge: null, order: 3, subCategories: DEFAULT_TAXONOMY['mens-salon-massage'] },
+  { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: '❄️', badge: '44 mins', order: 4, subCategories: DEFAULT_TAXONOMY['ac-appliance-repair'] },
+  { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: '🔧', badge: '19 mins', order: 5, subCategories: DEFAULT_TAXONOMY['electrician-plumber-carpenter'] },
+  { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: '🖌️', badge: null, order: 6, subCategories: DEFAULT_TAXONOMY['painting-waterproofing'] },
+  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: '👩‍🍳', badge: null, order: 7, subCategories: DEFAULT_TAXONOMY['instahelp'] },
+  { id: 'c-baby', name: 'Baby Sitting & Childcare', slug: 'baby-sitting-childcare', icon: '👶', badge: null, order: 8, subCategories: DEFAULT_TAXONOMY['baby-sitting-childcare'] },
+  { id: 'c-elder', name: 'Elderly Care', slug: 'elderly-care', icon: '👵', badge: null, order: 9, subCategories: DEFAULT_TAXONOMY['elderly-care'] },
+  { id: 'c-movers', name: 'Packers & Movers', slug: 'packers-movers', icon: '📦', badge: null, order: 10, subCategories: DEFAULT_TAXONOMY['packers-movers'] },
+  { id: 'c-interior', name: 'Interior & Modular Kitchen', slug: 'interior-modular-kitchen', icon: '📐', badge: null, order: 11, subCategories: DEFAULT_TAXONOMY['interior-modular-kitchen'] },
+];
+
 export default function UrbanCompanyModal({
   initialCategory = 'all',
   isOpen,
@@ -82,7 +350,7 @@ export default function UrbanCompanyModal({
   const router = useRouter();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>(DEFAULT_CATEGORIES);
   const [selectedSubCategoryForTier, setSelectedSubCategoryForTier] = useState<{
     subCategory: ServiceSubCategory;
     categorySlug: string;
@@ -101,43 +369,47 @@ export default function UrbanCompanyModal({
       if (res.ok) {
         const json = await res.json();
         const data = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : [];
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           // STRICT DYNAMIC FILTER: ONLY active categories from backend
           const activeCategories = data
             .filter((c: any) => c.isActive !== false)
-            .map((c: any) => ({
-              id: c.id,
-              name: c.name,
-              slug: c.slug,
-              icon: c.icon || '🛠️',
-              badge: c.badge || null,
-              order: c.order || 1,
-              subCategories: (c.subCategories || [])
-                .filter((s: any) => s.isActive !== false)
-                .map((s: any) => ({
-                  id: s.id,
-                  name: s.name,
-                  slug: s.slug,
-                  icon: s.icon || '🛠️',
-                  badge: s.badge || null,
-                  groupHeader: s.groupHeader || null,
-                  displayOrder: s.displayOrder || 1,
-                  tiers: (s.tiers || [])
-                    .filter((t: any) => t.isActive !== false)
-                    .map((t: any) => ({
-                      id: t.id,
-                      name: t.name,
-                      slug: t.slug,
-                      imageUrl: t.imageUrl || TIER_IMAGES[t.slug] || TIER_IMAGES['luxe'],
-                      description: t.description || null,
-                      badge: t.badge || null,
-                      startingPrice: t.startingPrice ? Number(t.startingPrice) : null,
-                      features: t.features || [],
-                      displayOrder: t.displayOrder || 1,
-                    })),
-                })),
-            }))
-            .filter((c: any) => (c.subCategories && c.subCategories.length > 0) || c.slug);
+            .map((c: any) => {
+              const fallbackSubs = DEFAULT_TAXONOMY[c.slug] || DEFAULT_TAXONOMY[slugify(c.slug)] || [];
+              const rawSubs = Array.isArray(c.subCategories) && c.subCategories.length > 0 ? c.subCategories : fallbackSubs;
+              
+              return {
+                id: c.id,
+                name: c.name,
+                slug: c.slug,
+                icon: c.icon || '🛠️',
+                badge: c.badge || null,
+                order: c.order || 1,
+                subCategories: (rawSubs || [])
+                  .filter((s: any) => s.isActive !== false)
+                  .map((s: any) => ({
+                    id: s.id,
+                    name: s.name,
+                    slug: s.slug,
+                    icon: s.icon || '🛠️',
+                    badge: s.badge || null,
+                    groupHeader: s.groupHeader || null,
+                    displayOrder: s.displayOrder || 1,
+                    tiers: (s.tiers || [])
+                      .filter((t: any) => t.isActive !== false)
+                      .map((t: any) => ({
+                        id: t.id,
+                        name: t.name,
+                        slug: t.slug,
+                        imageUrl: t.imageUrl || TIER_IMAGES[t.slug] || TIER_IMAGES['luxe'],
+                        description: t.description || null,
+                        badge: t.badge || null,
+                        startingPrice: t.startingPrice ? Number(t.startingPrice) : null,
+                        features: t.features || [],
+                        displayOrder: t.displayOrder || 1,
+                      })),
+                  })),
+              };
+            });
 
           setCategories(activeCategories);
         }
@@ -359,9 +631,23 @@ export default function UrbanCompanyModal({
           ) : (
             /* ════════════════════ SCREEN 1: CATEGORY & SUBCATEGORY GRID ════════════════════ */
             <div className="space-y-7">
-              {categories.map((category, catIndex) => {
-                const subCats = category.subCategories || [];
-                if (subCats.length === 0) return null;
+              {(() => {
+                const targetSlug = initialCategory ? slugify(initialCategory) : 'all';
+                const matched = (targetSlug && targetSlug !== 'all')
+                  ? categories.filter(
+                      (c) =>
+                        c.slug === initialCategory ||
+                        slugify(c.slug) === targetSlug ||
+                        slugify(c.name) === targetSlug ||
+                        slugify(c.name).includes(targetSlug) ||
+                        targetSlug.includes(slugify(c.name))
+                    )
+                  : categories;
+                const activeList = matched.length > 0 ? matched : categories;
+
+                return activeList.map((category, catIndex) => {
+                  const subCats = category.subCategories || DEFAULT_TAXONOMY[category.slug] || DEFAULT_TAXONOMY[slugify(category.slug)] || [];
+                  if (subCats.length === 0) return null;
 
                 const groups: { header: string; items: ServiceSubCategory[] }[] = [];
                 const ungrouped: ServiceSubCategory[] = [];
@@ -455,12 +741,13 @@ export default function UrbanCompanyModal({
                       </div>
                     ))}
 
-                    {catIndex < categories.length - 1 && (
+                    {catIndex < activeList.length - 1 && (
                       <div className="h-[1px] bg-gray-100 w-full pt-2" />
                     )}
                   </div>
                 );
-              })}
+              });
+            })()}
             </div>
           )}
         </div>
