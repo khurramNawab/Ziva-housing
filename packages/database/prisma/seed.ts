@@ -47,59 +47,59 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting Ziva Housing database seed...');
 
-  try {
-    // Ensure all tables and columns exist in PostgreSQL even before migration
-    await prisma.$executeRawUnsafe(`
-      ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "badge" TEXT;
-      ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN DEFAULT true;
-      ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "order" INTEGER DEFAULT 0;
-      ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "description" TEXT;
+  const ddlStatements = [
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "badge" TEXT`,
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN DEFAULT true`,
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "order" INTEGER DEFAULT 0`,
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "description" TEXT`,
+    `CREATE TABLE IF NOT EXISTS "service_sub_categories" (
+      "id" TEXT NOT NULL,
+      "categoryId" TEXT NOT NULL,
+      "name" TEXT NOT NULL,
+      "slug" TEXT NOT NULL,
+      "description" TEXT,
+      "icon" TEXT,
+      "imageUrl" TEXT,
+      "badge" TEXT,
+      "displayOrder" INTEGER NOT NULL DEFAULT 0,
+      "isActive" BOOLEAN NOT NULL DEFAULT true,
+      "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT "service_sub_categories_pkey" PRIMARY KEY ("id"),
+      CONSTRAINT "service_sub_categories_slug_key" UNIQUE ("slug")
+    )`,
+    `CREATE TABLE IF NOT EXISTS "service_tiers" (
+      "id" TEXT NOT NULL,
+      "subCategoryId" TEXT NOT NULL,
+      "name" TEXT NOT NULL,
+      "slug" TEXT NOT NULL,
+      "tag" TEXT,
+      "badge" TEXT,
+      "startingPrice" DECIMAL(65,30),
+      "description" TEXT,
+      "imageUrl" TEXT,
+      "displayOrder" INTEGER NOT NULL DEFAULT 0,
+      "isActive" BOOLEAN NOT NULL DEFAULT true,
+      "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT "service_tiers_pkey" PRIMARY KEY ("id"),
+      CONSTRAINT "service_tiers_slug_key" UNIQUE ("slug")
+    )`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "subCategoryId" TEXT`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "tierId" TEXT`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "bestsellerFlag" BOOLEAN DEFAULT false`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "rating" DOUBLE PRECISION DEFAULT 4.8`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "reviewCount" INTEGER DEFAULT 120`,
+  ];
 
-      CREATE TABLE IF NOT EXISTS "service_sub_categories" (
-        "id" TEXT NOT NULL,
-        "categoryId" TEXT NOT NULL,
-        "name" TEXT NOT NULL,
-        "slug" TEXT NOT NULL,
-        "description" TEXT,
-        "icon" TEXT,
-        "imageUrl" TEXT,
-        "badge" TEXT,
-        "displayOrder" INTEGER NOT NULL DEFAULT 0,
-        "isActive" BOOLEAN NOT NULL DEFAULT true,
-        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "service_sub_categories_pkey" PRIMARY KEY ("id"),
-        CONSTRAINT "service_sub_categories_slug_key" UNIQUE ("slug")
-      );
-
-      CREATE TABLE IF NOT EXISTS "service_tiers" (
-        "id" TEXT NOT NULL,
-        "subCategoryId" TEXT NOT NULL,
-        "name" TEXT NOT NULL,
-        "slug" TEXT NOT NULL,
-        "tag" TEXT,
-        "badge" TEXT,
-        "startingPrice" DECIMAL(65,30),
-        "description" TEXT,
-        "imageUrl" TEXT,
-        "displayOrder" INTEGER NOT NULL DEFAULT 0,
-        "isActive" BOOLEAN NOT NULL DEFAULT true,
-        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "service_tiers_pkey" PRIMARY KEY ("id"),
-        CONSTRAINT "service_tiers_slug_key" UNIQUE ("slug")
-      );
-
-      ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "subCategoryId" TEXT;
-      ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "tierId" TEXT;
-      ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "bestsellerFlag" BOOLEAN DEFAULT false;
-      ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "rating" DOUBLE PRECISION DEFAULT 4.8;
-      ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "reviewCount" INTEGER DEFAULT 120;
-    `);
-    console.log('✅ Auto-migration DDL verified');
-  } catch (err: any) {
-    console.warn('Auto DDL notice:', err?.message);
+  for (const stmt of ddlStatements) {
+    try {
+      await prisma.$executeRawUnsafe(stmt);
+    } catch (err: any) {
+      console.warn('Auto DDL warning for stmt:', err?.message);
+    }
   }
+  console.log('✅ Auto-migration DDL verified');
 
   // ─── Amenities ─────────────────────────────────────────────────────────────
   const amenities = [
@@ -388,13 +388,13 @@ async function main() {
       ],
     },
 
-    // 4. AC & Appliance Repair (DISABLED)
+    // 4. AC & Appliance Repair (ACTIVE)
     {
       name: 'AC & Appliance Repair',
       slug: 'ac-appliance-repair',
       icon: 'ac_unit',
       badge: '44 mins',
-      isActive: false,
+      isActive: true,
       order: 4,
       description: 'Expert servicing, foam jet wash, refrigerant recharge & motherboard fix.',
       subCategories: [
@@ -427,13 +427,13 @@ async function main() {
       ],
     },
 
-    // 5. Electrician, Plumber & Carpenter (DISABLED)
+    // 5. Electrician, Plumber & Carpenter (ACTIVE)
     {
       name: 'Electrician, Plumber & Carpenter',
       slug: 'electrician-plumber-carpenter',
       icon: 'handyman',
       badge: '19 mins',
-      isActive: false,
+      isActive: true,
       order: 5,
       description: 'Certified technicians for wiring, MCBs, pipe leakage, locks & furniture assembly.',
       subCategories: [
@@ -479,13 +479,13 @@ async function main() {
       ],
     },
 
-    // 6. Painting & Waterproofing (DISABLED)
+    // 6. Painting & Waterproofing (ACTIVE)
     {
       name: 'Painting & Waterproofing',
       slug: 'painting-waterproofing',
       icon: 'format_paint',
       badge: null,
-      isActive: false,
+      isActive: true,
       order: 6,
       description: 'Dustless sanding, waterproof primer & Asian Paints color finish.',
       subCategories: [
@@ -504,13 +504,13 @@ async function main() {
       ],
     },
 
-    // 7. InstaHelp (DISABLED)
+    // 7. InstaHelp (ACTIVE)
     {
       name: 'InstaHelp',
       slug: 'instahelp',
       icon: 'support_agent',
       badge: null,
-      isActive: false,
+      isActive: true,
       order: 7,
       description: 'Instant and verified on-demand helpers, daily cooks, babysitters & caregivers.',
       subCategories: [
