@@ -158,11 +158,8 @@ function UrbanCompanyServiceListingContent() {
       }
 
       if (!res.ok) {
-        if (res.status === 404) {
-          setError404(true);
-          return;
-        }
-        throw new Error(`Failed to load category (${res.status})`);
+        setError404(true);
+        return;
       }
 
       const json = await res.json();
