@@ -1,5 +1,42 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+
+// Load DATABASE_URL from .env files if not already set in environment
+if (!process.env.DATABASE_URL) {
+  const envCandidates = [
+    path.resolve(process.cwd(), '.env'),
+    path.resolve(__dirname, '../.env'),
+    path.resolve(__dirname, '../../.env'),
+    path.resolve(__dirname, '../../../.env'),
+    path.resolve(__dirname, '../../../apps/api/.env'),
+    path.resolve(process.cwd(), 'apps/api/.env'),
+    path.resolve(process.cwd(), 'packages/database/.env'),
+  ];
+  for (const envPath of envCandidates) {
+    if (fs.existsSync(envPath)) {
+      try {
+        const content = fs.readFileSync(envPath, 'utf8');
+        for (const line of content.split('\n')) {
+          const trimmed = line.trim();
+          if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
+            const [k, ...v] = trimmed.split('=');
+            const key = k.trim();
+            let val = v.join('=').trim();
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+              val = val.slice(1, -1);
+            }
+            if (!process.env[key]) {
+              process.env[key] = val;
+            }
+          }
+        }
+        if (process.env.DATABASE_URL) break;
+      } catch {}
+    }
+  }
+}
 
 const prisma = new PrismaClient();
 
