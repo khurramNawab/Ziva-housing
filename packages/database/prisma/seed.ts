@@ -52,6 +52,9 @@ async function main() {
     `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN DEFAULT true`,
     `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "order" INTEGER DEFAULT 0`,
     `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "description" TEXT`,
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "icon" TEXT`,
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    `ALTER TABLE "service_categories" ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
     `CREATE TABLE IF NOT EXISTS "service_sub_categories" (
       "id" TEXT NOT NULL,
       "categoryId" TEXT NOT NULL,
@@ -90,6 +93,8 @@ async function main() {
     `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "bestsellerFlag" BOOLEAN DEFAULT false`,
     `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "rating" DOUBLE PRECISION DEFAULT 4.8`,
     `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "reviewCount" INTEGER DEFAULT 120`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    `ALTER TABLE "services" ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP`,
   ];
 
   for (const stmt of ddlStatements) {
