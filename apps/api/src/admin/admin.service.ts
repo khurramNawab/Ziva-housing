@@ -1930,7 +1930,7 @@ export class AdminService {
       data: {
         name: dto.name,
         slug,
-        icon: dto.icon || 'home_repair_service',
+        icon: dto.icon || '🛠️',
         badge: dto.badge || null,
         description: dto.description || null,
         order: dto.order || 0,

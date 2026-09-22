@@ -20,7 +20,7 @@ const SEED_CATEGORIES = [
     id: 'cat-clean',
     name: 'Cleaning & Pest Control',
     slug: 'cleaning',
-    icon: 'vacuum',
+    icon: '🧹',
     order: 1,
     isActive: true,
     subCategories: [
@@ -34,7 +34,7 @@ const SEED_CATEGORIES = [
     id: 'cat-wsalon',
     name: "Women's Salon & Spa",
     slug: 'womens-salon-spa',
-    icon: 'face_retouching_natural',
+    icon: '🧖‍♀️',
     order: 2,
     isActive: true,
     subCategories: [
@@ -61,7 +61,7 @@ const SEED_CATEGORIES = [
     id: 'cat-msalon',
     name: "Men's Salon & Massage",
     slug: 'mens-salon-massage',
-    icon: 'person_grooming',
+    icon: '🧔‍♂️',
     order: 3,
     isActive: true,
     subCategories: [
@@ -87,7 +87,7 @@ const SEED_CATEGORIES = [
     id: 'cat-ac',
     name: 'AC & Appliance Repair',
     slug: 'ac-appliance-repair',
-    icon: 'ac_unit',
+    icon: '❄️',
     order: 4,
     isActive: true,
     subCategories: [
@@ -104,7 +104,7 @@ const SEED_CATEGORIES = [
     id: 'cat-handy',
     name: 'Electrician, Plumber & Carpenter',
     slug: 'electrician-plumber-carpenter',
-    icon: 'home_repair_service',
+    icon: '🔧',
     order: 5,
     isActive: true,
     subCategories: [
@@ -119,7 +119,7 @@ const SEED_CATEGORIES = [
     id: 'cat-paint',
     name: 'Painting & Waterproofing',
     slug: 'painting-waterproofing',
-    icon: 'format_paint',
+    icon: '🖌️',
     order: 6,
     isActive: true,
     subCategories: [
@@ -131,7 +131,7 @@ const SEED_CATEGORIES = [
     id: 'cat-help',
     name: 'InstaHelp',
     slug: 'instahelp',
-    icon: 'support_agent',
+    icon: '👩‍🍳',
     order: 7,
     isActive: true,
     subCategories: [
@@ -143,7 +143,7 @@ const SEED_CATEGORIES = [
     id: 'cat-pest',
     name: 'Pest Control',
     slug: 'pest-control',
-    icon: 'pest_control',
+    icon: '🐜',
     order: 8,
     isActive: true,
     subCategories: [
@@ -155,7 +155,7 @@ const SEED_CATEGORIES = [
     id: 'cat-movers',
     name: 'Packers & Movers',
     slug: 'packers-movers',
-    icon: 'local_shipping',
+    icon: '📦',
     order: 9,
     isActive: true,
     subCategories: [
