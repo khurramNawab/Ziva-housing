@@ -1,16 +1,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+
+const currentDir = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // Load DATABASE_URL from .env files if not already set in environment
 if (!process.env.DATABASE_URL) {
   const envCandidates = [
     path.resolve(process.cwd(), '.env'),
-    path.resolve(__dirname, '../.env'),
-    path.resolve(__dirname, '../../.env'),
-    path.resolve(__dirname, '../../../.env'),
-    path.resolve(__dirname, '../../../apps/api/.env'),
+    path.resolve(currentDir, '../.env'),
+    path.resolve(currentDir, '../../.env'),
+    path.resolve(currentDir, '../../../.env'),
+    path.resolve(currentDir, '../../../apps/api/.env'),
     path.resolve(process.cwd(), 'apps/api/.env'),
     path.resolve(process.cwd(), 'packages/database/.env'),
   ];
