@@ -45,58 +45,70 @@ async function main() {
   }
   console.log(`✅ Seeded ${amenities.length} amenities`);
 
-  // ─── Service Categories, Groups & Services (Urban Company Model) ──────────────
-  const serviceData = [
-    // 1. Cleaning (ACTIVE)
+  // ─── Service Categories, SubCategories, Tiers & Services (Urban Company Model) ──────────────
+  const multiLevelServiceData = [
+    // 1. Cleaning & Pest Control (ACTIVE)
     {
-      name: 'Cleaning',
+      name: 'Cleaning & Pest Control',
       slug: 'cleaning',
       icon: 'vacuum',
+      badge: '44 mins',
       isActive: true,
       order: 1,
       description: 'Professional deep cleaning, bathroom sanitization, sofa and carpet care with industrial equipment.',
-      groups: [
+      subCategories: [
         {
-          groupName: 'Bathroom & Toilet Cleaning',
+          name: 'Bathroom & Kitchen Cleaning',
+          slug: 'bathroom-kitchen-cleaning',
+          icon: '🧼',
+          badge: '44 mins',
           displayOrder: 1,
+          isActive: true,
+          description: 'Intensive tile scrubbing, tap descaling, and grease removal.',
           services: [
-            { name: 'Bathroom Deep Cleaning (1 Bathroom)', slug: 'bathroom-deep-cleaning', basePrice: 499, durationMinutes: 60, description: 'Intense tile scrubbing, descaling of taps, shower glass & toilet sanitization.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Bathroom Descaling & Stain Removal', slug: 'bathroom-descaling', basePrice: 699, durationMinutes: 75, description: 'Hard water stain removal from tiles, mirrors, and glass partitions.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Full Bathroom + Toilet Combo (2 Bathrooms)', slug: 'bathroom-combo-cleaning', basePrice: 899, durationMinutes: 110, description: 'Complete deep cleaning and odor treatment for 2 bathrooms.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Bathroom Deep Cleaning (1 Bathroom)', slug: 'bathroom-deep-cleaning', basePrice: 499, durationMinutes: 44, bestsellerFlag: true, rating: 4.86, reviewCount: 240, description: 'Intense tile scrubbing, descaling of taps, shower glass & toilet sanitization.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Bathroom Descaling & Stain Removal', slug: 'bathroom-descaling', basePrice: 699, durationMinutes: 60, bestsellerFlag: false, rating: 4.79, reviewCount: 110, description: 'Hard water stain removal from tiles, mirrors, and glass partitions.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Kitchen Degreasing & Deep Clean', slug: 'kitchen-degreasing', basePrice: 699, durationMinutes: 60, bestsellerFlag: true, rating: 4.88, reviewCount: 310, description: 'Oil & grease removal from tiles, slab, sink, gas stove & cabinets exterior.', imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Full Home Deep Cleaning',
+          name: 'Full Home Deep Cleaning',
+          slug: 'full-home-cleaning',
+          icon: '🏠',
+          badge: null,
           displayOrder: 2,
+          isActive: true,
+          description: 'Top-to-bottom complete sanitized deep cleaning.',
           services: [
-            { name: '1 BHK Full Home Deep Cleaning', slug: '1bhk-deep-cleaning', basePrice: 1999, durationMinutes: 240, description: 'Thorough cleaning of living room, bedroom, kitchen, bathroom & balcony.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
-            { name: '2 BHK Full Home Deep Cleaning', slug: '2bhk-deep-cleaning', basePrice: 2899, durationMinutes: 300, description: 'Mechanized floor scrubbing, dusting, kitchen degreasing & 2 bathroom washes.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
-            { name: '3 BHK Full Home Deep Cleaning', slug: '3bhk-deep-cleaning', basePrice: 3899, durationMinutes: 360, description: 'Complete sanitization and mechanized polishing for 3 BHK apartments.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Move-in / Vacant House Cleaning', slug: 'move-in-cleaning', basePrice: 2499, durationMinutes: 300, description: 'Deep dusting, vacuuming of cabinets, windows & intensive sanitization.', imageUrl: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=600&q=80' },
+            { name: '1 BHK Full Home Deep Cleaning', slug: '1bhk-deep-cleaning', basePrice: 1999, durationMinutes: 240, bestsellerFlag: true, rating: 4.82, reviewCount: 520, description: 'Thorough cleaning of living room, bedroom, kitchen, bathroom & balcony.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+            { name: '2 BHK Full Home Deep Cleaning', slug: '2bhk-deep-cleaning', basePrice: 2899, durationMinutes: 300, bestsellerFlag: true, rating: 4.85, reviewCount: 780, description: 'Mechanized floor scrubbing, dusting, kitchen degreasing & 2 bathroom washes.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
+            { name: '3 BHK Full Home Deep Cleaning', slug: '3bhk-deep-cleaning', basePrice: 3899, durationMinutes: 360, bestsellerFlag: false, rating: 4.87, reviewCount: 430, description: 'Complete sanitization and mechanized polishing for 3 BHK apartments.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Sofa & Carpet Cleaning',
+          name: 'Sofa & Carpet Cleaning',
+          slug: 'sofa-carpet-cleaning',
+          icon: '🛋️',
+          badge: null,
           displayOrder: 3,
+          isActive: true,
+          description: 'Foam shampoo and moisture extraction for upholstery.',
           services: [
-            { name: '3-Seater Sofa Fabric Shampoo & Vacuum', slug: 'sofa-shampoo-3seater', basePrice: 699, durationMinutes: 60, description: 'Dry vacuuming, foam shampoo & moisture extraction for fabric sofas.', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
-            { name: '5-Seater Sofa Deep Spa Treatment', slug: 'sofa-shampoo-5seater', basePrice: 1099, durationMinutes: 90, description: 'Stain treatment and sanitization for 5-seater sofas & cushions.', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Living Room Carpet Deep Shampoo', slug: 'carpet-deep-shampoo', basePrice: 799, durationMinutes: 60, description: 'Industrial extraction wash for large carpets and rugs.', imageUrl: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80' },
+            { name: '3-Seater Sofa Fabric Shampoo & Vacuum', slug: 'sofa-shampoo-3seater', basePrice: 699, durationMinutes: 60, bestsellerFlag: true, rating: 4.79, reviewCount: 290, description: 'Dry vacuuming, foam shampoo & moisture extraction for fabric sofas.', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Living Room Carpet Deep Shampoo', slug: 'carpet-deep-shampoo', basePrice: 799, durationMinutes: 60, bestsellerFlag: false, rating: 4.75, reviewCount: 160, description: 'Industrial extraction wash for large carpets and rugs.', imageUrl: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Kitchen Deep Cleaning',
+          name: 'Pest Control',
+          slug: 'pest-control-sub',
+          icon: '🐜',
+          badge: null,
           displayOrder: 4,
+          isActive: true,
+          description: 'Odorless chemical and herbal gel treatments.',
           services: [
-            { name: 'Kitchen Degreasing & Deep Clean', slug: 'kitchen-degreasing', basePrice: 999, durationMinutes: 120, description: 'Oil & grease removal from tiles, slab, sink, gas stove & cabinets exterior.', imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Chimney & Exhaust Fan Deep Cleaning', slug: 'chimney-cleaning', basePrice: 599, durationMinutes: 60, description: 'Filter mesh dismantling, caustic degreasing and motor baffle cleanup.', imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80' },
-          ],
-        },
-        {
-          groupName: 'Balcony & Glass Cleaning',
-          displayOrder: 5,
-          services: [
-            { name: 'Balcony Jet Wash & Floor Scrubbing', slug: 'balcony-jet-wash', basePrice: 399, durationMinutes: 45, description: 'High pressure wash of balcony floor, railings and drainage clearance.', imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Cockroach & Ant Herbal Gel Control', slug: 'cockroach-control', basePrice: 599, durationMinutes: 45, bestsellerFlag: true, rating: 4.81, reviewCount: 380, description: 'Bayer herbal gel treatment with 6 months warranty.', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Ants & Bed Bugs Odorless Spray Control', slug: 'ants-bedbugs-control', basePrice: 799, durationMinutes: 60, bestsellerFlag: false, rating: 4.78, reviewCount: 140, description: 'Odorless spray treatment in joints & mattresses.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
           ],
         },
       ],
@@ -107,46 +119,109 @@ async function main() {
       name: "Women's Salon & Spa",
       slug: 'womens-salon-spa',
       icon: 'face_retouching_natural',
+      badge: null,
       isActive: true,
       order: 2,
       description: 'Salon and luxury spa at home with single-use kits, certified beauticians and top brands.',
-      groups: [
+      subCategories: [
         {
-          groupName: 'Waxing & Threading',
+          name: 'Salon for Women',
+          slug: 'salon-for-women',
+          icon: '🧖‍♀️',
+          badge: '44 mins',
           displayOrder: 1,
+          isActive: true,
+          description: 'RICA waxing, facial cleanup, threading & mani-pedi with single-use kits.',
           services: [
-            { name: 'Full Arms + Full Legs + Underarms (Rica Wax)', slug: 'rica-wax-combo', basePrice: 899, durationMinutes: 60, description: 'Painless Italian Rica wax for gentle hair removal & skin brightening.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Eyebrow + Upper Lip + Forehead Threading', slug: 'threading-combo', basePrice: 99, durationMinutes: 20, description: 'Precision facial hair threading and aloe vera soothing massage.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Full Arms + Full Legs + Underarms (Rica Wax)', slug: 'rica-wax-combo', basePrice: 899, durationMinutes: 60, bestsellerFlag: true, rating: 4.89, reviewCount: 920, description: 'Painless Italian Rica wax for gentle hair removal & skin brightening.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Eyebrow + Upper Lip + Forehead Threading', slug: 'threading-combo', basePrice: 99, durationMinutes: 20, bestsellerFlag: false, rating: 4.75, reviewCount: 450, description: 'Precision facial hair threading and aloe vera soothing massage.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+            { name: 'O3+ Bridal Glow Facial', slug: 'o3-bridal-facial', basePrice: 1699, durationMinutes: 75, bestsellerFlag: true, rating: 4.92, reviewCount: 610, description: 'Multi-step radiant facial with peeling, brightening serum and mask.', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Sara Luxury Pedicure', slug: 'sara-luxury-pedicure', basePrice: 599, durationMinutes: 45, bestsellerFlag: false, rating: 4.82, reviewCount: 340, description: 'Foot soak, cuticle care, dead skin scrubbing and relaxing massage.', imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Facial & Cleanup',
+          name: 'Spa for Women',
+          slug: 'spa-for-women',
+          icon: '💆‍♀️',
+          badge: null,
           displayOrder: 2,
-          services: [
-            { name: "O3+ Bridal Glow Facial", slug: 'o3-bridal-facial', basePrice: 1699, durationMinutes: 75, description: 'Multi-step radiant facial with peeling, brightening serum and mask.', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Sara Fruit Detox Cleanup', slug: 'sara-detox-cleanup', basePrice: 699, durationMinutes: 45, description: 'Fruit scrub, blackhead extraction, massage & hydration pack.', imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=600&q=80' },
+          isActive: true,
+          description: 'Aromatherapy full body relaxation massages and traditional Ayurvedic therapies.',
+          tiers: [
+            {
+              name: 'Luxe',
+              slug: 'spa-women-luxe',
+              tag: 'AROMA OIL',
+              badge: 'Top rated',
+              startingPrice: 898,
+              displayOrder: 1,
+              isActive: true,
+              description: 'Curated therapies with only Highly rated therapists & oils',
+              imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80',
+              services: [
+                { name: 'Sublime Swedish Massage (60 mins)', slug: 'sublime-swedish-massage', basePrice: 898, durationMinutes: 60, bestsellerFlag: true, rating: 4.91, reviewCount: 540, description: 'Long gliding strokes with lavender aroma oil for deep mental & muscular relaxation.', imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=600&q=80' },
+                { name: 'Deep Tissue Aromatherapy Spa (90 mins)', slug: 'deep-tissue-aroma-90', basePrice: 1399, durationMinutes: 90, bestsellerFlag: true, rating: 4.94, reviewCount: 380, description: 'Intensive firm pressure targeting chronic knots and shoulder stiffness.', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' },
+              ],
+            },
+            {
+              name: 'Prime',
+              slug: 'spa-women-prime',
+              tag: 'RELAXING OIL',
+              badge: null,
+              startingPrice: 699,
+              displayOrder: 2,
+              isActive: true,
+              description: 'Regular oil massages with standard techniques & therapist',
+              imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=600&q=80',
+              services: [
+                { name: 'Prime Full Body Relaxation Massage (60 mins)', slug: 'prime-full-body-massage', basePrice: 699, durationMinutes: 60, bestsellerFlag: false, rating: 4.79, reviewCount: 220, description: 'Soothing mineral oil massage for everyday body fatigue.', imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=600&q=80' },
+                { name: 'Head, Neck & Shoulder Stress Buster (30 mins)', slug: 'head-shoulder-massage-women', basePrice: 399, durationMinutes: 30, bestsellerFlag: false, rating: 4.77, reviewCount: 180, description: 'Targeted acupressure relief for desk workers and cervical tension.', imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80' },
+              ],
+            },
+            {
+              name: 'Ayurveda',
+              slug: 'spa-women-ayurveda',
+              tag: 'HERBAL OIL',
+              badge: null,
+              startingPrice: 699,
+              displayOrder: 3,
+              isActive: true,
+              description: 'Therapist trained in traditional massage techniques & oils',
+              imageUrl: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80',
+              services: [
+                { name: 'Ayurvedic Abhyanga Herbal Massage (60 mins)', slug: 'ayurvedic-abhyanga-massage', basePrice: 799, durationMinutes: 60, bestsellerFlag: true, rating: 4.88, reviewCount: 310, description: 'Traditional warm herbal oil rhythmic full body therapy.', imageUrl: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80' },
+                { name: 'Kizhi Warm Herbal Pouch Therapy (75 mins)', slug: 'kizhi-herbal-pouch', basePrice: 1099, durationMinutes: 75, bestsellerFlag: false, rating: 4.84, reviewCount: 140, description: 'Warm medicated herbal boluses applied to relieve joint stiffness.', imageUrl: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=600&q=80' },
+              ],
+            },
           ],
         },
         {
-          groupName: 'Manicure & Pedicure',
+          name: 'Hair Studio for Women',
+          slug: 'hair-studio-women',
+          icon: '💇‍♀️',
+          badge: null,
           displayOrder: 3,
+          isActive: true,
+          description: 'L’Oréal hair spa, keratin, botox, global colouring & styling.',
           services: [
-            { name: 'Sara Luxury Pedicure', slug: 'sara-luxury-pedicure', basePrice: 599, durationMinutes: 45, description: 'Foot soak, cuticle care, dead skin scrubbing and relaxing massage.', imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Spa Manicure & Pedicure Duo', slug: 'spa-mani-pedi-duo', basePrice: 999, durationMinutes: 80, description: 'Complete hand and feet pampering package with organic scrub.', imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=600&q=80' },
+            { name: 'L’Oréal Hair Spa + Split End Trim + Blowdry Combo', slug: 'hair-spa-trim-combo', basePrice: 899, durationMinutes: 60, bestsellerFlag: true, rating: 4.93, reviewCount: 880, description: 'Deep nourishing hair spa, split end trimming and salon blowdry.', imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Glam Blow Dry & Party Styling', slug: 'glam-blowdry-styling', basePrice: 399, durationMinutes: 45, bestsellerFlag: false, rating: 4.8, reviewCount: 290, description: 'Out-curls, straight sleek finish or bouncy beach waves.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Advanced Layered Haircut & Wash', slug: 'layered-haircut-women', basePrice: 499, durationMinutes: 45, bestsellerFlag: true, rating: 4.86, reviewCount: 420, description: 'Personalized face-framing cut, shampoo wash and styling.', imageUrl: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Brazilian Keratin Smoothing Treatment', slug: 'keratin-smoothing-women', basePrice: 3499, durationMinutes: 180, bestsellerFlag: false, rating: 4.91, reviewCount: 190, description: 'Frizz-free silky smooth hair for up to 6 months.', imageUrl: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Global Hair Colour (Ammonia-Free Inoa)', slug: 'global-hair-colour-women', basePrice: 2199, durationMinutes: 120, bestsellerFlag: false, rating: 4.84, reviewCount: 260, description: '100% grey coverage with premium ammonia-free L’Oréal Inoa.', imageUrl: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Hair Care & Styling',
+          name: 'Makeup, Saree & Styling',
+          slug: 'makeup-saree-styling',
+          icon: '💄',
+          badge: null,
           displayOrder: 4,
+          isActive: true,
+          description: 'Party makeup, saree draping & hairstyle for weddings and functions.',
           services: [
-            { name: "L'Oreal Deep Conditioning Hair Spa", slug: 'loreal-hair-spa', basePrice: 899, durationMinutes: 60, description: 'Intensive scalp massage, steam treatment and split end repair.', imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80' },
-          ],
-        },
-        {
-          groupName: 'Spa & Body Massage',
-          displayOrder: 5,
-          services: [
-            { name: 'Aroma Oil Full Body Relaxation Massage (60 min)', slug: 'aroma-full-body-massage', basePrice: 1299, durationMinutes: 60, description: 'Calming lavender oil massage with pressure point therapy.', imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=600&q=80' },
+            { name: 'HD Party Makeup & Eyelashes', slug: 'hd-party-makeup', basePrice: 1499, durationMinutes: 90, bestsellerFlag: true, rating: 4.9, reviewCount: 310, description: 'Flawless HD base, eye makeup, lashes and long-lasting setting spray.', imageUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Designer Saree Draping & Box Pleating', slug: 'saree-draping-service', basePrice: 299, durationMinutes: 25, bestsellerFlag: false, rating: 4.82, reviewCount: 190, description: 'Expert pin-up, box pleats and drape for any saree style.', imageUrl: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80' },
           ],
         },
       ],
@@ -156,186 +231,219 @@ async function main() {
     {
       name: "Men's Salon & Massage",
       slug: 'mens-salon-massage',
-      icon: 'person_grooming',
+      icon: 'content_cut',
+      badge: null,
       isActive: true,
       order: 3,
       description: "Men's grooming, styled haircuts, beard shaping, charcoal cleanups & head/body massages at home.",
-      groups: [
+      subCategories: [
         {
-          groupName: 'Haircut & Beard Grooming',
+          name: 'Salon for Men',
+          slug: 'salon-for-men',
+          icon: '🧔‍♂️',
+          badge: '44 mins',
           displayOrder: 1,
+          isActive: true,
+          description: 'Haircut, beard grooming & de-tan cleanups.',
           services: [
-            { name: "Men's Haircut + Beard Styling", slug: 'mens-haircut-beard', basePrice: 349, durationMinutes: 45, description: 'Trendy scissor/clipper haircut, beard styling & neck cleanup.', imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Beard Trimming & Hot Towel Shave', slug: 'beard-hot-towel', basePrice: 199, durationMinutes: 30, description: 'Razor precision lining, herbal balm and hot towel hydration.', imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&q=80' },
+            { name: "Men's Haircut + Beard Styling", slug: 'mens-haircut-beard', basePrice: 349, durationMinutes: 45, bestsellerFlag: true, rating: 4.85, reviewCount: 650, description: 'Trendy scissor/clipper haircut, beard styling & neck cleanup.', imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Beard Trimming & Hot Towel Shave', slug: 'beard-hot-towel', basePrice: 199, durationMinutes: 30, bestsellerFlag: false, rating: 4.76, reviewCount: 280, description: 'Razor precision lining, herbal balm and hot towel hydration.', imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Activated Charcoal Pollution De-Tan Cleanup', slug: 'mens-charcoal-cleanup', basePrice: 549, durationMinutes: 40, bestsellerFlag: true, rating: 4.88, reviewCount: 420, description: 'Pore cleansing, dirt extraction, blackhead removal and mask.', imageUrl: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: "Men's Facial & Cleanup",
+          name: 'Massage for Men',
+          slug: 'massage-for-men',
+          icon: '💆‍♂️',
+          badge: null,
           displayOrder: 2,
-          services: [
-            { name: 'Activated Charcoal Pollution De-Tan Cleanup', slug: 'mens-charcoal-cleanup', basePrice: 549, durationMinutes: 40, description: 'Pore cleansing, dirt extraction, blackhead removal and mask.', imageUrl: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=600&q=80' },
-          ],
-        },
-        {
-          groupName: 'Relaxing Head & Body Massage',
-          displayOrder: 3,
-          services: [
-            { name: 'Stress Relief Head, Neck & Shoulder Massage (30 min)', slug: 'mens-head-shoulder-massage', basePrice: 399, durationMinutes: 30, description: 'Ayurvedic cooling oil head massage with shoulder relaxation.', imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Full Body Deep Tissue Massage for Men (60 min)', slug: 'mens-deep-tissue-massage', basePrice: 1199, durationMinutes: 60, description: 'Firm pressure muscle relief massage for back pain and fatigue.', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' },
+          isActive: true,
+          description: 'Therapeutic muscle relief and stress reduction.',
+          tiers: [
+            {
+              name: 'Luxe Deep Tissue',
+              slug: 'massage-men-luxe',
+              tag: 'STRESS RELIEF',
+              badge: 'Top rated',
+              startingPrice: 999,
+              displayOrder: 1,
+              isActive: true,
+              description: 'Deep muscle release with premium mineral oils',
+              imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80',
+              services: [
+                { name: 'Deep Tissue Back & Spine Relief (60 min)', slug: 'mens-deep-tissue-massage', basePrice: 999, durationMinutes: 60, bestsellerFlag: true, rating: 4.92, reviewCount: 390, description: 'Firm pressure muscle relief massage for back pain and fatigue.', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80' },
+              ],
+            },
+            {
+              name: 'Classic Relax',
+              slug: 'massage-men-classic',
+              tag: 'SWEDISH',
+              badge: null,
+              startingPrice: 699,
+              displayOrder: 2,
+              isActive: true,
+              description: 'Full body relaxing oil massage',
+              imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80',
+              services: [
+                { name: 'Stress Relief Head, Neck & Shoulder Massage (30 min)', slug: 'mens-head-shoulder-massage', basePrice: 399, durationMinutes: 30, bestsellerFlag: false, rating: 4.81, reviewCount: 210, description: 'Ayurvedic cooling oil head massage with shoulder relaxation.', imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=600&q=80' },
+              ],
+            },
           ],
         },
       ],
     },
 
-    // 4. AC & Appliance Repair (DISABLED - Phase 2)
+    // 4. AC & Appliance Repair (DISABLED)
     {
       name: 'AC & Appliance Repair',
       slug: 'ac-appliance-repair',
       icon: 'ac_unit',
+      badge: '44 mins',
       isActive: false,
       order: 4,
-      description: 'Expert diagnostics, servicing, gas recharge & PCB repair for household appliances.',
-      groups: [
+      description: 'Expert servicing, foam jet wash, refrigerant recharge & motherboard fix.',
+      subCategories: [
         {
-          groupName: 'AC Service & Repair',
+          name: 'AC Service & Repair',
+          slug: 'ac-service-sub',
+          icon: '❄️',
+          badge: '44 mins',
           displayOrder: 1,
+          isActive: true,
+          description: 'Power jet wash of indoor and outdoor units.',
           services: [
-            { name: 'Split AC Power Jet Service', slug: 'split-ac-power-jet', basePrice: 499, durationMinutes: 60, description: 'Deep water foam jet cleaning of indoor cooling coil & outdoor unit.', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80' },
-            { name: 'AC Gas Refill & Leak Inspection', slug: 'ac-gas-leak-check', basePrice: 1499, durationMinutes: 60, description: 'Complete Freon/R32 gas charging and leak braze repair.', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80' },
+            { name: 'AC Service & Power Jet (44 mins)', slug: 'ac-power-jet', basePrice: 499, durationMinutes: 44, bestsellerFlag: true, rating: 4.83, reviewCount: 510, description: 'Power jet wash of filters, cooling coils & outdoor unit.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
+            { name: 'AC Gas Refill & Leak Inspection', slug: 'ac-gas-leak-check', basePrice: 1499, durationMinutes: 60, bestsellerFlag: false, rating: 4.79, reviewCount: 220, description: 'Complete Freon/R32 gas charging and leak braze repair.', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Washing Machine & Fridge Repair',
+          name: 'Washing Machine & Refrigerator',
+          slug: 'washing-fridge-sub',
+          icon: '🧺',
+          badge: null,
           displayOrder: 2,
+          isActive: true,
+          description: 'Motor spin check, drain valve fix & drum diagnosis.',
           services: [
-            { name: 'Washing Machine Checkup & Repair', slug: 'washing-machine-checkup', basePrice: 299, durationMinutes: 45, description: 'Diagnosis of motor, spin cycle, drainage or PCB motherboard error.', imageUrl: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Refrigerator Cooling Repair', slug: 'refrigerator-cooling-repair', basePrice: 349, durationMinutes: 45, description: 'Thermostat, compressor relay and gas circulation diagnostic.', imageUrl: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Washing Machine Repair & Checkup', slug: 'washing-machine-repair', basePrice: 299, durationMinutes: 45, bestsellerFlag: false, rating: 4.77, reviewCount: 180, description: 'Motor spin check, drain valve fix & drum diagnosis.', imageUrl: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Refrigerator Cooling Repair', slug: 'refrigerator-repair', basePrice: 349, durationMinutes: 45, bestsellerFlag: false, rating: 4.74, reviewCount: 140, description: 'Gas check, thermostat relay replacement & cooling audit.', imageUrl: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=600&q=80' },
           ],
         },
       ],
     },
 
-    // 5. Electrician, Plumber & Carpenter (DISABLED - Phase 2)
+    // 5. Electrician, Plumber & Carpenter (DISABLED)
     {
       name: 'Electrician, Plumber & Carpenter',
       slug: 'electrician-plumber-carpenter',
-      icon: 'home_repair_service',
+      icon: 'handyman',
+      badge: '19 mins',
       isActive: false,
       order: 5,
-      description: 'Doorstep certified handymen for home electrical, plumbing and woodwork repairs.',
-      groups: [
+      description: 'Certified technicians for wiring, MCBs, pipe leakage, locks & furniture assembly.',
+      subCategories: [
         {
-          groupName: 'Electrician Services',
+          name: 'Electrician',
+          slug: 'electrician-sub',
+          icon: '⚡',
+          badge: '19 mins',
           displayOrder: 1,
+          isActive: true,
+          description: 'Switchboard repair, fan installation & short circuit fixes.',
           services: [
-            { name: 'Switchboard / Socket Repair & Install', slug: 'switchboard-repair', basePrice: 149, durationMinutes: 30, description: 'Fix faulty modular switches, MCB trips and socket replacements.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Ceiling Fan Installation / Repair', slug: 'fan-install-repair-handy', basePrice: 249, durationMinutes: 45, description: 'Assembly, regulator wiring and ceiling fan mount.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Switchboard / Socket Repair & Install', slug: 'switchboard-repair', basePrice: 149, durationMinutes: 30, bestsellerFlag: true, rating: 4.87, reviewCount: 620, description: 'Fix faulty modular switches, MCB trips and socket replacements.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Ceiling Fan Installation / Repair', slug: 'fan-install-repair-handy', basePrice: 249, durationMinutes: 45, bestsellerFlag: false, rating: 4.8, reviewCount: 310, description: 'Assembly, regulator wiring and ceiling fan mount.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Plumbing Services',
+          name: 'Plumber',
+          slug: 'plumber-sub',
+          icon: '🔧',
+          badge: '19 mins',
           displayOrder: 2,
+          isActive: true,
+          description: 'Tap repair, drain unblocking & flush valve fixing.',
           services: [
-            { name: 'Tap / Faucet Leak Repair', slug: 'tap-leak-repair', basePrice: 199, durationMinutes: 30, description: 'Spindle change, washer replacement and faucet fixing.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Drainage & Pipe Blockage Clearing', slug: 'drain-block-clearing', basePrice: 399, durationMinutes: 45, description: 'Mechanical unclogging of kitchen sink, floor traps & bathroom drains.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Tap / Faucet Leak Repair', slug: 'tap-leak-repair', basePrice: 199, durationMinutes: 30, bestsellerFlag: true, rating: 4.82, reviewCount: 440, description: 'Spindle change, washer replacement and faucet fixing.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Drainage & Pipe Blockage Clearing', slug: 'drain-block-clearing', basePrice: 399, durationMinutes: 45, bestsellerFlag: false, rating: 4.79, reviewCount: 270, description: 'Mechanical unclogging of kitchen sink, floor traps & bathroom drains.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=600&q=80' },
           ],
         },
         {
-          groupName: 'Carpentry Services',
+          name: 'Carpenter',
+          slug: 'carpenter-sub',
+          icon: '🪚',
+          badge: null,
           displayOrder: 3,
+          isActive: true,
+          description: 'Door locks, drill & hang, and furniture assembly.',
           services: [
-            { name: 'Door Lock Repair & Handle Fitting', slug: 'door-lock-fitting', basePrice: 299, durationMinutes: 45, description: 'Mortise lock, latch replacement and hinges realignment.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Drill & Hang (Shelves, Curtains, TV)', slug: 'drill-hang-service', basePrice: 199, durationMinutes: 30, description: 'Wall mounting of frames, mirrors, rods and brackets.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Door Lock Repair & Handle Fitting', slug: 'door-lock-fitting', basePrice: 299, durationMinutes: 45, bestsellerFlag: false, rating: 4.78, reviewCount: 190, description: 'Mortise lock, latch replacement and hinges realignment.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Drill & Hang (Shelves, Curtains, TV)', slug: 'drill-hang-service', basePrice: 199, durationMinutes: 30, bestsellerFlag: true, rating: 4.85, reviewCount: 380, description: 'Wall mounting of frames, mirrors, rods and brackets.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=600&q=80' },
           ],
         },
       ],
     },
 
-    // 6. Painting & Waterproofing (DISABLED - Phase 2)
+    // 6. Painting & Waterproofing (DISABLED)
     {
       name: 'Painting & Waterproofing',
       slug: 'painting-waterproofing',
       icon: 'format_paint',
+      badge: null,
       isActive: false,
       order: 6,
-      description: 'Complete interior & exterior home painting with laser measurement and waterproofing solutions.',
-      groups: [
+      description: 'Dustless sanding, waterproof primer & Asian Paints color finish.',
+      subCategories: [
         {
-          groupName: 'Home Painting',
+          name: 'Wall Painting & Waterproofing',
+          slug: 'wall-painting-sub',
+          icon: '🖌️',
+          badge: null,
           displayOrder: 1,
+          isActive: true,
+          description: 'Interior repainting and bathroom leakage waterproofing.',
           services: [
-            { name: 'Full Home Interior Painting Consultation', slug: 'interior-painting-consult', basePrice: 499, durationMinutes: 60, description: 'Laser wall measurement, color visualization and detailed quotation.', imageUrl: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Full Home Interior Painting Consultation', slug: 'interior-painting-consult', basePrice: 499, durationMinutes: 60, bestsellerFlag: true, rating: 4.9, reviewCount: 150, description: 'Laser wall measurement, color visualization and detailed quotation.', imageUrl: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=600&q=80' },
           ],
         },
       ],
     },
 
-    // 7. InstaHelp (Cooks, Maids & Care) (DISABLED - Phase 2)
+    // 7. InstaHelp (DISABLED)
     {
       name: 'InstaHelp',
       slug: 'instahelp',
       icon: 'support_agent',
+      badge: null,
       isActive: false,
       order: 7,
-      description: 'Instant and verified on-demand helpers, daily cooks, babysitters & elderly caregivers.',
-      groups: [
+      description: 'Instant and verified on-demand helpers, daily cooks, babysitters & caregivers.',
+      subCategories: [
         {
-          groupName: 'Daily Home Help',
+          name: 'Daily Helpers & Cooks',
+          slug: 'daily-helpers-sub',
+          icon: '👩‍💼',
+          badge: null,
           displayOrder: 1,
+          isActive: true,
+          description: 'Same-day on-demand cooks and housekeeping maids.',
           services: [
-            { name: 'Cook for 1 Meal (Up to 4 Persons)', slug: 'cook-single-meal', basePrice: 399, durationMinutes: 90, description: 'Freshly prepared home-style food (Roti, Sabzi, Dal, Rice).', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80' },
-            { name: 'Emergency Housekeeper / Maid (2 Hours)', slug: 'emergency-maid-2hr', basePrice: 349, durationMinutes: 120, description: 'Vetted helper for utensil washing, sweeping and mopping.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
-          ],
-        },
-      ],
-    },
-
-    // 8. Pest Control (DISABLED - Phase 2)
-    {
-      name: 'Pest Control',
-      slug: 'pest-control',
-      icon: 'pest_control',
-      isActive: false,
-      order: 8,
-      description: 'Odorless chemical and gel treatments with government approved safe chemicals.',
-      groups: [
-        {
-          groupName: 'Pest Extermination',
-          displayOrder: 1,
-          services: [
-            { name: 'Cockroach & Ant Gel Treatment', slug: 'cockroach-gel-treatment', basePrice: 599, durationMinutes: 45, description: 'Bayer herbal gel spots in kitchen and bathrooms with 6-month warranty.', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80' },
-          ],
-        },
-      ],
-    },
-
-    // 9. Packers & Movers (DISABLED - Phase 2)
-    {
-      name: 'Packers & Movers',
-      slug: 'packers-movers',
-      icon: 'local_shipping',
-      isActive: false,
-      order: 9,
-      description: 'Hassle-free household goods relocation with 3-layer bubble packaging and dedicated trucks.',
-      groups: [
-        {
-          groupName: 'Home Shifting',
-          displayOrder: 1,
-          services: [
-            { name: 'Local Within-City Moving Consultation', slug: 'local-moving-survey', basePrice: 299, durationMinutes: 45, description: 'Free inventory evaluation and confirmed flat quotation.', imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Cook for 1 Meal (Up to 4 Persons)', slug: 'cook-single-meal', basePrice: 399, durationMinutes: 90, bestsellerFlag: true, rating: 4.88, reviewCount: 410, description: 'Freshly prepared home-style food (Roti, Sabzi, Dal, Rice).', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80' },
+            { name: 'Emergency Housekeeper / Maid (2 Hours)', slug: 'emergency-maid-2hr', basePrice: 349, durationMinutes: 120, bestsellerFlag: false, rating: 4.8, reviewCount: 230, description: 'Vetted helper for utensil washing, sweeping and mopping.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
           ],
         },
       ],
     },
   ];
 
-  for (const catData of serviceData) {
-    const { groups, ...categoryFields } = catData;
+  for (const catData of multiLevelServiceData) {
+    const { subCategories, ...categoryFields } = catData;
     const category = await prisma.serviceCategory.upsert({
       where: { slug: catData.slug },
       update: {
         name: catData.name,
         icon: catData.icon,
+        badge: catData.badge,
         isActive: catData.isActive,
         order: catData.order,
         description: catData.description,
@@ -345,66 +453,109 @@ async function main() {
       },
     });
 
-    for (const grp of groups) {
-      let group = await prisma.serviceGroup.findFirst({
-        where: { categoryId: category.id, groupName: grp.groupName },
+    for (const subCat of subCategories) {
+      const { tiers, services: directServices, ...subCatFields } = subCat as any;
+      const subCategory = await prisma.serviceSubCategory.upsert({
+        where: { slug: subCat.slug },
+        update: {
+          name: subCat.name,
+          icon: subCat.icon,
+          badge: subCat.badge,
+          displayOrder: subCat.displayOrder,
+          isActive: subCat.isActive,
+          description: subCat.description,
+          categoryId: category.id,
+        },
+        create: {
+          ...subCatFields,
+          categoryId: category.id,
+        },
       });
 
-      if (!group) {
-        group = await prisma.serviceGroup.create({
-          data: {
-            categoryId: category.id,
-            groupName: grp.groupName,
-            displayOrder: grp.displayOrder,
-          },
-        });
-      } else {
-        await prisma.serviceGroup.update({
-          where: { id: group.id },
-          data: { displayOrder: grp.displayOrder },
-        });
+      // If subcategory has tiers (e.g. Luxe, Prime, Ayurveda under Spa for Women)
+      if (Array.isArray(tiers) && tiers.length > 0) {
+        for (const tierData of tiers) {
+          const { services: tierServices, ...tierFields } = tierData;
+          const tier = await prisma.serviceTier.upsert({
+            where: { slug: tierData.slug },
+            update: {
+              name: tierData.name,
+              tag: tierData.tag,
+              badge: tierData.badge,
+              startingPrice: tierData.startingPrice,
+              displayOrder: tierData.displayOrder,
+              isActive: tierData.isActive,
+              description: tierData.description,
+              imageUrl: tierData.imageUrl,
+              subCategoryId: subCategory.id,
+            },
+            create: {
+              ...tierFields,
+              subCategoryId: subCategory.id,
+            },
+          });
+
+          if (Array.isArray(tierServices)) {
+            for (const svc of tierServices) {
+              await prisma.service.upsert({
+                where: { slug: svc.slug },
+                update: {
+                  name: svc.name,
+                  basePrice: svc.basePrice,
+                  durationMinutes: svc.durationMinutes,
+                  bestsellerFlag: svc.bestsellerFlag || false,
+                  rating: svc.rating || 4.8,
+                  reviewCount: svc.reviewCount || 100,
+                  description: svc.description,
+                  imageUrl: svc.imageUrl,
+                  isActive: catData.isActive && subCat.isActive && tierData.isActive,
+                  categoryId: category.id,
+                  subCategoryId: subCategory.id,
+                  tierId: tier.id,
+                },
+                create: {
+                  ...svc,
+                  categoryId: category.id,
+                  subCategoryId: subCategory.id,
+                  tierId: tier.id,
+                  isActive: catData.isActive && subCat.isActive && tierData.isActive,
+                },
+              });
+            }
+          }
+        }
       }
 
-      for (const svc of grp.services) {
-        const createdSvc = await prisma.service.upsert({
-          where: { slug: svc.slug },
-          update: {
-            name: svc.name,
-            basePrice: svc.basePrice,
-            durationMinutes: svc.durationMinutes,
-            description: svc.description,
-            imageUrl: svc.imageUrl,
-            isActive: catData.isActive,
-            categoryId: category.id,
-          },
-          create: {
-            ...svc,
-            categoryId: category.id,
-            isActive: catData.isActive,
-          },
-        });
-
-        const existingSubOpt = await prisma.serviceSubOption.findFirst({
-          where: { serviceId: createdSvc.id, name: 'Standard Service' },
-        });
-
-        if (!existingSubOpt) {
-          await prisma.serviceSubOption.create({
-            data: {
-              serviceId: createdSvc.id,
-              groupId: group.id,
-              name: 'Standard Service',
-              description: 'Standard verified professional delivery with safety kit',
-              priceAdjust: 0,
-              isActive: true,
-              displayOrder: 1,
+      // Direct services under subcategory
+      if (Array.isArray(directServices)) {
+        for (const svc of directServices) {
+          await prisma.service.upsert({
+            where: { slug: svc.slug },
+            update: {
+              name: svc.name,
+              basePrice: svc.basePrice,
+              durationMinutes: svc.durationMinutes,
+              bestsellerFlag: svc.bestsellerFlag || false,
+              rating: svc.rating || 4.8,
+              reviewCount: svc.reviewCount || 100,
+              description: svc.description,
+              imageUrl: svc.imageUrl,
+              isActive: catData.isActive && subCat.isActive,
+              categoryId: category.id,
+              subCategoryId: subCategory.id,
+            },
+            create: {
+              ...svc,
+              categoryId: category.id,
+              subCategoryId: subCategory.id,
+              isActive: catData.isActive && subCat.isActive,
             },
           });
         }
       }
     }
   }
-  console.log(`✅ Seeded ${serviceData.length} Urban Company service categories with groups & services`);
+  console.log(`✅ Seeded ${multiLevelServiceData.length} Urban Company multi-level service categories`);
 
   // ─── Commission Rules ───────────────────────────────────────────────────────
   const commissionRules = [

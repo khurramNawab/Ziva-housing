@@ -728,35 +728,91 @@ model ServiceCategory {
   slug        String   @unique
   description String?
   icon        String?
+  badge       String?  // e.g. "44 mins", "19 mins"
   isActive    Boolean  @default(true)
   order       Int      @default(0)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
 
+  subCategories ServiceSubCategory[]
   services      Service[]
   serviceGroups ServiceGroup[]
 
   @@map("service_categories")
 }
 
+model ServiceSubCategory {
+  id           String   @id @default(cuid())
+  categoryId   String
+  name         String
+  slug         String   @unique
+  description  String?
+  icon         String?
+  imageUrl     String?
+  badge        String?  // e.g. "44 mins"
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt @default(now())
+
+  category     ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  tiers        ServiceTier[]
+  services     Service[]
+
+  @@index([categoryId])
+  @@map("service_sub_categories")
+}
+
+model ServiceTier {
+  id            String   @id @default(cuid())
+  subCategoryId String
+  name          String   // e.g. "Luxe", "Prime", "Ayurveda"
+  slug          String   @unique
+  tag           String?  // e.g. "AROMA OIL", "HERBAL OIL"
+  badge         String?  // e.g. "Top rated"
+  startingPrice Decimal? // e.g. 898
+  description   String?  // e.g. "Curated therapies with only Highly rated therapists & oils"
+  imageUrl      String?
+  displayOrder  Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt @default(now())
+
+  subCategory   ServiceSubCategory @relation(fields: [subCategoryId], references: [id], onDelete: Cascade)
+  services      Service[]
+
+  @@index([subCategoryId])
+  @@map("service_tiers")
+}
+
 model Service {
   id              String   @id @default(cuid())
   categoryId      String
+  subCategoryId   String?
+  tierId          String?
   name            String
   slug            String   @unique
   description     String?
   basePrice       Decimal?
   durationMinutes Int?
+  bestsellerFlag  Boolean  @default(false)
+  rating          Float?   @default(4.8)
+  reviewCount     Int?     @default(120)
   isActive        Boolean  @default(true)
   order           Int      @default(0)
   imageUrl        String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  category        ServiceCategory    @relation(fields: [categoryId], references: [id])
+  category        ServiceCategory     @relation(fields: [categoryId], references: [id])
+  subCategory     ServiceSubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: SetNull)
+  tier            ServiceTier?        @relation(fields: [tierId], references: [id], onDelete: SetNull)
   serviceBookings ServiceBooking[]
   subOptions      ServiceSubOption[]
 
   @@index([categoryId])
+  @@index([subCategoryId])
+  @@index([tierId])
   @@map("services")
 }
 

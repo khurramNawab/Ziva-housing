@@ -17,6 +17,20 @@ export class ServicesController {
   }
 
   @Public()
+  @Get('subcategories')
+  @ApiOperation({ summary: 'Get active subcategories (public, optional filter by category)' })
+  getSubCategories(@Query('category') categoryIdOrSlug?: string) {
+    return this.servicesService.getSubCategories(categoryIdOrSlug);
+  }
+
+  @Public()
+  @Get('tiers/:subCategoryId')
+  @ApiOperation({ summary: 'Get active tiers for a subcategory (public)' })
+  getSubCategoryTiers(@Param('subCategoryId') subCategoryId: string) {
+    return this.servicesService.getSubCategoryTiers(subCategoryId);
+  }
+
+  @Public()
   @Get('categories/:id/menu')
   @ApiOperation({ summary: 'Get grouped service menu for a category (public)' })
   getCategoryMenu(@Param('id') categoryId: string) {
@@ -25,9 +39,20 @@ export class ServicesController {
 
   @Public()
   @Get()
-  @ApiOperation({ summary: 'Get services list (public, optional filter by category slug)' })
-  getServices(@Query('category') categorySlug?: string) {
-    return this.servicesService.getServices(categorySlug);
+  @ApiOperation({ summary: 'Get services list (public, optional filter by category, subcategory, tier)' })
+  getServices(
+    @Query('category') categorySlug?: string,
+    @Query('subCategory') subCategorySlug?: string,
+    @Query('tier') tierSlug?: string,
+  ) {
+    return this.servicesService.getServices(categorySlug, subCategorySlug, tierSlug);
+  }
+
+  @Public()
+  @Get('item/:idOrSlug')
+  @ApiOperation({ summary: 'Get single service by id or slug (public with strict active check)' })
+  getServiceItem(@Param('idOrSlug') idOrSlug: string) {
+    return this.servicesService.getServiceByIdOrSlug(idOrSlug);
   }
 
   @Public()

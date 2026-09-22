@@ -151,101 +151,332 @@ export class ServicesService {
       try {
         const categories = await this.prisma.serviceCategory.findMany({
           where: { isActive: true },
+          include: {
+            subCategories: {
+              where: { isActive: true },
+              orderBy: { displayOrder: 'asc' },
+              include: {
+                tiers: {
+                  where: { isActive: true },
+                  orderBy: { displayOrder: 'asc' },
+                },
+              },
+            },
+          },
           orderBy: { order: 'asc' },
         });
-        if (categories && categories.length > 0) return categories;
+        if (categories) return categories;
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getCategories: ${err?.message}`);
       }
     }
-    return this.inMemoryCategories;
+    return this.inMemoryCategories.filter((c) => c.isActive);
+  }
+
+  // ─── GET /subcategories?category=... ──────────────────────────────────────
+  async getSubCategories(categoryIdOrSlug?: string) {
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const where: any = {
+          isActive: true,
+          category: { isActive: true },
+        };
+        if (categoryIdOrSlug) {
+          where.category.OR = [{ id: categoryIdOrSlug }, { slug: categoryIdOrSlug }];
+        }
+
+        const subCategories = await this.prisma.serviceSubCategory.findMany({
+          where,
+          include: {
+            category: { select: { id: true, name: true, slug: true, icon: true, badge: true, isActive: true } },
+            tiers: { where: { isActive: true }, orderBy: { displayOrder: 'asc' } },
+            services: { where: { isActive: true }, orderBy: { order: 'asc' } },
+          },
+          orderBy: { displayOrder: 'asc' },
+        });
+        return subCategories;
+      } catch (err: any) {
+        this.logger.warn(`Remote DB error in getSubCategories: ${err?.message}`);
+      }
+    }
+    return [];
+  }
+
+  // ─── GET /tiers/:subCategoryIdOrSlug ──────────────────────────────────────
+  async getSubCategoryTiers(subCategoryIdOrSlug: string) {
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const tiers = await this.prisma.serviceTier.findMany({
+          where: {
+            subCategory: {
+              OR: [{ id: subCategoryIdOrSlug }, { slug: subCategoryIdOrSlug }],
+              isActive: true,
+              category: { isActive: true },
+            },
+            isActive: true,
+          },
+          include: {
+            subCategory: { select: { id: true, name: true, slug: true, categoryId: true } },
+            services: { where: { isActive: true }, orderBy: { order: 'asc' } },
+          },
+          orderBy: { displayOrder: 'asc' },
+        });
+        return tiers;
+      } catch (err: any) {
+        this.logger.warn(`Remote DB error in getSubCategoryTiers: ${err?.message}`);
+      }
+    }
+    return [];
   }
 
   // ─── GET /categories/:id/menu — Grouped Response ───────────────────────
-  async getCategoryMenu(categoryId: string) {
+  async getCategoryMenu(categoryIdOrSlug: string) {
+    const rawParam = categoryIdOrSlug || '';
+    const normalizedSlug = rawParam
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    const cleanAlphaNum = rawParam.toLowerCase().replace(/[^a-z0-9]/g, '');
+
     if (this.prisma.isDbAvailable()) {
       try {
-        const category = await this.prisma.serviceCategory.findFirst({
-          where: { OR: [{ id: categoryId }, { slug: categoryId }], isActive: true },
+        let category = await this.prisma.serviceCategory.findFirst({
+          where: {
+            OR: [
+              { id: rawParam },
+              { slug: rawParam },
+              { slug: normalizedSlug },
+              { slug: normalizedSlug.replace(/-/g, '') },
+              { name: { equals: rawParam, mode: 'insensitive' } },
+            ],
+          },
           include: {
-            serviceGroups: {
+            subCategories: {
+              where: { isActive: true },
               orderBy: { displayOrder: 'asc' },
               include: {
-                subOptions: { where: { isActive: true }, orderBy: { displayOrder: 'asc' } },
+                tiers: {
+                  where: { isActive: true },
+                  orderBy: { displayOrder: 'asc' },
+                  include: {
+                    services: { where: { isActive: true }, orderBy: { order: 'asc' } },
+                  },
+                },
+                services: { where: { isActive: true }, orderBy: { order: 'asc' } },
               },
             },
             services: {
               where: { isActive: true },
               orderBy: { order: 'asc' },
               include: {
-                subOptions: { where: { isActive: true }, orderBy: { displayOrder: 'asc' } },
+                subCategory: true,
+                tier: true,
               },
             },
           },
         });
 
-        if (category) {
-          // Build grouped response: if serviceGroups exist, group services under them
-          const groups =
-            category.serviceGroups.length > 0
-              ? category.serviceGroups.map((g) => ({
-                  groupName: g.groupName,
-                  services: category.services.filter((s) =>
-                    s.subOptions.some((so) => so.groupId === g.id),
-                  ),
-                }))
-              : [{ groupName: category.name, services: category.services }];
+        // If not found directly, do prioritized fuzzy match across all categories
+        if (!category) {
+          const allCategories = await this.prisma.serviceCategory.findMany({
+            include: {
+              subCategories: {
+                where: { isActive: true },
+                orderBy: { displayOrder: 'asc' },
+                include: {
+                  tiers: {
+                    where: { isActive: true },
+                    orderBy: { displayOrder: 'asc' },
+                    include: {
+                      services: { where: { isActive: true }, orderBy: { order: 'asc' } },
+                    },
+                  },
+                  services: { where: { isActive: true }, orderBy: { order: 'asc' } },
+                },
+              },
+              services: {
+                where: { isActive: true },
+                orderBy: { order: 'asc' },
+                include: {
+                  subCategory: true,
+                  tier: true,
+                },
+              },
+            },
+          });
 
-          return { category, groups };
+          // Priority 1: Exact alphanumeric match
+          category =
+            allCategories.find((c) => {
+              const catClean = c.slug.toLowerCase().replace(/[^a-z0-9]/g, '');
+              const nameClean = c.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+              return catClean === cleanAlphaNum || nameClean === cleanAlphaNum;
+            }) || null;
+
+          // Priority 2: Starts-with match
+          if (!category) {
+            category =
+              allCategories.find((c) => {
+                const catClean = c.slug.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const nameClean = c.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                return catClean.startsWith(cleanAlphaNum) || nameClean.startsWith(cleanAlphaNum);
+              }) || null;
+          }
         }
+
+        // 🔒 STRICT INACTIVE CHECK: If category exists in DB and is inactive, return null immediately
+        if (category) {
+          if (category.isActive === false) {
+            return null;
+          }
+
+          return {
+            id: category.id,
+            name: category.name,
+            slug: category.slug,
+            icon: category.icon,
+            badge: category.badge,
+            description: category.description,
+            order: category.order,
+            isActive: category.isActive,
+            subCategories: category.subCategories,
+            services: category.services,
+          };
+        }
+
+        // Category was not found in DB
+        return null;
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getCategoryMenu: ${err?.message}`);
       }
     }
 
-    // In-memory fallback
+    // In-memory fallback only when database is completely disconnected
     const cat = this.inMemoryCategories.find(
-      (c) => c.id === categoryId || c.slug === categoryId,
+      (c) =>
+        (c.id === rawParam || c.slug === rawParam || c.slug === normalizedSlug) && c.isActive,
     );
     if (!cat) return null;
-    const services = this.inMemoryServices.filter((s) => s.categoryId === cat.id);
+    const services = this.inMemoryServices.filter((s) => s.categoryId === cat.id && s.isActive);
     return {
-      category: cat,
-      groups: [{ groupName: cat.name, services }],
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+      icon: cat.icon,
+      badge: (cat as any).badge || null,
+      description: null,
+      order: cat.order,
+      isActive: cat.isActive,
+      subCategories: [
+        {
+          id: `sub-${cat.id}`,
+          name: cat.name,
+          slug: cat.slug,
+          icon: cat.icon,
+          badge: null,
+          groupHeader: null,
+          displayOrder: 1,
+          isActive: true,
+          tiers: [],
+          services,
+        },
+      ],
+      services,
     };
   }
 
-  async getServices(categorySlug?: string) {
+  // ─── GET /services — Filtered Services ───────────────────────────────────
+  async getServices(categorySlug?: string, subCategorySlug?: string, tierSlug?: string) {
     if (this.prisma.isDbAvailable()) {
       try {
-        const where: any = { isActive: true };
+        const where: any = {
+          isActive: true,
+          category: { isActive: true },
+        };
         if (categorySlug) {
-          where.category = { slug: categorySlug };
+          where.category.slug = categorySlug;
+        }
+        if (subCategorySlug) {
+          where.subCategory = { slug: subCategorySlug, isActive: true };
+        }
+        if (tierSlug) {
+          where.tier = { slug: tierSlug, isActive: true };
         }
 
         const services = await this.prisma.service.findMany({
           where,
-          include: { category: true },
+          include: {
+            category: { select: { id: true, name: true, slug: true, icon: true, badge: true } },
+            subCategory: { select: { id: true, name: true, slug: true, icon: true, badge: true } },
+            tier: { select: { id: true, name: true, slug: true, tag: true, badge: true, startingPrice: true } },
+          },
           orderBy: { order: 'asc' },
         });
-        if (services && services.length > 0) return services;
+        if (services) return services;
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getServices: ${err?.message}`);
       }
     }
 
     if (categorySlug) {
-      const cat = this.inMemoryCategories.find((c) => c.slug === categorySlug);
+      const cat = this.inMemoryCategories.find((c) => c.slug === categorySlug && c.isActive);
       if (!cat) return [];
       return this.inMemoryServices
-        .filter((s) => s.categoryId === cat.id)
+        .filter((s) => s.categoryId === cat.id && s.isActive)
         .map((s) => ({ ...s, category: cat }));
     }
 
-    return this.inMemoryServices.map((s) => ({
-      ...s,
-      category: this.inMemoryCategories.find((c) => c.id === s.categoryId),
-    }));
+    return this.inMemoryServices
+      .filter((s) => s.isActive)
+      .map((s) => ({
+        ...s,
+        category: this.inMemoryCategories.find((c) => c.id === s.categoryId && c.isActive),
+      }))
+      .filter((s) => s.category);
+  }
+
+  // ─── GET /services/:idOrSlug — Strict Direct Fetch Check ──────────────────
+  async getServiceByIdOrSlug(idOrSlug: string) {
+    if (this.prisma.isDbAvailable()) {
+      try {
+        const service = await this.prisma.service.findFirst({
+          where: {
+            OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+          },
+          include: {
+            category: true,
+            subCategory: true,
+            tier: true,
+          },
+        });
+
+        if (!service) {
+          throw new NotFoundException('Service not found');
+        }
+
+        // Strict cascading active check
+        if (
+          !service.isActive ||
+          !service.category?.isActive ||
+          (service.subCategory && !service.subCategory.isActive) ||
+          (service.tier && !service.tier.isActive)
+        ) {
+          throw new NotFoundException('This service is currently disabled or unavailable.');
+        }
+
+        return service;
+      } catch (err: any) {
+        if (err instanceof NotFoundException) throw err;
+        this.logger.warn(`Remote DB error in getServiceByIdOrSlug: ${err?.message}`);
+      }
+    }
+
+    const service = this.inMemoryServices.find((s) => (s.id === idOrSlug || s.slug === idOrSlug) && s.isActive);
+    if (!service) throw new NotFoundException('Service not found or unavailable');
+    const cat = this.inMemoryCategories.find((c) => c.id === service.categoryId && c.isActive);
+    if (!cat) throw new NotFoundException('Service parent category is disabled');
+    return { ...service, category: cat };
   }
 
   // ─── Provider Onboarding / Profile ────────────────────────────────────────

@@ -1,25 +1,47 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+interface ServiceTier {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  badge: string | null;
+  startingPrice: number | null;
+  features: string[];
+  displayOrder: number;
+  isActive: boolean;
+  services?: ServiceItem[];
+}
 
 interface ServiceItem {
   id: string;
   name: string;
   slug: string;
-  basePrice: number | string | null;
+  basePrice: number;
   durationMinutes: number | null;
   description: string | null;
   imageUrl: string | null;
   isActive: boolean;
+  order: number;
+  subCategoryId?: string | null;
+  tierId?: string | null;
 }
 
-interface ServiceGroup {
+interface ServiceSubCategory {
   id: string;
-  groupName: string;
+  categoryId: string;
+  name: string;
+  slug: string;
+  icon: string | null;
+  badge: string | null;
+  groupHeader: string | null;
   displayOrder: number;
-  subOptions?: any[];
+  isActive: boolean;
+  tiers?: ServiceTier[];
+  services?: ServiceItem[];
 }
 
 interface ServiceCategory {
@@ -27,564 +49,1412 @@ interface ServiceCategory {
   name: string;
   slug: string;
   icon: string | null;
-  description: string | null;
-  isActive: boolean;
+  badge: string | null;
+  description?: string | null;
   order: number;
-  services: ServiceItem[];
-  serviceGroups: ServiceGroup[];
+  isActive: boolean;
+  subCategories?: ServiceSubCategory[];
+  services?: ServiceItem[];
 }
 
-const DEFAULT_MOCK_CATEGORIES: ServiceCategory[] = [
-  {
-    id: 'cat-cleaning',
-    name: 'Cleaning & Pest Control',
-    slug: 'cleaning',
-    icon: 'cleaning_services',
-    isActive: true,
-    order: 1,
-    description: 'Deep bathroom, kitchen, sofa, carpet & full home cleaning with disinfectant jet wash.',
-    serviceGroups: [
-      { id: 'grp-cl-1', groupName: 'Cleaning', displayOrder: 1 },
-      { id: 'grp-cl-2', groupName: 'Pest Control', displayOrder: 2 },
-    ],
-    services: [
-      { id: 'svc-cl-1', name: 'Bathroom Cleaning (44 mins)', slug: 'bathroom-cleaning', basePrice: 499, durationMinutes: 44, description: 'Tile scrubbing, stains removal & sanitary disinfection.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-cl-2', name: 'Kitchen Cleaning', slug: 'kitchen-cleaning', basePrice: 699, durationMinutes: 60, description: 'Degreasing cabinets, chimney wipe & countertop polish.', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-cl-3', name: 'Living & Bedroom Cleaning', slug: 'living-bedroom-cleaning', basePrice: 599, durationMinutes: 60, description: 'Dusting, floor scrubbing, vacuuming & furniture wiping.', imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-cl-4', name: 'Full Home / By Room Cleaning', slug: 'full-home-cleaning', basePrice: 1499, durationMinutes: 180, description: 'Top to bottom complete sanitized deep cleaning.', imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-cl-5', name: 'Cockroach & Ant Control', slug: 'cockroach-control', basePrice: 599, durationMinutes: 45, description: 'Bayer herbal gel treatment with 6 months warranty.', imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-cl-6', name: 'Ants & Bed Bugs Control', slug: 'ants-bedbugs-control', basePrice: 799, durationMinutes: 60, description: 'Odorless spray treatment in joints & mattresses.', imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80', isActive: true },
-    ],
-  },
-  {
-    id: 'cat-womens-salon',
-    name: "Women's Salon & Spa",
-    slug: 'womens-salon-spa',
-    icon: 'spa',
-    isActive: true,
-    order: 2,
-    description: 'Waxing, facial cleanups, manicure, pedicure, hair spa & bridal styling at home.',
-    serviceGroups: [
-      { id: 'grp-ws-1', groupName: 'Salon at Home', displayOrder: 1 },
-      { id: 'grp-ws-2', groupName: 'Spa & Relaxation', displayOrder: 2 },
-    ],
-    services: [
-      { id: 'svc-ws-1', name: 'Salon for Women', slug: 'salon-for-women', basePrice: 499, durationMinutes: 60, description: 'RICA waxing, threading & cleanups with single-use kits.', imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-ws-2', name: 'Spa for Women', slug: 'spa-for-women', basePrice: 1199, durationMinutes: 60, description: 'Aromatherapy full body relaxing massage & hot oils.', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-ws-3', name: 'Hair Studio for Women', slug: 'hair-studio-women', basePrice: 699, durationMinutes: 45, description: 'L’Oréal hair spa, split end trimming & blow dry.', imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-ws-4', name: 'Makeup, Saree & Styling', slug: 'makeup-saree-styling', basePrice: 1499, durationMinutes: 90, description: 'Party makeup, saree draping & hairstyle for functions.', imageUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=300&q=80', isActive: true },
-    ],
-  },
-  {
-    id: 'cat-mens-salon',
-    name: "Men's Salon & Massage",
-    slug: 'mens-salon-massage',
-    icon: 'content_cut',
-    isActive: true,
-    order: 3,
-    description: 'Men grooming, haircut, beard styling, de-tan cleanup & therapeutic massage.',
-    serviceGroups: [
-      { id: 'grp-ms-1', groupName: 'Grooming & Haircut', displayOrder: 1 },
-      { id: 'grp-ms-2', groupName: 'Therapeutic Massage', displayOrder: 2 },
-    ],
-    services: [
-      { id: 'svc-ms-1', name: 'Salon for Men', slug: 'salon-for-men', basePrice: 349, durationMinutes: 45, description: 'Haircut, beard trimming & herbal face de-tan pack.', imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&q=80', isActive: true },
-      { id: 'svc-ms-2', name: 'Massage for Men', slug: 'massage-for-men', basePrice: 999, durationMinutes: 60, description: 'Deep tissue stress relief massage for back & shoulders.', imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=300&q=80', isActive: true },
-    ],
-  },
-  {
-    id: 'cat-ac-appliances',
-    name: 'AC & Appliance Repair',
-    slug: 'ac-appliance-repair',
-    icon: 'ac_unit',
-    isActive: false,
-    order: 4,
-    description: 'Expert servicing, foam jet wash, refrigerant recharge & motherboard fix.',
-    serviceGroups: [
-      { id: 'grp-ac-1', groupName: 'Large Appliances', displayOrder: 1 },
-      { id: 'grp-ac-2', groupName: 'Kitchen & Small Appliances', displayOrder: 2 },
-    ],
-    services: [
-      { id: 'svc-ac-1', name: 'AC Service & Power Jet (44 mins)', slug: 'ac-power-jet', basePrice: 499, durationMinutes: 44, description: 'Power jet wash of filters, cooling coils & outdoor unit.', imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-ac-2', name: 'Washing Machine Repair', slug: 'washing-machine-repair', basePrice: 299, durationMinutes: 45, description: 'Motor spin check, drain valve fix & drum diagnosis.', imageUrl: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-ac-3', name: 'Refrigerator Repair', slug: 'refrigerator-repair', basePrice: 349, durationMinutes: 45, description: 'Gas check, thermostat relay replacement & cooling audit.', imageUrl: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-ac-4', name: 'Television Repair & Wall Mount', slug: 'tv-repair-mount', basePrice: 299, durationMinutes: 40, description: 'LED TV wall bracket installation & speaker diagnostics.', imageUrl: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-ac-5', name: 'Chimney & Microwave Repair', slug: 'chimney-microwave', basePrice: 399, durationMinutes: 45, description: 'Deep filter degreasing, motor check & magnetron test.', imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=300&q=80', isActive: false },
-    ],
-  },
-  {
-    id: 'cat-electrician-handy',
-    name: 'Electrician, Plumber & Carpenter',
-    slug: 'electrician-plumber-carpenter',
-    icon: 'handyman',
-    isActive: false,
-    order: 5,
-    description: 'Certified technicians for wiring, MCBs, pipe leakage, locks & furniture assembly.',
-    serviceGroups: [
-      { id: 'grp-el-1', groupName: 'Home Repairs', displayOrder: 1 },
-      { id: 'grp-el-2', groupName: 'Home Installation', displayOrder: 2 },
-    ],
-    services: [
-      { id: 'svc-el-1', name: 'Electrician (Wiring & Switches)', slug: 'electrician-wiring', basePrice: 149, durationMinutes: 30, description: 'Switchboard wiring, short-circuit diagnostics & MCB trips.', imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-el-2', name: 'Plumber (Tap Leak & Blockage)', slug: 'plumber-taps', basePrice: 199, durationMinutes: 30, description: 'Dripping taps, flush valve change & sink unclogging.', imageUrl: 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-el-3', name: 'Carpenter (19 mins arrival)', slug: 'carpenter-woodwork', basePrice: 299, durationMinutes: 19, description: 'Lock installation, door alignment & hinge repair.', imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-el-4', name: 'Furniture Assembly (25 mins)', slug: 'furniture-assembly', basePrice: 399, durationMinutes: 25, description: 'Bed, wardrobe, dining table & study unit setup.', imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=300&q=80', isActive: false },
-      { id: 'svc-el-5', name: 'Fan & Geyser Installation', slug: 'fan-geyser-install', basePrice: 299, durationMinutes: 45, description: 'Ceiling fan hanging, inlet pipe hookup & safety checks.', imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80', isActive: false },
-    ],
-  },
-  {
-    id: 'cat-painting',
-    name: 'Painting & Waterproofing',
-    slug: 'painting-waterproofing',
-    icon: 'format_paint',
-    isActive: false,
-    order: 6,
-    description: 'Dustless sanding, waterproof primer & Asian Paints color finish.',
-    serviceGroups: [
-      { id: 'grp-pt-1', groupName: 'Wall Painting', displayOrder: 1 },
-    ],
-    services: [
-      { id: 'svc-pt-1', name: 'Painting & Water - proofing', slug: 'home-painting-consult', basePrice: 499, durationMinutes: 60, description: 'Laser wall measurement, damp test & color consultation.', imageUrl: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=300&q=80', isActive: false },
-    ],
-  },
-  {
-    id: 'cat-instahelp',
-    name: 'InstaHelp',
-    slug: 'instahelp',
-    icon: 'support_agent',
-    isActive: false,
-    order: 7,
-    description: 'On-demand verified cooks, domestic maids & child caregivers.',
-    serviceGroups: [
-      { id: 'grp-ih-1', groupName: 'Daily Help', displayOrder: 1 },
-    ],
-    services: [
-      { id: 'svc-ih-1', name: 'InstaHelp Helper & Cook', slug: 'instahelp-helper', basePrice: 399, durationMinutes: 90, description: 'Hygienic home food preparation & dishwashing helper.', imageUrl: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=300&q=80', isActive: false },
-    ],
-  },
-];
+function getApiUrl(path: string): string {
+  const base = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000';
+  const cleanBase = base.endsWith('/api/v1') ? base : `${base}/api/v1`;
+  return `${cleanBase}${path.startsWith('/') ? path : `/${path}`}`;
+}
 
-export default function AdminServicesPage() {
-  const [categories, setCategories] = useState<ServiceCategory[]>(DEFAULT_MOCK_CATEGORIES);
-  const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
+function renderAdminIcon(iconStr: string | null | undefined, fallbackEmoji = '🛠️', size = 'text-2xl') {
+  if (!iconStr) return <span className={size}>{fallbackEmoji}</span>;
+  const trimmed = iconStr.trim();
+  if (/^[a-z0-9_]+$/i.test(trimmed) && trimmed.length > 2) {
+    return <span className={`material-symbols-outlined ${size} text-[#5e23dc]`}>{trimmed}</span>;
+  }
+  return <span className={size}>{trimmed}</span>;
+}
+
+export default function AdminServicesHierarchyPage() {
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedCatId, setExpandedCatId] = useState<string | null>('cat-cleaning');
-  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
 
-  const getAuthToken = () => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('Ziva_access') || '';
-    }
-    return '';
+  // Accordion expanded states
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const [expandedSubCategories, setExpandedSubCategories] = useState<Record<string, boolean>>({});
+  const [expandedTiers, setExpandedTiers] = useState<Record<string, boolean>>({});
+
+  // Active modal management
+  const [modalType, setModalType] = useState<
+    'CATEGORY' | 'SUBCATEGORY' | 'TIER' | 'SERVICE' | null
+  >(null);
+  const [editingItem, setEditingItem] = useState<any | null>(null);
+  const [modalParentContext, setModalParentContext] = useState<{
+    categoryId?: string;
+    subCategoryId?: string;
+    tierId?: string;
+  }>({});
+
+  // Feedback notifications
+  const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
+    setToastMessage({ text, type });
+    setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const fetchCategories = async () => {
-    setLoading(true);
-    // 1. Check local saved state first for instant persistence
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('Ziva_categories_state');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setCategories(parsed);
-          }
-        } catch {}
-      }
-    }
+  const getAdminToken = () => {
+    if (typeof window === 'undefined') return '';
+    return localStorage.getItem('Ziva_access') || localStorage.getItem('token') || '';
+  };
 
+  // Fetch all categories with full hierarchy
+  const fetchAllCategories = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/admin/services/categories`, {
+      setLoading(true);
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl('/admin/services/categories'), {
         headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        cache: 'no-store',
       });
+
       if (res.ok) {
-        const data = await res.json();
+        const json = await res.json();
+        const data = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : [];
+        setCategories(Array.isArray(data) ? data : []);
+        // Auto-expand first 3 categories
         if (Array.isArray(data) && data.length > 0) {
-          setCategories(data);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('Ziva_categories_state', JSON.stringify(data));
-          }
+          const initExpCat: Record<string, boolean> = {};
+          data.slice(0, 3).forEach((c) => {
+            initExpCat[c.id] = true;
+          });
+          setExpandedCategories((prev) => ({ ...initExpCat, ...prev }));
         }
+      } else {
+        throw new Error(`Failed to load admin categories (${res.status})`);
       }
     } catch (err: any) {
-      console.warn('Using local categories state:', err?.message);
+      console.warn('Error loading admin services:', err);
+      showToast('Could not fetch latest categories from backend', 'error');
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchCategories();
   }, []);
 
+  useEffect(() => {
+    fetchAllCategories();
+  }, [fetchAllCategories]);
+
+  // Toggle handlers
   const handleToggleCategory = async (cat: ServiceCategory) => {
-    setActionLoadingId(cat.id);
-    setSuccessMsg('');
-    setErrorMsg('');
-    const targetState = !cat.isActive;
-
-    // Instant local state update for zero lag
-    const updated = categories.map((c) =>
-      c.id === cat.id
-        ? {
-            ...c,
-            isActive: targetState,
-            services: c.services.map((s) => ({ ...s, isActive: targetState })),
-          }
-        : c,
+    const newStatus = !cat.isActive;
+    // Optimistic UI update
+    setCategories((prev) =>
+      prev.map((c) => (c.id === cat.id ? { ...c, isActive: newStatus } : c))
     );
-    setCategories(updated);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('Ziva_categories_state', JSON.stringify(updated));
-      window.dispatchEvent(new Event('ziva_categories_updated'));
-    }
-
-    setSuccessMsg(`Category "${cat.name}" is now ${targetState ? 'LIVE / ACTIVE' : 'DISABLED / HIDDEN'}!`);
-    setTimeout(() => setSuccessMsg(''), 3000);
 
     try {
-      await fetch(`${API_BASE}/admin/services/categories/${cat.id}/toggle`, {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/categories/${cat.id}/toggle`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${getAuthToken()}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ isActive: targetState }),
+        body: JSON.stringify({ isActive: newStatus }),
       });
+
+      if (!res.ok) throw new Error('Failed to toggle category');
+      showToast(`Category "${cat.name}" is now ${newStatus ? 'ACTIVE' : 'OFF'}`);
+      localStorage.setItem('ziva_services_updated', Date.now().toString());
+      window.dispatchEvent(new Event('storage'));
+      try {
+        const bc = new BroadcastChannel('ziva_admin_sync');
+        bc.postMessage({ type: 'SERVICES_UPDATED' });
+        bc.close();
+      } catch {}
     } catch (err) {
-      // handled
-    } finally {
-      setActionLoadingId(null);
+      // Revert optimistic update
+      setCategories((prev) =>
+        prev.map((c) => (c.id === cat.id ? { ...c, isActive: cat.isActive } : c))
+      );
+      showToast(`Error toggling category "${cat.name}"`, 'error');
     }
   };
 
-  const handleToggleService = async (service: ServiceItem, catId: string) => {
-    setActionLoadingId(service.id);
-    const targetState = !service.isActive;
-
-    const updated = categories.map((c) =>
-      c.id === catId
-        ? {
-            ...c,
-            services: c.services.map((s) =>
-              s.id === service.id ? { ...s, isActive: targetState } : s,
-            ),
-          }
-        : c,
+  const handleToggleSubCategory = async (sub: ServiceSubCategory) => {
+    const newStatus = !sub.isActive;
+    setCategories((prev) =>
+      prev.map((c) => ({
+        ...c,
+        subCategories: (c.subCategories || []).map((s) =>
+          s.id === sub.id ? { ...s, isActive: newStatus } : s
+        ),
+      }))
     );
-    setCategories(updated);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('Ziva_categories_state', JSON.stringify(updated));
-      window.dispatchEvent(new Event('ziva_categories_updated'));
-    }
 
     try {
-      await fetch(`${API_BASE}/admin/services/items/${service.id}/toggle`, {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/subcategories/${sub.id}/toggle`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${getAuthToken()}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ isActive: targetState }),
+        body: JSON.stringify({ isActive: newStatus }),
       });
+
+      if (!res.ok) throw new Error('Failed to toggle subcategory');
+      showToast(`SubCategory "${sub.name}" is now ${newStatus ? 'ACTIVE' : 'OFF'}`);
+      localStorage.setItem('ziva_services_updated', Date.now().toString());
+      window.dispatchEvent(new Event('storage'));
+      try {
+        const bc = new BroadcastChannel('ziva_admin_sync');
+        bc.postMessage({ type: 'SERVICES_UPDATED' });
+        bc.close();
+      } catch {}
     } catch (err) {
-      // handled
-    } finally {
-      setActionLoadingId(null);
+      fetchAllCategories();
+      showToast(`Error toggling subcategory`, 'error');
     }
   };
 
+  const handleToggleTier = async (tier: ServiceTier) => {
+    const newStatus = !tier.isActive;
+    setCategories((prev) =>
+      prev.map((c) => ({
+        ...c,
+        subCategories: (c.subCategories || []).map((s) => ({
+          ...s,
+          tiers: (s.tiers || []).map((t) => (t.id === tier.id ? { ...t, isActive: newStatus } : t)),
+        })),
+      }))
+    );
+
+    try {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/tiers/${tier.id}/toggle`), {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ isActive: newStatus }),
+      });
+
+      if (!res.ok) throw new Error('Failed to toggle tier');
+      showToast(`Tier "${tier.name}" is now ${newStatus ? 'ACTIVE' : 'OFF'}`);
+      localStorage.setItem('ziva_services_updated', Date.now().toString());
+      window.dispatchEvent(new Event('storage'));
+      try {
+        const bc = new BroadcastChannel('ziva_admin_sync');
+        bc.postMessage({ type: 'SERVICES_UPDATED' });
+        bc.close();
+      } catch {}
+    } catch (err) {
+      fetchAllCategories();
+      showToast(`Error toggling tier`, 'error');
+    }
+  };
+
+  const handleToggleService = async (service: ServiceItem) => {
+    const newStatus = !service.isActive;
+    try {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/items/${service.id}/toggle`), {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ isActive: newStatus }),
+      });
+
+      if (!res.ok) throw new Error('Failed to toggle service');
+      showToast(`Service "${service.name}" is now ${newStatus ? 'ACTIVE' : 'OFF'}`);
+      fetchAllCategories();
+      localStorage.setItem('ziva_services_updated', Date.now().toString());
+      window.dispatchEvent(new Event('storage'));
+      try {
+        const bc = new BroadcastChannel('ziva_admin_sync');
+        bc.postMessage({ type: 'SERVICES_UPDATED' });
+        bc.close();
+      } catch {}
+    } catch (err) {
+      showToast(`Error toggling service`, 'error');
+    }
+  };
+
+  // Delete handlers
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete Category "${name}" and all its subcategories?`)) return;
+    try {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/categories/${id}`), {
+        method: 'DELETE',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      showToast(`Category "${name}" deleted`);
+      fetchAllCategories();
+    } catch (err) {
+      showToast('Error deleting category', 'error');
+    }
+  };
+
+  const handleDeleteSubCategory = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete SubCategory "${name}"?`)) return;
+    try {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/subcategories/${id}`), {
+        method: 'DELETE',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      showToast(`SubCategory "${name}" deleted`);
+      fetchAllCategories();
+    } catch (err) {
+      showToast('Error deleting subcategory', 'error');
+    }
+  };
+
+  const handleDeleteTier = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete Tier "${name}"?`)) return;
+    try {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/tiers/${id}`), {
+        method: 'DELETE',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      showToast(`Tier "${name}" deleted`);
+      fetchAllCategories();
+    } catch (err) {
+      showToast('Error deleting tier', 'error');
+    }
+  };
+
+  const handleDeleteService = async (id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete Service "${name}"?`)) return;
+    try {
+      const token = getAdminToken();
+      const res = await fetch(getApiUrl(`/admin/services/items/${id}`), {
+        method: 'DELETE',
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      showToast(`Service "${name}" deleted`);
+      fetchAllCategories();
+    } catch (err) {
+      showToast('Error deleting service', 'error');
+    }
+  };
+
+  // Stats calculation
+  const totalCategories = categories.length;
+  const activeCategoriesCount = categories.filter((c) => c.isActive).length;
+  let totalSubCategories = 0;
+  let activeSubCategoriesCount = 0;
+  let totalTiers = 0;
+  let totalServices = 0;
+
+  categories.forEach((cat) => {
+    (cat.subCategories || []).forEach((sub) => {
+      totalSubCategories += 1;
+      if (sub.isActive && cat.isActive) activeSubCategoriesCount += 1;
+      totalTiers += (sub.tiers || []).length;
+      totalServices += (sub.services || []).length;
+    });
+    totalServices += (cat.services || []).length;
+  });
+
+  // Filtered categories
   const filteredCategories = categories.filter((cat) => {
-    if (filter === 'ACTIVE' && !cat.isActive) return false;
-    if (filter === 'INACTIVE' && cat.isActive) return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      const matchName = cat.name.toLowerCase().includes(q);
-      const matchService = cat.services?.some((s) => s.name.toLowerCase().includes(q));
-      return matchName || matchService;
-    }
+    const matchesSearch =
+      cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cat.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (cat.subCategories || []).some((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    if (!matchesSearch) return false;
+    if (statusFilter === 'ACTIVE') return cat.isActive;
+    if (statusFilter === 'INACTIVE') return !cat.isActive;
     return true;
   });
 
-  const activeCount = categories.filter((c) => c.isActive).length;
-  const inactiveCount = categories.filter((c) => !c.isActive).length;
-
   return (
-    <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-[#f8f9fb] font-[Rubik]">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-[#191c1e] flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#5e23dc]">room_service</span>
-              Home Services &amp; Category On/Off Control
-            </h1>
-            <p className="text-sm text-[#494455] mt-1">
-              Control which service categories and sub-services are active on the storefront. Enable or disable services with 1-click.
-            </p>
+    <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8 font-[Rubik] text-[#191c1e]">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div
+          className={`fixed top-6 right-6 z-[150] px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold flex items-center gap-2 animate-fadeIn ${
+            toastMessage.type === 'success'
+              ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
+              : 'bg-red-50 text-red-900 border-red-200'
+          }`}
+        >
+          <span className="material-symbols-outlined text-sm">
+            {toastMessage.type === 'success' ? 'check_circle' : 'error'}
+          </span>
+          <span>{toastMessage.text}</span>
+        </div>
+      )}
+
+      {/* Header & Breadcrumb */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200/90 pb-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
+            <Link href="/admin" className="hover:text-[#5e23dc]">Admin Console</Link>
+            <span>/</span>
+            <span className="text-[#111827] font-semibold">Home Services Taxonomy</span>
           </div>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[#111827] tracking-tight">
+            Multi-Level Home Services System
+          </h1>
+          <p className="text-xs text-gray-500 mt-1">
+            Urban Company-style 4-level hierarchy: Categories ➔ SubCategories ➔ Preference Tiers ➔ Bookable Services.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
           <button
-            onClick={fetchCategories}
-            className="self-start md:self-auto bg-white border border-[#cbc3d8] hover:bg-gray-50 text-[#191c1e] px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+            onClick={() => {
+              setEditingItem(null);
+              setModalParentContext({});
+              setModalType('CATEGORY');
+            }}
+            className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm">refresh</span>
-            Refresh List
+            <span className="material-symbols-outlined text-sm">add</span>
+            <span>Add Category</span>
           </button>
         </div>
+      </div>
 
-        {/* Launch Status Banner */}
-        <div className="bg-gradient-to-r from-[#5e23dc]/10 via-[#4500b4]/5 to-transparent border-l-4 border-[#5e23dc] rounded-xl p-4 flex items-start justify-between">
-          <div className="flex items-start gap-3">
-            <span className="material-symbols-outlined text-[#5e23dc] text-2xl">rocket_launch</span>
-            <div>
-              <h3 className="font-bold text-sm text-[#191c1e]">Initial Launch State Active</h3>
-              <p className="text-xs text-[#494455] mt-0.5">
-                Currently <strong className="text-emerald-700 font-bold">{activeCount} Categories</strong> are active (Cleaning &amp; Salon/Spa). The remaining <strong className="text-amber-700 font-bold">{inactiveCount} Categories</strong> are disabled and hidden from customer booking.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-xs font-semibold shrink-0">
-            <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold">{activeCount} Live</span>
-            <span className="px-2.5 py-1 bg-gray-200 text-gray-700 rounded-full font-bold">{inactiveCount} Inactive</span>
-          </div>
-        </div>
-
-        {/* Notifications */}
-        {successMsg && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2 animate-fadeIn">
-            <span className="material-symbols-outlined text-emerald-600">check_circle</span>
-            {successMsg}
-          </div>
-        )}
-        {errorMsg && (
-          <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2 animate-fadeIn">
-            <span className="material-symbols-outlined text-rose-600">error</span>
-            {errorMsg}
-          </div>
-        )}
-
-        {/* Filter and Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-[#eceef0] shadow-xs">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button
-              onClick={() => setFilter('ALL')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                filter === 'ALL'
-                  ? 'bg-[#5e23dc] text-white shadow-xs'
-                  : 'bg-gray-100 text-[#494455] hover:bg-gray-200'
-              }`}
-            >
-              All Categories ({categories.length})
-            </button>
-            <button
-              onClick={() => setFilter('ACTIVE')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                filter === 'ACTIVE'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-              }`}
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              Live / Active ({activeCount})
-            </button>
-            <button
-              onClick={() => setFilter('INACTIVE')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                filter === 'INACTIVE'
-                  ? 'bg-gray-700 text-white shadow-xs'
-                  : 'bg-gray-100 text-[#7a7487] hover:bg-gray-200'
-              }`}
-            >
-              <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-              Disabled / Off ({inactiveCount})
-            </button>
-          </div>
-
-          <div className="relative w-full sm:w-72">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[#7a7487] text-sm">
-              search
+      {/* Metric Cards Overview */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Categories</span>
+            <span className="w-8 h-8 rounded-lg bg-purple-50 text-[#5e23dc] flex items-center justify-center text-sm font-bold">
+              1
             </span>
-            <input
-              type="text"
-              placeholder="Search category or service..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#f2f4f6] rounded-xl pl-9 pr-4 py-2 text-xs text-[#191c1e] outline-none border border-transparent focus:border-[#5e23dc] transition-all"
-            />
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-extrabold text-[#111827]">{totalCategories}</span>
+            <span className="text-[11px] font-bold text-emerald-600">
+              ({activeCategoriesCount} Active)
+            </span>
           </div>
         </div>
 
-        {/* Categories List Cards */}
-        <div className="space-y-4">
-          {filteredCategories.map((cat) => {
-            const isExpanded = expandedCatId === cat.id;
+        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">SubCategories</span>
+            <span className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold">
+              2
+            </span>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-extrabold text-[#111827]">{totalSubCategories}</span>
+            <span className="text-[11px] font-bold text-emerald-600">
+              ({activeSubCategoriesCount} Live)
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Preference Tiers</span>
+            <span className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm font-bold">
+              3
+            </span>
+          </div>
+          <div className="mt-2">
+            <span className="text-2xl font-extrabold text-[#111827]">{totalTiers}</span>
+            <span className="text-[11px] text-gray-500 ml-1.5 font-medium">Luxe / Prime / Ayurveda</span>
+          </div>
+        </div>
+
+        <div className="bg-white p-5 rounded-2xl border border-gray-200/90 shadow-2xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-gray-500">Bookable Services</span>
+            <span className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm font-bold">
+              4
+            </span>
+          </div>
+          <div className="mt-2">
+            <span className="text-2xl font-extrabold text-[#111827]">{totalServices}</span>
+            <span className="text-[11px] text-gray-500 ml-1.5 font-medium">Leaf Services</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Search & Filter Bar */}
+      <div className="bg-white p-4 rounded-2xl border border-gray-200/90 shadow-2xs flex flex-col md:flex-row gap-3 items-center justify-between">
+        <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 w-full md:w-96 border border-gray-100 focus-within:border-[#5e23dc] transition-colors">
+          <span className="material-symbols-outlined text-gray-400 text-lg">search</span>
+          <input
+            type="text"
+            placeholder="Search categories, subcategories..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-transparent border-none outline-none w-full text-xs font-medium"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <span className="text-xs font-bold text-gray-500">Filter:</span>
+          {(['ALL', 'ACTIVE', 'INACTIVE'] as const).map((st) => (
+            <button
+              key={st}
+              onClick={() => setStatusFilter(st)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                statusFilter === st
+                  ? 'bg-[#111827] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {st}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ════════════════════ 4-LEVEL HIERARCHY ACCORDION TREE ════════════════════ */}
+      <div className="space-y-4">
+        {loading ? (
+          <div className="space-y-4 animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded-2xl" />
+            ))}
+          </div>
+        ) : filteredCategories.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center space-y-2">
+            <p className="text-gray-500 font-medium text-sm">No service categories found.</p>
+          </div>
+        ) : (
+          filteredCategories.map((cat) => {
+            const isCatExpanded = !!expandedCategories[cat.id];
+            const subCats = cat.subCategories || [];
+
             return (
               <div
                 key={cat.id}
-                className={`bg-white rounded-2xl border transition-all shadow-xs ${
-                  cat.isActive ? 'border-[#eceef0]' : 'border-gray-200 opacity-90'
+                className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden ${
+                  cat.isActive
+                    ? 'border-gray-200/90 shadow-2xs hover:border-purple-200'
+                    : 'border-dashed border-gray-300 bg-gray-50/50 opacity-80'
                 }`}
               >
-                {/* Category Header Row */}
-                <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div
-                    className="flex items-center gap-3.5 cursor-pointer flex-1"
-                    onClick={() => setExpandedCatId(isExpanded ? null : cat.id)}
-                  >
-                    <div
-                      className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 ${
-                        cat.isActive ? 'bg-[#f0e7ff] text-[#5e23dc]' : 'bg-gray-100 text-gray-400'
-                      }`}
+                {/* ─── Level 1: Category Header Bar ─── */}
+                <div className="p-4 md:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white">
+                  <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                    {/* Expand/Collapse Chevron */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedCategories((prev) => ({ ...prev, [cat.id]: !prev[cat.id] }))
+                      }
+                      className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-transform cursor-pointer"
                     >
-                      <span className="material-symbols-outlined">{cat.icon || 'category'}</span>
+                      <span
+                        className={`material-symbols-outlined text-lg transition-transform duration-200 ${
+                          isCatExpanded ? 'rotate-90' : ''
+                        }`}
+                      >
+                        chevron_right
+                      </span>
+                    </button>
+
+                    {/* Icon */}
+                    <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center shrink-0 border border-purple-100 shadow-2xs overflow-hidden">
+                      {renderAdminIcon(cat.icon, '🛠️', 'text-2xl')}
                     </div>
 
-                    <div>
-                      <div className="flex items-center gap-2.5">
-                        <h2 className="text-base font-bold text-[#191c1e]">{cat.name}</h2>
-                        <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            cat.isActive
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-gray-200 text-gray-700'
-                          }`}
-                        >
-                          {cat.isActive ? 'LIVE' : 'DISABLED'}
+                    {/* Category Details */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="text-base font-extrabold text-[#111827] truncate">
+                          {cat.name}
+                        </h2>
+                        <span className="text-[10px] font-mono bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">
+                          /{cat.slug}
                         </span>
-                        <span className="text-xs text-[#7a7487]">
-                          ({cat.services?.length || 0} services)
-                        </span>
+                        {cat.badge && (
+                          <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                            {cat.badge}
+                          </span>
+                        )}
                       </div>
-                      <p className="text-xs text-[#494455] mt-0.5 line-clamp-1">{cat.description}</p>
+                      <p className="text-[11px] text-gray-500 mt-0.5">
+                        {subCats.length} Subcategories • Order: #{cat.order}
+                      </p>
                     </div>
                   </div>
 
-                  {/* On/Off Switch & Expand Chevron */}
-                  <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-0 pt-3 sm:pt-0 border-gray-100">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-[#494455]">
-                        {cat.isActive ? 'Category On' : 'Category Off'}
+                  {/* Actions & ON/OFF Toggle */}
+                  <div className="flex items-center gap-3 self-end md:self-center">
+                    {/* Active Toggle Switch */}
+                    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                      <span
+                        className={`text-[11px] font-extrabold ${
+                          cat.isActive ? 'text-emerald-700' : 'text-gray-400'
+                        }`}
+                      >
+                        {cat.isActive ? 'Active' : 'Disabled'}
                       </span>
                       <button
                         type="button"
-                        disabled={actionLoadingId === cat.id}
                         onClick={() => handleToggleCategory(cat)}
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                          cat.isActive ? 'bg-[#5e23dc]' : 'bg-gray-300'
-                        } ${actionLoadingId === cat.id ? 'opacity-50' : ''}`}
+                        className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
+                          cat.isActive ? 'bg-[#16a34a]' : 'bg-gray-300'
+                        }`}
                       >
                         <span
-                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                          className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${
                             cat.isActive ? 'translate-x-5' : 'translate-x-0'
                           }`}
                         />
                       </button>
                     </div>
 
+                    {/* Add SubCategory */}
                     <button
-                      onClick={() => setExpandedCatId(isExpanded ? null : cat.id)}
-                      className="p-1 rounded-lg hover:bg-gray-100 text-[#7a7487] transition-colors"
-                      aria-label="Expand category services"
+                      type="button"
+                      onClick={() => {
+                        setEditingItem(null);
+                        setModalParentContext({ categoryId: cat.id });
+                        setModalType('SUBCATEGORY');
+                      }}
+                      className="p-2 rounded-xl bg-purple-50 text-[#5e23dc] hover:bg-[#5e23dc] hover:text-white transition-colors text-xs font-bold flex items-center gap-1 cursor-pointer"
+                      title="Add SubCategory"
                     >
-                      <span
-                        className={`material-symbols-outlined transition-transform duration-200 ${
-                          isExpanded ? 'rotate-180' : ''
-                        }`}
-                      >
-                        expand_more
-                      </span>
+                      <span className="material-symbols-outlined text-sm">add</span>
+                      <span className="hidden sm:inline">Add SubCategory</span>
+                    </button>
+
+                    {/* Edit */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingItem(cat);
+                        setModalType('CATEGORY');
+                      }}
+                      className="p-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer"
+                      title="Edit Category"
+                    >
+                      <span className="material-symbols-outlined text-sm">edit</span>
+                    </button>
+
+                    {/* Delete */}
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                      className="p-2 rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-colors cursor-pointer"
+                      title="Delete Category"
+                    >
+                      <span className="material-symbols-outlined text-sm">delete</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Sub-services Breakdown Accordion */}
-                {isExpanded && (
-                  <div className="border-t border-[#eceef0] bg-[#fafafa] p-4 sm:p-5 rounded-b-2xl space-y-3 animate-fadeIn">
-                    <div className="flex items-center justify-between pb-2 border-b border-gray-200/70">
-                      <h4 className="text-xs font-bold text-[#374151] uppercase tracking-wider">
-                        Sub-Services &amp; Pricing Controls
-                      </h4>
-                      <span className="text-xs text-[#7a7487]">
-                        Individual 1-click toggle for each service option
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-                      {cat.services?.map((svc) => (
-                        <div
-                          key={svc.id}
-                          className={`bg-white p-3 rounded-xl border flex items-center justify-between gap-3 shadow-2xs ${
-                            svc.isActive ? 'border-gray-200' : 'border-dashed border-gray-300 opacity-75'
-                          }`}
+                {/* ─── Level 2: SubCategories Accordion ─── */}
+                {isCatExpanded && (
+                  <div className="border-t border-gray-100 bg-gray-50/50 p-4 md:p-6 space-y-4">
+                    {subCats.length === 0 ? (
+                      <div className="text-center py-6 bg-white rounded-xl border border-dashed border-gray-200">
+                        <p className="text-xs text-gray-500">No subcategories created yet.</p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingItem(null);
+                            setModalParentContext({ categoryId: cat.id });
+                            setModalType('SUBCATEGORY');
+                          }}
+                          className="text-xs font-bold text-[#5e23dc] hover:underline mt-1 cursor-pointer"
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                              <img
-                                src={svc.imageUrl || 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=200&q=80'}
-                                alt={svc.name}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div>
-                              <span className="text-xs font-bold text-[#191c1e] block line-clamp-1">
-                                {svc.name}
-                              </span>
-                              <div className="flex items-center gap-2 text-[11px] text-[#7a7487] mt-0.5">
-                                <span className="font-semibold text-emerald-700">₹{svc.basePrice || 499}</span>
-                                <span>•</span>
-                                <span>{svc.durationMinutes ? `${svc.durationMinutes} mins` : 'Flexible'}</span>
+                          + Add first subcategory
+                        </button>
+                      </div>
+                    ) : (
+                      subCats.map((sub) => {
+                        const isSubExpanded = !!expandedSubCategories[sub.id];
+                        const tiers = sub.tiers || [];
+                        const directServices = sub.services || [];
+
+                        return (
+                          <div
+                            key={sub.id}
+                            className={`bg-white rounded-xl border transition-all overflow-hidden ${
+                              sub.isActive
+                                ? 'border-gray-200/90 shadow-2xs'
+                                : 'border-dashed border-gray-300 opacity-75'
+                            }`}
+                          >
+                            {/* SubCategory Header Bar */}
+                            <div className="p-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+                              <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setExpandedSubCategories((prev) => ({
+                                      ...prev,
+                                      [sub.id]: !prev[sub.id],
+                                    }))
+                                  }
+                                  className="w-7 h-7 rounded-md bg-gray-50 hover:bg-gray-100 flex items-center justify-center text-gray-600 cursor-pointer"
+                                >
+                                  <span
+                                    className={`material-symbols-outlined text-base transition-transform duration-200 ${
+                                      isSubExpanded ? 'rotate-90' : ''
+                                    }`}
+                                  >
+                                    chevron_right
+                                  </span>
+                                </button>
+
+                                <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100 overflow-hidden">
+                                  {renderAdminIcon(sub.icon, '🛠️', 'text-lg')}
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <h3 className="text-sm font-bold text-[#111827] truncate">
+                                      {sub.name}
+                                    </h3>
+                                    <span className="text-[9px] font-mono bg-gray-100 text-gray-600 px-1.5 py-0.2 rounded-xs">
+                                      {sub.slug}
+                                    </span>
+                                    {sub.groupHeader && (
+                                      <span className="bg-indigo-50 text-indigo-700 text-[9px] font-bold px-1.5 py-0.2 rounded-xs">
+                                        Group: {sub.groupHeader}
+                                      </span>
+                                    )}
+                                    {sub.badge && (
+                                      <span className="bg-emerald-50 text-emerald-700 text-[9px] font-bold px-1.5 py-0.2 rounded-xs">
+                                        {sub.badge}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[10px] text-gray-500">
+                                    {tiers.length > 0 ? `${tiers.length} Tiers` : `${directServices.length} Services`}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Actions & ON/OFF */}
+                              <div className="flex items-center gap-2 self-end md:self-center">
+                                {/* Toggle */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleSubCategory(sub)}
+                                  className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
+                                    sub.isActive ? 'bg-[#16a34a]' : 'bg-gray-300'
+                                  }`}
+                                >
+                                  <span
+                                    className={`absolute top-0.5 left-0.5 bg-white w-4 h-4 rounded-full transition-transform ${
+                                      sub.isActive ? 'translate-x-4' : 'translate-x-0'
+                                    }`}
+                                  />
+                                </button>
+
+                                {/* Add Tier */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingItem(null);
+                                    setModalParentContext({ subCategoryId: sub.id, categoryId: cat.id });
+                                    setModalType('TIER');
+                                  }}
+                                  className="p-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-600 hover:text-white text-[11px] font-bold flex items-center gap-0.5 cursor-pointer"
+                                  title="Add Preference Tier (Luxe, Prime, etc.)"
+                                >
+                                  <span className="material-symbols-outlined text-xs">add</span>
+                                  <span>Tier</span>
+                                </button>
+
+                                {/* Add Service */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingItem(null);
+                                    setModalParentContext({ subCategoryId: sub.id, categoryId: cat.id });
+                                    setModalType('SERVICE');
+                                  }}
+                                  className="p-1.5 rounded-lg bg-purple-50 text-[#5e23dc] hover:bg-[#5e23dc] hover:text-white text-[11px] font-bold flex items-center gap-0.5 cursor-pointer"
+                                  title="Add Bookable Service"
+                                >
+                                  <span className="material-symbols-outlined text-xs">add</span>
+                                  <span>Service</span>
+                                </button>
+
+                                {/* Edit */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingItem(sub);
+                                    setModalParentContext({ categoryId: cat.id });
+                                    setModalType('SUBCATEGORY');
+                                  }}
+                                  className="p-1.5 rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-200 cursor-pointer"
+                                >
+                                  <span className="material-symbols-outlined text-xs">edit</span>
+                                </button>
+
+                                {/* Delete */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteSubCategory(sub.id, sub.name)}
+                                  className="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-600 hover:text-white cursor-pointer"
+                                >
+                                  <span className="material-symbols-outlined text-xs">delete</span>
+                                </button>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-[10px] font-bold text-gray-500">
-                              {svc.isActive ? 'Active' : 'Off'}
-                            </span>
-                            <button
-                              type="button"
-                              disabled={actionLoadingId === svc.id || !cat.isActive}
-                              onClick={() => handleToggleService(svc, cat.id)}
-                              className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                svc.isActive && cat.isActive ? 'bg-emerald-600' : 'bg-gray-300'
-                              } ${actionLoadingId === svc.id || !cat.isActive ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                              <span
-                                className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                                  svc.isActive && cat.isActive ? 'translate-x-4' : 'translate-x-0'
-                                }`}
-                              />
-                            </button>
+                            {/* ─── Level 3: Tiers & Level 4: Services Sub-tree ─── */}
+                            {isSubExpanded && (
+                              <div className="border-t border-gray-100 bg-[#fafafa] p-4 space-y-3">
+                                {/* Tiers list */}
+                                {tiers.length > 0 && (
+                                  <div className="space-y-2">
+                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                                      Preference Tiers ({tiers.length})
+                                    </span>
+                                    {tiers.map((tier) => {
+                                      const isTierExpanded = !!expandedTiers[tier.id];
+                                      const tierServices = (tier.services || []).length > 0
+                                        ? tier.services
+                                        : (sub.services || []).filter((s) => s.tierId === tier.id);
+
+                                      return (
+                                        <div
+                                          key={tier.id}
+                                          className="bg-white rounded-lg border border-gray-200 p-3 space-y-2"
+                                        >
+                                          <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                              <button
+                                                type="button"
+                                                onClick={() =>
+                                                  setExpandedTiers((prev) => ({
+                                                    ...prev,
+                                                    [tier.id]: !prev[tier.id],
+                                                  }))
+                                                }
+                                                className="text-gray-400 hover:text-black cursor-pointer"
+                                              >
+                                                <span
+                                                  className={`material-symbols-outlined text-sm transition-transform ${
+                                                    isTierExpanded ? 'rotate-90' : ''
+                                                  }`}
+                                                >
+                                                  chevron_right
+                                                </span>
+                                              </button>
+                                              <span className="text-xs font-extrabold text-[#111827]">
+                                                {tier.name}
+                                              </span>
+                                              {tier.badge && (
+                                                <span className="bg-blue-50 text-blue-700 text-[9px] font-bold px-1.5 rounded-xs">
+                                                  {tier.badge}
+                                                </span>
+                                              )}
+                                              {tier.startingPrice && (
+                                                <span className="text-[10px] text-gray-500 font-bold">
+                                                  Starts ₹{tier.startingPrice}
+                                                </span>
+                                              )}
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                              {/* Tier Toggle */}
+                                              <button
+                                                type="button"
+                                                onClick={() => handleToggleTier(tier)}
+                                                className={`w-8 h-4 rounded-full transition-colors relative cursor-pointer ${
+                                                  tier.isActive ? 'bg-[#16a34a]' : 'bg-gray-300'
+                                                }`}
+                                              >
+                                                <span
+                                                  className={`absolute top-0.5 left-0.5 bg-white w-3 h-3 rounded-full transition-transform ${
+                                                    tier.isActive ? 'translate-x-4' : 'translate-x-0'
+                                                  }`}
+                                                />
+                                              </button>
+
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  setEditingItem(null);
+                                                  setModalParentContext({
+                                                    tierId: tier.id,
+                                                    subCategoryId: sub.id,
+                                                    categoryId: cat.id,
+                                                  });
+                                                  setModalType('SERVICE');
+                                                }}
+                                                className="text-[10px] font-bold text-[#5e23dc] bg-purple-50 hover:bg-[#5e23dc] hover:text-white px-2 py-0.5 rounded-md cursor-pointer"
+                                              >
+                                                + Service
+                                              </button>
+
+                                              <button
+                                                type="button"
+                                                onClick={() => {
+                                                  setEditingItem(tier);
+                                                  setModalParentContext({ subCategoryId: sub.id, categoryId: cat.id });
+                                                  setModalType('TIER');
+                                                }}
+                                                className="text-gray-400 hover:text-gray-700 cursor-pointer"
+                                              >
+                                                <span className="material-symbols-outlined text-xs">edit</span>
+                                              </button>
+
+                                              <button
+                                                type="button"
+                                                onClick={() => handleDeleteTier(tier.id, tier.name)}
+                                                className="text-gray-400 hover:text-red-600 cursor-pointer"
+                                              >
+                                                <span className="material-symbols-outlined text-xs">delete</span>
+                                              </button>
+                                            </div>
+                                          </div>
+
+                                          {/* Services in Tier */}
+                                          {isTierExpanded && (
+                                            <div className="pl-6 pt-2 space-y-1.5 border-t border-gray-100">
+                                              {tierServices && tierServices.length > 0 ? (
+                                                tierServices.map((svc) => (
+                                                  <div
+                                                    key={svc.id}
+                                                    className="flex items-center justify-between text-xs py-1 border-b border-gray-50 last:border-none"
+                                                  >
+                                                    <div className="flex items-center gap-2">
+                                                      <span className="font-bold text-gray-800">{svc.name}</span>
+                                                      <span className="text-[11px] font-extrabold text-[#5e23dc]">
+                                                        ₹{svc.basePrice}
+                                                      </span>
+                                                      {svc.durationMinutes && (
+                                                        <span className="text-[10px] text-gray-400">
+                                                          • {svc.durationMinutes}m
+                                                        </span>
+                                                      )}
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => handleToggleService(svc)}
+                                                        className={`text-[9px] font-bold px-1.5 py-0.2 rounded-xs cursor-pointer ${
+                                                          svc.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-200 text-gray-600'
+                                                        }`}
+                                                      >
+                                                        {svc.isActive ? 'ON' : 'OFF'}
+                                                      </button>
+                                                      <button
+                                                        type="button"
+                                                        onClick={() => handleDeleteService(svc.id, svc.name)}
+                                                        className="text-gray-400 hover:text-red-600 cursor-pointer"
+                                                      >
+                                                        <span className="material-symbols-outlined text-xs">delete</span>
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                ))
+                                              ) : (
+                                                <p className="text-[11px] text-gray-400">No services in this tier yet.</p>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+
+                                {/* Direct Services under SubCategory */}
+                                {directServices.length > 0 && (
+                                  <div className="space-y-1.5 pt-1">
+                                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
+                                      Services ({directServices.length})
+                                    </span>
+                                    {directServices.map((svc) => (
+                                      <div
+                                        key={svc.id}
+                                        className="bg-white rounded-lg border border-gray-100 p-2.5 flex items-center justify-between text-xs"
+                                      >
+                                        <div className="flex items-center gap-2.5 min-w-0">
+                                          {svc.imageUrl && (
+                                            <img
+                                              src={svc.imageUrl}
+                                              alt={svc.name}
+                                              className="w-8 h-8 rounded-md object-cover"
+                                            />
+                                          )}
+                                          <div className="truncate">
+                                            <span className="font-bold text-gray-800 block truncate">
+                                              {svc.name}
+                                            </span>
+                                            <span className="text-[10px] text-gray-500">
+                                              ₹{svc.basePrice} • {svc.durationMinutes || 60} mins
+                                            </span>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                          <button
+                                            type="button"
+                                            onClick={() => handleToggleService(svc)}
+                                            className={`text-[10px] font-bold px-2 py-0.5 rounded-md cursor-pointer ${
+                                              svc.isActive
+                                                ? 'bg-emerald-100 text-emerald-800'
+                                                : 'bg-gray-200 text-gray-600'
+                                            }`}
+                                          >
+                                            {svc.isActive ? 'Active' : 'Off'}
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setEditingItem(svc);
+                                              setModalParentContext({
+                                                subCategoryId: sub.id,
+                                                categoryId: cat.id,
+                                              });
+                                              setModalType('SERVICE');
+                                            }}
+                                            className="text-gray-400 hover:text-gray-700 cursor-pointer"
+                                          >
+                                            <span className="material-symbols-outlined text-xs">edit</span>
+                                          </button>
+                                          <button
+                                            type="button"
+                                            onClick={() => handleDeleteService(svc.id, svc.name)}
+                                            className="text-gray-400 hover:text-red-600 cursor-pointer"
+                                          >
+                                            <span className="material-symbols-outlined text-xs">delete</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        );
+                      })
+                    )}
                   </div>
                 )}
               </div>
             );
-          })}
+          })
+        )}
+      </div>
 
-          {filteredCategories.length === 0 && (
-            <div className="bg-white rounded-2xl p-12 text-center border border-[#eceef0] space-y-3">
-              <span className="material-symbols-outlined text-4xl text-[#7a7487]">
-                search_off
-              </span>
-              <p className="text-sm font-semibold text-[#191c1e]">No matching categories found</p>
-              <button
-                onClick={() => { setFilter('ALL'); setSearchQuery(''); }}
-                className="text-xs text-[#5e23dc] font-bold hover:underline"
-              >
-                Clear Filters
-              </button>
+      {/* ════════════════════ CREATE / EDIT MODALS ════════════════════ */}
+      {modalType && (
+        <HierarchyItemModal
+          modalType={modalType}
+          editingItem={editingItem}
+          parentContext={modalParentContext}
+          categories={categories}
+          onClose={() => {
+            setModalType(null);
+            setEditingItem(null);
+          }}
+          onSaved={() => {
+            setModalType(null);
+            setEditingItem(null);
+            fetchAllCategories();
+            showToast('Item saved successfully');
+            window.dispatchEvent(new Event('storage'));
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ─── Hierarchy Item Modal Component ──────────────────────────────────────────
+function HierarchyItemModal({
+  modalType,
+  editingItem,
+  parentContext,
+  categories,
+  onClose,
+  onSaved,
+}: {
+  modalType: 'CATEGORY' | 'SUBCATEGORY' | 'TIER' | 'SERVICE';
+  editingItem: any | null;
+  parentContext: { categoryId?: string; subCategoryId?: string; tierId?: string };
+  categories: ServiceCategory[];
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const isEditing = !!editingItem;
+  const [loading, setLoading] = useState(false);
+
+  // Common Form Fields
+  const [name, setName] = useState(editingItem?.name || '');
+  const [slug, setSlug] = useState(editingItem?.slug || '');
+  const [icon, setIcon] = useState(editingItem?.icon || '🛠️');
+  const [badge, setBadge] = useState(editingItem?.badge || '');
+  const [description, setDescription] = useState(editingItem?.description || '');
+  const [order, setOrder] = useState<number>(editingItem?.order ?? editingItem?.displayOrder ?? 1);
+  const [isActive, setIsActive] = useState<boolean>(editingItem?.isActive ?? true);
+
+  // SubCategory specific
+  const [categoryId, setCategoryId] = useState(
+    editingItem?.categoryId || parentContext.categoryId || categories[0]?.id || ''
+  );
+  const [groupHeader, setGroupHeader] = useState(editingItem?.groupHeader || '');
+
+  // Tier specific
+  const [subCategoryId, setSubCategoryId] = useState(
+    editingItem?.subCategoryId || parentContext.subCategoryId || ''
+  );
+  const [startingPrice, setStartingPrice] = useState<number | string>(editingItem?.startingPrice || '');
+  const [featuresStr, setFeaturesStr] = useState<string>(
+    Array.isArray(editingItem?.features) ? editingItem.features.join('\n') : ''
+  );
+
+  // Service specific
+  const [tierId, setTierId] = useState(editingItem?.tierId || parentContext.tierId || '');
+  const [basePrice, setBasePrice] = useState<number | string>(editingItem?.basePrice || 499);
+  const [durationMinutes, setDurationMinutes] = useState<number | string>(
+    editingItem?.durationMinutes || 60
+  );
+  const [imageUrl, setImageUrl] = useState(
+    editingItem?.imageUrl ||
+      'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80'
+  );
+
+  const getAdminToken = () => {
+    if (typeof window === 'undefined') return '';
+    return localStorage.getItem('Ziva_access') || localStorage.getItem('token') || '';
+  };
+
+  const handleNameChange = (val: string) => {
+    setName(val);
+    if (!isEditing) {
+      setSlug(val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const token = getAdminToken();
+      let url = '';
+      let method = isEditing ? 'PATCH' : 'POST';
+      let payload: any = { name, slug, isActive, order: Number(order) };
+
+      if (modalType === 'CATEGORY') {
+        url = isEditing
+          ? getApiUrl(`/admin/services/categories/${editingItem.id}`)
+          : getApiUrl('/admin/services/categories');
+        payload = { ...payload, icon, badge, description };
+      } else if (modalType === 'SUBCATEGORY') {
+        url = isEditing
+          ? getApiUrl(`/admin/services/subcategories/${editingItem.id}`)
+          : getApiUrl('/admin/services/subcategories');
+        payload = {
+          ...payload,
+          categoryId,
+          icon,
+          badge,
+          groupHeader: groupHeader || null,
+          displayOrder: Number(order),
+        };
+      } else if (modalType === 'TIER') {
+        url = isEditing
+          ? getApiUrl(`/admin/services/tiers/${editingItem.id}`)
+          : getApiUrl('/admin/services/tiers');
+        const features = featuresStr
+          .split('\n')
+          .map((s) => s.trim())
+          .filter(Boolean);
+        payload = {
+          ...payload,
+          subCategoryId,
+          badge,
+          description,
+          startingPrice: startingPrice ? Number(startingPrice) : null,
+          features,
+          displayOrder: Number(order),
+        };
+      } else if (modalType === 'SERVICE') {
+        url = isEditing
+          ? getApiUrl(`/admin/services/items/${editingItem.id}`)
+          : getApiUrl('/admin/services/items');
+        payload = {
+          ...payload,
+          categoryId,
+          subCategoryId: subCategoryId || null,
+          tierId: tierId || null,
+          basePrice: Number(basePrice),
+          durationMinutes: durationMinutes ? Number(durationMinutes) : null,
+          description,
+          imageUrl,
+        };
+      }
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
+
+      onSaved();
+    } catch (err: any) {
+      alert(`Failed to save: ${err?.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn font-[Rubik]">
+      <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto border border-gray-100">
+        <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+          <h3 className="text-base font-bold text-[#111827]">
+            {isEditing ? `Edit ${modalType}` : `Add New ${modalType}`}
+          </h3>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 text-xs"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+          {/* Name & Slug */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="font-bold text-gray-700 block mb-1">Name *</label>
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => handleNameChange(e.target.value)}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                placeholder="e.g. Salon for Women"
+              />
+            </div>
+            <div>
+              <label className="font-bold text-gray-700 block mb-1">Slug *</label>
+              <input
+                type="text"
+                required
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-mono text-[11px]"
+                placeholder="salon-for-women"
+              />
+            </div>
+          </div>
+
+          {/* SubCategory specific parent selector */}
+          {modalType === 'SUBCATEGORY' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Parent Category</label>
+                <select
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                >
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Group Header (Optional)</label>
+                <input
+                  type="text"
+                  value={groupHeader}
+                  onChange={(e) => setGroupHeader(e.target.value)}
+                  placeholder="e.g. Large appliances"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                />
+              </div>
             </div>
           )}
-        </div>
+
+          {/* Icon & Badge */}
+          {(modalType === 'CATEGORY' || modalType === 'SUBCATEGORY') && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Icon / Emoji</label>
+                <input
+                  type="text"
+                  value={icon}
+                  onChange={(e) => setIcon(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                  placeholder="🧖‍♀️ or vacuum"
+                />
+              </div>
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Badge (Optional)</label>
+                <input
+                  type="text"
+                  value={badge}
+                  onChange={(e) => setBadge(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                  placeholder="e.g. 44 mins or Sale"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Tier Specific Fields */}
+          {modalType === 'TIER' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Starting Price (₹)</label>
+                  <input
+                    type="number"
+                    value={startingPrice}
+                    onChange={(e) => setStartingPrice(e.target.value)}
+                    placeholder="1199"
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Tier Badge</label>
+                  <input
+                    type="text"
+                    value={badge}
+                    onChange={(e) => setBadge(e.target.value)}
+                    placeholder="Top-tier professionals"
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Features (One per line)</label>
+                <textarea
+                  rows={3}
+                  value={featuresStr}
+                  onChange={(e) => setFeaturesStr(e.target.value)}
+                  placeholder="Mono-dose products&#10;Experienced senior beauticians&#10;100% hygienic kits"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-sans"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Service Specific Fields */}
+          {modalType === 'SERVICE' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Base Price (₹) *</label>
+                  <input
+                    type="number"
+                    required
+                    value={basePrice}
+                    onChange={(e) => setBasePrice(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Duration (Mins)</label>
+                  <input
+                    type="number"
+                    value={durationMinutes}
+                    onChange={(e) => setDurationMinutes(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-bold text-gray-700 block mb-1">Image URL</label>
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Description */}
+          <div>
+            <label className="font-bold text-gray-700 block mb-1">Description</label>
+            <textarea
+              rows={2}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+            />
+          </div>
+
+          {/* Display Order & Active */}
+          <div className="grid grid-cols-2 gap-3 items-center">
+            <div>
+              <label className="font-bold text-gray-700 block mb-1">Display Order</label>
+              <input
+                type="number"
+                value={order}
+                onChange={(e) => setOrder(Number(e.target.value))}
+                className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none"
+              />
+            </div>
+            <div className="flex items-center gap-2 pt-4">
+              <input
+                type="checkbox"
+                id="activeStatus"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="w-4 h-4 text-[#5e23dc] rounded-md focus:ring-0 cursor-pointer"
+              />
+              <label htmlFor="activeStatus" className="font-bold text-gray-700 cursor-pointer">
+                Enabled / Active
+              </label>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl text-gray-600 hover:bg-gray-100 font-bold cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold px-5 py-2 rounded-xl shadow-md cursor-pointer"
+            >
+              {loading ? 'Saving...' : isEditing ? 'Save Changes' : 'Create'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

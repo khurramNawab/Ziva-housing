@@ -440,11 +440,30 @@ export class AdminController {
     return this.adminService.releasePayout(adminId, payoutId, body.notes);
   }
 
-  // ─── Service Category & Item Toggle Management (Admin Only) ──────────────
+  // ─── Service Category & Hierarchy Admin Controls (Admin Only) ──────────────
   @Get('services/categories')
-  @ApiOperation({ summary: 'Get all service categories with services & groups for admin management' })
+  @ApiOperation({ summary: 'Get all service categories with full hierarchy for admin management' })
   getServiceCategories(@CurrentUser('id') adminId: string) {
     return this.adminService.getAdminServiceCategories(adminId);
+  }
+
+  // Categories
+  @Post('services/categories')
+  @ApiOperation({ summary: 'Create a new service category' })
+  createServiceCategory(@CurrentUser('id') adminId: string, @Body() body: any) {
+    return this.adminService.createServiceCategory(adminId, body);
+  }
+
+  @Patch('services/categories/:id')
+  @ApiOperation({ summary: 'Update a service category' })
+  updateServiceCategory(@CurrentUser('id') adminId: string, @Param('id') id: string, @Body() body: any) {
+    return this.adminService.updateServiceCategory(adminId, id, body);
+  }
+
+  @Delete('services/categories/:id')
+  @ApiOperation({ summary: 'Delete a service category' })
+  deleteServiceCategory(@CurrentUser('id') adminId: string, @Param('id') id: string) {
+    return this.adminService.deleteServiceCategory(adminId, id);
   }
 
   @Patch('services/categories/:id/toggle')
@@ -455,6 +474,83 @@ export class AdminController {
     @Body() body?: { isActive?: boolean },
   ) {
     return this.adminService.toggleServiceCategory(adminId, categoryId, body?.isActive);
+  }
+
+  // SubCategories
+  @Post('services/subcategories')
+  @ApiOperation({ summary: 'Create a new service subcategory' })
+  createServiceSubCategory(@CurrentUser('id') adminId: string, @Body() body: any) {
+    return this.adminService.createServiceSubCategory(adminId, body);
+  }
+
+  @Patch('services/subcategories/:id')
+  @ApiOperation({ summary: 'Update a service subcategory' })
+  updateServiceSubCategory(@CurrentUser('id') adminId: string, @Param('id') id: string, @Body() body: any) {
+    return this.adminService.updateServiceSubCategory(adminId, id, body);
+  }
+
+  @Delete('services/subcategories/:id')
+  @ApiOperation({ summary: 'Delete a service subcategory' })
+  deleteServiceSubCategory(@CurrentUser('id') adminId: string, @Param('id') id: string) {
+    return this.adminService.deleteServiceSubCategory(adminId, id);
+  }
+
+  @Patch('services/subcategories/:id/toggle')
+  @ApiOperation({ summary: 'Toggle service subcategory active status (ON/OFF)' })
+  toggleServiceSubCategory(
+    @CurrentUser('id') adminId: string,
+    @Param('id') subCategoryId: string,
+    @Body() body?: { isActive?: boolean },
+  ) {
+    return this.adminService.toggleServiceSubCategory(adminId, subCategoryId, body?.isActive);
+  }
+
+  // Tiers
+  @Post('services/tiers')
+  @ApiOperation({ summary: 'Create a new service tier' })
+  createServiceTier(@CurrentUser('id') adminId: string, @Body() body: any) {
+    return this.adminService.createServiceTier(adminId, body);
+  }
+
+  @Patch('services/tiers/:id')
+  @ApiOperation({ summary: 'Update a service tier' })
+  updateServiceTier(@CurrentUser('id') adminId: string, @Param('id') id: string, @Body() body: any) {
+    return this.adminService.updateServiceTier(adminId, id, body);
+  }
+
+  @Delete('services/tiers/:id')
+  @ApiOperation({ summary: 'Delete a service tier' })
+  deleteServiceTier(@CurrentUser('id') adminId: string, @Param('id') id: string) {
+    return this.adminService.deleteServiceTier(adminId, id);
+  }
+
+  @Patch('services/tiers/:id/toggle')
+  @ApiOperation({ summary: 'Toggle service tier active status (ON/OFF)' })
+  toggleServiceTier(
+    @CurrentUser('id') adminId: string,
+    @Param('id') tierId: string,
+    @Body() body?: { isActive?: boolean },
+  ) {
+    return this.adminService.toggleServiceTier(adminId, tierId, body?.isActive);
+  }
+
+  // Services
+  @Post('services/items')
+  @ApiOperation({ summary: 'Create a new service item' })
+  createServiceItem(@CurrentUser('id') adminId: string, @Body() body: any) {
+    return this.adminService.createServiceItem(adminId, body);
+  }
+
+  @Patch('services/items/:id')
+  @ApiOperation({ summary: 'Update a service item' })
+  updateServiceItem(@CurrentUser('id') adminId: string, @Param('id') id: string, @Body() body: any) {
+    return this.adminService.updateServiceItem(adminId, id, body);
+  }
+
+  @Delete('services/items/:id')
+  @ApiOperation({ summary: 'Delete a service item' })
+  deleteServiceItem(@CurrentUser('id') adminId: string, @Param('id') id: string) {
+    return this.adminService.deleteServiceItem(adminId, id);
   }
 
   @Patch('services/items/:id/toggle')

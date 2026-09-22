@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from './components/Navbar';
@@ -8,12 +8,66 @@ import Footer from './components/Footer';
 import UrbanCompanyHero from './components/UrbanCompanyHero';
 import UrbanCompanyModal from './components/UrbanCompanyModal';
 
+function getApiUrl(path: string): string {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (typeof window !== 'undefined') {
+    return `/api/v1${cleanPath}`;
+  }
+  const base = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000';
+  const cleanBase = base.endsWith('/api/v1') ? base : `${base}/api/v1`;
+  return `${cleanBase}${cleanPath}`;
+}
+
 export default function LandingPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [purpose, setPurpose] = useState<'BUY' | 'RENT'>('BUY');
   const [isUrbanModalOpen, setIsUrbanModalOpen] = useState(false);
   const [urbanInitialCategory, setUrbanInitialCategory] = useState<string | undefined>(undefined);
+  const [activeCategorySlugs, setActiveCategorySlugs] = useState<string[]>([]);
+
+  const fetchActiveCategorySlugs = useCallback(async () => {
+    try {
+      let res: Response;
+      try {
+        res = await fetch(getApiUrl('/services/categories'), { cache: 'no-store' });
+      } catch {
+        res = await fetch('http://127.0.0.1:4000/api/v1/services/categories', { cache: 'no-store' });
+      }
+      if (res.ok) {
+        const json = await res.json();
+        const data = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : [];
+        if (Array.isArray(data)) {
+          const slugs = data.filter((c: any) => c.isActive !== false).map((c: any) => c.slug);
+          setActiveCategorySlugs(slugs);
+        }
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    fetchActiveCategorySlugs();
+
+    const handleRefresh = () => fetchActiveCategorySlugs();
+    window.addEventListener('focus', handleRefresh);
+    window.addEventListener('storage', handleRefresh);
+
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel('ziva_admin_sync');
+      bc.onmessage = (msg) => {
+        if (msg.data?.type === 'SERVICES_UPDATED') {
+          fetchActiveCategorySlugs();
+        }
+      };
+    } catch {}
+
+    return () => {
+      window.removeEventListener('focus', handleRefresh);
+      window.removeEventListener('storage', handleRefresh);
+      if (bc) bc.close();
+    };
+  }, [fetchActiveCategorySlugs]);
 
   const openServiceModal = (categorySlug?: string) => {
     setUrbanInitialCategory(categorySlug);
@@ -142,9 +196,14 @@ export default function LandingPage() {
                   { slug: 'electrician-plumber-carpenter', title: 'Electrician & Handy', img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=300&q=80' },
                   { slug: 'painting-waterproofing', title: 'Wall Painting', img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=300&q=80' },
                   { slug: 'instahelp', title: 'InstaHelp', img: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'cleaning', title: 'Pest Control', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80' },
-                  { slug: 'electrician-plumber-carpenter', title: 'Packers & Movers', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80' },
-                ].map((svc) => (
+                  { slug: 'pest-control', title: 'Pest Control', img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&q=80' },
+                  { slug: 'packers-movers', title: 'Packers & Movers', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=80' },
+                ]
+                  .filter((svc) =>
+                    activeCategorySlugs.length === 0 ||
+                    activeCategorySlugs.some((s) => s === svc.slug || s.includes(svc.slug) || svc.slug.includes(s))
+                  )
+                  .map((svc) => (
                   <button
                     suppressHydrationWarning
                     key={svc.title}

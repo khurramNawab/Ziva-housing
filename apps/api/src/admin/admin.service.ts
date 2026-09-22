@@ -1887,19 +1887,24 @@ export class AdminService {
     return { success: true, booking: booking || { id: bookingId, serviceProviderId: newProviderProfileId } };
   }
 
-  // ─── Service Category & Item On/Off Controls ──────────────────────────────
+  // ─── Service Category & Hierarchy Admin Controls ──────────────────────────
   async getAdminServiceCategories(adminId: string) {
     await this.assertAdmin(adminId);
     if (this.prisma.isDbAvailable()) {
       try {
         const categories = await this.prisma.serviceCategory.findMany({
           include: {
-            serviceGroups: {
+            subCategories: {
               orderBy: { displayOrder: 'asc' },
               include: {
-                subOptions: {
-                  include: { service: true },
+                tiers: {
                   orderBy: { displayOrder: 'asc' },
+                  include: {
+                    services: { orderBy: { order: 'asc' } },
+                  },
+                },
+                services: {
+                  orderBy: { order: 'asc' },
                 },
               },
             },
@@ -1909,12 +1914,48 @@ export class AdminService {
           },
           orderBy: { order: 'asc' },
         });
-        if (categories && categories.length > 0) return categories;
+        if (categories) return categories;
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getAdminServiceCategories: ${err?.message}`);
       }
     }
     return [];
+  }
+
+  // Category CRUD & Toggle
+  async createServiceCategory(adminId: string, dto: { name: string; slug?: string; icon?: string; badge?: string; description?: string; order?: number }) {
+    await this.assertAdmin(adminId);
+    const slug = dto.slug || dto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const category = await this.prisma.serviceCategory.create({
+      data: {
+        name: dto.name,
+        slug,
+        icon: dto.icon || 'home_repair_service',
+        badge: dto.badge || null,
+        description: dto.description || null,
+        order: dto.order || 0,
+        isActive: true,
+      },
+    });
+    await this.logAction(adminId, 'CREATE', 'ServiceCategory', category.id, null, category);
+    return category;
+  }
+
+  async updateServiceCategory(adminId: string, categoryId: string, dto: { name?: string; icon?: string; badge?: string; description?: string; order?: number; isActive?: boolean }) {
+    await this.assertAdmin(adminId);
+    const updated = await this.prisma.serviceCategory.update({
+      where: { id: categoryId },
+      data: dto,
+    });
+    await this.logAction(adminId, 'UPDATE', 'ServiceCategory', categoryId, null, updated);
+    return updated;
+  }
+
+  async deleteServiceCategory(adminId: string, categoryId: string) {
+    await this.assertAdmin(adminId);
+    await this.prisma.serviceCategory.delete({ where: { id: categoryId } });
+    await this.logAction(adminId, 'DELETE', 'ServiceCategory', categoryId, null, { deleted: true });
+    return { success: true };
   }
 
   async toggleServiceCategory(adminId: string, categoryId: string, requestedState?: boolean) {
@@ -1932,13 +1973,21 @@ export class AdminService {
           data: { isActive: newStatus },
         });
 
-        // Also cascade update services under this category if disabled
+        // Also cascade update subcategories and services under this category
         if (!newStatus) {
+          await this.prisma.serviceSubCategory.updateMany({
+            where: { categoryId: category.id },
+            data: { isActive: false },
+          });
           await this.prisma.service.updateMany({
             where: { categoryId: category.id },
             data: { isActive: false },
           });
         } else {
+          await this.prisma.serviceSubCategory.updateMany({
+            where: { categoryId: category.id },
+            data: { isActive: true },
+          });
           await this.prisma.service.updateMany({
             where: { categoryId: category.id },
             data: { isActive: true },
@@ -1954,6 +2003,218 @@ export class AdminService {
     }
 
     throw new BadRequestException('Failed to toggle service category status');
+  }
+
+  // SubCategory CRUD & Toggle
+  async createServiceSubCategory(adminId: string, dto: { categoryId: string; name: string; slug?: string; icon?: string; badge?: string; description?: string; displayOrder?: number }) {
+    await this.assertAdmin(adminId);
+    const slug = dto.slug || dto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const subCategory = await this.prisma.serviceSubCategory.create({
+      data: {
+        categoryId: dto.categoryId,
+        name: dto.name,
+        slug,
+        icon: dto.icon || 'star',
+        badge: dto.badge || null,
+        description: dto.description || null,
+        displayOrder: dto.displayOrder || 0,
+        isActive: true,
+      },
+    });
+    await this.logAction(adminId, 'CREATE', 'ServiceSubCategory', subCategory.id, null, subCategory);
+    return subCategory;
+  }
+
+  async updateServiceSubCategory(adminId: string, subCategoryId: string, dto: any) {
+    await this.assertAdmin(adminId);
+    const data: any = {};
+    if (dto.name !== undefined) data.name = dto.name;
+    if (dto.slug !== undefined) data.slug = dto.slug;
+    if (dto.icon !== undefined) data.icon = dto.icon;
+    if (dto.imageUrl !== undefined) data.imageUrl = dto.imageUrl;
+    if (dto.badge !== undefined) data.badge = dto.badge;
+    if (dto.estimatedTime !== undefined) data.badge = dto.estimatedTime;
+    if (dto.description !== undefined) data.description = dto.description;
+    if (dto.displayOrder !== undefined) data.displayOrder = Number(dto.displayOrder);
+    if (dto.isActive !== undefined) data.isActive = Boolean(dto.isActive);
+
+    const updated = await this.prisma.serviceSubCategory.update({
+      where: { id: subCategoryId },
+      data,
+    });
+    await this.logAction(adminId, 'UPDATE', 'ServiceSubCategory', subCategoryId, null, updated);
+    return updated;
+  }
+
+  async deleteServiceSubCategory(adminId: string, subCategoryId: string) {
+    await this.assertAdmin(adminId);
+    await this.prisma.serviceSubCategory.delete({ where: { id: subCategoryId } });
+    await this.logAction(adminId, 'DELETE', 'ServiceSubCategory', subCategoryId, null, { deleted: true });
+    return { success: true };
+  }
+
+  async toggleServiceSubCategory(adminId: string, subCategoryId: string, requestedState?: boolean) {
+    await this.assertAdmin(adminId);
+    const subCat = await this.prisma.serviceSubCategory.findUnique({ where: { id: subCategoryId } });
+    if (!subCat) throw new NotFoundException('SubCategory not found');
+    const newStatus = requestedState !== undefined ? requestedState : !subCat.isActive;
+    const updated = await this.prisma.serviceSubCategory.update({
+      where: { id: subCategoryId },
+      data: { isActive: newStatus },
+    });
+    // Cascade to services under this subcategory if disabled
+    if (!newStatus) {
+      await this.prisma.service.updateMany({
+        where: { subCategoryId },
+        data: { isActive: false },
+      });
+      await this.prisma.serviceTier.updateMany({
+        where: { subCategoryId },
+        data: { isActive: false },
+      });
+    } else {
+      await this.prisma.service.updateMany({
+        where: { subCategoryId },
+        data: { isActive: true },
+      });
+      await this.prisma.serviceTier.updateMany({
+        where: { subCategoryId },
+        data: { isActive: true },
+      });
+    }
+    await this.logAction(adminId, 'UPDATE', 'ServiceSubCategory', subCategoryId, { isActive: subCat.isActive }, { isActive: newStatus });
+    return { success: true, subCategory: updated };
+  }
+
+  // Tier CRUD & Toggle
+  async createServiceTier(adminId: string, dto: { subCategoryId: string; name: string; slug?: string; tag?: string; badge?: string; startingPrice?: number; description?: string; imageUrl?: string; displayOrder?: number }) {
+    await this.assertAdmin(adminId);
+    const slug = dto.slug || `${dto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+    const tier = await this.prisma.serviceTier.create({
+      data: {
+        subCategoryId: dto.subCategoryId,
+        name: dto.name,
+        slug,
+        tag: dto.tag || null,
+        badge: dto.badge || null,
+        startingPrice: dto.startingPrice ? Number(dto.startingPrice) : null,
+        description: dto.description || null,
+        imageUrl: dto.imageUrl || null,
+        displayOrder: dto.displayOrder || 0,
+        isActive: true,
+      },
+    });
+    await this.logAction(adminId, 'CREATE', 'ServiceTier', tier.id, null, tier);
+    return tier;
+  }
+
+  async updateServiceTier(adminId: string, tierId: string, dto: { name?: string; tag?: string; badge?: string; startingPrice?: number; description?: string; imageUrl?: string; displayOrder?: number; isActive?: boolean }) {
+    await this.assertAdmin(adminId);
+    const updated = await this.prisma.serviceTier.update({
+      where: { id: tierId },
+      data: dto,
+    });
+    await this.logAction(adminId, 'UPDATE', 'ServiceTier', tierId, null, updated);
+    return updated;
+  }
+
+  async deleteServiceTier(adminId: string, tierId: string) {
+    await this.assertAdmin(adminId);
+    await this.prisma.serviceTier.delete({ where: { id: tierId } });
+    await this.logAction(adminId, 'DELETE', 'ServiceTier', tierId, null, { deleted: true });
+    return { success: true };
+  }
+
+  async toggleServiceTier(adminId: string, tierId: string, requestedState?: boolean) {
+    await this.assertAdmin(adminId);
+    const tier = await this.prisma.serviceTier.findUnique({ where: { id: tierId } });
+    if (!tier) throw new NotFoundException('Service tier not found');
+    const newStatus = requestedState !== undefined ? requestedState : !tier.isActive;
+    const updated = await this.prisma.serviceTier.update({
+      where: { id: tierId },
+      data: { isActive: newStatus },
+    });
+    await this.logAction(adminId, 'UPDATE', 'ServiceTier', tierId, { isActive: tier.isActive }, { isActive: newStatus });
+    return { success: true, tier: updated };
+  }
+
+  // Service Item CRUD & Toggle
+  async createServiceItem(adminId: string, dto: any) {
+    await this.assertAdmin(adminId);
+    let categoryId = dto.categoryId;
+    if (!categoryId && dto.subCategoryId) {
+      const sub = await this.prisma.serviceSubCategory.findUnique({ where: { id: dto.subCategoryId } });
+      if (sub) categoryId = sub.categoryId;
+    }
+    if (!categoryId && dto.tierId) {
+      const tier = await this.prisma.serviceTier.findUnique({
+        where: { id: dto.tierId },
+        include: { subCategory: true },
+      });
+      if (tier?.subCategory?.categoryId) {
+        categoryId = tier.subCategory.categoryId;
+      }
+    }
+    if (!categoryId) {
+      throw new BadRequestException('CategoryId or a valid SubCategoryId/TierId is required');
+    }
+
+    const name = dto.name || dto.title || 'Untitled Service';
+    const slug = dto.slug || `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`;
+    const basePrice = dto.basePrice !== undefined ? Number(dto.basePrice) : (dto.price !== undefined ? Number(dto.price) : null);
+    const durationMinutes = dto.durationMinutes !== undefined ? Number(dto.durationMinutes) : (dto.duration !== undefined ? Number(dto.duration) : null);
+
+    const service = await this.prisma.service.create({
+      data: {
+        categoryId,
+        subCategoryId: dto.subCategoryId || null,
+        tierId: dto.tierId || null,
+        name,
+        slug,
+        description: dto.description || null,
+        basePrice,
+        durationMinutes,
+        bestsellerFlag: Boolean(dto.bestsellerFlag),
+        imageUrl: dto.imageUrl || null,
+        order: dto.order ? Number(dto.order) : 0,
+        isActive: dto.isActive !== undefined ? Boolean(dto.isActive) : true,
+      },
+    });
+    await this.logAction(adminId, 'CREATE', 'Service', service.id, null, service);
+    return service;
+  }
+
+  async updateServiceItem(adminId: string, serviceId: string, dto: any) {
+    await this.assertAdmin(adminId);
+    const data: any = {};
+    if (dto.name !== undefined) data.name = dto.name;
+    if (dto.title !== undefined) data.name = dto.title;
+    if (dto.slug !== undefined) data.slug = dto.slug;
+    if (dto.description !== undefined) data.description = dto.description;
+    if (dto.basePrice !== undefined) data.basePrice = Number(dto.basePrice);
+    if (dto.price !== undefined) data.basePrice = Number(dto.price);
+    if (dto.durationMinutes !== undefined) data.durationMinutes = Number(dto.durationMinutes);
+    if (dto.duration !== undefined) data.durationMinutes = Number(dto.duration);
+    if (dto.bestsellerFlag !== undefined) data.bestsellerFlag = Boolean(dto.bestsellerFlag);
+    if (dto.imageUrl !== undefined) data.imageUrl = dto.imageUrl;
+    if (dto.order !== undefined) data.order = Number(dto.order);
+    if (dto.subCategoryId !== undefined) data.subCategoryId = dto.subCategoryId;
+    if (dto.tierId !== undefined) data.tierId = dto.tierId;
+    if (dto.isActive !== undefined) data.isActive = Boolean(dto.isActive);
+
+    const updated = await this.prisma.service.update({
+      where: { id: serviceId },
+      data,
+    });
+    await this.logAction(adminId, 'UPDATE', 'Service', serviceId, null, updated);
+    return updated;
+  }
+
+  async deleteServiceItem(adminId: string, serviceId: string) {
+    await this.assertAdmin(adminId);
+    await this.prisma.service.delete({ where: { id: serviceId } });
+    await this.logAction(adminId, 'DELETE', 'Service', serviceId, null, { deleted: true });
+    return { success: true };
   }
 
   async toggleServiceItem(adminId: string, serviceId: string, requestedState?: boolean) {
