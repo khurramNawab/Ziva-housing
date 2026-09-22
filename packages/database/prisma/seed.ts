@@ -151,7 +151,7 @@ async function main() {
     {
       name: 'Cleaning & Pest Control',
       slug: 'cleaning',
-      icon: 'vacuum',
+      icon: '🧹',
       badge: '44 mins',
       isActive: true,
       order: 1,
@@ -218,7 +218,7 @@ async function main() {
     {
       name: "Women's Salon & Spa",
       slug: 'womens-salon-spa',
-      icon: 'face_retouching_natural',
+      icon: '🧖‍♀️',
       badge: null,
       isActive: true,
       order: 2,
@@ -331,7 +331,7 @@ async function main() {
     {
       name: "Men's Salon & Massage",
       slug: 'mens-salon-massage',
-      icon: 'content_cut',
+      icon: '🧔‍♂️',
       badge: null,
       isActive: true,
       order: 3,
@@ -397,7 +397,7 @@ async function main() {
     {
       name: 'AC & Appliance Repair',
       slug: 'ac-appliance-repair',
-      icon: 'ac_unit',
+      icon: '❄️',
       badge: '44 mins',
       isActive: true,
       order: 4,
@@ -436,7 +436,7 @@ async function main() {
     {
       name: 'Electrician, Plumber & Carpenter',
       slug: 'electrician-plumber-carpenter',
-      icon: 'handyman',
+      icon: '🔧',
       badge: '19 mins',
       isActive: true,
       order: 5,
@@ -488,7 +488,7 @@ async function main() {
     {
       name: 'Painting & Waterproofing',
       slug: 'painting-waterproofing',
-      icon: 'format_paint',
+      icon: '🖌️',
       badge: null,
       isActive: true,
       order: 6,
@@ -513,7 +513,7 @@ async function main() {
     {
       name: 'InstaHelp',
       slug: 'instahelp',
-      icon: 'support_agent',
+      icon: '👩‍🍳',
       badge: null,
       isActive: true,
       order: 7,
@@ -522,7 +522,7 @@ async function main() {
         {
           name: 'Daily Helpers & Cooks',
           slug: 'daily-helpers-sub',
-          icon: '👩‍💼',
+          icon: '👩‍🍳',
           badge: null,
           displayOrder: 1,
           isActive: true,

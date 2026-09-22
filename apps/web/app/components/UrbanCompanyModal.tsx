@@ -327,6 +327,76 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
   ],
 };
 
+const ICON_MAP: Record<string, string> = {
+  // Category Material Icon Names -> Vibrant Emojis
+  'vacuum': '🧹',
+  'cleaning': '🧹',
+  'face_retouching_natural': '🧖‍♀️',
+  'womens-salon-spa': '🧖‍♀️',
+  'content_cut': '🧔‍♂️',
+  'person_grooming': '🧔‍♂️',
+  'mens-salon-massage': '🧔‍♂️',
+  'ac_unit': '❄️',
+  'ac-appliance-repair': '❄️',
+  'handyman': '🔧',
+  'electrician-plumber-carpenter': '🔧',
+  'format_paint': '🖌️',
+  'painting-waterproofing': '🖌️',
+  'support_agent': '👩‍🍳',
+  'instahelp': '👩‍🍳',
+  'child_care': '👶',
+  'baby-sitting-childcare': '👶',
+  'elderly': '👵',
+  'elderly-care': '👵',
+  'local_shipping': '📦',
+  'packers-movers': '📦',
+  'countertops': '📐',
+  'interior-modular-kitchen': '📐',
+  'spa': '💆‍♀️',
+  'healing': '💆‍♂️',
+  'brush': '🖌️',
+  'palette': '🎨',
+  'plumbing': '🔧',
+  'bolt': '⚡',
+  'electric_bolt': '⚡',
+  'carpenter': '🪚',
+  'soap': '🧼',
+  'pest_control': '🐜',
+  'bug_report': '🐜',
+  'dry_cleaning': '🛋️',
+  'home': '🏠',
+  'chair': '🪑',
+  'kitchen': '🍳',
+  'mode_fan': '🌀',
+  'wash': '🧺',
+  'local_laundry_service': '🧺',
+  'face_3': '💄',
+  'content_cut_women': '💇‍♀️',
+};
+
+function renderCategoryIcon(iconStr?: string | null, fallback: string = '🛠️') {
+  if (!iconStr) return fallback;
+  const trimmed = iconStr.trim();
+  if (ICON_MAP[trimmed]) return ICON_MAP[trimmed];
+  if (ICON_MAP[trimmed.toLowerCase()]) return ICON_MAP[trimmed.toLowerCase()];
+
+  // If it's an image URL
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
+    return <img src={trimmed} alt="icon" className="w-8 h-8 object-contain" />;
+  }
+
+  // If it's a material icon name (e.g. only letters/underscores)
+  if (/^[a-z0-9_]+$/i.test(trimmed) && trimmed.length > 2) {
+    return (
+      <span className="material-symbols-outlined text-[24px] inline-block leading-none align-middle select-none">
+        {trimmed}
+      </span>
+    );
+  }
+
+  return trimmed;
+}
+
 const DEFAULT_CATEGORIES: ServiceCategory[] = [
   { id: 'c-clean', name: 'Cleaning & Pest Control', slug: 'cleaning', icon: '🧹', badge: '44 mins', order: 1, subCategories: DEFAULT_TAXONOMY['cleaning'] },
   { id: 'c-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: '🧖‍♀️', badge: null, order: 2, subCategories: DEFAULT_TAXONOMY['womens-salon-spa'] },
@@ -673,8 +743,10 @@ export default function UrbanCompanyModal({
                   >
                     {/* Category Title */}
                     <div className="flex items-center justify-between">
-                      <h3 className="text-[18px] font-extrabold text-[#111827] tracking-tight flex items-center gap-2">
-                        {category.icon && <span className="text-xl">{category.icon}</span>}
+                      <h3 className="text-[18px] font-extrabold text-[#111827] tracking-tight flex items-center gap-2.5">
+                        <span className="flex items-center justify-center text-2xl">
+                          {renderCategoryIcon(category.icon, '🛠️')}
+                        </span>
                         <span>{category.name}</span>
                       </h3>
                       {category.badge && (
@@ -700,7 +772,7 @@ export default function UrbanCompanyModal({
                               </span>
                             )}
                             <div className="w-11 h-11 flex items-center justify-center text-3xl mb-1 group-hover:-translate-y-0.5 transition-transform">
-                              {sub.icon || '🛠️'}
+                              {renderCategoryIcon(sub.icon, '🛠️')}
                             </div>
                             <span className="text-[10.5px] font-semibold text-[#1f2937] leading-tight line-clamp-2">
                               {sub.name}
@@ -730,7 +802,7 @@ export default function UrbanCompanyModal({
                                 </span>
                               )}
                               <div className="w-11 h-11 flex items-center justify-center text-3xl mb-1 group-hover:-translate-y-0.5 transition-transform">
-                                {sub.icon || '🛠️'}
+                                {renderCategoryIcon(sub.icon, '🛠️')}
                               </div>
                               <span className="text-[10.5px] font-semibold text-[#1f2937] leading-tight line-clamp-2">
                                 {sub.name}

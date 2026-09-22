@@ -72,6 +72,32 @@ function getApiUrl(path: string): string {
   return `${cleanBase}${cleanPath}`;
 }
 
+const ICON_MAP: Record<string, string> = {
+  'vacuum': '🧹',
+  'cleaning': '🧹',
+  'face_retouching_natural': '🧖‍♀️',
+  'womens-salon-spa': '🧖‍♀️',
+  'content_cut': '🧔‍♂️',
+  'person_grooming': '🧔‍♂️',
+  'mens-salon-massage': '🧔‍♂️',
+  'ac_unit': '❄️',
+  'ac-appliance-repair': '❄️',
+  'handyman': '🔧',
+  'electrician-plumber-carpenter': '🔧',
+  'format_paint': '🖌️',
+  'painting-waterproofing': '🖌️',
+  'support_agent': '👩‍🍳',
+  'instahelp': '👩‍🍳',
+};
+
+function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️') {
+  if (!iconStr) return fallback;
+  const trimmed = iconStr.trim();
+  if (ICON_MAP[trimmed]) return ICON_MAP[trimmed];
+  if (ICON_MAP[trimmed.toLowerCase()]) return ICON_MAP[trimmed.toLowerCase()];
+  return trimmed;
+}
+
 function slugify(text: string): string {
   if (!text) return '';
   return decodeURIComponent(text)
@@ -457,7 +483,7 @@ function UrbanCompanyServiceListingContent() {
                     }`}
                   >
                     <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-xl shadow-2xs shrink-0">
-                      {subCat.icon || '🛠️'}
+                      {renderServiceIcon(subCat.icon, '🛠️')}
                     </div>
                     <div className="flex-1 min-w-0">
                       <span className="text-xs md:text-[13px] block truncate">

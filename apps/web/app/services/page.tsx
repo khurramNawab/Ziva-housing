@@ -32,6 +32,32 @@ function getApiUrl(path: string): string {
   return `${cleanBase}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
+const ICON_MAP: Record<string, string> = {
+  'vacuum': '🧹',
+  'cleaning': '🧹',
+  'face_retouching_natural': '🧖‍♀️',
+  'womens-salon-spa': '🧖‍♀️',
+  'content_cut': '🧔‍♂️',
+  'person_grooming': '🧔‍♂️',
+  'mens-salon-massage': '🧔‍♂️',
+  'ac_unit': '❄️',
+  'ac-appliance-repair': '❄️',
+  'handyman': '🔧',
+  'electrician-plumber-carpenter': '🔧',
+  'format_paint': '🖌️',
+  'painting-waterproofing': '🖌️',
+  'support_agent': '👩‍🍳',
+  'instahelp': '👩‍🍳',
+};
+
+function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️') {
+  if (!iconStr) return fallback;
+  const trimmed = iconStr.trim();
+  if (ICON_MAP[trimmed]) return ICON_MAP[trimmed];
+  if (ICON_MAP[trimmed.toLowerCase()]) return ICON_MAP[trimmed.toLowerCase()];
+  return trimmed;
+}
+
 export default function ServicesDirectoryPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
@@ -127,7 +153,7 @@ export default function ServicesDirectoryPage() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div className="w-14 h-14 rounded-2xl bg-purple-50 group-hover:bg-[#5e23dc] transition-colors flex items-center justify-center text-3xl shadow-xs group-hover:scale-105 duration-200">
-                        <span>{cat.icon || '🛠️'}</span>
+                        <span>{renderServiceIcon(cat.icon, '🛠️')}</span>
                       </div>
                       {cat.badge && (
                         <span className="bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-200">
@@ -153,7 +179,7 @@ export default function ServicesDirectoryPage() {
                             key={sub.id}
                             className="bg-gray-50 text-gray-700 text-[11px] font-semibold px-2.5 py-1 rounded-lg border border-gray-100 group-hover:border-purple-100"
                           >
-                            {sub.icon ? `${sub.icon} ` : ''}{sub.name}
+                            {renderServiceIcon(sub.icon, '')} {sub.name}
                           </span>
                         ))}
                         {cat.subCategories.length > 4 && (
