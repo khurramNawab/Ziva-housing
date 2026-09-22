@@ -522,10 +522,20 @@ export class ServicesService {
     }
 
     // In-memory fallback only when database is completely disconnected
-    const cat = this.inMemoryCategories.find(
-      (c) =>
-        (c.id === rawParam || c.slug === rawParam || c.slug === normalizedSlug) && c.isActive,
-    );
+    const cat = this.inMemoryCategories.find((c) => {
+      if (!c.isActive) return false;
+      const cClean = c.slug.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const nClean = c.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      return (
+        c.id === rawParam ||
+        c.slug === rawParam ||
+        c.slug === normalizedSlug ||
+        cClean === cleanAlphaNum ||
+        nClean === cleanAlphaNum ||
+        cClean.includes(cleanAlphaNum) ||
+        cleanAlphaNum.includes(cClean)
+      );
+    });
     if (!cat) return null;
     const services = this.inMemoryServices.filter((s) => s.categoryId === cat.id && s.isActive);
     return {
