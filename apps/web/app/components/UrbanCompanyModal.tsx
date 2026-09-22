@@ -328,30 +328,77 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
 };
 
 const ICON_MAP: Record<string, string> = {
-  // Category Material Icon Names -> Vibrant Emojis
+  // Category & Subcategory Material / Slug names -> Vibrant Emojis
   'vacuum': '🧹',
   'cleaning': '🧹',
+  'cleaning-pest-control': '🧹',
+  'home-cleaning': '🧹',
+  'full-home-cleaning': '🏠',
+  'bathroom-kitchen-cleaning': '🧼',
+  'sofa-carpet-cleaning': '🛋️',
   'face_retouching_natural': '🧖‍♀️',
   'womens-salon-spa': '🧖‍♀️',
+  'womens_salon_spa': '🧖‍♀️',
+  'women_salon': '🧖‍♀️',
+  'salon-for-women': '🧖‍♀️',
+  'spa-for-women': '💆‍♀️',
+  'hair-studio-women': '💇‍♀️',
+  'makeup-saree-styling': '💄',
   'content_cut': '🧔‍♂️',
   'person_grooming': '🧔‍♂️',
   'mens-salon-massage': '🧔‍♂️',
+  'mens_salon_massage': '🧔‍♂️',
+  'men_salon': '🧔‍♂️',
+  'salon-for-men': '🧔‍♂️',
+  'massage-for-men': '💆‍♂️',
   'ac_unit': '❄️',
   'ac-appliance-repair': '❄️',
+  'ac_appliance_repair': '❄️',
+  'ac-service-sub': '❄️',
+  'washing-fridge-sub': '🧺',
+  'washing-machine': '🧺',
+  'refrigerator': '🧊',
+  'chimney': '🍳',
+  'ro-water-purifier': '💧',
+  'geyser': '♨️',
+  'television': '📺',
   'handyman': '🔧',
+  'home_repair_service': '🔧',
   'electrician-plumber-carpenter': '🔧',
+  'electrician_plumber_carpenter': '🔧',
+  'electrician-sub': '⚡',
+  'electrician': '⚡',
+  'plumber-sub': '🔧',
+  'plumber': '🔧',
+  'carpenter-sub': '🪚',
+  'carpenter': '🪚',
+  'fan-installation': '🌀',
+  'furniture-assembly': '🪑',
   'format_paint': '🖌️',
   'painting-waterproofing': '🖌️',
+  'painting_waterproofing': '🖌️',
+  'painting': '🖌️',
+  'wall-painting-sub': '🎨',
   'support_agent': '👩‍🍳',
   'instahelp': '👩‍🍳',
+  'daily-helpers-sub': '👩‍🍳',
+  'cook-chef': '🧹',
   'child_care': '👶',
   'baby-sitting-childcare': '👶',
+  'baby_sitting_childcare': '👶',
+  'nanny-infant-care': '👶',
   'elderly': '👵',
   'elderly-care': '👵',
+  'elderly_care': '👵',
+  'senior-living-assistance': '👵',
   'local_shipping': '📦',
   'packers-movers': '📦',
+  'packers_movers': '📦',
+  'home-shifting': '📦',
   'countertops': '📐',
   'interior-modular-kitchen': '📐',
+  'interior_modular_kitchen': '📐',
+  'modular-kitchen-woodwork': '📐',
   'spa': '💆‍♀️',
   'healing': '💆‍♂️',
   'brush': '🖌️',
@@ -359,9 +406,12 @@ const ICON_MAP: Record<string, string> = {
   'plumbing': '🔧',
   'bolt': '⚡',
   'electric_bolt': '⚡',
-  'carpenter': '🪚',
   'soap': '🧼',
   'pest_control': '🐜',
+  'pest-control-sub': '🐜',
+  'pest-control': '🐜',
+  'cockroach-control': '🐜',
+  'ants-bedbugs-control': '🐜',
   'bug_report': '🐜',
   'dry_cleaning': '🛋️',
   'home': '🏠',
@@ -377,24 +427,51 @@ const ICON_MAP: Record<string, string> = {
 function renderCategoryIcon(iconStr?: string | null, fallback: string = '🛠️') {
   if (!iconStr) return fallback;
   const trimmed = iconStr.trim();
+
   if (ICON_MAP[trimmed]) return ICON_MAP[trimmed];
-  if (ICON_MAP[trimmed.toLowerCase()]) return ICON_MAP[trimmed.toLowerCase()];
+  const normalized = trimmed.toLowerCase().replace(/_/g, '-');
+  if (ICON_MAP[normalized]) return ICON_MAP[normalized];
+  const underscored = trimmed.toLowerCase().replace(/-/g, '_');
+  if (ICON_MAP[underscored]) return ICON_MAP[underscored];
 
   // If it's an image URL
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
     return <img src={trimmed} alt="icon" className="w-8 h-8 object-contain" />;
   }
 
-  // If it's a material icon name (e.g. only letters/underscores)
-  if (/^[a-z0-9_]+$/i.test(trimmed) && trimmed.length > 2) {
-    return (
-      <span className="material-symbols-outlined text-[24px] inline-block leading-none align-middle select-none">
-        {trimmed}
-      </span>
-    );
+  // Heuristic keyword matching for any material symbol strings
+  const lower = trimmed.toLowerCase();
+  if (lower.includes('retouch') || (lower.includes('women') && lower.includes('salon'))) return '🧖‍♀️';
+  if (lower.includes('spa')) return '💆‍♀️';
+  if (lower.includes('cut') || lower.includes('men') || lower.includes('groom')) return '🧔‍♂️';
+  if (lower.includes('ac') || lower.includes('cool') || lower.includes('unit')) return '❄️';
+  if (lower.includes('clean') || lower.includes('vacuum')) return '🧹';
+  if (lower.includes('pest') || lower.includes('bug')) return '🐜';
+  if (lower.includes('handy') || lower.includes('repair') || lower.includes('tool')) return '🔧';
+  if (lower.includes('paint')) return '🖌️';
+  if (lower.includes('cook') || lower.includes('help') || lower.includes('maid')) return '👩‍🍳';
+  if (lower.includes('baby') || lower.includes('nanny') || lower.includes('child')) return '👶';
+  if (lower.includes('elder') || lower.includes('senior')) return '👵';
+  if (lower.includes('pack') || lower.includes('mover') || lower.includes('shift')) return '📦';
+  if (lower.includes('kitchen') || lower.includes('woodwork') || lower.includes('interior')) return '📐';
+  if (lower.includes('hair')) return '💇‍♀️';
+  if (lower.includes('makeup') || lower.includes('saree')) return '💄';
+  if (lower.includes('wash') || lower.includes('laundry')) return '🧺';
+  if (lower.includes('electric') || lower.includes('volt') || lower.includes('bolt')) return '⚡';
+  if (lower.includes('plumb')) return '🔧';
+  if (lower.includes('carpenter') || lower.includes('saw')) return '🪚';
+
+  // If it contains an underscore or is an ASCII identifier, NEVER render raw text with underscore!
+  if (trimmed.includes('_') || /^[a-z0-9_-]+$/i.test(trimmed)) {
+    return fallback;
   }
 
   return trimmed;
+}
+
+function cleanText(text?: string | null): string {
+  if (!text) return '';
+  return text.replace(/_/g, ' ');
 }
 
 const DEFAULT_CATEGORIES: ServiceCategory[] = [
@@ -747,11 +824,11 @@ export default function UrbanCompanyModal({
                         <span className="flex items-center justify-center text-2xl">
                           {renderCategoryIcon(category.icon, '🛠️')}
                         </span>
-                        <span>{category.name}</span>
+                        <span>{cleanText(category.name)}</span>
                       </h3>
                       {category.badge && (
                         <span className="bg-purple-50 text-[#5e23dc] text-[10px] font-bold px-2 py-0.5 rounded-full border border-purple-200">
-                          {category.badge}
+                          {cleanText(category.badge)}
                         </span>
                       )}
                     </div>
@@ -768,14 +845,14 @@ export default function UrbanCompanyModal({
                           >
                             {sub.badge && (
                               <span className="absolute top-1.5 left-1.5 bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-md">
-                                {sub.badge}
+                                {cleanText(sub.badge)}
                               </span>
                             )}
                             <div className="w-11 h-11 flex items-center justify-center text-3xl mb-1 group-hover:-translate-y-0.5 transition-transform">
                               {renderCategoryIcon(sub.icon, '🛠️')}
                             </div>
                             <span className="text-[10.5px] font-semibold text-[#1f2937] leading-tight line-clamp-2">
-                              {sub.name}
+                              {cleanText(sub.name)}
                             </span>
                           </button>
                         ))}
@@ -786,7 +863,7 @@ export default function UrbanCompanyModal({
                     {groups.map((group) => (
                       <div key={group.header} className="space-y-2 pt-1">
                         <h4 className="text-[13px] font-bold text-[#4b5563]">
-                          {group.header}
+                          {cleanText(group.header)}
                         </h4>
                         <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
                           {group.items.map((sub) => (
@@ -798,14 +875,14 @@ export default function UrbanCompanyModal({
                             >
                               {sub.badge && (
                                 <span className="absolute top-1.5 left-1.5 bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-md">
-                                  {sub.badge}
+                                  {cleanText(sub.badge)}
                                 </span>
                               )}
                               <div className="w-11 h-11 flex items-center justify-center text-3xl mb-1 group-hover:-translate-y-0.5 transition-transform">
                                 {renderCategoryIcon(sub.icon, '🛠️')}
                               </div>
                               <span className="text-[10.5px] font-semibold text-[#1f2937] leading-tight line-clamp-2">
-                                {sub.name}
+                                {cleanText(sub.name)}
                               </span>
                             </button>
                           ))}
