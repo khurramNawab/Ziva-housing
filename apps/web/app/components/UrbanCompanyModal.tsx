@@ -550,7 +550,14 @@ export default function UrbanCompanyModal({
                         imageUrl: t.imageUrl || TIER_IMAGES[t.slug] || TIER_IMAGES['luxe'],
                         description: t.description || null,
                         badge: t.badge || null,
-                        startingPrice: t.startingPrice ? Number(t.startingPrice) : null,
+                        startingPrice: (() => {
+                          const srvs = t.services || [];
+                          if (Array.isArray(srvs) && srvs.length > 0) {
+                            const minP = Math.min(...srvs.map((sv: any) => Number(sv.basePrice || 0)).filter((p: number) => p > 0));
+                            if (minP && isFinite(minP)) return minP;
+                          }
+                          return t.startingPrice ? Number(t.startingPrice) : null;
+                        })(),
                         features: t.features || [],
                         displayOrder: t.displayOrder || 1,
                       })),

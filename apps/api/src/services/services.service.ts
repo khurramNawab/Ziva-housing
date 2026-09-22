@@ -296,13 +296,45 @@ export class ServicesService {
                 tiers: {
                   where: { isActive: true },
                   orderBy: { displayOrder: 'asc' },
+                  include: {
+                    services: {
+                      where: { isActive: true },
+                      select: { id: true, basePrice: true },
+                    },
+                  },
+                },
+                services: {
+                  where: { isActive: true },
+                  select: { id: true, basePrice: true },
                 },
               },
             },
           },
           orderBy: { order: 'asc' },
         });
-        if (categories) return categories;
+
+        if (categories) {
+          return categories.map((cat) => ({
+            ...cat,
+            subCategories: cat.subCategories.map((sub) => ({
+              ...sub,
+              tiers: sub.tiers.map((t) => {
+                const srvs = t.services || [];
+                let startingPrice = t.startingPrice ? Number(t.startingPrice) : null;
+                if (srvs.length > 0) {
+                  const minPrice = Math.min(...srvs.map((s) => Number(s.basePrice || 0)).filter((p) => p > 0));
+                  if (minPrice && isFinite(minPrice)) {
+                    startingPrice = minPrice;
+                  }
+                }
+                return {
+                  ...t,
+                  startingPrice,
+                };
+              }),
+            })),
+          }));
+        }
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getCategories: ${err?.message}`);
       }

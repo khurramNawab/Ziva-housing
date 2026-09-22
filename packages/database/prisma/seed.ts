@@ -502,8 +502,22 @@ async function main() {
           displayOrder: 1,
           isActive: true,
           description: 'Interior repainting and bathroom leakage waterproofing.',
-          services: [
-            { name: 'Full Home Interior Painting Consultation', slug: 'interior-painting-consult', basePrice: 499, durationMinutes: 60, bestsellerFlag: true, rating: 4.9, reviewCount: 150, description: 'Laser wall measurement, color visualization and detailed quotation.', imageUrl: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=600&q=80' },
+          tiers: [
+            {
+              name: 'Royale Luxury Paint',
+              slug: 'royale-luxury-paint',
+              tag: 'ASIAN PAINTS',
+              badge: 'Asian Paints',
+              startingPrice: 299,
+              displayOrder: 1,
+              isActive: true,
+              description: 'Dustless machine sanding, waterproof primer & 3 coats Royale sheen.',
+              imageUrl: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80',
+              services: [
+                { name: 'Full Home Laser Measurement & Color Consultation', slug: 'interior-painting-consult', basePrice: 299, durationMinutes: 60, bestsellerFlag: true, rating: 4.8, reviewCount: 150, description: 'Laser area survey, wall moisture dampness test and shade visualizer.', imageUrl: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=600&q=80' },
+                { name: 'Royale Luxury Wall Painting Package', slug: 'royale-luxury-package', basePrice: 1499, durationMinutes: 180, bestsellerFlag: false, rating: 4.9, reviewCount: 95, description: 'Dustless machine sanding, waterproof primer & 3 coats Royale sheen.', imageUrl: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80' },
+              ],
+            },
           ],
         },
       ],
@@ -576,6 +590,15 @@ async function main() {
       if (Array.isArray(tiers) && tiers.length > 0) {
         for (const tierData of tiers) {
           const { services: tierServices, ...tierFields } = tierData;
+          if (Array.isArray(tierServices) && tierServices.length > 0) {
+            const minPrice = Math.min(
+              ...tierServices.map((s: any) => Number(s.basePrice || 0)).filter((p: number) => p > 0)
+            );
+            if (minPrice && isFinite(minPrice)) {
+              tierData.startingPrice = minPrice;
+            }
+          }
+
           const tier = await prisma.serviceTier.upsert({
             where: { slug: tierData.slug },
             update: {
@@ -591,6 +614,7 @@ async function main() {
             },
             create: {
               ...tierFields,
+              startingPrice: tierData.startingPrice,
               subCategoryId: subCategory.id,
             },
           });
