@@ -45,8 +45,28 @@ const CATEGORY_STYLE_MAP: Record<string, { icon: string; bg: string; defaultBadg
   'interior-modular-kitchen': { icon: '📐', bg: 'bg-[#eff6ff]' },
 };
 
+const PRIMARY_HERO_SLUGS = [
+  'cleaning',
+  'womens-salon-spa',
+  'mens-salon-massage',
+  'ac-appliance-repair',
+  'electrician-plumber-carpenter',
+  'painting-waterproofing',
+  'instahelp',
+];
+
+const DEFAULT_HERO_CATEGORIES: ServiceCategory[] = [
+  { id: 'c-clean', name: 'Cleaning & Pest Control', slug: 'cleaning', icon: '🧹', badge: '44 mins', isActive: true, order: 1 },
+  { id: 'c-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: '🧖‍♀️', badge: null, isActive: true, order: 2 },
+  { id: 'c-msalon', name: "Men's Salon & Massage", slug: 'mens-salon-massage', icon: '🧔‍♂️', badge: null, isActive: true, order: 3 },
+  { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: '❄️', badge: '44 mins', isActive: true, order: 4 },
+  { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: '🔧', badge: '19 mins', isActive: true, order: 5 },
+  { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: '🖌️', badge: null, isActive: true, order: 6 },
+  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: '👩‍🍳', badge: null, isActive: true, order: 7 },
+];
+
 export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroProps) {
-  const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>(DEFAULT_HERO_CATEGORIES);
   const [loading, setLoading] = useState(true);
 
   const fetchActiveCategories = useCallback(async () => {
@@ -61,24 +81,32 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
       if (res.ok) {
         const json = await res.json();
         const data = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : [];
-        if (Array.isArray(data)) {
-          // STRICT DYNAMIC FILTER: ONLY active categories from backend
-          const activeList = data.filter((c: any) => c.isActive !== false);
+        if (Array.isArray(data) && data.length > 0) {
+          // Filter to strictly pick only the primary 7 main categories for the hero grid
+          const primaryList = data.filter(
+            (c: any) => c.isActive !== false && PRIMARY_HERO_SLUGS.includes(c.slug)
+          );
 
-          const formatted: ServiceCategory[] = activeList.map((c: any) => {
-            const style = CATEGORY_STYLE_MAP[c.slug];
-            return {
-              id: c.id,
-              name: c.name,
-              slug: c.slug,
-              icon: c.icon || style?.icon || '🛠️',
-              badge: c.badge || style?.defaultBadge || null,
-              isActive: true,
-              order: c.order || 1,
-            };
-          });
+          if (primaryList.length > 0) {
+            primaryList.sort(
+              (a: any, b: any) => PRIMARY_HERO_SLUGS.indexOf(a.slug) - PRIMARY_HERO_SLUGS.indexOf(b.slug)
+            );
 
-          setCategories(formatted);
+            const formatted: ServiceCategory[] = primaryList.map((c: any) => {
+              const style = CATEGORY_STYLE_MAP[c.slug];
+              return {
+                id: c.id,
+                name: c.name,
+                slug: c.slug,
+                icon: c.icon || style?.icon || '🛠️',
+                badge: c.badge || style?.defaultBadge || null,
+                isActive: true,
+                order: c.order || 1,
+              };
+            });
+
+            setCategories(formatted);
+          }
         }
       }
     } catch (err) {
