@@ -697,7 +697,8 @@ async function main() {
 
   // ─── Admin User ─────────────────────────────────────────────────────────────
   const adminPhone = '9999999999';
-  const adminPasswordHash = await bcrypt.hash('Password@123', 12);
+  const seedAdminPassword = process.env.ADMIN_PASSWORD || process.env.SEED_ADMIN_PASSWORD || 'ZivaAdminSecret2026!';
+  const adminPasswordHash = await bcrypt.hash(seedAdminPassword, 12);
   await prisma.user.upsert({
     where: { phone: adminPhone },
     update: {
@@ -720,7 +721,7 @@ async function main() {
       passwordHash: adminPasswordHash,
     },
   });
-  console.log('✅ Upserted admin user (id: admin@zivahousing.com, pass: Password@123)');
+  console.log('✅ Upserted admin user (id: admin@zivahousing.com)');
 
   // ─── Owner User & Profile ──────────────────────────────────────────────────
   const ownerPhone = '9876543210';

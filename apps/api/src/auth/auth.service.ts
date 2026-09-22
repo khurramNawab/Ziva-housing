@@ -303,8 +303,8 @@ export class AuthService {
     // 🔒 Admin Strict Authentication Gate
     if (isAdminLogin) {
       const isPassCorrect =
-        dto.password === 'Password@123' ||
-        (user?.passwordHash && (await bcrypt.compare(dto.password, user.passwordHash)));
+        (user?.passwordHash && (await bcrypt.compare(dto.password, user.passwordHash))) ||
+        (process.env.ADMIN_PASSWORD && dto.password === process.env.ADMIN_PASSWORD);
 
       if (dto.identifier.trim().toLowerCase() !== 'admin@zivahousing.com' || !isPassCorrect) {
         throw new UnauthorizedException('Invalid admin email or password. Please check your credentials.');
@@ -328,7 +328,8 @@ export class AuthService {
         throw new UnauthorizedException('Invalid email/phone or password');
       }
     } else {
-      if (dto.password !== 'Password@123') {
+      const isEnvMatch = process.env.ADMIN_PASSWORD && dto.password === process.env.ADMIN_PASSWORD;
+      if (!isEnvMatch) {
         throw new UnauthorizedException('Invalid credentials');
       }
     }
