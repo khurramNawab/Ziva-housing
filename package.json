@@ -9,6 +9,7 @@
     "start:web": "npm run --prefix apps/web start",
     "db:seed": "npm --prefix packages/database run db:seed",
     "seed": "npm --prefix packages/database run db:seed",
+    "db:push": "npx prisma db push --schema=packages/database/prisma/schema.prisma --accept-data-loss",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
