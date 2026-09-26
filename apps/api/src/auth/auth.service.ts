@@ -197,11 +197,15 @@ export class AuthService {
 
   // ─── Send OTP ─────────────────────────────────────────────────────────────
   async sendOtp(dto: SendOtpDto) {
-    const rawDigits = dto.phone.replace(/\D/g, '');
-    const cleanPhone = rawDigits.length >= 10 ? rawDigits.slice(-10) : dto.phone.trim();
+    const rawDigits = (dto.phone || '').replace(/\D/g, '');
+    const cleanPhone = rawDigits.length >= 10 ? rawDigits.slice(-10) : (dto.phone || '').trim();
+    let targetEmail = dto.email?.trim().toLowerCase();
 
-    let targetEmail = dto.email?.trim();
-    if (!targetEmail) {
+    if (!cleanPhone && !targetEmail) {
+      throw new BadRequestException('Please provide a mobile number or email address.');
+    }
+
+    if (!targetEmail && cleanPhone) {
       const existingUser = await this.prisma.user.findFirst({
         where: {
           OR: [
@@ -216,12 +220,9 @@ export class AuthService {
       }
     }
 
-    if (!targetEmail) {
-      throw new BadRequestException('Email address is required for sending OTP via SMTP.');
-    }
-
     await this.otpService.sendOtp(cleanPhone, targetEmail);
-    return { message: `OTP sent successfully to +91 ${cleanPhone} and ${targetEmail}` };
+    const destInfo = [cleanPhone ? `+91 ${cleanPhone}` : null, targetEmail].filter(Boolean).join(' and ');
+    return { message: `Verification code sent successfully to ${destInfo}.` };
   }
 
   // ─── Verify OTP ────────────────────────────────────────────────────────────

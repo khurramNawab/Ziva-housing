@@ -73,6 +73,115 @@ const TIER_IMAGES: Record<string, string> = {
   'stress-relief': 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=80',
 };
 
+const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
+  // Cleaning & Pest Control (Dedicated distinct images)
+  'bathroom-kitchen-cleaning': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
+  'bathroom-cleaning': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=300&h=300&q=80',
+  'kitchen-cleaning': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
+  'full-home-cleaning': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&h=300&q=80',
+  'living-bedroom-cleaning': 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=300&h=300&q=80',
+  'sofa-carpet-cleaning': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=300&h=300&q=80',
+  'pest-control-sub': 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=300&h=300&q=80',
+  'pest-control': 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=300&h=300&q=80',
+  'cockroach-control': 'https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=300&h=300&q=80',
+  'ants-bed-bugs-control': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // Baby Sitting & Childcare
+  'nanny-infant-care': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&h=300&q=80',
+  'babysitting-childcare': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // Women's Salon & Spa
+  'salon-for-women': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&h=300&q=80',
+  'spa-for-women': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=300&h=300&q=80',
+  'hair-studio-women': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&h=300&q=80',
+  'makeup-saree-styling': 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // Men's Salon & Massage
+  'salon-for-men': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&h=300&q=80',
+  'massage-for-men': 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // AC & Appliance Repair (Exact Alias Mapping)
+  'ac-service-sub': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80',
+  'ac-service': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80',
+  'ac-service-repair': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80',
+  'washing-machine': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=300&h=300&q=80',
+  'washing-machine-sub': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=300&h=300&q=80',
+  'washing-fridge-sub': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=300&h=300&q=80',
+  'washing-machine-refrigerator': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=300&h=300&q=80',
+  'refrigerator': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&h=300&q=80',
+  'refrigerator-sub': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&h=300&q=80',
+  'chimney': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
+  'chimney-sub': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
+  'ro-water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
+  'water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
+  'water-purifier-sub': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
+  'native-water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
+  'geyser': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
+  'geyser-water-heater': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
+  'geyser-sub': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
+  'television': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80',
+  'television-sub': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // Electrician, Plumber & Carpenter
+  'electrician-sub': 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=300&h=300&q=80',
+  'plumber-sub': 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=300&h=300&q=80',
+  'carpenter-sub': 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // Painting & Waterproofing
+  'wall-painting-sub': 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=300&h=300&q=80',
+  'painting': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // InstaHelp
+  'daily-helpers-sub': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=300&h=300&q=80',
+  'cook-chef': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
+};
+
+const getSubPhoto = (sub: ServiceSubCategory): string => {
+  const slugKey = slugify(sub.slug || '');
+  const nameKey = slugify(sub.name || '');
+
+  if (sub.slug && SUBCATEGORY_PHOTO_MAP[sub.slug]) return SUBCATEGORY_PHOTO_MAP[sub.slug]!;
+  if (slugKey && SUBCATEGORY_PHOTO_MAP[slugKey]) return SUBCATEGORY_PHOTO_MAP[slugKey]!;
+  if (nameKey && SUBCATEGORY_PHOTO_MAP[nameKey]) return SUBCATEGORY_PHOTO_MAP[nameKey]!;
+
+  if ((sub as any).imageUrl && typeof (sub as any).imageUrl === 'string' && (sub as any).imageUrl.startsWith('http')) {
+    return (sub as any).imageUrl;
+  }
+
+  if (nameKey.includes('water') || nameKey.includes('purifier') || nameKey.includes('ro')) {
+    return 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('geyser') || nameKey.includes('heater')) {
+    return 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('washing') && (nameKey.includes('fridge') || nameKey.includes('refrigerator'))) {
+    return 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('washing')) {
+    return 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('refrigerator') || nameKey.includes('fridge')) {
+    return 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('tv') || nameKey.includes('television')) {
+    return 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('chimney')) {
+    return 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('ac') || nameKey.includes('air-conditioner')) {
+    return 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('cockroach')) {
+    return 'https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('ant') || nameKey.includes('bed-bug')) {
+    return 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+
+  return 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80';
+};
+
 const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
   'mens-salon-massage': [
     {
@@ -843,26 +952,44 @@ export default function UrbanCompanyModal({
                     {/* Ungrouped items */}
                     {ungrouped.length > 0 && (
                       <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
-                        {ungrouped.map((sub) => (
-                          <button
-                            key={sub.id || sub.slug}
-                            type="button"
-                            onClick={() => handleSubCategoryClick(sub, category)}
-                            className="relative bg-[#f8f9fb] hover:bg-purple-50/70 border border-gray-100 hover:border-purple-200 rounded-2xl flex flex-col items-center justify-center p-2 sm:p-2.5 text-center cursor-pointer transition-all hover:scale-105 group h-28"
-                          >
-                            {sub.badge && (
-                              <span className="absolute top-1.5 left-1.5 bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-md">
-                                {cleanText(sub.badge)}
+                        {ungrouped.map((sub) => {
+                          const subPhoto = getSubPhoto(sub);
+
+                          return (
+                            <button
+                              key={sub.id || sub.slug}
+                              type="button"
+                              onClick={() => handleSubCategoryClick(sub, category)}
+                              className="relative bg-white hover:bg-purple-50/50 border border-gray-200/80 hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 text-center cursor-pointer transition-all hover:scale-[1.03] group shadow-2xs hover:shadow-md min-h-[125px]"
+                            >
+                              {sub.badge && (
+                                <span className="absolute top-1.5 left-1.5 z-10 bg-[#16a34a] text-white text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-md shadow-2xs">
+                                  {cleanText(sub.badge)}
+                                </span>
+                              )}
+
+                              {/* Realistic Photo Thumbnail */}
+                              <div className="w-full h-16 sm:h-18 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
+                                <img
+                                  src={subPhoto}
+                                  alt={sub.name}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                  onError={(e) => {
+                                    const img = e.currentTarget;
+                                    if (!img.dataset.failed) {
+                                      img.dataset.failed = 'true';
+                                      img.src = 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&h=300&q=80';
+                                    }
+                                  }}
+                                />
+                              </div>
+
+                              <span className="text-[11px] font-extrabold text-[#111827] leading-tight line-clamp-2 group-hover:text-[#5e23dc] transition-colors pb-0.5">
+                                {cleanText(sub.name)}
                               </span>
-                            )}
-                            <div className="w-11 h-11 flex items-center justify-center text-3xl mb-1 group-hover:-translate-y-0.5 transition-transform">
-                              {renderCategoryIcon(sub.icon, '🛠️')}
-                            </div>
-                            <span className="text-[10.5px] font-semibold text-[#1f2937] leading-tight line-clamp-2">
-                              {cleanText(sub.name)}
-                            </span>
-                          </button>
-                        ))}
+                            </button>
+                          );
+                        })}
                       </div>
                     )}
 
@@ -873,26 +1000,44 @@ export default function UrbanCompanyModal({
                           {cleanText(group.header)}
                         </h4>
                         <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
-                          {group.items.map((sub) => (
-                            <button
-                              key={sub.id || sub.slug}
-                              type="button"
-                              onClick={() => handleSubCategoryClick(sub, category)}
-                              className="relative bg-[#f8f9fb] hover:bg-purple-50/70 border border-gray-100 hover:border-purple-200 rounded-2xl flex flex-col items-center justify-center p-2 sm:p-2.5 text-center cursor-pointer transition-all hover:scale-105 group h-28"
-                            >
-                              {sub.badge && (
-                                <span className="absolute top-1.5 left-1.5 bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-md">
-                                  {cleanText(sub.badge)}
+                          {group.items.map((sub) => {
+                            const subPhoto = getSubPhoto(sub);
+
+                            return (
+                              <button
+                                key={sub.id || sub.slug}
+                                type="button"
+                                onClick={() => handleSubCategoryClick(sub, category)}
+                                className="relative bg-white hover:bg-purple-50/50 border border-gray-200/80 hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 text-center cursor-pointer transition-all hover:scale-[1.03] group shadow-2xs hover:shadow-md min-h-[125px]"
+                              >
+                                {sub.badge && (
+                                  <span className="absolute top-1.5 left-1.5 z-10 bg-[#16a34a] text-white text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-md shadow-2xs">
+                                    {cleanText(sub.badge)}
+                                  </span>
+                                )}
+
+                                {/* Realistic Photo Thumbnail */}
+                                <div className="w-full h-16 sm:h-18 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
+                                  <img
+                                    src={subPhoto}
+                                    alt={sub.name}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    onError={(e) => {
+                                      const img = e.currentTarget;
+                                      if (!img.dataset.failed) {
+                                        img.dataset.failed = 'true';
+                                        img.src = 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&h=300&q=80';
+                                      }
+                                    }}
+                                  />
+                                </div>
+
+                                <span className="text-[11px] font-extrabold text-[#111827] leading-tight line-clamp-2 group-hover:text-[#5e23dc] transition-colors pb-0.5">
+                                  {cleanText(sub.name)}
                                 </span>
-                              )}
-                              <div className="w-11 h-11 flex items-center justify-center text-3xl mb-1 group-hover:-translate-y-0.5 transition-transform">
-                                {renderCategoryIcon(sub.icon, '🛠️')}
-                              </div>
-                              <span className="text-[10.5px] font-semibold text-[#1f2937] leading-tight line-clamp-2">
-                                {cleanText(sub.name)}
-                              </span>
-                            </button>
-                          ))}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     ))}

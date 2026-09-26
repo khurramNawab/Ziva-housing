@@ -2,10 +2,10 @@ import { IsString, Matches, IsOptional, IsEmail } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SendOtpDto {
-  @ApiProperty({ example: '9876543210' })
+  @ApiPropertyOptional({ example: '9876543210' })
+  @IsOptional()
   @IsString()
-  @Matches(/^[6-9]\d{9}$/, { message: 'Invalid Indian mobile number' })
-  phone: string;
+  phone?: string;
 
   @ApiPropertyOptional({ example: 'user@example.com' })
   @IsOptional()

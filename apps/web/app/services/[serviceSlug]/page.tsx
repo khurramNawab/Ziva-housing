@@ -27,6 +27,7 @@ interface ServiceItem {
   imageUrl: string | null;
   rating?: number;
   reviewCount?: number;
+  bestsellerFlag?: boolean;
   subCategoryId?: string | null;
   tierId?: string | null;
   isActive: boolean;
@@ -36,7 +37,9 @@ interface ServiceSubCategory {
   id: string;
   name: string;
   slug: string;
+  description?: string | null;
   icon: string | null;
+  imageUrl?: string | null;
   badge: string | null;
   groupHeader: string | null;
   displayOrder: number;
@@ -71,6 +74,124 @@ function getApiUrl(path: string): string {
   const cleanBase = base.endsWith('/api/v1') ? base : `${base}/api/v1`;
   return `${cleanBase}${cleanPath}`;
 }
+
+const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
+  // Salon for Women
+  'salon-for-women': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+  'spa-for-women': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+  'hair-studio-women': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
+  'makeup-saree-styling': 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=400&q=80',
+  
+  // Salon for Men
+  'salon-for-men': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
+  'massage-for-men': 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+
+  // Cleaning & Pest Control (Distinct dedicated images)
+  'bathroom-kitchen-cleaning': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+  'bathroom-cleaning': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=400&q=80',
+  'kitchen-cleaning': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+  'full-home-cleaning': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+  'living-bedroom-cleaning': 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80',
+  'sofa-carpet-cleaning': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+  'pest-control-sub': 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=400&q=80',
+  'pest-control': 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?auto=format&fit=crop&w=400&q=80',
+  'cockroach-control': 'https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=400&q=80',
+  'ants-bed-bugs-control': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=400&q=80',
+
+  // Baby Sitting & Childcare
+  'nanny-infant-care': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80',
+  'babysitting-childcare': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80',
+
+  // AC & Appliance (Exact Alias Mapping)
+  'ac-service-sub': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+  'ac-service': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+  'ac-service-repair': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+  'washing-machine': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
+  'washing-machine-sub': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
+  'washing-fridge-sub': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
+  'washing-machine-refrigerator': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
+  'refrigerator': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80',
+  'refrigerator-sub': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80',
+  'chimney': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+  'chimney-sub': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+  'ro-water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=400&q=80',
+  'water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=400&q=80',
+  'water-purifier-sub': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=400&q=80',
+  'native-water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=400&q=80',
+  'geyser': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+  'geyser-water-heater': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+  'geyser-sub': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+  'television': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=400&q=80',
+  'television-sub': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=400&q=80',
+
+  // Handyman
+  'electrician-sub': 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=400&q=80',
+  'plumber-sub': 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=400&q=80',
+  'carpenter-sub': 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+
+  // Painting
+  'wall-painting-sub': 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=400&q=80',
+  'painting': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=400&q=80',
+
+  // InstaHelp
+  'daily-helpers-sub': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=400&q=80',
+  'cook-chef': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+};
+
+const getSubPhoto = (sub: ServiceSubCategory): string => {
+  const slugKey = slugify(sub.slug || '');
+  const nameKey = slugify(sub.name || '');
+
+  if (sub.slug && SUBCATEGORY_IMAGE_MAP[sub.slug]) return SUBCATEGORY_IMAGE_MAP[sub.slug]!;
+  if (slugKey && SUBCATEGORY_IMAGE_MAP[slugKey]) return SUBCATEGORY_IMAGE_MAP[slugKey]!;
+  if (nameKey && SUBCATEGORY_IMAGE_MAP[nameKey]) return SUBCATEGORY_IMAGE_MAP[nameKey]!;
+
+  if (sub.imageUrl && sub.imageUrl.startsWith('http')) {
+    return sub.imageUrl;
+  }
+
+  if (nameKey.includes('water') || nameKey.includes('purifier') || nameKey.includes('ro')) {
+    return 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('geyser') || nameKey.includes('heater')) {
+    return 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('washing') && (nameKey.includes('fridge') || nameKey.includes('refrigerator'))) {
+    return 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('washing')) {
+    return 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('refrigerator') || nameKey.includes('fridge')) {
+    return 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('tv') || nameKey.includes('television')) {
+    return 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('chimney')) {
+    return 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80';
+  }
+  if (nameKey.includes('ac') || nameKey.includes('air-conditioner')) {
+    return 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80';
+  }
+
+  return 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80';
+};
+
+const SUBCATEGORY_BADGE_MAP: Record<string, string> = {
+  'salon-for-women': 'Upto 20% OFF',
+  'spa-for-women': 'Top Rated',
+  'hair-studio-women': 'New',
+  'makeup-saree-styling': 'Bestseller',
+  'salon-for-men': 'Upto 15% OFF',
+  'massage-for-men': 'Top Rated',
+  'ac-service-sub': '44 mins',
+  'bathroom-kitchen-cleaning': 'Upto 25% OFF',
+  'full-home-cleaning': 'Best Price',
+  'electrician-sub': '19 mins',
+  'plumber-sub': '19 mins',
+  'wall-painting-sub': 'Asian Paints',
+};
 
 const ICON_MAP: Record<string, string> = {
   'vacuum': '🧹',
@@ -122,6 +243,7 @@ function UrbanCompanyServiceListingContent() {
   const [activeTierSlug, setActiveTierSlug] = useState<string | null>(initialTierParam);
   const [loading, setLoading] = useState(true);
   const [error404, setError404] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Cart state
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -136,6 +258,15 @@ function UrbanCompanyServiceListingContent() {
   const [notes, setNotes] = useState('');
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState<any | null>(null);
+
+  // Static Coupon Verification State
+  const VALID_STATIC_COUPONS = useMemo(() => ['ZIVA200', 'STYLE200', 'WELCOME25', 'ZIVA25', 'SAVE200'], []);
+  const [appliedCoupon, setAppliedCoupon] = useState<string>('ZIVA200');
+  const [couponInput, setCouponInput] = useState<string>('');
+  const [couponMessage, setCouponMessage] = useState<{ text: string; isError: boolean } | null>({
+    text: 'ZIVA200 applied (25% off up to ₹200)',
+    isError: false,
+  });
 
   const timeSlots = ['08:00 AM', '10:30 AM', '01:00 PM', '03:30 PM', '06:00 PM'];
 
@@ -319,7 +450,27 @@ function UrbanCompanyServiceListingContent() {
     return cart.reduce((acc, item) => acc + item.service.basePrice * item.quantity, 0);
   }, [cart]);
 
-  const promoDiscount = cartSubtotal > 500 ? 100 : 0;
+  const handleApplyCoupon = (codeToTest?: string) => {
+    const code = (codeToTest || couponInput).trim().toUpperCase();
+    if (!code) {
+      setCouponMessage({ text: 'Please enter a coupon code.', isError: true });
+      return;
+    }
+    if (VALID_STATIC_COUPONS.includes(code)) {
+      setAppliedCoupon(code);
+      setCouponMessage({ text: `✓ ${code} applied! Saved 25% off (upto ₹200)`, isError: false });
+      setCouponInput('');
+    } else {
+      setCouponMessage({ text: `Invalid coupon "${code}". Try ZIVA200 or STYLE200.`, isError: true });
+    }
+  };
+
+  const promoDiscount = useMemo(() => {
+    if (!appliedCoupon || cartSubtotal <= 0) return 0;
+    // 25% off capped at ₹200 max for static promo coupons
+    return Math.min(200, Math.round(cartSubtotal * 0.25));
+  }, [cartSubtotal, appliedCoupon]);
+
   const taxesAndFee = Math.round(cartSubtotal * 0.05);
   const cartGrandTotal = Math.max(0, cartSubtotal - promoDiscount + taxesAndFee);
 
@@ -506,41 +657,105 @@ function UrbanCompanyServiceListingContent() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
                   <h1 className="text-2xl md:text-3xl font-extrabold text-[#111827] tracking-tight">
-                    {currentSubCategory ? currentSubCategory.name : categoryData.name}
+                    {categoryData.name}
                   </h1>
                   <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-600">
                     <span className="flex items-center gap-1 font-bold text-black">
                       <span className="material-symbols-outlined text-[15px] text-amber-500 fill-amber-500">star</span>
-                      4.82
+                      4.85
                     </span>
                     <span>•</span>
-                    <span>1.2M+ Bookings</span>
+                    <span>18.4M+ Bookings</span>
                     <span>•</span>
                     <span className="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full text-[10px]">
-                      ⚡ Quick Slot: Tomorrow 8:00 AM
+                      ⚡ Quick Slot: Today 2:00 PM
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Promo Discount Banner */}
-              <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100 rounded-xl p-3.5 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#5e23dc] text-white flex items-center justify-center font-bold text-lg shrink-0 shadow-xs">
-                  %
+              {/* Promo Discount Coupon Banner */}
+              <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-pink-50 border border-purple-100 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-2xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#16a34a] text-white flex items-center justify-center font-black text-xl shrink-0 shadow-xs">
+                    %
+                  </div>
+                  <div>
+                    <span className="text-xs font-extrabold text-[#111827] block tracking-wide">
+                      ZIVA200
+                    </span>
+                    <span className="text-[11.5px] text-gray-600 font-medium">
+                      Get 25% Off upto Rs 200 on all doorstep services
+                    </span>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-xs font-bold text-[#111827] block">
-                    Save ₹100 on orders above ₹500
+                <span className="text-xs font-bold text-[#5e23dc] bg-white px-3 py-1.5 rounded-xl border border-purple-200 shadow-2xs">
+                  Applied
+                </span>
+              </div>
+
+              {/* Urban Company Subcategory Visual Quick Nav Grid (4 Columns with Photos & Badges) */}
+              <div className="pt-2">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-[#374151] uppercase tracking-wider">
+                    Browse Categories
                   </span>
-                  <span className="text-[11px] text-purple-700 font-medium">
-                    Use code <strong className="font-extrabold tracking-wider">ZIVA100</strong> at checkout
+                  <span className="text-[11px] text-gray-400 font-medium">
+                    {(categoryData.subCategories || []).length} Options
                   </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+                  {(categoryData.subCategories || []).map((sub) => {
+                    const isSelected = sub.slug === activeSubCategorySlug;
+                    const subImg = getSubPhoto(sub);
+                    const badgeText = sub.badge || SUBCATEGORY_BADGE_MAP[sub.slug] || (sub.slug.includes('package') || sub.name.toLowerCase().includes('package') ? 'Upto 20% OFF' : null);
+
+                    return (
+                      <button
+                        key={sub.id || sub.slug}
+                        type="button"
+                        onClick={() => {
+                          setActiveSubCategorySlug(sub.slug);
+                          setActiveTierSlug(null);
+                          const el = document.getElementById(`subcat-section-${sub.slug}`);
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
+                        className={`relative rounded-2xl p-2.5 text-center flex flex-col items-center justify-between transition-all cursor-pointer group min-h-[140px] border ${
+                          isSelected
+                            ? 'bg-purple-50/70 border-[#5e23dc] shadow-md ring-2 ring-[#5e23dc]/20'
+                            : 'bg-[#f8f9fb] border-gray-100 hover:border-purple-200 hover:bg-purple-50/30 hover:scale-[1.02]'
+                        }`}
+                      >
+                        {badgeText && (
+                          <span className="absolute top-2 left-2 z-10 bg-[#16a34a] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shadow-2xs">
+                            {badgeText}
+                          </span>
+                        )}
+
+                        {/* Subcategory Photo Thumbnail */}
+                        <div className="w-full h-20 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
+                          <img
+                            src={subImg}
+                            alt={sub.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+
+                        <span className="text-[11.5px] font-bold text-[#111827] leading-tight line-clamp-2 group-hover:text-[#5e23dc] transition-colors">
+                          {sub.name}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {/* Tier Filter Tabs (if available for subcategory) */}
               {availableTiers.length > 0 && (
-                <div className="pt-2">
+                <div className="pt-2 border-t border-gray-100">
                   <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-2">
                     Select Preference Tier
                   </span>
@@ -583,114 +798,182 @@ function UrbanCompanyServiceListingContent() {
               )}
             </div>
 
-            {/* Service Cards Feed */}
-            <div className="space-y-4">
-              {displayedServices.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center space-y-2">
-                  <p className="text-gray-500 text-sm">No services listed under this selection currently.</p>
-                </div>
-              ) : (
-                displayedServices.map((service) => {
-                  const cartItem = cart.find((i) => i.service.id === service.id);
-                  const isAdded = !!cartItem;
+            {/* Dedicated Sections Feed grouped by Subcategory */}
+            <div className="space-y-8">
+              {(categoryData.subCategories || [])
+                .filter((sub) => !activeSubCategorySlug || sub.slug === activeSubCategorySlug)
+                .map((subCat) => {
+                  let subServices = subCat.services || [];
+                  if (subServices.length === 0 && categoryData.services) {
+                    subServices = categoryData.services.filter((s) => s.subCategoryId === subCat.id);
+                  }
+
+                  if (activeTierSlug) {
+                    const currentTier = (subCat.tiers || []).find(
+                      (t) => slugify(t.slug) === slugify(activeTierSlug) || slugify(t.name) === slugify(activeTierSlug)
+                    );
+                    if (currentTier) {
+                      subServices = subServices.filter((s) => s.tierId === currentTier.id);
+                    }
+                  }
+
+                  if (subServices.length === 0) return null;
 
                   return (
                     <div
-                      key={service.id}
-                      className="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs hover:shadow-md transition-shadow flex flex-col md:flex-row gap-5 items-start justify-between group"
+                      key={subCat.id}
+                      id={`subcat-section-${subCat.slug}`}
+                      className="space-y-4 scroll-mt-24"
                     >
-                      {/* Left info */}
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-base md:text-lg font-bold text-[#111827] group-hover:text-[#5e23dc] transition-colors">
-                            {service.name}
-                          </h3>
-                        </div>
-
-                        {/* Rating & Reviews */}
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <span className="flex items-center gap-0.5 text-black font-bold">
-                            <span className="material-symbols-outlined text-[14px] text-amber-500 fill-amber-500">star</span>
-                            {service.rating || '4.85'}
-                          </span>
-                          <span>({service.reviewCount || '320k'} reviews)</span>
-                        </div>
-
-                        {/* Price & Duration */}
-                        <div className="flex items-center gap-3 pt-1">
-                          <span className="text-base font-extrabold text-[#111827]">
-                            ₹{service.basePrice}
-                          </span>
-                          {service.durationMinutes && (
-                            <span className="text-xs text-gray-500 font-medium">
-                              • {service.durationMinutes} mins
-                            </span>
+                      {/* Section Header */}
+                      <div className="flex items-center justify-between border-b border-gray-200/80 pb-2.5">
+                        <div>
+                          <h2 className="text-xl font-extrabold text-[#111827] tracking-tight">
+                            {subCat.name}
+                          </h2>
+                          {subCat.description && (
+                            <p className="text-xs text-gray-500 mt-0.5 font-medium">
+                              {subCat.description}
+                            </p>
                           )}
                         </div>
-
-                        {/* Description */}
-                        {service.description && (
-                          <p className="text-xs text-gray-600 leading-relaxed pt-1">
-                            {service.description}
-                          </p>
-                        )}
+                        <span className="text-xs font-bold text-[#5e23dc] bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">
+                          {subServices.length} Services
+                        </span>
                       </div>
 
-                      {/* Right Image + Add / Adjust Button */}
-                      <div className="flex flex-col items-center shrink-0 w-full md:w-32">
-                        <div className="w-full h-24 rounded-xl overflow-hidden bg-gray-100 mb-2 relative">
-                          <img
-                            src={
-                              service.imageUrl ||
-                              'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80'
-                            }
-                            alt={service.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
+                      {/* Service Cards Feed under this section */}
+                      <div className="space-y-4">
+                        {subServices.map((service) => {
+                          const cartItem = cart.find((i) => i.service.id === service.id);
+                          const isAdded = !!cartItem;
+                          const originalPrice = Math.round(service.basePrice * 1.15);
+                          const isPackage = service.name.toLowerCase().includes('package') || service.name.toLowerCase().includes('combo');
 
-                        {/* Add or Counter Button */}
-                        {isAdded ? (
-                          <div className="flex items-center justify-between w-full bg-white border border-[#5e23dc] rounded-xl px-2 py-1 shadow-xs">
-                            <button
-                              type="button"
-                              onClick={() => handleUpdateQuantity(service.id, -1)}
-                              className="w-6 h-6 rounded-md hover:bg-gray-100 flex items-center justify-center text-sm font-bold text-[#5e23dc] cursor-pointer"
+                          return (
+                            <div
+                              key={service.id}
+                              className="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs hover:shadow-md transition-shadow flex flex-col md:flex-row gap-5 items-start justify-between group relative overflow-hidden"
                             >
-                              -
-                            </button>
-                            <span className="text-xs font-extrabold text-[#5e23dc]">
-                              {cartItem.quantity}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => handleUpdateQuantity(service.id, 1)}
-                              className="w-6 h-6 rounded-md hover:bg-gray-100 flex items-center justify-center text-sm font-bold text-[#5e23dc] cursor-pointer"
-                            >
-                              +
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleAddToCart(
-                                service,
-                                currentSubCategory?.name,
-                                availableTiers.find((t) => t.id === service.tierId)?.name
-                              )
-                            }
-                            className="w-full bg-white hover:bg-purple-50 text-[#5e23dc] font-bold border border-[#5e23dc] py-1.5 px-4 rounded-xl text-xs transition-colors shadow-2xs hover:shadow-xs flex items-center justify-center gap-1 cursor-pointer"
-                          >
-                            <span>Add</span>
-                            <span className="text-sm font-bold">+</span>
-                          </button>
-                        )}
+                              {/* Left info */}
+                              <div className="flex-1 space-y-2">
+                                {/* Package / Bestseller Tag */}
+                                <div className="flex items-center gap-2">
+                                  {isPackage ? (
+                                    <span className="bg-[#f0fdf4] text-[#16a34a] border border-[#bbf7d0] text-[9.5px] font-black px-2 py-0.5 rounded-xs uppercase tracking-wider">
+                                      PACKAGE
+                                    </span>
+                                  ) : service.bestsellerFlag ? (
+                                    <span className="bg-[#fff7ed] text-[#c2410c] border border-[#ffedd5] text-[9.5px] font-black px-2 py-0.5 rounded-xs uppercase tracking-wider">
+                                      BESTSELLER
+                                    </span>
+                                  ) : null}
+                                </div>
+
+                                <h3 className="text-base md:text-lg font-extrabold text-[#111827] group-hover:text-[#5e23dc] transition-colors leading-snug">
+                                  {service.name}
+                                </h3>
+
+                                {/* Rating & Reviews */}
+                                <div className="flex items-center gap-2 text-xs text-gray-600">
+                                  <span className="flex items-center gap-0.5 text-black font-bold">
+                                    <span className="material-symbols-outlined text-[14px] text-amber-500 fill-amber-500">star</span>
+                                    {service.rating || '4.85'}
+                                  </span>
+                                  <span>({service.reviewCount || '6.8M'} reviews)</span>
+                                </div>
+
+                                {/* Price & Duration Strikethrough Line */}
+                                <div className="flex items-center gap-2.5 pt-1 flex-wrap">
+                                  <span className="text-lg font-extrabold text-[#111827]">
+                                    ₹{service.basePrice}
+                                  </span>
+                                  <span className="text-xs text-gray-400 line-through font-medium">
+                                    ₹{originalPrice}
+                                  </span>
+                                  {service.durationMinutes && (
+                                    <span className="text-xs text-gray-500 font-medium">
+                                      • {service.durationMinutes} mins
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Promo Coupon Callout Line */}
+                                <div className="flex items-center gap-1.5 text-[11.5px] text-[#16a34a] font-bold pt-0.5">
+                                  <span className="material-symbols-outlined text-[14px]">local_offer</span>
+                                  <span>ZIVA200, get 25% Off upto Rs 200</span>
+                                </div>
+
+                                {/* Description */}
+                                {service.description && (
+                                  <p className="text-xs text-gray-600 leading-relaxed pt-1 font-medium">
+                                    {service.description}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Right Image + Add / Counter Button + Overlay Badge */}
+                              <div className="flex flex-col items-center shrink-0 w-full md:w-36">
+                                <div className="w-full h-28 rounded-2xl overflow-hidden bg-gray-100 mb-2 relative shadow-2xs">
+                                  <img
+                                    src={
+                                      service.imageUrl ||
+                                      SUBCATEGORY_IMAGE_MAP[subCat.slug] ||
+                                      'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80'
+                                    }
+                                    alt={service.name}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  />
+                                  <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-xs text-[#16a34a] text-[9px] font-black px-2 py-0.5 rounded-md shadow-2xs border border-emerald-100">
+                                    15% OFF
+                                  </div>
+                                </div>
+
+                                {/* Add or Counter Button */}
+                                {isAdded ? (
+                                  <div className="flex items-center justify-between w-full bg-white border border-[#5e23dc] rounded-xl px-2 py-1.5 shadow-xs">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleUpdateQuantity(service.id, -1)}
+                                      className="w-7 h-7 rounded-md hover:bg-purple-50 flex items-center justify-center text-base font-bold text-[#5e23dc] cursor-pointer"
+                                    >
+                                      -
+                                    </button>
+                                    <span className="text-sm font-extrabold text-[#5e23dc]">
+                                      {cartItem.quantity}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleUpdateQuantity(service.id, 1)}
+                                      className="w-7 h-7 rounded-md hover:bg-purple-50 flex items-center justify-center text-base font-bold text-[#5e23dc] cursor-pointer"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleAddToCart(
+                                        service,
+                                        subCat.name,
+                                        availableTiers.find((t) => t.id === service.tierId)?.name
+                                      )
+                                    }
+                                    className="w-full bg-white hover:bg-purple-50 text-[#5e23dc] font-extrabold border border-[#5e23dc] py-2 px-4 rounded-xl text-xs transition-colors shadow-2xs hover:shadow-xs flex items-center justify-center gap-1 cursor-pointer"
+                                  >
+                                    <span>Add</span>
+                                    <span className="text-sm font-extrabold">+</span>
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
-                })
-              )}
+                })}
             </div>
           </div>
 
@@ -742,6 +1025,32 @@ function UrbanCompanyServiceListingContent() {
                     ))}
                   </div>
 
+                  {/* Static Coupon Verification Box */}
+                  <div className="border-t border-gray-100 pt-3 space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Coupon (e.g. ZIVA200)"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                        className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5 text-xs uppercase font-bold text-[#111827] focus:outline-none focus:border-[#5e23dc]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleApplyCoupon()}
+                        className="bg-[#5e23dc] hover:bg-[#4500b4] text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    {couponMessage && (
+                      <p className={`text-[11px] font-bold ${couponMessage.isError ? 'text-red-600' : 'text-emerald-700'}`}>
+                        {couponMessage.text}
+                      </p>
+                    )}
+                  </div>
+
                   {/* Bill Breakdown */}
                   <div className="border-t border-gray-100 pt-3 space-y-1.5 text-xs">
                     <div className="flex justify-between text-gray-600">
@@ -750,12 +1059,12 @@ function UrbanCompanyServiceListingContent() {
                     </div>
                     {promoDiscount > 0 && (
                       <div className="flex justify-between text-emerald-600 font-bold">
-                        <span>ZIVA100 Promo Discount</span>
+                        <span>{appliedCoupon} Coupon Discount</span>
                         <span>-₹{promoDiscount}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-gray-600">
-                      <span>Taxes & Fee</span>
+                      <span>Taxes & Fee (5%)</span>
                       <span>₹{taxesAndFee}</span>
                     </div>
                     <div className="flex justify-between font-extrabold text-[#111827] text-sm pt-2 border-t border-gray-100">
@@ -953,6 +1262,68 @@ function UrbanCompanyServiceListingContent() {
             >
               Back to Home
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ════════════════════ FLOATING MENU QUICK-JUMP BUTTON ════════════════════ */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <button
+          type="button"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="bg-[#111827] hover:bg-black text-white px-5 py-2.5 rounded-full shadow-2xl font-extrabold text-xs flex items-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-gray-700"
+        >
+          <span className="material-symbols-outlined text-sm">menu</span>
+          <span>Menu</span>
+        </button>
+      </div>
+
+      {/* ════════════════════ FLOATING MENU DRAWER ════════════════════ */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/50 backdrop-blur-2xs animate-fadeIn">
+          <div className="bg-white rounded-t-3xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[75vh] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+              <h3 className="text-base font-extrabold text-[#111827]">
+                Quick Jump to Section
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(false)}
+                className="w-7 h-7 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {(categoryData?.subCategories || []).map((sub) => {
+                const subServices = sub.services || (categoryData?.services || []).filter((s) => s.subCategoryId === sub.id);
+                return (
+                  <button
+                    key={sub.id}
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setActiveSubCategorySlug(sub.slug);
+                      setActiveTierSlug(null);
+                      const el = document.getElementById(`subcat-section-${sub.slug}`);
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-purple-50 text-left transition-colors font-bold text-xs text-gray-800 border border-gray-100 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span>{renderServiceIcon(sub.icon, '🛠️')}</span>
+                      <span>{sub.name}</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-[#5e23dc] bg-purple-100 px-2 py-0.5 rounded-full">
+                      {subServices.length}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

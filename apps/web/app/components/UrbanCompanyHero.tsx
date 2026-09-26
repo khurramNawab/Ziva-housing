@@ -26,16 +26,55 @@ function getApiUrl(path: string): string {
   return `${cleanBase}${cleanPath}`;
 }
 
-const CATEGORY_STYLE_MAP: Record<string, { icon: string; bg: string; defaultBadge?: string }> = {
-  'instahelp': { icon: '👩‍🍳', bg: 'bg-[#f5f3ff]' },
-  'womens-salon-spa': { icon: '🧖‍♀️', bg: 'bg-[#fdf2f8]' },
-  'mens-salon-massage': { icon: '🧔‍♂️', bg: 'bg-[#eff6ff]' },
-  'cleaning': { icon: '🧹', bg: 'bg-[#f0fdf4]', defaultBadge: '44 mins' },
-  'ac-appliance-repair': { icon: '❄️', bg: 'bg-[#f0f9ff]', defaultBadge: '44 mins' },
-  'electrician-plumber-carpenter': { icon: '🔧', bg: 'bg-[#faf5ff]', defaultBadge: '19 mins' },
-  'painting-waterproofing': { icon: '🖌️', bg: 'bg-[#fffbeb]' },
-  'pest-control': { icon: '🐜', bg: 'bg-[#fef2f2]' },
-  'packers-movers': { icon: '📦', bg: 'bg-[#fefce8]' },
+const CATEGORY_STYLE_MAP: Record<string, { icon: string; imgUrl?: string; bg: string; defaultBadge?: string }> = {
+  'instahelp': { 
+    icon: '👩‍🍳', 
+    imgUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#f5f3ff]' 
+  },
+  'womens-salon-spa': { 
+    icon: '🧖‍♀️', 
+    imgUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#fdf2f8]' 
+  },
+  'mens-salon-massage': { 
+    icon: '🧔‍♂️', 
+    imgUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#eff6ff]' 
+  },
+  'cleaning': { 
+    icon: '🧹', 
+    imgUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#f0fdf4]', 
+    defaultBadge: '44 mins' 
+  },
+  'ac-appliance-repair': { 
+    icon: '❄️', 
+    imgUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#f0f9ff]', 
+    defaultBadge: '44 mins' 
+  },
+  'electrician-plumber-carpenter': { 
+    icon: '🔧', 
+    imgUrl: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#faf5ff]', 
+    defaultBadge: '19 mins' 
+  },
+  'painting-waterproofing': { 
+    icon: '🖌️', 
+    imgUrl: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#fffbeb]' 
+  },
+  'pest-control': { 
+    icon: '🐜', 
+    imgUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#fef2f2]' 
+  },
+  'packers-movers': { 
+    icon: '📦', 
+    imgUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#fefce8]' 
+  },
   'home-cleaning': { icon: '🧹', bg: 'bg-[#f0fdf4]' },
   'electrician': { icon: '⚡', bg: 'bg-[#faf5ff]' },
   'plumber': { icon: '🔧', bg: 'bg-[#f0f9ff]' },
@@ -232,8 +271,26 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                       className="flex flex-col items-center justify-between p-2 md:p-2.5 rounded-xl hover:bg-gray-50/90 hover:shadow-xs transition-all text-center group cursor-pointer border border-transparent hover:border-gray-200 min-h-[96px]"
                     >
                       <div className="relative flex flex-col items-center justify-center">
-                        <div className={`w-12 h-12 md:w-13 md:h-13 rounded-2xl ${styleInfo.bg} flex items-center justify-center text-2xl md:text-3xl shadow-xs group-hover:scale-105 transition-transform duration-200`}>
-                          <span>{styleInfo.icon || item.icon || '🛠️'}</span>
+                        <div className="w-13 h-13 md:w-14 md:h-14 rounded-2xl overflow-hidden shadow-xs border border-gray-100 bg-gray-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                          {styleInfo.imgUrl ? (
+                            <img
+                              src={styleInfo.imgUrl}
+                              alt={item.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = 'none';
+                                const parent = (e.target as HTMLElement).parentElement;
+                                if (parent && !parent.querySelector('.fallback-emoji')) {
+                                  const span = document.createElement('span');
+                                  span.className = 'fallback-emoji text-2xl md:text-3xl';
+                                  span.innerText = styleInfo.icon || item.icon || '🛠️';
+                                  parent.appendChild(span);
+                                }
+                              }}
+                            />
+                          ) : (
+                            <span className="text-2xl md:text-3xl">{styleInfo.icon || item.icon || '🛠️'}</span>
+                          )}
                         </div>
 
                         {/* Pill Badge (e.g. 44 mins, 19 mins) */}
@@ -275,7 +332,24 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                   Native Smart Products
                 </h3>
                 <div className="flex gap-3">
-                  {nativeProducts.map((prod) => (
+                  {[
+                    {
+                      id: 'water-purifier',
+                      name: 'Native Water Purifier',
+                      category: 'ac-appliance-repair',
+                      imgUrl: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
+                      icon: '💧',
+                      badge: 'Sale',
+                    },
+                    {
+                      id: 'smart-locks',
+                      name: 'Native Smart Locks',
+                      category: 'electrician-plumber-carpenter',
+                      imgUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=300&h=300&q=80',
+                      icon: '🔐',
+                      badge: 'Sale',
+                    },
+                  ].map((prod) => (
                     <button
                       suppressHydrationWarning
                       key={prod.id}
@@ -283,9 +357,23 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                       onClick={() => onSelectCategory(prod.category)}
                       className="flex items-center gap-3 p-2.5 px-3 rounded-xl border border-gray-200/90 hover:border-[#5e23dc] hover:bg-purple-50/40 transition-all text-left group cursor-pointer bg-[#fafafa]"
                     >
-                      <div className="relative w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-xs flex items-center justify-center text-xl">
-                        <span>{prod.icon}</span>
-                        <span className="absolute -top-1.5 -right-1.5 bg-[#16a34a] text-white text-[8px] font-bold px-1 rounded-full uppercase tracking-tighter">
+                      <div className="relative w-11 h-11 rounded-xl bg-white border border-gray-100 shadow-xs overflow-hidden flex items-center justify-center p-0.5">
+                        <img
+                          src={prod.imgUrl}
+                          alt={prod.name}
+                          className="w-full h-full object-cover rounded-lg"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                            const parent = (e.target as HTMLElement).parentElement;
+                            if (parent && !parent.querySelector('.fallback-prod-icon')) {
+                              const span = document.createElement('span');
+                              span.className = 'fallback-prod-icon text-xl';
+                              span.innerText = prod.icon;
+                              parent.appendChild(span);
+                            }
+                          }}
+                        />
+                        <span className="absolute -top-1 -right-1 bg-[#16a34a] text-white text-[8px] font-bold px-1 rounded-full uppercase tracking-tighter z-10">
                           {prod.badge}
                         </span>
                       </div>

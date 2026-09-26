@@ -198,15 +198,15 @@ export default function LoginPage() {
     try {
       const apiBase = getApiBaseUrl();
       const isEmail = forgotIdentifier.includes('@');
-      const phoneVal = isEmail ? '' : forgotIdentifier.replace(/\D/g, '');
-      const emailVal = isEmail ? forgotIdentifier.trim() : forgotEmail.trim();
+      const phoneVal = isEmail ? undefined : forgotIdentifier.replace(/\D/g, '');
+      const emailVal = isEmail ? forgotIdentifier.trim() : (forgotEmail.trim() || undefined);
 
       const res = await fetch(`${apiBase}/api/v1/auth/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phone: phoneVal || '9876543210',
-          email: emailVal || undefined,
+          phone: phoneVal,
+          email: emailVal,
         }),
       });
 

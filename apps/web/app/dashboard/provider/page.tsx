@@ -40,6 +40,16 @@ interface ProviderProfile {
   };
 }
 
+function getApiUrl(path: string): string {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (typeof window !== 'undefined') {
+    return `/api/v1${cleanPath}`;
+  }
+  const base = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000';
+  const cleanBase = base.endsWith('/api/v1') ? base : `${base}/api/v1`;
+  return `${cleanBase}${cleanPath}`;
+}
+
 export default function VendorDashboard() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<any | null>(null);
@@ -88,9 +98,8 @@ export default function VendorDashboard() {
 
   const fetchProviderData = async (accToken: string) => {
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
       // 1. Fetch real DB provider profile
-      const profRes = await fetch(`${apiBase}/api/v1/services/provider/profile`, {
+      const profRes = await fetch(getApiUrl('/services/provider/profile'), {
         headers: { Authorization: `Bearer ${accToken}` },
       });
       if (profRes.ok) {
@@ -99,7 +108,7 @@ export default function VendorDashboard() {
       }
 
       // 2. Fetch bookings (role-aware — returns provider's assigned bookings)
-      const res = await fetch(`${apiBase}/api/v1/services/bookings/my`, {
+      const res = await fetch(getApiUrl('/services/bookings/my'), {
         headers: { Authorization: `Bearer ${accToken}` },
       });
       if (res.ok) {

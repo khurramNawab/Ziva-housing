@@ -266,13 +266,22 @@ export default function Navbar() {
               onClick={() => setShowLocModal(!showLocModal)}
               className="flex items-center gap-1 bg-[#f2f4f6] hover:bg-[#e8ddff] px-2.5 py-1.5 rounded-xl border border-[#cbc3d8] text-[11px] md:text-xs font-semibold text-[#191c1e] transition-all cursor-pointer max-w-[120px] sm:max-w-[180px]"
             >
-              <span className={`material-symbols-outlined text-xs md:text-sm flex-shrink-0 ${mounted && locating ? 'animate-spin text-[#5e23dc]' : 'text-[#7a7487]'}`}>
-                {mounted && locating ? 'sync' : 'location_on'}
-              </span>
+              {mounted && locating ? (
+                <svg className="w-3.5 h-3.5 animate-spin text-[#5e23dc] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5 text-[#7a7487] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              )}
               <span className="truncate" suppressHydrationWarning>
                 {mounted ? (locating ? 'Detecting...' : city) : 'Location'}
               </span>
-              <span className="material-symbols-outlined text-xs text-[#7a7487] flex-shrink-0">expand_more</span>
+              <svg className="w-3 h-3 text-[#7a7487] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
 
             {/* Location Selector Dropdown Modal */}
@@ -450,18 +459,22 @@ export default function Navbar() {
               href="/become-professional/register"
               className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-[#006c47] bg-[#e8faf4] border border-[#16a373]/30 px-2.5 py-1.5 rounded-lg hover:bg-[#16a373] hover:text-white transition-all shadow-sm"
             >
-              <span className="material-symbols-outlined text-xs">handyman</span>
-              Join as Vendor
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>Join as Vendor</span>
             </Link>
           )}
 
-          {/* Post Property: Only visible to Property Owners, Admins, or Guests (Hidden for pure Buyers/Renters and Service Vendors) */}
+          {/* Post Property: Only visible to Property Owners, Admins, or Guests */}
           {(!token || userRole === 'OWNER' || userRole === 'ADMIN') && (
             <Link
               href="/post-property"
               className="hidden sm:flex bg-[#5e23dc] hover:bg-[#4500b4] text-white px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm items-center gap-1"
             >
-              <span className="material-symbols-outlined text-sm">add</span>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
               <span>Post Property</span>
             </Link>
           )}
@@ -504,9 +517,11 @@ export default function Navbar() {
                   router.push('/auth/login');
                 }}
                 title="Logout"
-                className="hidden sm:flex text-gray-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                className="hidden sm:flex text-gray-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors items-center gap-1"
               >
-                <span className="material-symbols-outlined text-sm">logout</span>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
               </button>
             </div>
           ) : (
@@ -514,7 +529,9 @@ export default function Navbar() {
               href="/auth/login"
               className="hidden sm:flex border border-[#cbc3d8] text-[#191c1e] hover:bg-[#f2f4f6] px-3 py-1.5 rounded-lg text-xs font-bold transition-all items-center gap-1"
             >
-              <span className="material-symbols-outlined text-sm">login</span>
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
               <span>Login</span>
             </Link>
           )}

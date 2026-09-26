@@ -42,18 +42,21 @@ export class OtpService {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
-  async sendOtp(phone: string, email?: string): Promise<void> {
-    const rawDigits = phone.replace(/\D/g, '');
-    const cleanPhone = rawDigits.length >= 10 ? rawDigits.slice(-10) : phone.trim();
+  async sendOtp(phone?: string, email?: string): Promise<void> {
+    const rawDigits = (phone || '').replace(/\D/g, '');
+    const cleanPhone = rawDigits.length >= 10 ? rawDigits.slice(-10) : (phone || '').trim();
+    const cleanEmail = email ? email.trim().toLowerCase() : undefined;
+
+    const requestKey = cleanPhone || cleanEmail || 'unknown';
 
     // Enforce 60-second cooldown to prevent OTP spamming / credit draining
-    const lastSent = this.recentOtpRequests.get(cleanPhone);
+    const lastSent = this.recentOtpRequests.get(requestKey);
     const now = Date.now();
     if (lastSent && now - lastSent < this.OTP_COOLDOWN_SECONDS * 1000) {
       const waitSeconds = Math.ceil((this.OTP_COOLDOWN_SECONDS * 1000 - (now - lastSent)) / 1000);
       throw new BadRequestException(`Please wait ${waitSeconds} seconds before requesting another OTP.`);
     }
-    this.recentOtpRequests.set(cleanPhone, now);
+    this.recentOtpRequests.set(requestKey, now);
 
     const otp = this.generateOtp();
     const otpExpiresAt = new Date(Date.now() + this.OTP_EXPIRY_MINUTES * 60 * 1000);
@@ -62,54 +65,56 @@ export class OtpService {
     const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
 
     try {
-      await this.prisma.user.upsert({
-        where: { phone: cleanPhone },
-        update: { otpCode: otpHash, otpExpiresAt },
-        create: {
-          phone: cleanPhone,
-          firstName: 'Unknown',
-          lastName: 'User',
-          email: email || undefined,
-          otpCode: otpHash,
-          otpExpiresAt,
-          status: 'PENDING_VERIFICATION',
+      let existingUser = await this.prisma.user.findFirst({
+        where: {
+          OR: [
+            ...(cleanPhone ? [{ phone: cleanPhone }, { phone }, { phone: `+91${cleanPhone}` }] : []),
+            ...(cleanEmail ? [{ email: cleanEmail }] : []),
+          ],
         },
       });
-    } catch (err) {
-      this.logger.warn('User upsert during OTP failed, attempting update', err);
-      try {
-        await this.prisma.user.updateMany({
-          where: { phone: cleanPhone },
+
+      if (existingUser) {
+        await this.prisma.user.update({
+          where: { id: existingUser.id },
           data: { otpCode: otpHash, otpExpiresAt },
         });
-      } catch {}
+      } else if (cleanPhone) {
+        await this.prisma.user.create({
+          data: {
+            phone: cleanPhone,
+            firstName: 'User',
+            lastName: '',
+            email: cleanEmail || undefined,
+            otpCode: otpHash,
+            otpExpiresAt,
+            status: 'PENDING_VERIFICATION',
+          },
+        });
+      }
+    } catch (err) {
+      this.logger.warn('User update/create during OTP failed:', err);
     }
 
     // Determine email destination if available
-    let targetEmail = email;
-    if (!targetEmail) {
-      const user = await this.prisma.user.findFirst({
-        where: {
-          OR: [
-            { phone: cleanPhone },
-            { phone },
-            { phone: `+91${cleanPhone}` },
-          ],
-        },
-        select: { email: true },
-      });
-      if (user?.email) {
-        targetEmail = user.email;
-      }
-    }
+    const targetEmail = cleanEmail || (await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(cleanPhone ? [{ phone: cleanPhone }, { phone }, { phone: `+91${cleanPhone}` }] : []),
+        ],
+      },
+      select: { email: true },
+    }))?.email;
 
     // 1. Send via Email (SMTP / Resend) if email is present
     if (targetEmail) {
       await this.sendViaEmail(targetEmail, otp);
     }
 
-    // 2. Send via MSG91 SMS
-    await this.sendViaMSG91(cleanPhone, otp);
+    // 2. Send via MSG91 SMS if phone is present
+    if (cleanPhone) {
+      await this.sendViaMSG91(cleanPhone, otp);
+    }
   }
 
   async verifyOtp(phone: string, otp: string, email?: string): Promise<boolean> {

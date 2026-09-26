@@ -58,9 +58,13 @@ interface ServiceCategory {
 }
 
 function getApiUrl(path: string): string {
-  const base = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000';
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (typeof window !== 'undefined') {
+    return `/api/v1${cleanPath}`;
+  }
+  const base = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:4000';
   const cleanBase = base.endsWith('/api/v1') ? base : `${base}/api/v1`;
-  return `${cleanBase}${path.startsWith('/') ? path : `/${path}`}`;
+  return `${cleanBase}${cleanPath}`;
 }
 
 function renderAdminIcon(iconStr: string | null | undefined, fallbackEmoji = '🛠️', size = 'text-2xl') {
