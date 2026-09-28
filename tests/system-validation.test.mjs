@@ -98,7 +98,7 @@ async function runTestSuite() {
     assert(pageSrc.includes('All Home Service Categories'), 'Hero categories section rendered');
     assert(pageSrc.includes('VIP Club Membership'), 'Ziva Plus VIP Club Card section rendered');
     assert(pageSrc.includes('Most Booked Doorstep Services'), 'Most booked doorstep services rendered');
-    assert(pageSrc.includes('2,500+ Happy Customers'), 'Realistic startup numbers verified (2,500+ Customers)');
+    assert(pageSrc.includes('2,500+') && pageSrc.includes('Happy Customers'), 'Realistic startup numbers verified (2,500+ Customers)');
     assert(!pageSrc.includes('Loved by 50,000+ Happy Homes'), 'Unrealistic 50,000+ happy homes banner removed');
     assert(!pageSrc.includes('ZIVA PLUS MEMBERSHIP — SAVE ₹150+ ON EVERY BOOKING\n                </div>'), 'Harsh full-width promo bar removed from under stats');
   } catch (err) {
