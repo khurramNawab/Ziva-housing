@@ -99,8 +99,27 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'ants-bed-bugs-control': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=400&q=80',
 
   // Baby Sitting & Childcare
-  'nanny-infant-care': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80',
-  'babysitting-childcare': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=400&q=80',
+  'nanny-infant-care': '/services/babysitting.jpg',
+  'babysitting-childcare': '/services/babysitting.jpg',
+  'nanny-care': '/services/babysitting.jpg',
+  'baby-sitting-childcare': '/services/babysitting.jpg',
+
+  // Elderly Care
+  'elderly-care': '/services/elderly-care.jpg',
+  'senior-care': '/services/elderly-care.jpg',
+  'attendant-for-elderly': '/services/elderly-care.jpg',
+
+  // Packers & Movers
+  'packers-movers': '/services/packers-movers.jpg',
+  'house-shifting': '/services/packers-movers.jpg',
+  'local-shifting': '/services/packers-movers.jpg',
+  'intercity-shifting': '/services/packers-movers.jpg',
+
+  // Interior & Modular Kitchen
+  'interior-modular-kitchen': '/services/modular-kitchen.jpg',
+  'modular-kitchen': '/services/modular-kitchen.jpg',
+  'kitchen-wardrobes': '/services/modular-kitchen.jpg',
+  'full-home-interiors': '/services/modular-kitchen.jpg',
 
   // AC & Appliance (Exact Alias Mapping)
   'ac-service-sub': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
@@ -171,8 +190,17 @@ const getSubPhoto = (sub: ServiceSubCategory): string => {
   if (nameKey.includes('chimney')) {
     return 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80';
   }
-  if (nameKey.includes('ac') || nameKey.includes('air-conditioner')) {
-    return 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80';
+  if (nameKey.includes('pack') || nameKey.includes('mover') || nameKey.includes('shifting')) {
+    return '/services/packers-movers.jpg';
+  }
+  if (nameKey.includes('elder') || nameKey.includes('senior')) {
+    return '/services/elderly-care.jpg';
+  }
+  if (nameKey.includes('kitchen') || nameKey.includes('modular') || nameKey.includes('interior')) {
+    return '/services/modular-kitchen.jpg';
+  }
+  if (nameKey.includes('nanny') || nameKey.includes('baby') || nameKey.includes('child') || nameKey.includes('infant')) {
+    return '/services/babysitting.jpg';
   }
 
   return 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80';

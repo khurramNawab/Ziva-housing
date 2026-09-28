@@ -251,6 +251,8 @@ export default function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const isServicesMode = mounted && (pathname === '/' || pathname?.startsWith('/services'));
+
   return (
     <header className="bg-white border-b border-[#eceef0] sticky top-0 z-50 font-[Rubik]">
       <div className="max-w-[1280px] mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-2 md:gap-4">
@@ -382,59 +384,104 @@ export default function Navbar() {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 text-[14px] font-semibold text-[#494455]">
-          {userRole !== 'SERVICE_PROVIDER' && (
+          {isServicesMode ? (
             <>
               <Link
-                href="/properties?purpose=BUY"
+                href="/services"
                 className={`transition-all py-1 border-b-2 font-bold ${
-                  isTabActive('BUY')
+                  pathname === '/services'
                     ? 'text-[#5e23dc] border-[#5e23dc]'
                     : 'border-transparent hover:text-[#4500b4]'
                 }`}
               >
-                Buy
+                All Services
               </Link>
               <Link
-                href="/properties?purpose=RENT"
-                className={`transition-all py-1 border-b-2 font-bold ${
-                  isTabActive('RENT')
-                    ? 'text-[#5e23dc] border-[#5e23dc]'
-                    : 'border-transparent hover:text-[#4500b4]'
-                }`}
+                href="/services?cat=cleaning"
+                className="transition-all py-1 border-b-2 font-bold border-transparent hover:text-[#4500b4]"
               >
-                Rent
+                Cleaning
               </Link>
               <Link
-                href="/sell"
-                className={`transition-all py-1 border-b-2 font-bold ${
-                  isTabActive('SELL')
-                    ? 'text-[#5e23dc] border-[#5e23dc]'
-                    : 'border-transparent hover:text-[#4500b4]'
-                }`}
+                href="/services?cat=ac-appliance-repair"
+                className="transition-all py-1 border-b-2 font-bold border-transparent hover:text-[#4500b4]"
               >
-                Sell
+                AC & Appliance
               </Link>
               <Link
-                href="/properties?purpose=PG"
-                className={`transition-all py-1 border-b-2 font-bold ${
-                  isTabActive('PG')
-                    ? 'text-[#5e23dc] border-[#5e23dc]'
-                    : 'border-transparent hover:text-[#4500b4]'
-                }`}
+                href="/services?cat=womens-salon-spa"
+                className="transition-all py-1 border-b-2 font-bold border-transparent hover:text-[#4500b4]"
               >
-                PG
+                Salon & Spa
               </Link>
               <Link
-                href="/projects/p-prestige-falcon"
-                className={`transition-all py-1 border-b-2 font-bold ${
-                  isTabActive('NEW_PROJECTS')
-                    ? 'text-[#5e23dc] border-[#5e23dc]'
-                    : 'border-transparent hover:text-[#4500b4]'
-                }`}
+                href="/services?cat=electrician-plumber-carpenter"
+                className="transition-all py-1 border-b-2 font-bold border-transparent hover:text-[#4500b4]"
               >
-                New Projects
+                Quick Repairs
+              </Link>
+              <Link
+                href="/services?cat=packers-movers"
+                className="transition-all py-1 border-b-2 font-bold border-transparent hover:text-[#4500b4]"
+              >
+                Packers & Movers
               </Link>
             </>
+          ) : (
+            userRole !== 'SERVICE_PROVIDER' && (
+              <>
+                <Link
+                  href="/properties?purpose=BUY"
+                  className={`transition-all py-1 border-b-2 font-bold ${
+                    isTabActive('BUY')
+                      ? 'text-[#5e23dc] border-[#5e23dc]'
+                      : 'border-transparent hover:text-[#4500b4]'
+                  }`}
+                >
+                  Buy
+                </Link>
+                <Link
+                  href="/properties?purpose=RENT"
+                  className={`transition-all py-1 border-b-2 font-bold ${
+                    isTabActive('RENT')
+                      ? 'text-[#5e23dc] border-[#5e23dc]'
+                      : 'border-transparent hover:text-[#4500b4]'
+                  }`}
+                >
+                  Rent
+                </Link>
+                <Link
+                  href="/sell"
+                  className={`transition-all py-1 border-b-2 font-bold ${
+                    isTabActive('SELL')
+                      ? 'text-[#5e23dc] border-[#5e23dc]'
+                      : 'border-transparent hover:text-[#4500b4]'
+                  }`}
+                >
+                  Sell
+                </Link>
+                <Link
+                  href="/properties?purpose=PG"
+                  className={`transition-all py-1 border-b-2 font-bold ${
+                    isTabActive('PG')
+                      ? 'text-[#5e23dc] border-[#5e23dc]'
+                      : 'border-transparent hover:text-[#4500b4]'
+                  }`}
+                >
+                  PG
+                </Link>
+                <Link
+                  href="/projects/p-prestige-falcon"
+                  className={`transition-all py-1 border-b-2 font-bold ${
+                    isTabActive('NEW_PROJECTS')
+                      ? 'text-[#5e23dc] border-[#5e23dc]'
+                      : 'border-transparent hover:text-[#4500b4]'
+                  }`}
+                >
+                  New Projects
+                </Link>
+              </>
+            )
           )}
 
           {userRole === 'SERVICE_PROVIDER' && (
@@ -453,30 +500,55 @@ export default function Navbar() {
 
         {/* Header Actions & Mobile Hamburger Toggle */}
         <div className="flex items-center gap-1.5 md:gap-2.5">
-          {/* Join as Vendor: Only visible to Guests (not logged-in users) */}
-          {!token && (
-            <Link
-              href="/become-professional/register"
-              className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-[#006c47] bg-[#e8faf4] border border-[#16a373]/30 px-2.5 py-1.5 rounded-lg hover:bg-[#16a373] hover:text-white transition-all shadow-sm"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span>Join as Vendor</span>
-            </Link>
-          )}
+          {isServicesMode ? (
+            <>
+              {/* In Services Mode: Join as Partner and/or Bookings */}
+              {!token && (
+                <Link
+                  href="/become-professional/register"
+                  className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-[#006c47] bg-[#e8faf4] border border-[#16a373]/30 px-2.5 py-1.5 rounded-lg hover:bg-[#16a373] hover:text-white transition-all shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[15px]">handyman</span>
+                  <span>Join as Partner</span>
+                </Link>
+              )}
+              {token && userRole !== 'SERVICE_PROVIDER' && (
+                <Link
+                  href="/dashboard/bookings"
+                  className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-[#5e23dc] bg-[#e8ddff] border border-[#5e23dc]/30 px-2.5 py-1.5 rounded-lg hover:bg-[#5e23dc] hover:text-white transition-all shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[15px]">calendar_month</span>
+                  <span>My Bookings</span>
+                </Link>
+              )}
+            </>
+          ) : (
+            <>
+              {/* In Real Estate Mode: Join as Vendor and Post Property */}
+              {!token && (
+                <Link
+                  href="/become-professional/register"
+                  className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-[#006c47] bg-[#e8faf4] border border-[#16a373]/30 px-2.5 py-1.5 rounded-lg hover:bg-[#16a373] hover:text-white transition-all shadow-sm"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>Join as Vendor</span>
+                </Link>
+              )}
 
-          {/* Post Property: Only visible to Property Owners, Admins, or Guests */}
-          {(!token || userRole === 'OWNER' || userRole === 'ADMIN') && (
-            <Link
-              href="/post-property"
-              className="hidden sm:flex bg-[#5e23dc] hover:bg-[#4500b4] text-white px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm items-center gap-1"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-              </svg>
-              <span>Post Property</span>
-            </Link>
+              {(!token || userRole === 'OWNER' || userRole === 'ADMIN') && (
+                <Link
+                  href="/post-property"
+                  className="hidden sm:flex bg-[#5e23dc] hover:bg-[#4500b4] text-white px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all shadow-sm items-center gap-1"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Post Property</span>
+                </Link>
+              )}
+            </>
           )}
 
           {/* Role-Specific Dashboard / Login Button */}
@@ -549,20 +621,61 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* 🧭 Dedicated Mode Toggle Sub-Bar (Directly below Navbar) */}
+      <div className="border-t border-[#f0ecf6] bg-[#fbfbfe] py-2 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]" suppressHydrationWarning>
+        <div className="max-w-[1280px] mx-auto flex items-center justify-center">
+          <div className="inline-flex items-center p-1 bg-[#eceef2] rounded-full border border-[#ded8ea] shadow-inner gap-1">
+            <Link
+              href="/real-estate"
+              className={`flex items-center gap-2 px-5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                mounted && !isServicesMode
+                  ? 'bg-white text-[#4500b4] shadow-sm font-black'
+                  : 'text-[#6b6577] hover:text-[#4500b4] hover:bg-white/50'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[16px]">apartment</span>
+              <span>Real Estate</span>
+            </Link>
+            <Link
+              href="/"
+              className={`flex items-center gap-2 px-5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
+                mounted && isServicesMode
+                  ? 'bg-[#5e23dc] text-white shadow-sm font-black'
+                  : 'text-[#6b6577] hover:text-[#5e23dc] hover:bg-white/50'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[16px]">home_repair_service</span>
+              <span>Home Services</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* 📱 Mobile Slide-Out Drawer Navigation Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-[#cbc3d8] p-4 shadow-xl animate-in slide-in-from-top duration-200 space-y-4">
           {/* Quick Primary Actions in Mobile Drawer */}
           <div className="grid grid-cols-2 gap-2">
-            {userRole !== 'SERVICE_PROVIDER' && (
+            {isServicesMode ? (
               <Link
-                href="/post-property"
+                href="/services"
                 onClick={() => setMobileMenuOpen(false)}
                 className="bg-[#5e23dc] text-white p-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm"
               >
-                <span className="material-symbols-outlined text-sm">add</span>
-                Post Property
+                <span className="material-symbols-outlined text-sm">home_repair_service</span>
+                Book Service
               </Link>
+            ) : (
+              userRole !== 'SERVICE_PROVIDER' && (
+                <Link
+                  href="/post-property"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="bg-[#5e23dc] text-white p-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span>
+                  Post Property
+                </Link>
+              )
             )}
 
             {token ? (
@@ -590,62 +703,154 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="text-[11px] font-bold text-[#7a7487] uppercase tracking-wider px-1 border-t border-[#eceef0] pt-3">Navigation Menu</div>
+          {/* Mobile Mode Toggle */}
+          <div className="flex items-center gap-0.5 bg-[#f2f4f6] rounded-2xl p-1 border border-[#e0dde8] shadow-inner w-full" suppressHydrationWarning>
+            <Link
+              href="/real-estate"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 ${
+                mounted && !isServicesMode
+                  ? 'bg-white text-[#4500b4] shadow-sm border border-[#e0dde8]'
+                  : 'text-[#7a7487]'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[14px]">home</span>
+              Real Estate
+            </Link>
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-extrabold transition-all duration-200 ${
+                mounted && isServicesMode
+                  ? 'bg-[#5e23dc] text-white shadow-sm'
+                  : 'text-[#7a7487]'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[14px]">home_repair_service</span>
+              Services
+            </Link>
+          </div>
+
+          <div className="text-[11px] font-bold text-[#7a7487] uppercase tracking-wider px-1 border-t border-[#eceef0] pt-3">
+            {isServicesMode ? 'Services Menu' : 'Real Estate Menu'}
+          </div>
           <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-            {userRole !== 'SERVICE_PROVIDER' && (
+            {isServicesMode ? (
               <>
                 <Link
-                  href="/properties?purpose=BUY"
+                  href="/services"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
-                    isTabActive('BUY')
+                    pathname === '/services'
                       ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
                       : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm">home</span>
-                  Buy Properties
+                  <span className="material-symbols-outlined text-sm">grid_view</span>
+                  All Services
                 </Link>
 
                 <Link
-                  href="/properties?purpose=RENT"
+                  href="/services?cat=cleaning"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
-                    isTabActive('RENT')
-                      ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
-                      : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
-                  }`}
+                  className="p-3 rounded-xl border flex items-center gap-2 transition-all bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]"
                 >
-                  <span className="material-symbols-outlined text-sm">key</span>
-                  Rent Homes
+                  <span className="material-symbols-outlined text-sm">cleaning_services</span>
+                  Cleaning & Pest
                 </Link>
 
                 <Link
-                  href="/sell"
+                  href="/services?cat=ac-appliance-repair"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
-                    isTabActive('SELL')
-                      ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
-                      : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
-                  }`}
+                  className="p-3 rounded-xl border flex items-center gap-2 transition-all bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]"
                 >
-                  <span className="material-symbols-outlined text-sm">sell</span>
-                  Sell Property
+                  <span className="material-symbols-outlined text-sm">ac_unit</span>
+                  AC & Appliance
                 </Link>
 
                 <Link
-                  href="/properties?purpose=PG"
+                  href="/services?cat=womens-salon-spa"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
-                    isTabActive('PG')
-                      ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
-                      : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
-                  }`}
+                  className="p-3 rounded-xl border flex items-center gap-2 transition-all bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]"
                 >
-                  <span className="material-symbols-outlined text-sm">apartment</span>
-                  PG & Hostels
+                  <span className="material-symbols-outlined text-sm">spa</span>
+                  Salon & Spa
+                </Link>
+
+                <Link
+                  href="/services?cat=electrician-plumber-carpenter"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-xl border flex items-center gap-2 transition-all bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]"
+                >
+                  <span className="material-symbols-outlined text-sm">build</span>
+                  Quick Repairs
+                </Link>
+
+                <Link
+                  href="/services?cat=packers-movers"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-3 rounded-xl border flex items-center gap-2 transition-all bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]"
+                >
+                  <span className="material-symbols-outlined text-sm">local_shipping</span>
+                  Packers & Movers
                 </Link>
               </>
+            ) : (
+              userRole !== 'SERVICE_PROVIDER' && (
+                <>
+                  <Link
+                    href="/properties?purpose=BUY"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
+                      isTabActive('BUY')
+                        ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
+                        : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">home</span>
+                    Buy Properties
+                  </Link>
+
+                  <Link
+                    href="/properties?purpose=RENT"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
+                      isTabActive('RENT')
+                        ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
+                        : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">key</span>
+                    Rent Homes
+                  </Link>
+
+                  <Link
+                    href="/sell"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
+                      isTabActive('SELL')
+                        ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
+                        : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">sell</span>
+                    Sell Property
+                  </Link>
+
+                  <Link
+                    href="/properties?purpose=PG"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`p-3 rounded-xl border flex items-center gap-2 transition-all ${
+                      isTabActive('PG')
+                        ? 'bg-[#5e23dc] text-white border-[#5e23dc]'
+                        : 'bg-[#f8f9fb] text-[#191c1e] border-[#cbc3d8]/50 hover:bg-[#e8ddff]'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">apartment</span>
+                    PG & Hostels
+                  </Link>
+                </>
+              )
             )}
 
             {userRole === 'SERVICE_PROVIDER' && (

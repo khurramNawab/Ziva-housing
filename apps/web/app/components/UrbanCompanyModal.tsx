@@ -87,8 +87,8 @@ const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
   'ants-bed-bugs-control': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=300&h=300&q=80',
 
   // Baby Sitting & Childcare
-  'nanny-infant-care': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&h=300&q=80',
-  'babysitting-childcare': 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=300&h=300&q=80',
+  'nanny-infant-care': '/services/babysitting.jpg',
+  'babysitting-childcare': '/services/babysitting.jpg',
 
   // Women's Salon & Spa
   'salon-for-women': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&h=300&q=80',
@@ -110,15 +110,15 @@ const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
   'washing-machine-refrigerator': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=300&h=300&q=80',
   'refrigerator': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&h=300&q=80',
   'refrigerator-sub': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=300&h=300&q=80',
-  'chimney': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
-  'chimney-sub': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
-  'ro-water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
-  'water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
-  'water-purifier-sub': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
-  'native-water-purifier': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
-  'geyser': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
-  'geyser-water-heater': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
-  'geyser-sub': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80',
+  'chimney': '/services/chimney.jpg',
+  'chimney-sub': '/services/chimney.jpg',
+  'ro-water-purifier': '/services/ro-water-purifier.jpg',
+  'water-purifier': '/services/ro-water-purifier.jpg',
+  'water-purifier-sub': '/services/ro-water-purifier.jpg',
+  'native-water-purifier': '/services/native-water-purifier.jpg',
+  'geyser': '/services/geyser.jpg',
+  'geyser-water-heater': '/services/geyser.jpg',
+  'geyser-sub': '/services/geyser.jpg',
   'television': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80',
   'television-sub': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80',
 
@@ -134,6 +134,18 @@ const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
   // InstaHelp
   'daily-helpers-sub': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=300&h=300&q=80',
   'cook-chef': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
+
+  // Packers & Movers
+  'home-shifting': '/services/packers-movers.jpg',
+  'packers-movers': '/services/packers-movers.jpg',
+
+  // Elderly Care
+  'senior-living-assistance': '/services/elderly-care.jpg',
+  'elderly-care': '/services/elderly-care.jpg',
+
+  // Interior & Modular Kitchen
+  'modular-kitchen-woodwork': '/services/modular-kitchen.jpg',
+  'interior-modular-kitchen': '/services/modular-kitchen.jpg',
 };
 
 const getSubPhoto = (sub: ServiceSubCategory): string => {
@@ -149,10 +161,13 @@ const getSubPhoto = (sub: ServiceSubCategory): string => {
   }
 
   if (nameKey.includes('water') || nameKey.includes('purifier') || nameKey.includes('ro')) {
-    return 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80';
+    return '/services/ro-water-purifier.jpg';
   }
   if (nameKey.includes('geyser') || nameKey.includes('heater')) {
-    return 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=300&h=300&q=80';
+    return '/services/geyser.jpg';
+  }
+  if (nameKey.includes('chimney')) {
+    return '/services/chimney.jpg';
   }
   if (nameKey.includes('washing') && (nameKey.includes('fridge') || nameKey.includes('refrigerator'))) {
     return 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=300&h=300&q=80';
@@ -166,9 +181,6 @@ const getSubPhoto = (sub: ServiceSubCategory): string => {
   if (nameKey.includes('tv') || nameKey.includes('television')) {
     return 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80';
   }
-  if (nameKey.includes('chimney')) {
-    return 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80';
-  }
   if (nameKey.includes('ac') || nameKey.includes('air-conditioner')) {
     return 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80';
   }
@@ -177,6 +189,18 @@ const getSubPhoto = (sub: ServiceSubCategory): string => {
   }
   if (nameKey.includes('ant') || nameKey.includes('bed-bug')) {
     return 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=300&h=300&q=80';
+  }
+  if (nameKey.includes('pack') || nameKey.includes('mover') || nameKey.includes('shift') || nameKey.includes('reloc')) {
+    return '/services/packers-movers.jpg';
+  }
+  if (nameKey.includes('elder') || nameKey.includes('senior') || nameKey.includes('old-age')) {
+    return '/services/elderly-care.jpg';
+  }
+  if (nameKey.includes('modular') || nameKey.includes('kitchen-woodwork') || nameKey.includes('interior') || nameKey.includes('woodwork')) {
+    return '/services/modular-kitchen.jpg';
+  }
+  if (nameKey.includes('nanny') || nameKey.includes('baby') || nameKey.includes('child') || nameKey.includes('infant')) {
+    return '/services/babysitting.jpg';
   }
 
   return 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80';

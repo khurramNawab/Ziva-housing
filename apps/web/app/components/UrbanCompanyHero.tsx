@@ -28,60 +28,60 @@ function getApiUrl(path: string): string {
 
 const CATEGORY_STYLE_MAP: Record<string, { icon: string; imgUrl?: string; bg: string; defaultBadge?: string }> = {
   'instahelp': { 
-    icon: '👩‍🍳', 
+    icon: 'restaurant', 
     imgUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=300&h=300&q=80',
     bg: 'bg-[#f5f3ff]' 
   },
   'womens-salon-spa': { 
-    icon: '🧖‍♀️', 
+    icon: 'spa', 
     imgUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=300&h=300&q=80',
     bg: 'bg-[#fdf2f8]' 
   },
   'mens-salon-massage': { 
-    icon: '🧔‍♂️', 
+    icon: 'face', 
     imgUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=300&h=300&q=80',
     bg: 'bg-[#eff6ff]' 
   },
   'cleaning': { 
-    icon: '🧹', 
+    icon: 'cleaning_services', 
     imgUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=300&h=300&q=80',
     bg: 'bg-[#f0fdf4]', 
     defaultBadge: '44 mins' 
   },
   'ac-appliance-repair': { 
-    icon: '❄️', 
-    imgUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&h=300&q=80',
+    icon: 'ac_unit', 
+    imgUrl: '/services/ac-service.jpg',
     bg: 'bg-[#f0f9ff]', 
     defaultBadge: '44 mins' 
   },
   'electrician-plumber-carpenter': { 
-    icon: '🔧', 
-    imgUrl: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=300&h=300&q=80',
+    icon: 'build', 
+    imgUrl: '/services/electrician-service.jpg',
     bg: 'bg-[#faf5ff]', 
     defaultBadge: '19 mins' 
   },
   'painting-waterproofing': { 
-    icon: '🖌️', 
+    icon: 'format_paint', 
     imgUrl: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=300&h=300&q=80',
     bg: 'bg-[#fffbeb]' 
   },
   'pest-control': { 
-    icon: '🐜', 
+    icon: 'pest_control', 
     imgUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=300&h=300&q=80',
     bg: 'bg-[#fef2f2]' 
   },
   'packers-movers': { 
-    icon: '📦', 
-    imgUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&h=300&q=80',
+    icon: 'local_shipping', 
+    imgUrl: '/services/packers-movers.jpg', 
     bg: 'bg-[#fefce8]' 
   },
-  'home-cleaning': { icon: '🧹', bg: 'bg-[#f0fdf4]' },
-  'electrician': { icon: '⚡', bg: 'bg-[#faf5ff]' },
-  'plumber': { icon: '🔧', bg: 'bg-[#f0f9ff]' },
-  'carpenter': { icon: '🪚', bg: 'bg-[#fefce8]' },
-  'babysitting-childcare': { icon: '👶', bg: 'bg-[#fef2f2]' },
-  'elderly-care': { icon: '👵', bg: 'bg-[#fdf2f8]' },
-  'interior-modular-kitchen': { icon: '📐', bg: 'bg-[#eff6ff]' },
+  'home-cleaning': { icon: 'cleaning_services', bg: 'bg-[#f0fdf4]' },
+  'electrician': { icon: 'bolt', bg: 'bg-[#faf5ff]' },
+  'plumber': { icon: 'plumbing', bg: 'bg-[#f0f9ff]' },
+  'carpenter': { icon: 'carpenter', bg: 'bg-[#fefce8]' },
+  'babysitting-childcare': { icon: 'child_care', imgUrl: '/services/babysitting.jpg', bg: 'bg-[#fef2f2]' },
+  'elderly-care': { icon: 'elderly', imgUrl: '/services/elderly-care.jpg', bg: 'bg-[#fdf2f8]' },
+  'interior-modular-kitchen': { icon: 'countertops', imgUrl: '/services/modular-kitchen.jpg', bg: 'bg-[#eff6ff]' },
 };
 
 const PRIMARY_HERO_SLUGS = [
@@ -95,13 +95,13 @@ const PRIMARY_HERO_SLUGS = [
 ];
 
 const DEFAULT_HERO_CATEGORIES: ServiceCategory[] = [
-  { id: 'c-clean', name: 'Cleaning & Pest Control', slug: 'cleaning', icon: '🧹', badge: '44 mins', isActive: true, order: 1 },
-  { id: 'c-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: '🧖‍♀️', badge: null, isActive: true, order: 2 },
-  { id: 'c-msalon', name: "Men's Salon & Massage", slug: 'mens-salon-massage', icon: '🧔‍♂️', badge: null, isActive: true, order: 3 },
-  { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: '❄️', badge: '44 mins', isActive: true, order: 4 },
-  { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: '🔧', badge: '19 mins', isActive: true, order: 5 },
-  { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: '🖌️', badge: null, isActive: true, order: 6 },
-  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: '👩‍🍳', badge: null, isActive: true, order: 7 },
+  { id: 'c-clean', name: 'Cleaning & Pest Control', slug: 'cleaning', icon: 'cleaning_services', badge: '44 mins', isActive: true, order: 1 },
+  { id: 'c-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: 'spa', badge: null, isActive: true, order: 2 },
+  { id: 'c-msalon', name: "Men's Salon & Massage", slug: 'mens-salon-massage', icon: 'face', badge: null, isActive: true, order: 3 },
+  { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: 'ac_unit', badge: '44 mins', isActive: true, order: 4 },
+  { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: 'build', badge: '19 mins', isActive: true, order: 5 },
+  { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: 'format_paint', badge: null, isActive: true, order: 6 },
+  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: 'restaurant', badge: null, isActive: true, order: 7 },
 ];
 
 export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroProps) {
@@ -218,12 +218,12 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
     {
       slug: 'ac-appliance-repair',
       title: 'AC & Appliance Repair',
-      image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=700&q=80',
+      image: '/services/ac-service.jpg',
     },
     {
       slug: 'electrician-plumber-carpenter',
       title: 'Electrician & Carpenter',
-      image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=700&q=80',
+      image: '/services/electrician-service.jpg',
     },
     {
       slug: 'painting-waterproofing',
@@ -280,16 +280,16 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                               onError={(e) => {
                                 (e.target as HTMLElement).style.display = 'none';
                                 const parent = (e.target as HTMLElement).parentElement;
-                                if (parent && !parent.querySelector('.fallback-emoji')) {
+                                if (parent && !parent.querySelector('.fallback-icon')) {
                                   const span = document.createElement('span');
-                                  span.className = 'fallback-emoji text-2xl md:text-3xl';
-                                  span.innerText = styleInfo.icon || item.icon || '🛠️';
+                                  span.className = 'fallback-icon material-symbols-outlined text-2xl md:text-3xl text-[#5e23dc]';
+                                  span.innerText = styleInfo.icon || 'home_repair_service';
                                   parent.appendChild(span);
                                 }
                               }}
                             />
                           ) : (
-                            <span className="text-2xl md:text-3xl">{styleInfo.icon || item.icon || '🛠️'}</span>
+                            <span className="material-symbols-outlined text-2xl md:text-3xl text-[#5e23dc]">{styleInfo.icon || 'home_repair_service'}</span>
                           )}
                         </div>
 
@@ -337,8 +337,8 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                       id: 'water-purifier',
                       name: 'Native Water Purifier',
                       category: 'ac-appliance-repair',
-                      imgUrl: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4e?auto=format&fit=crop&w=300&h=300&q=80',
-                      icon: '💧',
+                      imgUrl: '/services/native-water-purifier.jpg',
+                      icon: 'water_drop',
                       badge: 'Sale',
                     },
                     {
@@ -346,7 +346,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                       name: 'Native Smart Locks',
                       category: 'electrician-plumber-carpenter',
                       imgUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=300&h=300&q=80',
-                      icon: '🔐',
+                      icon: 'lock',
                       badge: 'Sale',
                     },
                   ].map((prod) => (
@@ -367,7 +367,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                             const parent = (e.target as HTMLElement).parentElement;
                             if (parent && !parent.querySelector('.fallback-prod-icon')) {
                               const span = document.createElement('span');
-                              span.className = 'fallback-prod-icon text-xl';
+                              span.className = 'fallback-prod-icon material-symbols-outlined text-xl text-[#5e23dc]';
                               span.innerText = prod.icon;
                               parent.appendChild(span);
                             }
