@@ -84,6 +84,8 @@ async function runTestSuite() {
     'babysitting.jpg',
     'elderly-care.jpg',
     'modular-kitchen.jpg',
+    'toilet-cleaning-rim.jpg',
+    'makeup-party-glam.jpg',
   ];
 
   requiredPhotos.forEach((file) => {
@@ -192,6 +194,35 @@ async function runTestSuite() {
   }
 
   try {
+    const bathRes = await fetchUrl(`${WEB_URL}/services/bathroom-cleaning`);
+    assert(bathRes.status === 200, 'Dedicated Bathroom Cleaning Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Germ-free under rims') && serviceSrc.includes('/services/toilet-cleaning-rim.jpg'), 'Bathroom Cleaning Germ-free under rims hero banner verified');
+    assert(serviceSrc.includes('Value deals') && serviceSrc.includes('Intense cleaning (2 bathrooms)'), 'Bathroom Cleaning Value deals section verified');
+    assert(serviceSrc.includes('One time deep clean') && serviceSrc.includes('Intense bathroom cleaning'), 'Bathroom Cleaning One time deep clean section verified');
+    assert(serviceSrc.includes('Mini services') && serviceSrc.includes('Bathroom exhaust fan cleaning'), 'Bathroom Cleaning Mini services section verified');
+    assert(serviceSrc.includes('Bathroom disinfection') && serviceSrc.includes('Minor descaling'), 'Bathroom Cleaning disinfection and descaling verified');
+  } catch (err) {
+    assert(false, 'Dedicated Bathroom Cleaning page reachable', err.message);
+  }
+
+  try {
+    const makeupRes = await fetchUrl(`${WEB_URL}/services/makeup-saree-styling`);
+    assert(makeupRes.status === 200, 'Dedicated Makeup, Saree & Styling Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Party makeup package') && serviceSrc.includes('/services/makeup-party-glam.jpg'), 'Makeup Party makeup package hero verified');
+    assert(serviceSrc.includes('Packages') && serviceSrc.includes('Zara makeup package'), 'Makeup Packages section verified');
+    assert(serviceSrc.includes('Group deals') && serviceSrc.includes('Styling twin deal'), 'Makeup Group deals section verified');
+    assert(serviceSrc.includes('Saree draping') && serviceSrc.includes('Party saree draping'), 'Makeup Saree draping section verified');
+    assert(serviceSrc.includes('Wedding combos') && serviceSrc.includes('Pre-wedding styling combo'), 'Makeup Wedding combos section verified');
+    assert(serviceSrc.includes('Party makeup') && serviceSrc.includes('Glass skin glow makeup'), 'Makeup Party makeup section verified');
+    assert(serviceSrc.includes('Hair styling') && serviceSrc.includes('Classic blowdry & curls'), 'Makeup Hair styling section verified');
+    assert(serviceSrc.includes('Add-ons') && serviceSrc.includes('Eye lash application'), 'Makeup Add-ons section verified');
+  } catch (err) {
+    assert(false, 'Dedicated Makeup, Saree & Styling page reachable', err.message);
+  }
+
+  try {
     const modalSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/components/UrbanCompanyModal.tsx'), 'utf8');
     assert(modalSrc.includes('Derma Facials') && modalSrc.includes('Cryofacial Cold Therapy'), 'Modal Derma Facials Cryofacial Cold Therapy banner verified');
     assert(modalSrc.includes('CASMARA') && modalSrc.includes('CIREPIL') && modalSrc.includes('799'), 'Modal Luxe tier with CASMARA & CIREPIL verified');
@@ -199,6 +230,9 @@ async function runTestSuite() {
     assert(modalSrc.includes('48 mins') && modalSrc.includes('59 mins'), 'Modal subcategory duration badges verified');
     assert(modalSrc.includes('AROMA OIL') && modalSrc.includes('HERBAL OIL'), 'Modal AROMA OIL & HERBAL OIL preference tags verified');
     assert(modalSrc.includes('898') && modalSrc.includes('Arriving in 44 mins'), 'Modal Luxe & Prime preference pricing and ETA badges verified');
+    assert(modalSrc.includes('groupHeader: \'Cleaning\'') && modalSrc.includes('groupHeader: \'Pest Control\''), 'Modal Cleaning & Pest Control grouping verified');
+    assert(modalSrc.includes('Cockroach Control') && modalSrc.includes('Ants & Bed Bugs Control'), 'Modal Pest Control subcategories verified');
+    assert(modalSrc.includes('55 mins') && modalSrc.includes('74 mins'), 'Modal 55 mins and 74 mins duration badges verified');
   } catch (err) {
     assert(false, 'Modal component source check reachable', err.message);
   }

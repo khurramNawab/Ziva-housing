@@ -80,7 +80,14 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'salon-for-women': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
   'spa-for-women': '/services/spa-luxe-stones.jpg',
   'hair-studio-women': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
-  'makeup-saree-styling': 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=400&q=80',
+  'makeup-saree-styling': '/services/makeup-party-glam.jpg',
+  'packages': '/services/makeup-party-glam.jpg',
+  'group-deals': '/services/makeup-party-glam.jpg',
+  'saree-draping': '/services/makeup-party-glam.jpg',
+  'wedding-combos': '/services/makeup-party-glam.jpg',
+  'party-makeup': '/services/makeup-party-glam.jpg',
+  'hair-styling': '/services/makeup-party-glam.jpg',
+  'add-ons': '/services/makeup-party-glam.jpg',
   
   // Salon for Men
   'salon-for-men': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
@@ -88,7 +95,10 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
 
   // Cleaning & Pest Control (Distinct dedicated images)
   'bathroom-kitchen-cleaning': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
-  'bathroom-cleaning': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=400&q=80',
+  'bathroom-cleaning': '/services/toilet-cleaning-rim.jpg',
+  'value-deals': '/services/toilet-cleaning-rim.jpg',
+  'one-time-deep-clean': '/services/toilet-cleaning-rim.jpg',
+  'mini-services': '/services/toilet-cleaning-rim.jpg',
   'kitchen-cleaning': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
   'full-home-cleaning': 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
   'living-bedroom-cleaning': 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80',
@@ -241,10 +251,21 @@ const SUBCATEGORY_BADGE_MAP: Record<string, string> = {
   'spa-for-women': 'Top Rated',
   'hair-studio-women': 'New',
   'makeup-saree-styling': 'Bestseller',
+  'packages': 'Bestseller',
+  'group-deals': '10% OFF',
+  'saree-draping': 'From ₹399',
+  'wedding-combos': 'Luxury',
+  'party-makeup': 'In 59 mins',
+  'hair-styling': 'Salon Finish',
+  'add-ons': 'Quick Add',
   'salon-for-men': 'Upto 15% OFF',
   'massage-for-men': 'Top Rated',
   'ac-service-sub': '44 mins',
   'bathroom-kitchen-cleaning': 'Upto 25% OFF',
+  'bathroom-cleaning': 'Top Rated',
+  'value-deals': 'Upto 25% OFF',
+  'one-time-deep-clean': 'Deep Clean',
+  'mini-services': 'From ₹99',
   'full-home-cleaning': 'Best Price',
   'electrician-sub': '19 mins',
   'plumber-sub': '19 mins',
@@ -1582,6 +1603,564 @@ const DEFAULT_SPA_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_BATHROOM_CLEANING_CATEGORY: ServiceCategory = {
+  id: 'cat-bathroom-cleaning',
+  name: 'Bathroom Cleaning',
+  slug: 'bathroom-cleaning',
+  icon: '🚽',
+  badge: '4.80 ★ (4.2M)',
+  order: 3,
+  subCategories: [
+    {
+      id: 'sub-bc-value-deals',
+      name: 'Value deals',
+      slug: 'value-deals',
+      icon: 'savings',
+      badge: 'Upto 25% OFF',
+      groupHeader: 'Bathroom Cleaning',
+      displayOrder: 1,
+      description: 'Multi-bathroom intensive cleaning packages with maximum savings.',
+      services: [
+        {
+          id: 'srv-bc-val-2',
+          name: 'Intense cleaning (2 bathrooms)',
+          slug: 'intense-cleaning-2-bathrooms',
+          basePrice: 899,
+          durationMinutes: 80,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 1200000,
+          description: '• Takes 2 hrs • 2 bathrooms with stubborn stain removal\n• Power scrubbing machine & skin-safe descaling foam\n• Exhaust fan, mirror, floor & sanitary ware deep clean',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-val-3',
+          name: 'Intense cleaning (3 bathrooms)',
+          slug: 'intense-cleaning-3-bathrooms',
+          basePrice: 1299,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 680000,
+          description: '• Takes 3 hrs • 3 bathrooms with stain removal & descaling\n• Acid-free lime scale removal on taps, tiles & fittings\n• Complete bathroom floor buffing & disinfection',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-val-4',
+          name: 'Intense cleaning (4 bathrooms)',
+          slug: 'intense-cleaning-4-bathrooms',
+          basePrice: 1699,
+          durationMinutes: 160,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 340000,
+          description: '• Takes 4 hrs • 4 bathrooms deep chemical wash & descaling\n• Full tile grout scrubbing, ceiling cobweb removal & drain clearing\n• Save 25% on whole home bathroom care',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-val-combo',
+          name: 'Intense bathroom & ceiling fan cleaning (pack of 2)',
+          slug: 'intense-bathroom-ceiling-fan-pack-2',
+          basePrice: 999,
+          durationMinutes: 100,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 510000,
+          description: '• Includes 2 bathrooms deep clean + 2 ceiling fans power dusting\n• Removes stubborn grease, moisture stains and limescale',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-bc-deep-clean',
+      name: 'One time deep clean',
+      slug: 'one-time-deep-clean',
+      icon: 'clean_hands',
+      badge: 'Deep Clean',
+      groupHeader: 'Bathroom Cleaning',
+      displayOrder: 2,
+      description: 'Single bathroom intensive restoration with power rotary brushes.',
+      services: [
+        {
+          id: 'srv-bc-intense-single',
+          name: 'Intense bathroom cleaning',
+          slug: 'intense-bathroom-cleaning',
+          basePrice: 499,
+          durationMinutes: 50,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 2100000,
+          description: '• Hard water stain removal with power scrubbing machine\n• Bathroom tile & floor deep cleaning with skin-safe foam\n• Toilet bowl under-rim germ eradication & chrome tap polish',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-move-in',
+          name: 'Move-in bathroom cleaning',
+          slug: 'move-in-bathroom-cleaning',
+          basePrice: 699,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 420000,
+          description: '• Deep chemical descaling for newly moved-in or vacated homes\n• Exhaust fan, geyser exterior & mirror descaling included\n• Heavy grime, paint residue & mildew removal',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-bc-mini-services',
+      name: 'Mini services',
+      slug: 'mini-services',
+      icon: 'add_task',
+      badge: 'From ₹99',
+      groupHeader: 'Add-ons',
+      displayOrder: 3,
+      description: 'Quick targeted bathroom maintenance and fixture cleaning add-ons.',
+      services: [
+        {
+          id: 'srv-bc-exhaust-fan',
+          name: 'Bathroom exhaust fan cleaning (additional)',
+          slug: 'bathroom-exhaust-fan-cleaning',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 180000,
+          description: '• Grease and dust removal from blades and mesh guard\n• Motor wiping with dry microfiber cloth',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-door-cleaning',
+          name: 'Door cleaning (additional)',
+          slug: 'door-cleaning-additional',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.76,
+          reviewCount: 95000,
+          description: '• Dirt & moisture mark wiping with anti-bacterial solution\n• Cleans inner & outer door panels and handles',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-minor-descaling',
+          name: 'Minor descaling (additional)',
+          slug: 'minor-descaling-additional',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 140000,
+          description: '• Acid-free limescale removal on chrome taps and showerheads\n• Restores brilliant metallic shine without scratching',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-washbasin-cleaning',
+          name: 'Washbasin cleaning (additional)',
+          slug: 'washbasin-cleaning-additional',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 210000,
+          description: '• Stain removal from ceramic wash basin & mirror polish\n• Drain rim cleanup and stopper sanitization',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-ceiling-fan',
+          name: 'Ceiling fan cleaning',
+          slug: 'ceiling-fan-cleaning-add',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 310000,
+          description: '• Deep blade wiping & motor cowl dust wipe down\n• Non-messy dry wiping with specialized drop cloth',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-bc-disinfection',
+          name: 'Bathroom disinfection',
+          slug: 'bathroom-disinfection-service',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 160000,
+          description: '• Hospital-grade anti-microbial spray mist on all sanitary surfaces\n• 99.9% germ eradication on toilet seat, flush button & taps',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_MAKEUP_CATEGORY: ServiceCategory = {
+  id: 'cat-makeup-saree-styling',
+  name: 'Makeup, Saree & Styling',
+  slug: 'makeup-saree-styling',
+  icon: '💄',
+  badge: 'In 59 mins',
+  order: 2,
+  subCategories: [
+    {
+      id: 'sub-mk-packages',
+      name: 'Packages',
+      slug: 'packages',
+      icon: 'shopping_bag',
+      badge: 'Bestseller',
+      groupHeader: 'Combos & Packages',
+      displayOrder: 1,
+      description: 'Curated head-to-toe party and bridal styling packages by master artists.',
+      services: [
+        {
+          id: 'srv-mk-party-pkg',
+          name: 'Party makeup package',
+          slug: 'party-makeup-package',
+          basePrice: 1499,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 520000,
+          description: '• Includes full face glam party makeup with false lashes\n• Simple hair styling (curls/blowdry/straightening) & saree or dupatta draping included\n• International branded cosmetic kits',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-zara-pkg',
+          name: 'Zara makeup package',
+          slug: 'zara-makeup-package',
+          basePrice: 1999,
+          durationMinutes: 105,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 310000,
+          description: '• High-definition party glam look using premium MAC & Huda products\n• Complimentary hair styling and precision saree draping\n• Waterproof 12-hour long-wear finish',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-editorial-pkg',
+          name: 'Editorial makeup package',
+          slug: 'editorial-makeup-package',
+          basePrice: 2499,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.91,
+          reviewCount: 180000,
+          description: '• Long-wear luminous finish, precision contouring, and smokey eye glam\n• Advanced hair styling with curls, waves or textured bun\n• Premium mink lashes and setting spray',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-saree-hair',
+          name: 'Saree draping & hair styling',
+          slug: 'saree-draping-hair-styling',
+          basePrice: 799,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.85,
+          reviewCount: 640000,
+          description: '• Neat pleating & pinning with pin-free safety tips\n• Quick curls, straightening or neat hair bun\n• Hair accessory attachment included',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-saree-makeup',
+          name: 'Saree draping & hair make-up',
+          slug: 'saree-draping-hair-makeup',
+          basePrice: 1199,
+          durationMinutes: 70,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 410000,
+          description: '• Classic saree drape + light makeup touch up + blowdry curls\n• Perfect for family gatherings, pujas and festive functions',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-mk-group-deals',
+      name: 'Group deals',
+      slug: 'group-deals',
+      icon: 'groups',
+      badge: '10% OFF',
+      groupHeader: 'Group Deals',
+      displayOrder: 2,
+      description: 'Group styling packages for friends and family with instant 10% discount.',
+      services: [
+        {
+          id: 'srv-mk-styling-twin',
+          name: 'Styling twin deal',
+          slug: 'styling-twin-deal',
+          basePrice: 2499,
+          durationMinutes: 150,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 190000,
+          description: '• Complete makeup & styling package for 2 people\n• Save 10% on group booking with dedicated stylist\n• Hair styling and saree/dupatta draping for both',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-mehendi-duo',
+          name: 'Mehendi hair styling duo',
+          slug: 'mehendi-hair-styling-duo',
+          basePrice: 1299,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 110000,
+          description: '• Floral braids, textured curls & baby breath flower placement for 2 people\n• Ideal for Mehendi and Sangeet functions',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-mk-saree-draping',
+      name: 'Saree draping',
+      slug: 'saree-draping',
+      icon: 'styler',
+      badge: 'From ₹399',
+      groupHeader: 'Draping',
+      displayOrder: 3,
+      description: 'Wrinkle-free, perfectly pleated draping for all saree fabrics.',
+      services: [
+        {
+          id: 'srv-mk-party-saree',
+          name: 'Party saree draping',
+          slug: 'party-saree-draping',
+          basePrice: 399,
+          durationMinutes: 25,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 820000,
+          description: '• Standard pleated or Gujarati style pallu draping\n• Clean waist fitting and secure safety pinning',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-bridal-saree',
+          name: 'Bridal / heavy saree draping',
+          slug: 'bridal-heavy-saree-draping',
+          basePrice: 599,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 340000,
+          description: '• Heavy Kanjeevaram / Banarasi saree with ironed pleats & secure pinning\n• Can-can skirt adjustment and dupatta double draping',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-mk-wedding-combos',
+      name: 'Wedding combos',
+      slug: 'wedding-combos',
+      icon: 'diamond',
+      badge: 'Luxury',
+      groupHeader: 'Wedding Specials',
+      displayOrder: 4,
+      description: 'Showstopper bridal & wedding guest glam combinations.',
+      services: [
+        {
+          id: 'srv-mk-pre-wedding',
+          name: 'Pre-wedding styling combo',
+          slug: 'pre-wedding-styling-combo',
+          basePrice: 2999,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 120000,
+          description: '• HD makeup, false lashes, bridal hairstyling & lehenga/saree drape\n• High-definition contouring and 16-hr smudge-proof finish',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-reception-glam',
+          name: 'Reception glam combo',
+          slug: 'reception-glam-combo',
+          basePrice: 3499,
+          durationMinutes: 130,
+          bestsellerFlag: true,
+          rating: 4.92,
+          reviewCount: 95000,
+          description: '• Waterproof long-wear HD glam with contouring & premium hair accessory setting\n• Customized lip blend & metallic eye shimmer',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-engagement-glam',
+          name: 'Engagement glam combo',
+          slug: 'engagement-glam-combo',
+          basePrice: 3499,
+          durationMinutes: 130,
+          bestsellerFlag: false,
+          rating: 4.91,
+          reviewCount: 88000,
+          description: '• Radiant engagement glow, eye drama, airbrush finish effect & drape\n• Long-stay setting mist for tear-proof wear',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-mk-party-makeup',
+      name: 'Party makeup',
+      slug: 'party-makeup',
+      icon: 'face',
+      badge: 'In 59 mins',
+      groupHeader: 'Makeup Styles',
+      displayOrder: 5,
+      description: 'Face makeup only tailored to your skin tone and event lighting.',
+      services: [
+        {
+          id: 'srv-mk-classic-party',
+          name: 'Classic party makeup',
+          slug: 'classic-party-makeup',
+          basePrice: 1199,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 480000,
+          description: '• Subtle natural glowing base with nude lips & winged eyeliner\n• Matches your skin undertone perfectly',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-hd-party',
+          name: 'HD party makeup',
+          slug: 'hd-party-makeup',
+          basePrice: 1499,
+          durationMinutes: 75,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 610000,
+          description: '• High-definition photo-ready foundation, bold eye makeup & blush\n• Conceals blemishes and dark circles seamlessly',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-glass-skin',
+          name: 'Glass skin glow makeup',
+          slug: 'glass-skin-glow-makeup',
+          basePrice: 1899,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 240000,
+          description: '• Dewy Korean glass skin finish with cream blushes and luminous highlighter\n• Ultra-hydrating skin prep with hyaluronic serum',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-mk-hair-styling',
+      name: 'Hair styling',
+      slug: 'hair-styling',
+      icon: 'brush',
+      badge: 'Salon Finish',
+      groupHeader: 'Hair',
+      displayOrder: 6,
+      description: 'Professional thermal styling, curls and statement hair buns.',
+      services: [
+        {
+          id: 'srv-mk-classic-blowdry',
+          name: 'Classic blowdry & curls',
+          slug: 'classic-blowdry-curls',
+          basePrice: 499,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 390000,
+          description: '• Smooth bouncy blowdry or soft beachy waves\n• Heat protectant serum application before styling',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-adv-hair',
+          name: 'Advanced hair styling',
+          slug: 'advanced-hair-styling',
+          basePrice: 699,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 270000,
+          description: '• Textured messy bun, French twists or Hollywood waves with setting spray\n• Includes teasing, padding and bobby pinning',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-mk-add-ons',
+      name: 'Add-ons',
+      slug: 'add-ons',
+      icon: 'extension',
+      badge: 'Quick Add',
+      groupHeader: 'Add-ons',
+      displayOrder: 7,
+      description: 'Quick enhancement treatments to complement your party look.',
+      services: [
+        {
+          id: 'srv-mk-eyelash',
+          name: 'Eye lash application',
+          slug: 'eye-lash-application',
+          basePrice: 299,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 190000,
+          description: '• Premium natural wispy false eyelashes with long-stay adhesive\n• Waterproof and reusable',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-adv-eye',
+          name: 'Advanced eye makeup',
+          slug: 'advanced-eye-makeup',
+          basePrice: 399,
+          durationMinutes: 25,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 150000,
+          description: '• Cut-crease, smokey glitter eyes or dramatic cat eye styling\n• Includes eye primer and foil shimmers',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mk-hair-spa',
+          name: 'Hair spa add-on',
+          slug: 'hair-spa-addon',
+          basePrice: 499,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 110000,
+          description: '• Deep nourishing steam mask & scalp massage before styling\n• Tames frizz and adds instant mirror shine',
+          imageUrl: '/services/makeup-party-glam.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -1631,6 +2210,8 @@ function UrbanCompanyServiceListingContent() {
     const isSalonLuxeSlug = !isSpaSlug && ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
     const isInstaHelpSlug = ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug);
     const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
+    const isBathroomCleaningSlug = ['bathroom-cleaning', 'bathroom', 'bathroom-cleaning-services'].includes(serviceSlug);
+    const isMakeupSlug = ['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -1682,6 +2263,16 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WASHING_MACHINE_CATEGORY.subCategories?.[0]?.slug || 'washing-machine-jet-service');
           return;
         }
+        if (isBathroomCleaningSlug) {
+          setCategoryData(DEFAULT_BATHROOM_CLEANING_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_BATHROOM_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'value-deals');
+          return;
+        }
+        if (isMakeupSlug) {
+          setCategoryData(DEFAULT_MAKEUP_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_MAKEUP_CATEGORY.subCategories?.[0]?.slug || 'packages');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -1707,6 +2298,10 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_INSTAHELP_CATEGORY;
         } else if (isWashingMachineSlug) {
           data = DEFAULT_WASHING_MACHINE_CATEGORY;
+        } else if (isBathroomCleaningSlug) {
+          data = DEFAULT_BATHROOM_CLEANING_CATEGORY;
+        } else if (isMakeupSlug) {
+          data = DEFAULT_MAKEUP_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -1723,6 +2318,10 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_INSTAHELP_CATEGORY;
       } else if (isWashingMachineSlug || data.slug === 'washing-machine' || data.name?.toLowerCase().includes('washing')) {
         data = DEFAULT_WASHING_MACHINE_CATEGORY;
+      } else if (isBathroomCleaningSlug || data.slug === 'bathroom-cleaning' || data.name?.toLowerCase().includes('bathroom')) {
+        data = DEFAULT_BATHROOM_CLEANING_CATEGORY;
+      } else if (isMakeupSlug || data.slug === 'makeup-saree-styling' || data.name?.toLowerCase().includes('makeup')) {
+        data = DEFAULT_MAKEUP_CATEGORY;
       }
 
       setCategoryData(data);
@@ -1780,6 +2379,14 @@ function UrbanCompanyServiceListingContent() {
       } else if (['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_WASHING_MACHINE_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WASHING_MACHINE_CATEGORY.subCategories?.[0]?.slug || 'washing-machine-jet-service');
+        setError404(false);
+      } else if (['bathroom-cleaning', 'bathroom', 'bathroom-cleaning-services'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_BATHROOM_CLEANING_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_BATHROOM_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'value-deals');
+        setError404(false);
+      } else if (['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_MAKEUP_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_MAKEUP_CATEGORY.subCategories?.[0]?.slug || 'packages');
         setError404(false);
       } else {
         setError404(true);
@@ -1903,6 +2510,23 @@ function UrbanCompanyServiceListingContent() {
       ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug) ||
       categoryData?.slug === 'washing-machine' ||
       categoryData?.name?.toLowerCase().includes('washing')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isBathroomCleaningCategory = useMemo(() => {
+    return (
+      ['bathroom-cleaning', 'bathroom', 'bathroom-cleaning-services'].includes(serviceSlug) ||
+      ['bathroom-cleaning', 'bathroom'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('bathroom')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isMakeupCategory = useMemo(() => {
+    return (
+      ['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug) ||
+      ['makeup-saree-styling', 'makeup'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('makeup') ||
+      categoryData?.name?.toLowerCase().includes('saree')
     );
   }, [serviceSlug, categoryData]);
 
@@ -2268,6 +2892,67 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isBathroomCleaningCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Bathroom Cleaning</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.80
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">4.2M reviews</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isMakeupCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Makeup, Saree & ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 59 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.86
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.8M reviews</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <h2 className="text-xs font-bold text-[#374151] uppercase tracking-wider mb-4 px-2">
               Select a service
             </h2>
@@ -2391,6 +3076,60 @@ function UrbanCompanyServiceListingContent() {
                 </div>
                 <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/10 shrink-0">
                   <img src="/services/washing-machine-clean.jpg" alt="Washing Machine Clean" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Bathroom Cleaning (Matching Screenshot 2: Germ-free under rims) */}
+            {isBathroomCleaningCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="/services/toilet-cleaning-rim.jpg"
+                    alt="Bathroom Cleaning - Germ-free under rims"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ‹
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+                          Germ-free under rims
+                        </h2>
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ›
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-200 font-medium">
+                        100% stain eradication & certified hospital-grade sanitization
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Makeup (Matching Screenshot 3: Party makeup package Starting ₹1,499) */}
+            {isMakeupCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#831843] via-[#9d174d] to-[#be185d] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-pink-700">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-pink-300 text-pink-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                    Party & Bridal Glam
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight">
+                    Party makeup<br /><span className="text-pink-200">package</span>
+                  </h2>
+                  <p className="text-xs text-pink-100 font-medium leading-relaxed">
+                    Full face glam, international MAC cosmetics, saree drape & hair curls
+                  </p>
+                  <div className="text-sm font-extrabold text-amber-300 pt-1">
+                    Starting ₹1,499
+                  </div>
+                </div>
+                <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0">
+                  <img src="/services/makeup-party-glam.jpg" alt="Party Makeup Package" className="w-full h-full object-cover" />
                 </div>
               </div>
             )}
@@ -2544,7 +3283,12 @@ function UrbanCompanyServiceListingContent() {
             {/* Dedicated Sections Feed grouped by Subcategory */}
             <div className="space-y-8">
               {(categoryData.subCategories || [])
-                .filter((sub) => !activeSubCategorySlug || sub.slug === activeSubCategorySlug)
+                .filter((sub) => {
+                  if (isBathroomCleaningCategory || isMakeupCategory) {
+                    return true;
+                  }
+                  return !activeSubCategorySlug || sub.slug === activeSubCategorySlug;
+                })
                 .map((subCat) => {
                   let subServices = subCat.services || [];
                   if (subServices.length === 0 && categoryData.services) {
@@ -2586,6 +3330,44 @@ function UrbanCompanyServiceListingContent() {
                       </div>
 
                       {/* Custom Section Banners (Urban Company Style) */}
+                      {subCat.slug === 'value-deals' && (
+                        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#16a34a] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Upto 25% OFF
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Bathroom cleaning value packages
+                            </h3>
+                            <p className="text-xs text-emerald-800 font-medium">
+                              From ₹899 for 2 bathrooms • Complete stain & limescale eradication
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
+                            <img src="/services/toilet-cleaning-rim.jpg" alt="Value Deals" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {subCat.slug === 'packages' && (
+                        <div className="bg-gradient-to-r from-pink-50 via-rose-50 to-pink-100/60 border border-pink-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#be185d] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Bestselling Look
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Party makeup package from ₹1,499
+                            </h3>
+                            <p className="text-xs text-pink-900 font-medium">
+                              Full face glam + eye lashes + saree draping & hair styling
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-pink-100 shrink-0 hidden sm:block">
+                            <img src="/services/makeup-party-glam.jpg" alt="Party Makeup Package" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
                       {subCat.slug === 'annual-plan' && (
                         <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
                           <div className="space-y-1">
@@ -3082,17 +3864,32 @@ function UrbanCompanyServiceListingContent() {
               )}
             </div>
 
-            {/* Ziva Guarantee Box */}
-            <div className="bg-[#f5f3ff] rounded-2xl p-4 border border-purple-100 space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-[#5e23dc] font-bold">
-                <span className="material-symbols-outlined text-[18px]">verified_user</span>
-                <span>Ziva Promise</span>
+            {/* UC Promise Box (Matching Urban Company Screenshots 2 & 3) */}
+            <div className="bg-[#f5f3ff] rounded-2xl p-4 border border-purple-100 space-y-2.5 text-xs">
+              <div className="flex items-center justify-between text-[#5e23dc] font-extrabold">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[20px]">verified_user</span>
+                  <span className="text-sm">UC Promise</span>
+                </div>
+                <div className="w-7 h-7 rounded-full bg-purple-100 flex items-center justify-center text-xs">
+                  🛡️
+                </div>
               </div>
-              <ul className="space-y-1 text-gray-600 text-[11px] list-disc list-inside">
-                <li>Background-verified professionals</li>
-                <li>Escrow protected payments</li>
-                <li>Free rework within 30 days</li>
+              <ul className="space-y-1.5 text-gray-700 text-[11.5px]">
+                <li className="flex items-center gap-2 font-medium"><span className="text-[#5e23dc] font-bold">✓</span> Verified Professionals</li>
+                <li className="flex items-center gap-2 font-medium"><span className="text-[#5e23dc] font-bold">✓</span> Hassle Free Booking</li>
+                <li className="flex items-center gap-2 font-medium"><span className="text-[#5e23dc] font-bold">✓</span> Transparent Pricing</li>
               </ul>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCheckoutOpen(true)}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-3 rounded-xl shadow-xs transition-colors flex items-center justify-between cursor-pointer"
+                >
+                  <span>{cart.length > 0 ? `${cart.reduce((a, b) => a + b.quantity, 0)} ${cart.reduce((a, b) => a + b.quantity, 0) === 1 ? 'item' : 'items'}` : '1 item'}</span>
+                  <span>View Cart ›</span>
+                </button>
+              </div>
             </div>
           </div>
 
