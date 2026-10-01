@@ -827,6 +827,12 @@ export default function UrbanCompanyModal({
         router.push('/services/bathroom-cleaning');
       } else if (subSlug === 'makeup-saree-styling') {
         router.push('/services/makeup-saree-styling');
+      } else if (subSlug === 'kitchen-cleaning' || subSlug === 'kitchen') {
+        router.push('/services/kitchen-cleaning');
+      } else if (subSlug === 'living-bedroom-cleaning' || subSlug === 'living-bedroom' || subSlug === 'sofa-cleaning') {
+        router.push('/services/living-bedroom-cleaning');
+      } else if (subSlug === 'full-home-cleaning' || subSlug === 'full-home' || subSlug === 'full-home-by-room-cleaning' || subSlug === 'full-home-by-room') {
+        router.push('/services/full-home-cleaning');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }

@@ -86,6 +86,7 @@ async function runTestSuite() {
     'modular-kitchen.jpg',
     'toilet-cleaning-rim.jpg',
     'makeup-party-glam.jpg',
+    'kitchen-cleaning-counter.jpg',
   ];
 
   requiredPhotos.forEach((file) => {
@@ -220,6 +221,40 @@ async function runTestSuite() {
     assert(serviceSrc.includes('Add-ons') && serviceSrc.includes('Eye lash application'), 'Makeup Add-ons section verified');
   } catch (err) {
     assert(false, 'Dedicated Makeup, Saree & Styling page reachable', err.message);
+  }
+
+  try {
+    const kitchenRes = await fetchUrl(`${WEB_URL}/services/kitchen-cleaning`);
+    assert(kitchenRes.status === 200, 'Dedicated Kitchen Cleaning Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Spotless counters & chimney') && serviceSrc.includes('/services/kitchen-cleaning-counter.jpg'), 'Kitchen Cleaning hero banner verified');
+    assert(serviceSrc.includes('Kitchen Cleaning') && serviceSrc.includes('2.4M bookings'), 'Kitchen Cleaning header and 2.4M bookings verified');
+    assert(serviceSrc.includes('Regular chimney & kitchen cleaning') && serviceSrc.includes('Intense kitchen & chimney cleaning'), 'Kitchen Cleaning Value deals services verified');
+    assert(serviceSrc.includes('Safe Chemicals') && serviceSrc.includes('Superior Stain Removal'), 'Kitchen Cleaning UC Promise verified');
+  } catch (err) {
+    assert(false, 'Dedicated Kitchen Cleaning page reachable', err.message);
+  }
+
+  try {
+    const livingRes = await fetchUrl(`${WEB_URL}/services/living-bedroom-cleaning`);
+    assert(livingRes.status === 200, 'Dedicated Living & Bedroom Cleaning Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('With professional tools'), 'Living & Bedroom Cleaning With professional tools banner verified');
+    assert(serviceSrc.includes('Living & Bedroom ...') && serviceSrc.includes('1.9M bookings'), 'Living & Bedroom header and 1.9M bookings verified');
+    assert(serviceSrc.includes('Curated sofa & home upholstery combos') && serviceSrc.includes('Fabric sofa deep cleaning'), 'Living & Bedroom Super saver deals verified');
+  } catch (err) {
+    assert(false, 'Dedicated Living & Bedroom Cleaning page reachable', err.message);
+  }
+
+  try {
+    const fullHomeRes = await fetchUrl(`${WEB_URL}/services/full-home-cleaning`);
+    assert(fullHomeRes.status === 200, 'Dedicated Full Home / By Room Cleaning Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Full home cleaning') && serviceSrc.includes('Starts at ₹3,199'), 'Full Home cleaning Starts at ₹3,199 hero verified');
+    assert(serviceSrc.includes('Full Home/ By Room ...') && serviceSrc.includes('Earliest 16, 8:30 AM'), 'Full Home/ By Room header and earliest slot verified');
+    assert(serviceSrc.includes('Full apartment') && serviceSrc.includes('Full bungalow/duplex') && serviceSrc.includes('Partial home cleaning'), 'Full Home subcategories verified');
+  } catch (err) {
+    assert(false, 'Dedicated Full Home / By Room Cleaning page reachable', err.message);
   }
 
   try {

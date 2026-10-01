@@ -2161,6 +2161,904 @@ const DEFAULT_MAKEUP_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
+  id: 'cat-kitchen-cleaning',
+  name: 'Kitchen Cleaning',
+  slug: 'kitchen-cleaning',
+  icon: '🍳',
+  badge: '4.80 ★ (2.4M)',
+  order: 3,
+  subCategories: [
+    {
+      id: 'sub-kc-value-deals',
+      name: 'Value deals',
+      slug: 'value-deals',
+      icon: 'savings',
+      badge: 'Upto 25% OFF',
+      groupHeader: 'Kitchen Cleaning',
+      displayOrder: 1,
+      description: 'Kitchen and chimney combination packages with deep degreasing.',
+      services: [
+        {
+          id: 'srv-kc-reg-chimney-kitchen',
+          name: 'Regular chimney & kitchen cleaning',
+          slug: 'regular-chimney-kitchen-cleaning',
+          basePrice: 1199,
+          durationMinutes: 150,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 340000,
+          description: '• Complete kitchen degreasing + regular chimney cleaning\n• Gas stove, countertop, backsplash tiles and floor scrubbing\n• Non-toxic chemical degreaser on stubborn oil deposits',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-intense-chimney-kitchen',
+          name: 'Intense kitchen & chimney cleaning',
+          slug: 'intense-kitchen-chimney-cleaning',
+          basePrice: 1699,
+          durationMinutes: 195,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 510000,
+          description: '• Deep chemical wash for heavily oiled kitchens\n• Baffle filter dismantling & power degreasing\n• Slabs, exhaust, cabinets exterior and wall tiles buffing',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-floor-sink',
+          name: 'Kitchen floor scrubbing & sink',
+          slug: 'kitchen-floor-scrubbing-sink',
+          basePrice: 699,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 180000,
+          description: '• High-speed floor scrubbing machine for greasy kitchen floors\n• Deep sink descaling & drain pipe unclog wash',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-kc-chimney',
+      name: 'Chimney cleaning',
+      slug: 'chimney-cleaning',
+      icon: 'air',
+      badge: 'Bestseller',
+      groupHeader: 'Kitchen Cleaning',
+      displayOrder: 2,
+      description: 'Professional chimney dismantle, carbon & grease removal.',
+      services: [
+        {
+          id: 'srv-kc-reg-chimney',
+          name: 'Regular chimney cleaning',
+          slug: 'regular-chimney-cleaning',
+          basePrice: 599,
+          durationMinutes: 75,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 420000,
+          description: '• Filter cleaning, exterior body wipe & motor duct check\n• Removes sticky grease film for higher suction power',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-deep-chimney',
+          name: 'Deep baffle filter chimney cleaning',
+          slug: 'deep-baffle-filter-chimney-cleaning',
+          basePrice: 799,
+          durationMinutes: 105,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 260000,
+          description: '• Complete baffle filter chemical immersion & degrease soak\n• Inner fan blade carbon removal & auto-clean tray restoration',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-kc-occupied',
+      name: 'Occupied kitchen cleaning',
+      slug: 'occupied-kitchen-cleaning',
+      icon: 'soup_kitchen',
+      badge: 'Deep Clean',
+      groupHeader: 'Kitchen Cleaning',
+      displayOrder: 3,
+      description: 'End-to-end cleaning without having to empty your kitchen cabinets.',
+      services: [
+        {
+          id: 'srv-kc-occupied-full',
+          name: 'Complete occupied kitchen cleaning',
+          slug: 'complete-occupied-kitchen-cleaning',
+          basePrice: 1299,
+          durationMinutes: 150,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 610000,
+          description: '• Utensil-safe degreasing of counters, hob, tiles & sink\n• Exterior cabinet doors, drawers and handles disinfected\n• Floor scrubbing with skin-safe disinfectant',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-kc-appliances',
+      name: 'Appliance cleaning',
+      slug: 'appliance-cleaning',
+      icon: 'kitchen',
+      badge: 'From ₹149',
+      groupHeader: 'Appliances',
+      displayOrder: 4,
+      description: 'Hygienic deep cleaning of microwaves, fridges, stoves and air fryers.',
+      services: [
+        {
+          id: 'srv-kc-fridge',
+          name: 'Refrigerator cleaning',
+          slug: 'refrigerator-cleaning-kitchen',
+          basePrice: 399,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 410000,
+          description: '• Tray removal, interior food stain wipe & gasket mold removal\n• Odor neutralizing steam deodorization',
+          imageUrl: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-microwave',
+          name: 'Microwave cleaning',
+          slug: 'microwave-cleaning',
+          basePrice: 299,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 280000,
+          description: '• Turntable wash, grease splash removal & interior chamber scrub\n• Food-grade citrus sanitization',
+          imageUrl: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-stove',
+          name: 'Gas stove deep clean',
+          slug: 'gas-stove-deep-clean',
+          basePrice: 249,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 310000,
+          description: '• Brass burner unclog, drip tray scrubbing & glass/steel top polish\n• Removes stubborn burnt oil spots',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-purifier',
+          name: 'Water purifier exterior cleaning',
+          slug: 'water-purifier-exterior-cleaning',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.77,
+          reviewCount: 120000,
+          description: '• Water deposit descaling on body & dispensing tap disinfection',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-airfryer',
+          name: 'Air fryer cleaning',
+          slug: 'air-fryer-cleaning',
+          basePrice: 199,
+          durationMinutes: 25,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 95000,
+          description: '• Basket oil degreasing, heating coil crumb wipe & exterior cleanup',
+          imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-oven',
+          name: 'Oven cleaning',
+          slug: 'oven-deep-cleaning',
+          basePrice: 349,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 150000,
+          description: '• Baking tray scrubbing, grill racks wire brush cleanup & glass door polish',
+          imageUrl: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-mixer',
+          name: 'Mixer grinder / toaster cleaning',
+          slug: 'mixer-toaster-cleaning',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.76,
+          reviewCount: 80000,
+          description: '• Body grime wiping, cord wipe and crumb tray emptying',
+          imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-kc-cabinets',
+      name: 'Cabinets & slab',
+      slug: 'cabinets-slab',
+      icon: 'countertops',
+      badge: 'Popular',
+      groupHeader: 'Storage & Slab',
+      displayOrder: 5,
+      description: 'Granite counter polish, tile degreasing and cabinet interior organization.',
+      services: [
+        {
+          id: 'srv-kc-slab-degrease',
+          name: 'Kitchen slab & tile degreasing',
+          slug: 'kitchen-slab-tile-degreasing',
+          basePrice: 499,
+          durationMinutes: 50,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 350000,
+          description: '• High-potency non-acidic foam spray removing oil droplets from tiles & slab\n• Restores clean shine without dulling granite',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-cabinet-wipe',
+          name: 'Cabinet interior wiping & organizing',
+          slug: 'cabinet-interior-wiping-organizing',
+          basePrice: 599,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 220000,
+          description: '• Internal shelf wiping, crumb suction & lining paper replacement assistance',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-kc-mini',
+      name: 'Mini services',
+      slug: 'mini-services',
+      icon: 'add_task',
+      badge: 'From ₹99',
+      groupHeader: 'Add-ons',
+      displayOrder: 6,
+      description: 'Quick add-ons for sink, exhaust, windows and floor sanitization.',
+      services: [
+        {
+          id: 'srv-kc-exhaust',
+          name: 'Kitchen exhaust fan cleaning',
+          slug: 'kitchen-exhaust-fan-cleaning',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 210000,
+          description: '• Oil and soot removal from blades and plastic shutter louvers',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-sink',
+          name: 'Sink & drain cleaning',
+          slug: 'sink-drain-cleaning-kitchen',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 190000,
+          description: '• Stainless steel stain polish & drain trap hair/food debris flush',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-dishrack',
+          name: 'Dish drying rack & utensil area cleaning',
+          slug: 'dish-drying-rack-cleaning',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.77,
+          reviewCount: 140000,
+          description: '• Water lime deposit removal from chrome/plastic dish rack trays',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-window',
+          name: 'Kitchen window & mesh cleaning',
+          slug: 'kitchen-window-mesh-cleaning',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 110000,
+          description: '• Oil mist wiping from window panes and wire mesh channel vacuuming',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kc-floor-disinfect',
+          name: 'Kitchen floor disinfection',
+          slug: 'kitchen-floor-disinfection-addon',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 160000,
+          description: '• Hospital-grade antibacterial mop eliminating kitchen bacteria and grease',
+          imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY: ServiceCategory = {
+  id: 'cat-living-bedroom-cleaning',
+  name: 'Living & Bedroom Cleaning',
+  slug: 'living-bedroom-cleaning',
+  icon: '🛋️',
+  badge: '4.82 ★ (1.9M)',
+  order: 3,
+  subCategories: [
+    {
+      id: 'sub-lbc-super-saver',
+      name: 'Super saver deals',
+      slug: 'super-saver-deals',
+      icon: 'savings',
+      badge: 'Upto 25% OFF',
+      groupHeader: 'Upholstery & Deals',
+      displayOrder: 1,
+      description: 'Exclusive combo packages for sofa and carpet wet extraction.',
+      services: [
+        {
+          id: 'srv-lbc-fabric-sofa-3',
+          name: 'Fabric sofa deep cleaning (3-seater)',
+          slug: 'fabric-sofa-deep-cleaning-3seater',
+          basePrice: 599,
+          durationMinutes: 75,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 620000,
+          description: '• Power dry vacuuming + shampoo foam injection + wet extraction\n• Removes 98% dust mites, coffee stains and pet odors\n• High-suction machine leaves sofa dry in 3 hours',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-upholstery',
+      name: 'Clean upholstery expertise',
+      slug: 'clean-upholstery-expertise',
+      icon: 'cleaning_services',
+      badge: 'Expert Tools',
+      groupHeader: 'Upholstery & Deals',
+      displayOrder: 2,
+      description: 'German injection-extraction tools restoring fabric color and texture.',
+      services: [
+        {
+          id: 'srv-lbc-sofa-scrub-extract',
+          name: 'Deep sofa scrubbing & wet extraction',
+          slug: 'deep-sofa-scrubbing-wet-extraction',
+          basePrice: 799,
+          durationMinutes: 105,
+          bestsellerFlag: true,
+          rating: 4.85,
+          reviewCount: 410000,
+          description: '• Manual stain spotting + motorized rotary brush shampooing\n• Hospital-grade sanitization killing allergens and bed bugs\n• Suitable for velvet, suede, linen & cotton blends',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-sofa',
+      name: 'Sofa cleaning',
+      slug: 'sofa-cleaning',
+      icon: 'weekend',
+      badge: 'Top Booked',
+      groupHeader: 'Furniture',
+      displayOrder: 3,
+      description: 'Individual seating units and whole sectional sofa cleaning.',
+      services: [
+        {
+          id: 'srv-lbc-sofa-1',
+          name: '1-seater sofa / armchair cleaning',
+          slug: '1seater-sofa-cleaning',
+          basePrice: 299,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 150000,
+          description: '• Complete fabric shampoo wash & moisture extraction',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-sofa-3',
+          name: '3-seater sofa cleaning',
+          slug: '3seater-sofa-cleaning',
+          basePrice: 599,
+          durationMinutes: 75,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 520000,
+          description: '• Deep foam wash on armrests, backrest and seat cushions',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-sofa-5',
+          name: '5-seater (3+1+1) sofa cleaning',
+          slug: '5seater-sofa-cleaning',
+          basePrice: 899,
+          durationMinutes: 120,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 410000,
+          description: '• Complete living room sofa suite deep extraction wash',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-sofa-lshape',
+          name: 'L-shape / Sectional sofa cleaning',
+          slug: 'lshape-sectional-sofa-cleaning',
+          basePrice: 1199,
+          durationMinutes: 150,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 220000,
+          description: '• Chaise lounge and all modular sectional units deep shampooed',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-carpet',
+          name: 'Carpet cleaning (small/medium)',
+          slug: 'carpet-cleaning-living',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 190000,
+          description: '• Up to 5x7 ft rug deep shampooing, dust mite extraction & deodorization',
+          imageUrl: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-curtain',
+      name: 'Curtains',
+      slug: 'curtain',
+      icon: 'curtains',
+      badge: 'In-situ',
+      groupHeader: 'Furnishings',
+      displayOrder: 4,
+      description: 'Hang-in-place high pressure steam dusting without unhooking.',
+      services: [
+        {
+          id: 'srv-lbc-curtain-panel',
+          name: 'Curtain steam cleaning & dusting (per panel)',
+          slug: 'curtain-steam-cleaning-panel',
+          basePrice: 199,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 190000,
+          description: '• High-temperature steam kills dust mites and straightens wrinkles\n• No hassle of taking down heavy curtains or drapery',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-balcony',
+      name: 'Balcony cleaning',
+      slug: 'balcony-cleaning',
+      icon: 'deck',
+      badge: 'Power Wash',
+      groupHeader: 'Spaces',
+      displayOrder: 5,
+      description: 'Balcony floor scrubbing, bird dropping removal and railing wiping.',
+      services: [
+        {
+          id: 'srv-lbc-balcony-deep',
+          name: 'Balcony deep wash & railing cleaning',
+          slug: 'balcony-deep-wash-railing',
+          basePrice: 399,
+          durationMinutes: 40,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 240000,
+          description: '• High-pressure water floor wash, drain clearing & glass/steel railing wipe',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-bedroom',
+      name: 'Bedroom deep',
+      slug: 'bedroom-deep',
+      icon: 'bed',
+      badge: 'Deep Clean',
+      groupHeader: 'Spaces',
+      displayOrder: 6,
+      description: 'Complete bedroom dust eradication, under-bed cleaning and sanitization.',
+      services: [
+        {
+          id: 'srv-lbc-single-bedroom',
+          name: 'Single bedroom deep cleaning',
+          slug: 'single-bedroom-deep-cleaning',
+          basePrice: 699,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 380000,
+          description: '• Cobweb removal, ceiling fan wipe, wardrobe exterior wipe & floor buffing\n• Under-bed and behind-furniture dust vacuuming',
+          imageUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-mattress',
+      name: 'Mattress & bed',
+      slug: 'mattress-bed',
+      icon: 'hotel',
+      badge: 'Anti-allergen',
+      groupHeader: 'Bedding',
+      displayOrder: 7,
+      description: 'UV & wet extraction removing dead skin, dust mites and sweat stains.',
+      services: [
+        {
+          id: 'srv-lbc-mat-single',
+          name: 'Single bed mattress deep cleaning',
+          slug: 'single-bed-mattress-cleaning',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 290000,
+          description: '• Both sides shampoo wash + high power suction extraction',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-mat-double',
+          name: 'Double / Queen bed mattress deep cleaning',
+          slug: 'double-bed-mattress-cleaning',
+          basePrice: 699,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 430000,
+          description: '• Removes sweat rings, accidental spills and 99% dust mite allergens\n• Sanitizing anti-microbial spray treatment',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-headboard',
+          name: 'Headboard fabric cleaning',
+          slug: 'headboard-fabric-cleaning',
+          basePrice: 299,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 110000,
+          description: '• Upholstered bed backrest shampooing & dust extraction',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-dining',
+      name: 'Living room & dining',
+      slug: 'living-room-dining',
+      icon: 'dining',
+      badge: 'Wood & Glass',
+      groupHeader: 'Living Area',
+      displayOrder: 8,
+      description: 'Dining suite polishing, TV unit dusting and living room center table clean.',
+      services: [
+        {
+          id: 'srv-lbc-dining-table',
+          name: 'Dining table & 4/6 chairs cleaning',
+          slug: 'dining-table-chairs-cleaning',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 210000,
+          description: '• Glass/wood tabletop polishing + cushioned chair fabric shampooing',
+          imageUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-furniture',
+      name: 'Other furniture',
+      slug: 'other-furniture',
+      icon: 'chair',
+      badge: 'Add-on',
+      groupHeader: 'Furniture',
+      displayOrder: 9,
+      description: 'Recliners, study chairs, wardrobes and shoe racks dusting.',
+      services: [
+        {
+          id: 'srv-lbc-wardrobe-loft',
+          name: 'Wardrobe exterior & loft dusting',
+          slug: 'wardrobe-exterior-loft-dusting',
+          basePrice: 299,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 160000,
+          description: '• Wardrobe panel wipe down, mirror polishing and loft cobweb suction',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-shoerack',
+          name: 'Shoe rack & console table cleaning',
+          slug: 'shoe-rack-console-cleaning',
+          basePrice: 199,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.77,
+          reviewCount: 95000,
+          description: '• Dust suction & sanitizing wipe of shoe shelves',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-recliner',
+          name: 'Recliner chair deep cleaning',
+          slug: 'recliner-chair-cleaning',
+          basePrice: 399,
+          durationMinutes: 40,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 140000,
+          description: '• Deep extraction of footrest, armrests and head cushion',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-office-chair',
+          name: 'Office study chair cleaning',
+          slug: 'office-study-chair-cleaning',
+          basePrice: 199,
+          durationMinutes: 25,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 180000,
+          description: '• Mesh/cushion foam shampoo and wheel caster lint removal',
+          imageUrl: 'https://images.unsplash.com/photo-1580481077195-c89b788001e3?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-beanbag',
+          name: 'Bean bag cleaning',
+          slug: 'bean-bag-cleaning',
+          basePrice: 199,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 75000,
+          description: '• Leatherette / fabric outer casing wipe and disinfectant treatment',
+          imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lbc-windows-fan',
+      name: 'Windows & fan',
+      slug: 'windows-fan',
+      icon: 'window',
+      badge: 'From ₹99',
+      groupHeader: 'Fixtures',
+      displayOrder: 10,
+      description: 'Window glass channels, doors, ceiling fans and switchboards.',
+      services: [
+        {
+          id: 'srv-lbc-window-glass',
+          name: 'Window glass & channel cleaning (per window)',
+          slug: 'window-glass-channel-cleaning',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 220000,
+          description: '• Channel vacuuming & squeegee streak-free glass polish',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-fan-pack2',
+          name: 'Ceiling fan power dusting (pack of 2)',
+          slug: 'ceiling-fan-power-dusting-pack2',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 310000,
+          description: '• Specialized anti-static dust sleeve & motor wipe',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-door-frame',
+          name: 'Door & frame wiping',
+          slug: 'door-frame-wiping-living',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 140000,
+          description: '• Fingerprint mark cleaning and anti-bacterial handle wipe',
+          imageUrl: '/services/toilet-cleaning-rim.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-lbc-switchboards',
+          name: 'Light fixtures & switchboard dusting',
+          slug: 'light-fixtures-switchboard-dusting',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 110000,
+          description: '• Dry insulated microfiber brush dusting on all switches and pendant lights',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_FULL_HOME_CLEANING_CATEGORY: ServiceCategory = {
+  id: 'cat-full-home-cleaning',
+  name: 'Full Home/ By Room Cleaning',
+  slug: 'full-home-cleaning',
+  icon: '🏠',
+  badge: 'Earliest 16, 8:30 AM',
+  order: 3,
+  subCategories: [
+    {
+      id: 'sub-fhc-apartment',
+      name: 'Full apartment',
+      slug: 'full-apartment',
+      icon: 'apartment',
+      badge: 'Best value',
+      groupHeader: 'Full Home',
+      displayOrder: 1,
+      description: 'Whole home intensive transformation with heavy single-disc rotary machine scrubbing.',
+      services: [
+        {
+          id: 'srv-fhc-unfurnished-apt',
+          name: 'Unfurnished apartment - Home deep cleaning',
+          slug: 'unfurnished-apartment-home-deep-cleaning',
+          basePrice: 3199,
+          durationMinutes: 180,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 542000,
+          description: '• Cleaning & stain removal from rooms, kitchen, bathroom & balcony\n• Machine floor scrubbing & dusting of walls & ceilings\n• Complete limescale, grease, cobweb and paint speck removal',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhc-furnished-apt',
+          name: 'Furnished apartment - Home deep cleaning',
+          slug: 'furnished-apartment-home-deep-cleaning',
+          basePrice: 3499,
+          durationMinutes: 225,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 687000,
+          description: '• Cleaning & stain removal from rooms, kitchen, bathroom & balcony\n• Machine floor scrubbing & dusting of walls & ceilings\n• Behind-furniture and under-bed vacuuming + appliance exterior buffing',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhc-bungalow',
+      name: 'Full bungalow/duplex',
+      slug: 'full-bungalow-duplex',
+      icon: 'villa',
+      badge: 'Heavy Duty',
+      groupHeader: 'Full Home',
+      displayOrder: 2,
+      description: 'Multi-story villas and duplex homes deep cleaning with dedicated 4-man crew.',
+      services: [
+        {
+          id: 'srv-fhc-unfurnished-villa',
+          name: 'Unfurnished bungalow - Home deep cleaning',
+          slug: 'unfurnished-bungalow-deep-cleaning',
+          basePrice: 5899,
+          durationMinutes: 300,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 125000,
+          description: '• Ideal for vacant, unoccupied homes & move-ins\n• Machine floor scrubbing & stain removal across rooms, kitchen, baths & balcony\n• Terrace, staircase railings & exterior window channels included',
+          imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhc-furnished-villa',
+          name: 'Furnished bungalow - Home deep cleaning',
+          slug: 'furnished-bungalow-deep-cleaning',
+          basePrice: 6899,
+          durationMinutes: 330,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 182000,
+          description: '• Ideal for furnished, occupied homes with intensive care\n• Machine floor scrubbing & stain removal across rooms, kitchen, baths & balcony\n• Living, dining, all bedrooms, modular kitchen and stairwells deep scrubbed',
+          imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhc-partial',
+      name: 'Partial home cleaning',
+      slug: 'partial-home-cleaning',
+      icon: 'tune',
+      badge: '10% OFF',
+      groupHeader: 'Custom Combos',
+      displayOrder: 3,
+      description: 'Make your own package tailored to selected rooms with instant 10% discount.',
+      services: [
+        {
+          id: 'srv-fhc-partial-pkg',
+          name: 'Partial home cleaning',
+          slug: 'partial-home-cleaning-combo',
+          basePrice: 1468,
+          durationMinutes: 135,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 315000,
+          description: '• MAKE YOUR PACKAGE • 10% OFF Above ₹1,500\n• Choose from bathroom, bedroom, kitchen, living room & balcony\n• Add-in from upholstery & sofa, appliance cleaning',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhc-custom-combo',
+          name: 'Customise: living, bedroom, balcony cleaning combo',
+          slug: 'customise-living-bedroom-balcony-combo',
+          basePrice: 1789,
+          durationMinutes: 135,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 178000,
+          description: '• Create a cleaning package tailored to your home\'s needs\n• Suitable for both regular upkeep & deep cleaning with power vacuuming',
+          imageUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -2212,6 +3110,9 @@ function UrbanCompanyServiceListingContent() {
     const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
     const isBathroomCleaningSlug = ['bathroom-cleaning', 'bathroom', 'bathroom-cleaning-services'].includes(serviceSlug);
     const isMakeupSlug = ['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug);
+    const isKitchenCleaningSlug = ['kitchen-cleaning', 'kitchen'].includes(serviceSlug);
+    const isLivingBedroomSlug = ['living-bedroom-cleaning', 'living-bedroom', 'sofa-cleaning'].includes(serviceSlug);
+    const isFullHomeSlug = ['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -2273,6 +3174,21 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_MAKEUP_CATEGORY.subCategories?.[0]?.slug || 'packages');
           return;
         }
+        if (isKitchenCleaningSlug) {
+          setCategoryData(DEFAULT_KITCHEN_CLEANING_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_KITCHEN_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'value-deals');
+          return;
+        }
+        if (isLivingBedroomSlug) {
+          setCategoryData(DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'super-saver-deals');
+          return;
+        }
+        if (isFullHomeSlug) {
+          setCategoryData(DEFAULT_FULL_HOME_CLEANING_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FULL_HOME_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'full-apartment');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -2302,6 +3218,12 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_BATHROOM_CLEANING_CATEGORY;
         } else if (isMakeupSlug) {
           data = DEFAULT_MAKEUP_CATEGORY;
+        } else if (isKitchenCleaningSlug) {
+          data = DEFAULT_KITCHEN_CLEANING_CATEGORY;
+        } else if (isLivingBedroomSlug) {
+          data = DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY;
+        } else if (isFullHomeSlug) {
+          data = DEFAULT_FULL_HOME_CLEANING_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -2322,6 +3244,12 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_BATHROOM_CLEANING_CATEGORY;
       } else if (isMakeupSlug || data.slug === 'makeup-saree-styling' || data.name?.toLowerCase().includes('makeup')) {
         data = DEFAULT_MAKEUP_CATEGORY;
+      } else if (isKitchenCleaningSlug || data.slug === 'kitchen-cleaning' || data.name?.toLowerCase().includes('kitchen')) {
+        data = DEFAULT_KITCHEN_CLEANING_CATEGORY;
+      } else if (isLivingBedroomSlug || data.slug === 'living-bedroom-cleaning' || data.name?.toLowerCase().includes('living') || data.name?.toLowerCase().includes('bedroom')) {
+        data = DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY;
+      } else if (isFullHomeSlug || data.slug === 'full-home-cleaning' || data.name?.toLowerCase().includes('full home')) {
+        data = DEFAULT_FULL_HOME_CLEANING_CATEGORY;
       }
 
       setCategoryData(data);
@@ -2387,6 +3315,18 @@ function UrbanCompanyServiceListingContent() {
       } else if (['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_MAKEUP_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_MAKEUP_CATEGORY.subCategories?.[0]?.slug || 'packages');
+        setError404(false);
+      } else if (['kitchen-cleaning', 'kitchen'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_KITCHEN_CLEANING_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_KITCHEN_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'value-deals');
+        setError404(false);
+      } else if (['living-bedroom-cleaning', 'living-bedroom', 'sofa-cleaning'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'super-saver-deals');
+        setError404(false);
+      } else if (['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_FULL_HOME_CLEANING_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FULL_HOME_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'full-apartment');
         setError404(false);
       } else {
         setError404(true);
@@ -2527,6 +3467,31 @@ function UrbanCompanyServiceListingContent() {
       ['makeup-saree-styling', 'makeup'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('makeup') ||
       categoryData?.name?.toLowerCase().includes('saree')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isKitchenCleaningCategory = useMemo(() => {
+    return (
+      ['kitchen-cleaning', 'kitchen'].includes(serviceSlug) ||
+      ['kitchen-cleaning', 'kitchen'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('kitchen')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isLivingBedroomCategory = useMemo(() => {
+    return (
+      ['living-bedroom-cleaning', 'living-bedroom', 'sofa-cleaning'].includes(serviceSlug) ||
+      ['living-bedroom-cleaning', 'living-bedroom'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('living') ||
+      categoryData?.name?.toLowerCase().includes('bedroom')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isFullHomeCategory = useMemo(() => {
+    return (
+      ['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug) ||
+      ['full-home-cleaning', 'full-home'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('full home')
     );
   }, [serviceSlug, categoryData]);
 
@@ -2953,6 +3918,97 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isKitchenCleaningCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Kitchen Cleaning</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.80
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">2.4M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isLivingBedroomCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Living & Bedroom ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.82
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.9M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isFullHomeCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Full Home/ By Room ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px]">schedule</span>
+                      Earliest 16, 8:30 AM
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.80
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.6M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <h2 className="text-xs font-bold text-[#374151] uppercase tracking-wider mb-4 px-2">
               Select a service
             </h2>
@@ -3134,6 +4190,94 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {/* Dedicated Hero Banner for Kitchen Cleaning (Matching Screenshot 1: Gas stove & counter) */}
+            {isKitchenCleaningCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="/services/kitchen-cleaning-counter.jpg"
+                    alt="Kitchen Cleaning - Spotless counters & deep degreasing"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ‹
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+                          Spotless counters & chimney
+                        </h2>
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ›
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-200 font-medium">
+                        Oil deposit removal & certified food-safe degreasing
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Living & Bedroom Cleaning (Matching Screenshot 2: With professional tools) */}
+            {isLivingBedroomCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80"
+                    alt="Living & Bedroom Cleaning - With professional tools"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ‹
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+                          With professional tools
+                        </h2>
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ›
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-200 font-medium">
+                        High suction wet vacuuming & deep fabric stain extraction
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Full Home / By Room Cleaning (Matching Screenshot 3: Full home cleaning Starts at ₹3,199) */}
+            {isFullHomeCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#f0fdf4] via-[#ecfdf5] to-[#f7fee7] border border-emerald-200 p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-[#16a34a] text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-md tracking-wider shadow-xs">
+                    Best seller
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight text-[#111827]">
+                    Full home cleaning<br />
+                    <span className="text-[#15803d]">Starts at ₹3,199</span>{' '}
+                    <span className="text-sm font-medium text-gray-400 line-through">₹4,798</span>
+                  </h2>
+                  <p className="text-xs text-gray-600 font-semibold leading-relaxed">
+                    More affordable than picking services one by one
+                  </p>
+                </div>
+                <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-emerald-100 shrink-0">
+                  <img
+                    src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80"
+                    alt="Full home machine cleaning"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Header / Hero Banner with Rating & Quick Slot info */}
             <div className="bg-white rounded-2xl border border-gray-200/90 p-6 shadow-xs space-y-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -3284,7 +4428,13 @@ function UrbanCompanyServiceListingContent() {
             <div className="space-y-8">
               {(categoryData.subCategories || [])
                 .filter((sub) => {
-                  if (isBathroomCleaningCategory || isMakeupCategory) {
+                  if (
+                    isBathroomCleaningCategory ||
+                    isMakeupCategory ||
+                    isKitchenCleaningCategory ||
+                    isLivingBedroomCategory ||
+                    isFullHomeCategory
+                  ) {
                     return true;
                   }
                   return !activeSubCategorySlug || sub.slug === activeSubCategorySlug;
@@ -3330,7 +4480,7 @@ function UrbanCompanyServiceListingContent() {
                       </div>
 
                       {/* Custom Section Banners (Urban Company Style) */}
-                      {subCat.slug === 'value-deals' && (
+                      {subCat.slug === 'value-deals' && isBathroomCleaningCategory && (
                         <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
                           <div className="space-y-1">
                             <span className="bg-[#16a34a] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
@@ -3345,6 +4495,63 @@ function UrbanCompanyServiceListingContent() {
                           </div>
                           <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
                             <img src="/services/toilet-cleaning-rim.jpg" alt="Value Deals" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {subCat.slug === 'value-deals' && isKitchenCleaningCategory && (
+                        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#16a34a] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Upto 25% OFF
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Kitchen cleaning value packages
+                            </h3>
+                            <p className="text-xs text-emerald-800 font-medium">
+                              From ₹1,199 • Deep degreasing, chimney power wash & slab buffing
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
+                            <img src="/services/kitchen-cleaning-counter.jpg" alt="Value Deals" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {subCat.slug === 'super-saver-deals' && isLivingBedroomCategory && (
+                        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#16a34a] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Super Saver
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Curated sofa & home upholstery combos
+                            </h3>
+                            <p className="text-xs text-emerald-800 font-medium">
+                              Starts at ₹899 • Fabric shampooing, deep extraction & sanitized drying
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80" alt="Super Saver Deals" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {subCat.slug === 'full-apartment' && isFullHomeCategory && (
+                        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#16a34a] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Best Value
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Apartment deep cleaning from ₹3,199
+                            </h3>
+                            <p className="text-xs text-emerald-800 font-medium">
+                              Single-disc floor scrubbing machine + all rooms, kitchen & washrooms
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80" alt="Full Apartment" className="w-full h-full object-cover" />
                           </div>
                         </div>
                       )}
@@ -3701,6 +4908,34 @@ function UrbanCompanyServiceListingContent() {
                   </ul>
                 </div>
               </>
+            ) : isBathroomCleaningCategory || isKitchenCleaningCategory || isLivingBedroomCategory || isFullHomeCategory ? (
+              <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
+                    <span>UC Promise</span>
+                  </h3>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-0.5 flex items-center justify-center">
+                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-[7px] font-black text-purple-900 uppercase tracking-tighter text-center leading-none">
+                      QUALITY ASSURED
+                    </div>
+                  </div>
+                </div>
+                <ul className="space-y-2 text-xs text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Verified Professionals</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Safe Chemicals</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Superior Stain Removal</span>
+                  </li>
+                </ul>
+              </div>
             ) : isInstaHelpCategory || isWashingMachineCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
@@ -3876,9 +5111,21 @@ function UrbanCompanyServiceListingContent() {
                 </div>
               </div>
               <ul className="space-y-1.5 text-gray-700 text-[11.5px]">
-                <li className="flex items-center gap-2 font-medium"><span className="text-[#5e23dc] font-bold">✓</span> Verified Professionals</li>
-                <li className="flex items-center gap-2 font-medium"><span className="text-[#5e23dc] font-bold">✓</span> Hassle Free Booking</li>
-                <li className="flex items-center gap-2 font-medium"><span className="text-[#5e23dc] font-bold">✓</span> Transparent Pricing</li>
+                <li className="flex items-center gap-2 font-medium">
+                  <span className="text-[#5e23dc] font-bold">✓</span> Verified Professionals
+                </li>
+                <li className="flex items-center gap-2 font-medium">
+                  <span className="text-[#5e23dc] font-bold">✓</span>{' '}
+                  {isBathroomCleaningCategory || isKitchenCleaningCategory || isLivingBedroomCategory || isFullHomeCategory
+                    ? 'Safe Chemicals'
+                    : 'Hassle Free Booking'}
+                </li>
+                <li className="flex items-center gap-2 font-medium">
+                  <span className="text-[#5e23dc] font-bold">✓</span>{' '}
+                  {isBathroomCleaningCategory || isKitchenCleaningCategory || isLivingBedroomCategory || isFullHomeCategory
+                    ? 'Superior Stain Removal'
+                    : 'Transparent Pricing'}
+                </li>
               </ul>
               <div className="pt-2">
                 <button
@@ -3886,7 +5133,13 @@ function UrbanCompanyServiceListingContent() {
                   onClick={() => setIsCheckoutOpen(true)}
                   className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-3 rounded-xl shadow-xs transition-colors flex items-center justify-between cursor-pointer"
                 >
-                  <span>{cart.length > 0 ? `${cart.reduce((a, b) => a + b.quantity, 0)} ${cart.reduce((a, b) => a + b.quantity, 0) === 1 ? 'item' : 'items'}` : '1 item'}</span>
+                  <span>
+                    {cart.length > 0
+                      ? `₹${cartGrandTotal}`
+                      : isFullHomeCategory
+                      ? '₹1,349'
+                      : `${cart.reduce((a, b) => a + b.quantity, 0)} ${cart.reduce((a, b) => a + b.quantity, 0) === 1 ? 'item' : 'items'}`}
+                  </span>
                   <span>View Cart ›</span>
                 </button>
               </div>
