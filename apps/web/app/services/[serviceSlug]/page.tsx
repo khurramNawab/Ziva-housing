@@ -132,10 +132,16 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'installation-uninstallation': '/services/ac-installation.jpg',
   'ac-installation': '/services/ac-installation.jpg',
   'ac-service-repair': '/services/ac-service.jpg',
+  // Washing Machine
   'washing-machine': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
   'washing-machine-sub': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
   'washing-fridge-sub': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
   'washing-machine-refrigerator': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
+  'washing-machine-jet-service': '/services/washing-machine-clean.jpg',
+  'washing-machine-check-up': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
+  'washing-machine-installation': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
+
+  // Appliances
   'refrigerator': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80',
   'refrigerator-sub': 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80',
   'chimney': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
@@ -159,9 +165,20 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'wall-painting-sub': 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=400&q=80',
   'painting': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=400&q=80',
 
+  // Salon Luxe & Women's Salon
+  'super-saver-packages': '/services/japanese-glow-rituals.jpg',
+  'waxing-threading': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+  'japanese-rituals-korean-facials': '/services/japanese-glow-rituals.jpg',
+  'signature-facial-cleanup': '/services/cryofacial-therapy.jpg',
+  'pedicure-manicure': 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+  'bleach-detan-massage': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+
   // InstaHelp
-  'daily-helpers-sub': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=400&q=80',
-  'cook-chef': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+  'daily-helpers-sub': '/services/instahelp-helper.jpg',
+  'cook-chef': '/services/instahelp-helper.jpg',
+  'instant': '/services/instahelp-helper.jpg',
+  'later': '/services/instahelp-helper.jpg',
+  'multi-day': '/services/instahelp-helper.jpg',
 };
 
 const getSubPhoto = (sub: ServiceSubCategory): string => {
@@ -452,6 +469,872 @@ const DEFAULT_AC_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_SALON_LUXE_CATEGORY: ServiceCategory = {
+  id: 'cat-salon-luxe',
+  name: 'Salon Luxe',
+  slug: 'salon-luxe',
+  icon: '🧖‍♀️',
+  badge: 'Earliest Thu, 7:00 PM',
+  order: 2,
+  subCategories: [
+    {
+      id: 'sub-salon-packages',
+      name: 'Super saver packages',
+      slug: 'super-saver-packages',
+      icon: 'percent',
+      badge: 'Upto 20% OFF',
+      groupHeader: 'Packages',
+      displayOrder: 1,
+      description: 'Curated salon combos with maximum savings and premium parlor care at home.',
+      services: [
+        {
+          id: 'srv-luxe-pkg-1',
+          name: 'Make your own package',
+          slug: 'make-your-own-package',
+          basePrice: 5347,
+          durationMinutes: 300,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 1400000,
+          description: '• Waxing: Full arms - Rica Gold Tin, Full legs - Rica Gold Tin\n• Facial & cleanup: Korean glass skin facial\n• Manicure & pedicure: Ice cream delight manicure, Ice cream delight pedicure\n• Facial hair removal: Eyebrows',
+          imageUrl: '/services/japanese-glow-rituals.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-luxe-pkg-2',
+          name: 'Monthly maintenance package',
+          slug: 'monthly-maintenance-package',
+          basePrice: 1687,
+          durationMinutes: 85,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 1100000,
+          description: '• Waxing: Full arms - Rica Gold Tin, Full legs - Rica Gold Tin\n• Facial hair removal: Eyebrows',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-luxe-pkg-3',
+          name: 'Wax & glow',
+          slug: 'wax-and-glow',
+          basePrice: 3218,
+          durationMinutes: 165,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 1100000,
+          description: '• Waxing: Full arms - Rica Gold Tin, Full legs - Rica Gold Tin\n• Facials: Korean glass skin facial\n• Facial hair removal: Eyebrows',
+          imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-salon-waxing',
+      name: 'Waxing & threading',
+      slug: 'waxing-threading',
+      icon: 'content_cut',
+      badge: 'Popular',
+      groupHeader: 'Waxing',
+      displayOrder: 2,
+      description: 'Hygienic cartridge roll-on & peel-off waxing by certified beauticians.',
+      services: [
+        {
+          id: 'srv-wax-spatula',
+          name: 'Spatula waxing (Full arms & legs, underarms)',
+          slug: 'spatula-waxing-full',
+          basePrice: 1039,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 48000,
+          description: '• Choose from Honey or RICA Wax\n• Covers full legs & arms (including underarms)',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-rollon',
+          name: 'Roll-on waxing (Full arms & legs, underarm)',
+          slug: 'roll-on-waxing-full',
+          basePrice: 1399,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 36000,
+          description: '• Choose from a range of Roll-on wax options\n• Cirepil intimate peel-off wax would be used for underarms',
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-arms-underarms',
+          name: 'Full arms & underarms waxing',
+          slug: 'full-arms-underarms-waxing',
+          basePrice: 599,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 127000,
+          description: 'Covers full arms & underarms with gentle soothing post-wax treatment.',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-legs',
+          name: 'Full legs waxing',
+          slug: 'full-legs-waxing',
+          basePrice: 539,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 68000,
+          description: '• Bikini/ bikini line/butt waxing is not included',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-half-legs',
+          name: 'Half legs waxing',
+          slug: 'half-legs-waxing',
+          basePrice: 349,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 50000,
+          description: 'Gentle hair removal for half legs with soothing aloe vera finish.',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-stomach',
+          name: 'Stomach waxing',
+          slug: 'stomach-waxing',
+          basePrice: 489,
+          durationMinutes: 25,
+          bestsellerFlag: false,
+          rating: 4.92,
+          reviewCount: 5000,
+          description: '• Covers the area from below the bust to the pelvis',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-back',
+          name: 'Back waxing',
+          slug: 'back-waxing',
+          basePrice: 539,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 5000,
+          description: '• Covers the area from shoulders to the pelvis',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-underarms',
+          name: 'Underarms waxing',
+          slug: 'underarms-waxing',
+          basePrice: 119,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 38000,
+          description: 'Quick & painless underarms hair removal with single-use cartridge wax.',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-bikini',
+          name: 'Bikini waxing',
+          slug: 'bikini-waxing',
+          basePrice: 1099,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.93,
+          reviewCount: 82000,
+          description: '• Covers full pelvic area (buttocks not included)',
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-bikini-line',
+          name: 'Bikini line waxing',
+          slug: 'bikini-line-waxing',
+          basePrice: 499,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.92,
+          reviewCount: 4000,
+          description: '• Only covers area around the pelvis, not the pelvis itself',
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-butt',
+          name: 'Butt waxing',
+          slug: 'butt-waxing',
+          basePrice: 349,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.91,
+          reviewCount: 2000,
+          description: '• Covers the buttocks. Butthole is not included',
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wax-full-body',
+          name: 'Full body waxing',
+          slug: 'full-body-waxing',
+          basePrice: 1799,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 12000,
+          description: '• Covers full arms, full legs, underarms, stomach & back',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-threading',
+          name: 'Threading',
+          slug: 'threading-service',
+          basePrice: 99,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.91,
+          reviewCount: 499000,
+          description: 'Precision threading for eyebrows, upper lip, chin & forehead.',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cirepil-face',
+          name: 'Cirepil PR Visage face wax',
+          slug: 'cirepil-face-wax',
+          basePrice: 199,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 116000,
+          description: '• Face waxing service does not include eyebrow shaping/threading',
+          imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-salon-japanese',
+      name: 'Japanese rituals & Korean facials',
+      slug: 'japanese-rituals-korean-facials',
+      icon: 'sparkles',
+      badge: 'New',
+      groupHeader: 'Facials',
+      displayOrder: 3,
+      description: 'Cryofacial cold therapy, glass skin hydration and Japanese mochi skin rituals.',
+      services: [
+        {
+          id: 'srv-yuzu-glow',
+          name: 'Yuzu vitamin glow ritual',
+          slug: 'yuzu-vitamin-glow-ritual',
+          basePrice: 2399,
+          durationMinutes: 70,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 4000,
+          description: '• Melts away dullness & locks in deep hydration for a visibly brighter, dewy glow\n• Free SPF 70 PA ++++ mist & nourishing lip butter balm',
+          imageUrl: '/services/japanese-glow-rituals.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-mochi-skin',
+          name: 'Rice water mochi skin ritual',
+          slug: 'rice-water-mochi-skin-ritual',
+          basePrice: 1999,
+          durationMinutes: 70,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 3000,
+          description: '• Clears away congestion & resets stressed skin for a fresh, bouncy finish\n• Free SPF 70 PA ++++ mist & nourishing lip butter balm',
+          imageUrl: '/services/japanese-glow-rituals.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-korean-glass-skin',
+          name: 'Korean Glass skin facial',
+          slug: 'korean-glass-skin-facial',
+          basePrice: 2099,
+          durationMinutes: 80,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 50000,
+          description: '• Refines skin texture to achieve a smooth, poreless finish\n• Suitable for normal to oily skin',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-kglow-age-rewind',
+          name: 'KGlow age-rewind facial',
+          slug: 'kglow-age-rewind-facial',
+          basePrice: 1899,
+          durationMinutes: 80,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 23000,
+          description: '• Restores skin elasticity to visibly lift & tighten the face\n• Suitable for all skin types',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-korean-sea-algae',
+          name: 'Korean Sea-algae Hydra-boost facial',
+          slug: 'korean-sea-algae-hydra-boost-facial',
+          basePrice: 2299,
+          durationMinutes: 80,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 19000,
+          description: '• Drenches skin in deep moisture to restore a plump, dewy look\n• Suitable for all skin types',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-salon-signature-facial',
+      name: 'Signature facial & cleanup',
+      slug: 'signature-facial-cleanup',
+      icon: 'spa',
+      badge: 'Luxury',
+      groupHeader: 'Facials',
+      displayOrder: 4,
+      description: 'Luxury Casmara, O3+ and Repechage clinical treatments for radiant, youthful skin.',
+      services: [
+        {
+          id: 'srv-sig-brightening',
+          name: 'Signature brightening facial',
+          slug: 'signature-brightening-facial',
+          basePrice: 2499,
+          durationMinutes: 80,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 10000,
+          description: '• Targets dark spots & uneven patches to promote a more uniform complexion\n• Suitable for all skin types',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-casmara-brightening',
+          name: 'Casmara brightening facial',
+          slug: 'casmara-brightening-facial',
+          basePrice: 3959,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 15000,
+          description: '• Exfoliates dull skin cells to reveal a smoother, more uniform skin tone\n• Suitable for all skin types',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-multi-peptide',
+          name: 'Multi-peptide anti-ageing facial',
+          slug: 'multi-peptide-anti-ageing-facial',
+          basePrice: 2699,
+          durationMinutes: 80,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 7000,
+          description: '• Targets fine lines & boosts elasticity for a visibly lifted appearance\n• Suitable for dry skin',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-casmara-anti-ageing',
+          name: 'Casmara anti-ageing facial',
+          slug: 'casmara-anti-ageing-facial',
+          basePrice: 3949,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 9000,
+          description: '• Enhances skin firmness & elasticity for a revitalized, sculpted look\n• Suitable for dry skin',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-hydraboost',
+          name: 'Hydraboost facial',
+          slug: 'hydraboost-facial',
+          basePrice: 2449,
+          durationMinutes: 80,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 4000,
+          description: '• Drenches skin in moisture to restore a soft & supple feel\n• Suitable for dry skin',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-casmara-hydration',
+          name: 'Casmara hydration facial',
+          slug: 'casmara-hydration-facial',
+          basePrice: 3039,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 6000,
+          description: "• Restores & replenishes skin's natural moisture balance\n• Suitable for dry skin",
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-o3-kumkumadi',
+          name: 'O3 Kumkumadi ayurvedic facial',
+          slug: 'o3-kumkumadi-ayurvedic-facial',
+          basePrice: 1749,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 10000,
+          description: '• Targets tanning & dullness to reveal a visibly clearer, more luminous complexion\n• Suitable for all skin types',
+          imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-o3-radiance',
+          name: 'O3+ Radiance luxury facial',
+          slug: 'o3-radiance-luxury-facial',
+          basePrice: 1649,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 14000,
+          description: '• Revives dull skin to reveal a smooth, radiant complexion\n• For normal to dry skin',
+          imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-remy-laure',
+          name: 'Remy Laure eternal radiance treatment',
+          slug: 'remy-laure-radiance',
+          basePrice: 4599,
+          durationMinutes: 100,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 746,
+          description: '• Restores natural radiance through deep hydration\n• Includes a relaxing back, hands & half-leg massage',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-hydra-mud',
+          name: 'Hydra mud glow cleanup',
+          slug: 'hydra-mud-glow-cleanup',
+          basePrice: 1299,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 13000,
+          description: '• Purifies skin & refines pores to reveal a healthy, natural glow\n• Suitable for dry skin',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-detox-mud',
+          name: 'Detox mud cleanup',
+          slug: 'detox-mud-cleanup',
+          basePrice: 1299,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 6000,
+          description: '• Purifies & tightens pores to maintain a breakout-free skin\n• Suitable for oily skin',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-repechage-cleanup',
+          name: 'Repechage brightening cleanup',
+          slug: 'repechage-brightening-cleanup',
+          basePrice: 1749,
+          durationMinutes: 50,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 12000,
+          description: '• Effectively lightens pigmentation & reduces dark spots\n• Suitable for all skin types',
+          imageUrl: '/services/cryofacial-therapy.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-salon-pedicure-manicure',
+      name: 'Pedicure & manicure',
+      slug: 'pedicure-manicure',
+      icon: 'self_improvement',
+      badge: 'Combo Savings',
+      groupHeader: 'Nails & Care',
+      displayOrder: 5,
+      description: 'Nourishing foot & hand spa, cut-file-polish and rejuvenating paraffin crystal therapies.',
+      services: [
+        {
+          id: 'srv-sig-mani-pedi',
+          name: 'Signature mani-pedi combo',
+          slug: 'signature-mani-pedi-combo',
+          basePrice: 1849,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 7000,
+          description: '• A deep cleansing ritual that boosts circulation & soothes the skin',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-icecream-pedi',
+          name: 'Ice cream delight pedicure',
+          slug: 'ice-cream-delight-pedicure',
+          basePrice: 1599,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 23000,
+          description: '• A creamy, strawberry-infused retreat to soften skin & refresh tired feet',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-crystal-pedi',
+          name: 'Rejuvenating crystal spa pedicure',
+          slug: 'rejuvenating-crystal-spa-pedicure',
+          basePrice: 1289,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 75000,
+          description: '• Wheatgerm oil, beeswax & paraffin treatment for long-lasting hydration\n• Includes 15-min foot & 10-min shoulder & hand massage',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cut-file-feet',
+          name: 'Cut, file & polish (feet)',
+          slug: 'cut-file-polish-feet',
+          basePrice: 349,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 19000,
+          description: '• Quick toenail grooming session with a wide range of nail paints',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-icecream-mani',
+          name: 'Ice cream delight manicure',
+          slug: 'ice-cream-delight-manicure',
+          basePrice: 1299,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 7000,
+          description: '• A creamy, strawberry-infused retreat to soften skin & refresh tired skin',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-avl-algae-mani',
+          name: 'AVL sea-algae manicure',
+          slug: 'avl-sea-algae-manicure',
+          basePrice: 999,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 25000,
+          description: '• A marine-powered therapy that detoxifies, tones & repairs the skin',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cut-file-hands',
+          name: 'Cut, file & polish (hands)',
+          slug: 'cut-file-polish-hands',
+          basePrice: 299,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 19000,
+          description: '• Quick fingernail grooming session with a wide range of nail paints',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-salon-bleach-detan',
+      name: 'Bleach, detan & massage',
+      slug: 'bleach-detan-massage',
+      icon: 'flare',
+      badge: 'Express',
+      groupHeader: 'Care',
+      displayOrder: 6,
+      description: 'Targeted tan reduction, professional bleaching and stress-relief massage therapies.',
+      services: [
+        {
+          id: 'srv-bleach',
+          name: 'Bleach',
+          slug: 'bleach-service',
+          basePrice: 549,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 24000,
+          description: '• Professional bleach to help even out skin tone & lighten facial hair',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-detan',
+          name: 'Detan',
+          slug: 'detan-service',
+          basePrice: 549,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 31000,
+          description: '• A targeted detan service to help reduce pigmentation, tan & dark spots',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-foot-massage',
+          name: 'Foot massage',
+          slug: 'foot-massage-express',
+          basePrice: 299,
+          durationMinutes: 10,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 37000,
+          description: '• Micro-movement techniques to relax feet & stimulate pressure points',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-head-massage',
+          name: 'Head massage',
+          slug: 'head-massage-oil',
+          basePrice: 349,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.92,
+          reviewCount: 56000,
+          description: '• Relaxing oil massage to relieve stress & promote hair growth',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_INSTAHELP_CATEGORY: ServiceCategory = {
+  id: 'cat-instahelp',
+  name: 'InstaHelp',
+  slug: 'instahelp',
+  icon: '👩‍🍳',
+  badge: 'In 41 mins',
+  order: 7,
+  subCategories: [
+    {
+      id: 'sub-ih-instant',
+      name: 'Instant',
+      slug: 'instant',
+      icon: 'bolt',
+      badge: 'In 41 mins',
+      groupHeader: 'Daily Help',
+      displayOrder: 1,
+      description: 'Verified domestic helpers delivered to your doorstep in minutes.',
+      services: [
+        {
+          id: 'srv-ih-instant-main',
+          name: 'InstaHelp',
+          slug: 'instahelp-instant',
+          basePrice: 49,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.70,
+          reviewCount: 19500000,
+          description: 'Immediate domestic assistance for utensils, chopping, sweeping & emergency house tasks.\nView details',
+          imageUrl: '/services/instahelp-helper.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ih-instant-saver',
+          name: 'Super saver pack',
+          slug: 'super-saver-pack-instant',
+          basePrice: 49,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.70,
+          reviewCount: 19500000,
+          description: 'Complete 45-min household chores pack including kitchen slab wiping & floor cleaning.\nView details',
+          imageUrl: '/services/instahelp-helper.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-ih-later',
+      name: 'Later',
+      slug: 'later',
+      icon: 'schedule',
+      badge: 'Scheduled',
+      groupHeader: 'Daily Help',
+      displayOrder: 2,
+      description: 'Schedule trained helpers for any convenient upcoming slot.',
+      services: [
+        {
+          id: 'srv-ih-later-main',
+          name: 'InstaHelp',
+          slug: 'instahelp-later',
+          basePrice: 59,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.70,
+          reviewCount: 19500000,
+          description: 'Pre-book your favorite slot for thorough kitchen aid, meal prep assistance and dusting.\nView details',
+          imageUrl: '/services/instahelp-helper.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ih-later-saver',
+          name: 'Super saver pack',
+          slug: 'super-saver-pack-later',
+          basePrice: 49,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.70,
+          reviewCount: 19500000,
+          description: 'Scheduled multi-task assistance bundle with verified, background-checked domestic staff.\nView details',
+          imageUrl: '/services/instahelp-helper.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-ih-multiday',
+      name: 'Multi-day',
+      slug: 'multi-day',
+      icon: 'calendar_month',
+      badge: 'Subscriptions',
+      groupHeader: 'Daily Help',
+      displayOrder: 3,
+      description: 'Reliable recurring domestic help packages with guaranteed backup.',
+      services: [
+        {
+          id: 'srv-ih-multi-main',
+          name: 'InstaHelp Multi-Day',
+          slug: 'instahelp-multi-day',
+          basePrice: 69,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.69,
+          reviewCount: 459000,
+          description: 'Multi-day recurring home support bundle with seamless rescheduling & dedicated helper guarantee.\nView details',
+          imageUrl: '/services/instahelp-helper.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_WASHING_MACHINE_CATEGORY: ServiceCategory = {
+  id: 'cat-washing-machine',
+  name: 'Washing Machine Repair',
+  slug: 'washing-machine',
+  icon: '🧺',
+  badge: 'In 44 mins',
+  order: 4,
+  subCategories: [
+    {
+      id: 'sub-wm-jet',
+      name: 'Washing machine jet service',
+      slug: 'washing-machine-jet-service',
+      icon: 'water_drop',
+      badge: 'Skin-safe',
+      groupHeader: 'Repair & Service',
+      displayOrder: 1,
+      description: 'High-pressure drum decontamination with skin-safe anti-scaling chemicals.',
+      services: [
+        {
+          id: 'srv-wm-jet-main',
+          name: 'Washing machine jet service',
+          slug: 'washing-machine-jet-service-main',
+          basePrice: 1099,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 4000,
+          description: '• Improves wash quality, fabric care, and machine performance\n• Available for top-load & front-load machines, except Bosch & Siemens',
+          imageUrl: '/services/washing-machine-clean.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wm-checkup',
+      name: 'Washing machine check-up',
+      slug: 'washing-machine-check-up',
+      icon: 'troubleshoot',
+      badge: '₹199 Only',
+      groupHeader: 'Repair & Service',
+      displayOrder: 2,
+      description: 'Comprehensive 21-point checkup to identify motor, drainage, PCB or spin issues.',
+      services: [
+        {
+          id: 'srv-wm-checkup-main',
+          name: 'Washing machine check-up',
+          slug: 'washing-machine-checkup-main',
+          basePrice: 199,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 91000,
+          description: '• Complete check up to identify issues before repair\n• We share a quote and get it approved by you before the repair begins',
+          imageUrl: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wm-installation',
+      name: 'Washing machine installation',
+      slug: 'washing-machine-installation',
+      icon: 'plumbing',
+      badge: 'Precision',
+      groupHeader: 'Repair & Service',
+      displayOrder: 3,
+      description: 'Vibration-free leveling, inlet water hose fitting & drain pipe routing.',
+      services: [
+        {
+          id: 'srv-wm-install-main',
+          name: 'Washing machine installation',
+          slug: 'washing-machine-install-main',
+          basePrice: 399,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 54000,
+          description: '• The washing machine will be installed with care.\n• The area will be cleaned once work is done.',
+          imageUrl: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -513,11 +1396,29 @@ function UrbanCompanyServiceListingContent() {
       }
 
       const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
+      const isSalonLuxeSlug = ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
+      const isInstaHelpSlug = ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug);
+      const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
 
       if (!res.ok) {
         if (isAcSlug) {
           setCategoryData(DEFAULT_AC_CATEGORY);
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AC_CATEGORY.subCategories?.[0]?.slug || 'annual-plan');
+          return;
+        }
+        if (isSalonLuxeSlug) {
+          setCategoryData(DEFAULT_SALON_LUXE_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_SALON_LUXE_CATEGORY.subCategories?.[0]?.slug || 'super-saver-packages');
+          return;
+        }
+        if (isInstaHelpSlug) {
+          setCategoryData(DEFAULT_INSTAHELP_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_INSTAHELP_CATEGORY.subCategories?.[0]?.slug || 'instant');
+          return;
+        }
+        if (isWashingMachineSlug) {
+          setCategoryData(DEFAULT_WASHING_MACHINE_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WASHING_MACHINE_CATEGORY.subCategories?.[0]?.slug || 'washing-machine-jet-service');
           return;
         }
         setError404(true);
@@ -537,6 +1438,12 @@ function UrbanCompanyServiceListingContent() {
       if (!data || data.isActive === false) {
         if (isAcSlug) {
           data = DEFAULT_AC_CATEGORY;
+        } else if (isSalonLuxeSlug) {
+          data = DEFAULT_SALON_LUXE_CATEGORY;
+        } else if (isInstaHelpSlug) {
+          data = DEFAULT_INSTAHELP_CATEGORY;
+        } else if (isWashingMachineSlug) {
+          data = DEFAULT_WASHING_MACHINE_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -544,15 +1451,13 @@ function UrbanCompanyServiceListingContent() {
       }
 
       if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
-        const existingSubs = data.subCategories || [];
-        const missingSubs = DEFAULT_AC_CATEGORY.subCategories!.filter(
-          (defSub) => !existingSubs.some((s: any) => slugify(s.slug) === slugify(defSub.slug) || s.name.toLowerCase() === defSub.name.toLowerCase())
-        );
-        data = {
-          ...data,
-          name: 'AC',
-          subCategories: [...DEFAULT_AC_CATEGORY.subCategories!, ...existingSubs.filter((s: any) => !DEFAULT_AC_CATEGORY.subCategories!.some((d) => slugify(d.slug) === slugify(s.slug)))],
-        };
+        data = DEFAULT_AC_CATEGORY;
+      } else if (isSalonLuxeSlug || data.slug === 'salon-luxe' || data.name?.toLowerCase().includes('salon')) {
+        data = DEFAULT_SALON_LUXE_CATEGORY;
+      } else if (isInstaHelpSlug || data.slug === 'instahelp') {
+        data = DEFAULT_INSTAHELP_CATEGORY;
+      } else if (isWashingMachineSlug || data.slug === 'washing-machine' || data.name?.toLowerCase().includes('washing')) {
+        data = DEFAULT_WASHING_MACHINE_CATEGORY;
       }
 
       setCategoryData(data);
@@ -590,6 +1495,18 @@ function UrbanCompanyServiceListingContent() {
       if (['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_AC_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AC_CATEGORY.subCategories?.[0]?.slug || 'annual-plan');
+        setError404(false);
+      } else if (['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_SALON_LUXE_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_SALON_LUXE_CATEGORY.subCategories?.[0]?.slug || 'super-saver-packages');
+        setError404(false);
+      } else if (['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_INSTAHELP_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_INSTAHELP_CATEGORY.subCategories?.[0]?.slug || 'instant');
+        setError404(false);
+      } else if (['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_WASHING_MACHINE_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WASHING_MACHINE_CATEGORY.subCategories?.[0]?.slug || 'washing-machine-jet-service');
         setError404(false);
       } else {
         setError404(true);
@@ -679,6 +1596,30 @@ function UrbanCompanyServiceListingContent() {
       ['ac', 'ac-service', 'ac-appliance-repair'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase() === 'ac' ||
       categoryData?.name?.toLowerCase().includes('air conditioner')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isSalonLuxeCategory = useMemo(() => {
+    return (
+      ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug) ||
+      ['salon-luxe', 'salon-for-women', 'womens-salon-spa'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('salon')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isInstaHelpCategory = useMemo(() => {
+    return (
+      ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug) ||
+      categoryData?.slug === 'instahelp' ||
+      categoryData?.name?.toLowerCase().includes('instahelp')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isWashingMachineCategory = useMemo(() => {
+    return (
+      ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug) ||
+      categoryData?.slug === 'washing-machine' ||
+      categoryData?.name?.toLowerCase().includes('washing')
     );
   }, [serviceSlug, categoryData]);
 
@@ -893,10 +1834,114 @@ function UrbanCompanyServiceListingContent() {
                 <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">City, Building, apartment or street...</span>
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {isSalonLuxeCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Salon Luxe</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Earliest Thu, 7:00 PM
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.89
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">2.2 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isInstaHelpCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">InstaHelp</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 41 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.72
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">14.8 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isWashingMachineCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Washing Machine ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 44 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.78
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">3.6 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 180 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-washing-machine-jet-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
               </div>
             )}
 
@@ -960,6 +2005,46 @@ function UrbanCompanyServiceListingContent() {
                 </div>
                 <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/10 shrink-0">
                   <img src="/services/ac-foam-jet-hero.jpg" alt="Foam-jet AC Service" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Salon Luxe (Matching Urban Company Japanese Glow Rituals) */}
+            {isSalonLuxeCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#fff1f2] via-[#ffe4e6] to-[#fce7f3] text-[#111827] p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-pink-200">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-[#be185d] text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-md tracking-wider">
+                    New launch
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight text-[#111827]">
+                    Japanese<br /><span className="text-[#be185d]">glow rituals</span>
+                  </h2>
+                  <p className="text-sm font-bold text-[#831843]">
+                    Starting ₹1,999
+                  </p>
+                </div>
+                <div className="w-full sm:w-64 h-40 rounded-xl overflow-hidden shadow-lg border border-white/60 shrink-0">
+                  <img src="/services/japanese-glow-rituals.jpg" alt="Japanese Glow Rituals" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Washing Machine Repair */}
+            {isWashingMachineCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f766e] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-slate-700">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                    Skin-safe chemicals
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight">
+                    Select your service
+                  </h2>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                    Deep power drum decontamination with non-toxic chemical descaling
+                  </p>
+                </div>
+                <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/10 shrink-0">
+                  <img src="/services/washing-machine-clean.jpg" alt="Washing Machine Clean" className="w-full h-full object-cover" />
                 </div>
               </div>
             )}
@@ -1174,6 +2259,25 @@ function UrbanCompanyServiceListingContent() {
                         </div>
                       )}
 
+                      {(subCat.slug === 'waxing-threading' || subCat.slug === 'sub-salon-waxing') && (
+                        <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100/60 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#d97706] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Bestselling Wax
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Spatula waxing starting at ₹1,039
+                            </h3>
+                            <p className="text-xs text-amber-900 font-medium">
+                              Full arms, legs & underarms • Honey or RICA wax options
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-amber-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80" alt="Spatula Waxing" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
                       {(subCat.slug === 'ac-service-sub' || subCat.slug === 'ac-service' || subCat.slug === 'service') && (
                         <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-100/60 border border-purple-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
                           <div className="space-y-1">
@@ -1200,6 +2304,36 @@ function UrbanCompanyServiceListingContent() {
                           const isAdded = !!cartItem;
                           const originalPrice = Math.round(service.basePrice * 1.15);
                           const isPackage = service.name.toLowerCase().includes('package') || service.name.toLowerCase().includes('combo');
+                          const hasFreebie = service.description?.includes('Free SPF 70') || service.name.toLowerCase().includes('ritual');
+
+                          // Option count badge
+                          let optionText: string | null = null;
+                          const lowerName = service.name.toLowerCase();
+                          if (lowerName.includes('threading')) optionText = '8 options';
+                          else if (lowerName.includes('cirepil') || lowerName === 'instahelp') optionText = '7 options';
+                          else if (
+                            lowerName.includes('full arms') ||
+                            lowerName.includes('full legs') ||
+                            lowerName.includes('stomach') ||
+                            lowerName.includes('back') ||
+                            lowerName.includes('full body') ||
+                            lowerName.includes('bleach') ||
+                            lowerName.includes('detan') ||
+                            lowerName.includes('multi-day')
+                          ) optionText = '6 options';
+                          else if (
+                            lowerName.includes('spatula') ||
+                            lowerName.includes('roll-on') ||
+                            lowerName.includes('half legs') ||
+                            lowerName.includes('butt waxing') ||
+                            lowerName.includes('installation')
+                          ) optionText = '3 options';
+                          else if (
+                            lowerName.includes('bikini') ||
+                            lowerName.includes('delight') ||
+                            lowerName.includes('head massage') ||
+                            lowerName.includes('signature mani')
+                          ) optionText = '2 options';
 
                           return (
                             <div
@@ -1208,11 +2342,15 @@ function UrbanCompanyServiceListingContent() {
                             >
                               {/* Left info */}
                               <div className="flex-1 space-y-2">
-                                {/* Package / Bestseller Tag */}
+                                {/* Package / Freebie / Bestseller Tag */}
                                 <div className="flex items-center gap-2">
                                   {isPackage ? (
                                     <span className="bg-[#f0fdf4] text-[#16a34a] border border-[#bbf7d0] text-[9.5px] font-black px-2 py-0.5 rounded-xs uppercase tracking-wider">
                                       PACKAGE
+                                    </span>
+                                  ) : hasFreebie ? (
+                                    <span className="bg-[#f0fdf4] text-[#16a34a] border border-[#bbf7d0] text-[9.5px] font-black px-2 py-0.5 rounded-xs uppercase tracking-wider">
+                                      FREEBIE INCLUDED
                                     </span>
                                   ) : service.bestsellerFlag ? (
                                     <span className="bg-[#fff7ed] text-[#c2410c] border border-[#ffedd5] text-[9.5px] font-black px-2 py-0.5 rounded-xs uppercase tracking-wider">
@@ -1237,11 +2375,13 @@ function UrbanCompanyServiceListingContent() {
                                 {/* Price & Duration Strikethrough Line */}
                                 <div className="flex items-center gap-2.5 pt-1 flex-wrap">
                                   <span className="text-lg font-extrabold text-[#111827]">
-                                    ₹{service.basePrice}
+                                    {optionText ? `Starts at ₹${service.basePrice}` : `₹${service.basePrice}`}
                                   </span>
-                                  <span className="text-xs text-gray-400 line-through font-medium">
-                                    ₹{originalPrice}
-                                  </span>
+                                  {originalPrice > service.basePrice && (
+                                    <span className="text-xs text-gray-400 line-through font-medium">
+                                      ₹{originalPrice}
+                                    </span>
+                                  )}
                                   {service.durationMinutes && (
                                     <span className="text-xs text-gray-500 font-medium">
                                       • {service.durationMinutes} mins
@@ -1255,11 +2395,33 @@ function UrbanCompanyServiceListingContent() {
                                   <span>ZIVA200, get 25% Off upto Rs 200</span>
                                 </div>
 
-                                {/* Description */}
+                                {/* Description with clean bullets */}
                                 {service.description && (
-                                  <p className="text-xs text-gray-600 leading-relaxed pt-1 font-medium">
-                                    {service.description}
-                                  </p>
+                                  <div className="space-y-1 pt-1">
+                                    {service.description.split('\n').map((line, idx) => {
+                                      const trimmed = line.trim();
+                                      if (!trimmed) return null;
+                                      if (trimmed.toLowerCase() === 'view details') {
+                                        return (
+                                          <span key={idx} className="text-xs font-bold text-[#5e23dc] hover:underline block pt-0.5 cursor-pointer">
+                                            View details
+                                          </span>
+                                        );
+                                      }
+                                      if (trimmed.toLowerCase() === 'edit your package') {
+                                        return (
+                                          <span key={idx} className="text-xs font-bold text-[#5e23dc] hover:underline block pt-0.5 cursor-pointer">
+                                            Edit your package
+                                          </span>
+                                        );
+                                      }
+                                      return (
+                                        <p key={idx} className="text-xs text-gray-600 leading-relaxed font-medium">
+                                          {trimmed}
+                                        </p>
+                                      );
+                                    })}
+                                  </div>
                                 )}
                               </div>
 
@@ -1275,9 +2437,15 @@ function UrbanCompanyServiceListingContent() {
                                     alt={service.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                   />
-                                  <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-xs text-[#16a34a] text-[9px] font-black px-2 py-0.5 rounded-md shadow-2xs border border-emerald-100">
-                                    15% OFF
-                                  </div>
+                                  {isPackage ? (
+                                    <div className="absolute top-2 right-2 bg-emerald-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-2xs">
+                                      20% OFF
+                                    </div>
+                                  ) : (
+                                    <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-xs text-[#16a34a] text-[9px] font-black px-2 py-0.5 rounded-md shadow-2xs border border-emerald-100">
+                                      15% OFF
+                                    </div>
+                                  )}
                                 </div>
 
                                 {/* Add or Counter Button */}
@@ -1317,6 +2485,12 @@ function UrbanCompanyServiceListingContent() {
                                     <span className="text-sm font-extrabold">+</span>
                                   </button>
                                 )}
+
+                                {optionText && (
+                                  <span className="text-[10px] text-gray-500 font-medium mt-1">
+                                    {optionText}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           );
@@ -1331,31 +2505,101 @@ function UrbanCompanyServiceListingContent() {
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 space-y-4 sticky top-24">
             {/* UC Promise Card (Exact Urban Company Style) */}
-            <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
-                  <span>UC Promise</span>
-                </h3>
-                <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
-                  100% Quality
-                </span>
+            {isSalonLuxeCategory ? (
+              <>
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/80 rounded-2xl p-3 flex items-center justify-between shadow-2xs">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-lg">percent</span>
+                    <span className="text-xs font-bold text-[#111827]">Get 25% off upto ₹200</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-[#5e23dc] bg-white px-2 py-0.5 rounded-md border border-purple-100">
+                    2/2
+                  </span>
+                </div>
+
+                <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
+                      <span>UC Promise</span>
+                    </h3>
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-0.5 flex items-center justify-center">
+                      <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-[7px] font-black text-purple-900 uppercase tracking-tighter text-center leading-none">
+                        QUALITY ASSURED
+                      </div>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 text-xs text-gray-700">
+                    <li className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                      <span className="font-semibold text-gray-800">4.5+ Rated Beauticians</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                      <span className="font-semibold text-gray-800">Luxury Salon Experience</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                      <span className="font-semibold text-gray-800">Premium Branded Products</span>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            ) : isInstaHelpCategory || isWashingMachineCategory ? (
+              <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
+                    <span>UC Promise</span>
+                  </h3>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-0.5 flex items-center justify-center">
+                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-[7px] font-black text-purple-900 uppercase tracking-tighter text-center leading-none">
+                      QUALITY ASSURED
+                    </div>
+                  </div>
+                </div>
+                <ul className="space-y-2 text-xs text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Verified Professionals</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Hassle Free Booking</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Transparent Pricing</span>
+                  </li>
+                </ul>
               </div>
-              <ul className="space-y-2 text-xs text-gray-700">
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
-                  <span className="font-semibold text-gray-800">Verified Professionals</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
-                  <span className="font-semibold text-gray-800">Hassle-free booking</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
-                  <span className="font-semibold text-gray-800">Transparent Pricing</span>
-                </li>
-              </ul>
-            </div>
+            ) : (
+              <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
+                    <span>UC Promise</span>
+                  </h3>
+                  <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                    100% Quality
+                  </span>
+                </div>
+                <ul className="space-y-2 text-xs text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Verified Professionals</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">30-Day Service Warranty</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Standard Rate Cards</span>
+                  </li>
+                </ul>
+              </div>
+            )}
 
             <div className="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs space-y-4">
               <h2 className="text-sm font-bold text-[#111827] flex items-center justify-between border-b border-gray-100 pb-3">

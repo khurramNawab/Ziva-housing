@@ -278,17 +278,41 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       id: 'sub-w-salon',
       name: 'Salon for Women',
       slug: 'salon-for-women',
-      icon: '💇‍♀️',
-      badge: '30 mins',
+      icon: '🧖‍♀️',
+      badge: null,
       groupHeader: null,
       displayOrder: 1,
+      tiers: [
+        {
+          id: 'tier-w-salon-luxe',
+          name: 'Luxe',
+          slug: 'luxe',
+          description: 'CASMARA • CIREPIL',
+          badge: 'Top rated pros',
+          startingPrice: 799,
+          imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+          features: ['CASMARA luxury skincare actives', 'CIREPIL peel-off wax for intimate areas', 'Senior beauticians with 4.8+ rating'],
+          displayOrder: 1,
+        },
+        {
+          id: 'tier-w-salon-prime',
+          name: 'Prime',
+          slug: 'prime',
+          description: 'O3+ • RICA',
+          badge: null,
+          startingPrice: 599,
+          imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
+          features: ['O3+ signature brightening facial', 'RICA lipo-soluble cartridge wax', 'Single-use hygienic kit guarantee'],
+          displayOrder: 2,
+        },
+      ],
     },
     {
       id: 'sub-w-spa',
       name: 'Spa for Women',
       slug: 'spa-for-women',
-      icon: '🧖‍♀️',
-      badge: '45 mins',
+      icon: '💆‍♀️',
+      badge: '48 mins',
       groupHeader: null,
       displayOrder: 2,
       tiers: [
@@ -331,8 +355,8 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       id: 'sub-w-hair',
       name: 'Hair Studio for Women',
       slug: 'hair-studio-women',
-      icon: '💆‍♀️',
-      badge: '45 mins',
+      icon: '💇‍♀️',
+      badge: null,
       groupHeader: null,
       displayOrder: 3,
     },
@@ -341,7 +365,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       name: 'Makeup, Saree & Styling',
       slug: 'makeup-saree-styling',
       icon: '💄',
-      badge: '60 mins',
+      badge: '59 mins',
       groupHeader: null,
       displayOrder: 4,
     },
@@ -837,14 +861,31 @@ export default function UrbanCompanyModal({
           {selectedSubCategoryForTier ? (
             /* ════════════════════ SCREEN 2: SELECT YOUR PREFERENCE (TIERS) WITH LEFT PHOTO ════════════════════ */
             <div className="space-y-4 animate-fadeIn">
-              <div className="space-y-0.5">
-                <span className="text-xs font-bold text-[#5e23dc] uppercase tracking-wider">
-                  Tier Selection
-                </span>
-                <p className="text-[13px] text-gray-600">
-                  Select from our range of services tailored to your standard and needs:
-                </p>
-              </div>
+              {/* Derma Facials Cryotherapy Banner for Salon for Women (Screenshot 5) */}
+              {selectedSubCategoryForTier.subCategory.slug === 'salon-for-women' ? (
+                <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#0284c7] via-[#0369a1] to-[#1e3a8a] text-white p-4 shadow-md flex items-center justify-between gap-4 border border-sky-400/40">
+                  <div className="space-y-1 max-w-[300px]">
+                    <h4 className="text-base sm:text-lg font-black tracking-tight leading-tight">
+                      Derma Facials
+                    </h4>
+                    <p className="text-[11.5px] text-sky-100 font-medium leading-snug">
+                      Targeted actives, powered by Cryofacial Cold Therapy
+                    </p>
+                  </div>
+                  <div className="w-24 sm:w-32 h-16 sm:h-20 rounded-xl overflow-hidden shadow-md shrink-0 border border-white/20">
+                    <img src="/services/cryofacial-therapy.jpg" alt="Cryofacial Therapy" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-0.5">
+                  <span className="text-xs font-bold text-[#5e23dc] uppercase tracking-wider">
+                    Tier Selection
+                  </span>
+                  <p className="text-[13px] text-gray-600">
+                    Select from our range of services tailored to your standard and needs:
+                  </p>
+                </div>
+              )}
 
               <div className="space-y-4 pt-1">
                 {(selectedSubCategoryForTier.subCategory.tiers || []).map((tier) => {

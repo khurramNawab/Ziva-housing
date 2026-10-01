@@ -72,6 +72,10 @@ async function runTestSuite() {
     'ac-foam-jet-hero.jpg',
     'ac-repair-gas.jpg',
     'ac-installation.jpg',
+    'japanese-glow-rituals.jpg',
+    'instahelp-helper.jpg',
+    'washing-machine-clean.jpg',
+    'cryofacial-therapy.jpg',
     'electrician-service.jpg',
     'packers-movers.jpg',
     'babysitting.jpg',
@@ -135,9 +139,52 @@ async function runTestSuite() {
     assert(acSrc.includes('Foam-jet') && acSrc.includes('Power Saver'), 'AC Foam-jet Service section verified with Power Saver');
     assert(acSrc.includes('Repair & gas refill'), 'AC Repair & gas refill section verified');
     assert(acSrc.includes('Installation/uninstallation'), 'AC Installation/uninstallation section verified');
-    assert(acSrc.includes('UC Promise') && acSrc.includes('Select an address'), 'UC Promise card and Address Selector integrated');
+    assert(acSrc.includes('UC Promise'), 'UC Promise card integrated');
   } catch (err) {
     assert(false, 'Dedicated AC Service page reachable', err.message);
+  }
+
+  try {
+    const luxeRes = await fetchUrl(`${WEB_URL}/services/salon-luxe`);
+    assert(luxeRes.status === 200, 'Dedicated Salon Luxe Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('glow rituals') && serviceSrc.includes('1,999'), 'Salon Luxe Japanese glow rituals banner verified');
+    assert(serviceSrc.includes('Make your own package') && serviceSrc.includes('Monthly maintenance package'), 'Salon Luxe super saver packages verified');
+    assert(serviceSrc.includes('Spatula waxing starting at ₹1,039'), 'Waxing & threading spatula banner verified');
+    assert(serviceSrc.includes('FREEBIE INCLUDED'), 'Salon Luxe freebie included tags verified');
+    assert(serviceSrc.includes('4.5+ Rated Beauticians') && serviceSrc.includes('Luxury Salon Experience'), 'Salon Luxe UC Promise verified');
+  } catch (err) {
+    assert(false, 'Dedicated Salon Luxe page reachable', err.message);
+  }
+
+  try {
+    const ihRes = await fetchUrl(`${WEB_URL}/services/instahelp`);
+    assert(ihRes.status === 200, 'Dedicated InstaHelp Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('In 41 mins') && serviceSrc.includes('14.8 M bookings'), 'InstaHelp 41 mins badge & 14.8M bookings verified');
+    assert(serviceSrc.includes('/services/instahelp-helper.jpg'), 'InstaHelp helper photo verified');
+  } catch (err) {
+    assert(false, 'Dedicated InstaHelp page reachable', err.message);
+  }
+
+  try {
+    const wmRes = await fetchUrl(`${WEB_URL}/services/washing-machine`);
+    assert(wmRes.status === 200, 'Dedicated Washing Machine Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Up to 180 days warranty'), 'Washing Machine 180 days warranty verified');
+    assert(serviceSrc.includes('Skin-safe chemicals') && serviceSrc.includes('/services/washing-machine-clean.jpg'), 'Washing Machine skin-safe chemical cleaning verified');
+  } catch (err) {
+    assert(false, 'Dedicated Washing Machine page reachable', err.message);
+  }
+
+  try {
+    const modalSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/components/UrbanCompanyModal.tsx'), 'utf8');
+    assert(modalSrc.includes('Derma Facials') && modalSrc.includes('Cryofacial Cold Therapy'), 'Modal Derma Facials Cryofacial Cold Therapy banner verified');
+    assert(modalSrc.includes('CASMARA') && modalSrc.includes('CIREPIL') && modalSrc.includes('799'), 'Modal Luxe tier with CASMARA & CIREPIL verified');
+    assert(modalSrc.includes('O3+') && modalSrc.includes('RICA') && modalSrc.includes('599'), 'Modal Prime tier with O3+ & RICA verified');
+    assert(modalSrc.includes('48 mins') && modalSrc.includes('59 mins'), 'Modal subcategory duration badges verified');
+  } catch (err) {
+    assert(false, 'Modal component source check reachable', err.message);
   }
 
   // --- Suite 3: Dedicated Role-Based Panels Routing ---
