@@ -258,6 +258,49 @@ async function runTestSuite() {
   }
 
   try {
+    const cockroachRes = await fetchUrl(`${WEB_URL}/services/cockroach-control`);
+    assert(cockroachRes.status === 200, 'Dedicated Cockroach Control Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Long lasting protection'), 'Cockroach Control Long lasting protection hero banner verified');
+    assert(serviceSrc.includes('Kitchen/Bathroom') && serviceSrc.includes('Apartment/Bunglow'), 'Cockroach Control sections verified');
+    assert(serviceSrc.includes('60 days warranty') && serviceSrc.includes('Instant in 24 mins'), 'Cockroach Control left card badges verified');
+  } catch (err) {
+    assert(false, 'Dedicated Cockroach Control page reachable', err.message);
+  }
+
+  try {
+    const antsRes = await fetchUrl(`${WEB_URL}/services/ants-bed-bugs-control`);
+    assert(antsRes.status === 200, 'Dedicated Ants & Bed Bugs Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('100% bug-free sleep guarantee'), 'Ants & Bed Bugs bug-free sleep guarantee banner verified');
+    assert(serviceSrc.includes('Bed Bugs Control') && serviceSrc.includes('Ant Control'), 'Ants & Bed Bugs sections verified');
+    assert(serviceSrc.includes('Instant in 14 mins') && serviceSrc.includes('39K bookings'), 'Ants & Bed Bugs left card badges verified');
+  } catch (err) {
+    assert(false, 'Dedicated Ants & Bed Bugs page reachable', err.message);
+  }
+
+  try {
+    const fullPaintRes = await fetchUrl(`${WEB_URL}/services/full-home-painting`);
+    assert(fullPaintRes.status === 200, 'Dedicated Full Home Painting Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Pay only after satisfaction'), 'Painting Pay only after satisfaction hero banner verified');
+    assert(serviceSrc.includes('Unfurnished Full home painting') && serviceSrc.includes('Furnished full home painting'), 'Full Home Painting sections verified');
+    assert(serviceSrc.includes('200k+ reviews') && serviceSrc.includes('Home Painting'), 'Home Painting left card header verified');
+  } catch (err) {
+    assert(false, 'Dedicated Full Home Painting page reachable', err.message);
+  }
+
+  try {
+    const wallsPaintRes = await fetchUrl(`${WEB_URL}/services/walls-rooms-painting`);
+    assert(wallsPaintRes.status === 200, 'Dedicated Walls & Rooms Painting Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Few wall painting') && serviceSrc.includes('One room painting'), 'Walls & Rooms Painting sections verified');
+    assert(serviceSrc.includes('1.6M bookings') && serviceSrc.includes('Walls & Rooms Painting'), 'Walls & Rooms Painting left card header verified');
+  } catch (err) {
+    assert(false, 'Dedicated Walls & Rooms Painting page reachable', err.message);
+  }
+
+  try {
     const modalSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/components/UrbanCompanyModal.tsx'), 'utf8');
     assert(modalSrc.includes('Derma Facials') && modalSrc.includes('Cryofacial Cold Therapy'), 'Modal Derma Facials Cryofacial Cold Therapy banner verified');
     assert(modalSrc.includes('CASMARA') && modalSrc.includes('CIREPIL') && modalSrc.includes('799'), 'Modal Luxe tier with CASMARA & CIREPIL verified');
@@ -268,6 +311,7 @@ async function runTestSuite() {
     assert(modalSrc.includes('groupHeader: \'Cleaning\'') && modalSrc.includes('groupHeader: \'Pest Control\''), 'Modal Cleaning & Pest Control grouping verified');
     assert(modalSrc.includes('Cockroach Control') && modalSrc.includes('Ants & Bed Bugs Control'), 'Modal Pest Control subcategories verified');
     assert(modalSrc.includes('55 mins') && modalSrc.includes('74 mins'), 'Modal 55 mins and 74 mins duration badges verified');
+    assert(modalSrc.includes('Select your scope') && modalSrc.includes('Full home painting') && modalSrc.includes('Few walls & rooms'), 'Modal Painting & Waterproofing Scope Selection verified');
   } catch (err) {
     assert(false, 'Modal component source check reachable', err.message);
   }

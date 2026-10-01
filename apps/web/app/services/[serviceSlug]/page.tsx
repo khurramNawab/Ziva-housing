@@ -3059,6 +3059,852 @@ const DEFAULT_FULL_HOME_CLEANING_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_COCKROACH_CONTROL_CATEGORY: ServiceCategory = {
+  id: 'cat-cockroach-control',
+  name: 'Cockroach Control',
+  slug: 'cockroach-control',
+  icon: '🐜',
+  badge: '4.81 ★ (1.5M)',
+  order: 4,
+  subCategories: [
+    {
+      id: 'sub-cc-kitchen-bath',
+      name: 'Kitchen/Bathroom',
+      slug: 'kitchen-bathroom',
+      icon: 'kitchen',
+      badge: 'Bestseller',
+      groupHeader: 'Pest Control',
+      displayOrder: 1,
+      description: 'Specialized gel dots & odor-free spray targeting kitchen drains & cupboards.',
+      services: [
+        {
+          id: 'srv-cc-utensil-yes',
+          name: 'Cockroach control (includes utensil removal)',
+          slug: 'cockroach-control-includes-utensil-removal',
+          basePrice: 1249,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 158000,
+          description: '• Treatment will be completed in 2 visits with 2 weeks of gap\n• We\'ll remove utensils before the service begins\n• Targeted herbal gel & odorless chemical spray behind appliances',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cc-utensil-no',
+          name: 'Cockroach control (no utensil removal)',
+          slug: 'cockroach-control-no-utensil-removal',
+          basePrice: 999,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 258000,
+          description: '• Treatment will be completed in 2 visits with 2 weeks of gap\n• Excludes removal of utensils & objects before the service begins\n• Cabinet hinge gel dots & drain trap treatment',
+          imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-cc-apt-bungalow',
+      name: 'Apartment/Bunglow',
+      slug: 'apartment-bungalow',
+      icon: 'apartment',
+      badge: 'Full Home',
+      groupHeader: 'Pest Control',
+      displayOrder: 2,
+      description: 'Comprehensive whole-house eradication for apartments and bungalows.',
+      services: [
+        {
+          id: 'srv-cc-apt-cust',
+          name: 'Apartment pest control (Utensil removal by customer)',
+          slug: 'apartment-pest-control-utensil-removal-by-customer',
+          basePrice: 1545,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 45000,
+          description: '• Spray treatment followed by gel treatment after 2 weeks\n• Excludes removal of utensils & objects before the service begins\n• Complete coverage for 1-4 BHK apartments',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cc-bung-cust',
+          name: 'Bungalow cockroach control (Utensil removal by customer)',
+          slug: 'bungalow-cockroach-control-utensil-removal-by-customer',
+          basePrice: 2699,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.75,
+          reviewCount: 17000,
+          description: '• Spray treatment followed by gel treatment after 2 weeks\n• Excludes removal of utensils & objects before the service begins\n• Comprehensive boundary & duplex protection',
+          imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cc-apt-incl',
+          name: 'Apartment cockroach control (includes utensil removal)',
+          slug: 'apartment-cockroach-control-includes-utensil-removal',
+          basePrice: 1799,
+          durationMinutes: 110,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 104000,
+          description: '• Spray treatment followed by gel treatment after 2 weeks\n• We\'ll remove utensils before the service begins\n• Hassle-free complete kitchen & house deinfestation',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cc-bung-incl',
+          name: 'Bungalow cockroach control (includes utensil removal)',
+          slug: 'bungalow-cockroach-control-includes-utensil-removal',
+          basePrice: 2999,
+          durationMinutes: 150,
+          bestsellerFlag: false,
+          rating: 4.72,
+          reviewCount: 9000,
+          description: '• Spray treatment followed by gel treatment after 2 weeks\n• We\'ll remove utensils before the service begins\n• Full multi-floor eradication of German & American roaches',
+          imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_ANTS_BED_BUGS_CATEGORY: ServiceCategory = {
+  id: 'cat-ants-bed-bugs-control',
+  name: 'Ants & Bed Bugs ...',
+  slug: 'ants-bed-bugs-control',
+  icon: '🐜',
+  badge: '4.79 ★ (39K)',
+  order: 4,
+  subCategories: [
+    {
+      id: 'sub-abb-bed-bugs',
+      name: 'Bed Bugs Control',
+      slug: 'bed-bugs-control',
+      icon: 'bed',
+      badge: '2 Visits',
+      groupHeader: 'Pest Control',
+      displayOrder: 1,
+      description: 'Dual-phase nymph & egg cycle interruption for peaceful, bite-free sleep.',
+      services: [
+        {
+          id: 'srv-abb-bedbugs',
+          name: 'Bed bugs control',
+          slug: 'bed-bugs-control-service',
+          basePrice: 1399,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.77,
+          reviewCount: 11000,
+          description: '• Essential pre-service inspection of the entire home\n• Unique 2-visit treatment to target eggs, nymphs & adult nests\n• Hospital-grade non-hazardous active solution',
+          imageUrl: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-abb-ants',
+      name: 'Ant Control',
+      slug: 'ant-control',
+      icon: 'pest_control',
+      badge: 'Guaranteed',
+      groupHeader: 'Pest Control',
+      displayOrder: 2,
+      description: 'Wall crevice and trail eradication stopping red and black ant colonies.',
+      services: [
+        {
+          id: 'srv-abb-apt-utensil-yes',
+          name: 'Apartment ant control (with utensil removal)',
+          slug: 'apartment-ant-control-with-utensil-removal',
+          basePrice: 1049,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 1000,
+          description: '• Complete ant treatment for confined spaces\n• Includes thorough inspection, chemical spray & hole sealing',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-abb-apt-utensil-no',
+          name: 'Apartment ant control (without utensil removal)',
+          slug: 'apartment-ant-control-without-utensil-removal',
+          basePrice: 1049,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 4000,
+          description: '• Complete ant treatment for confined spaces\n• Includes thorough inspection, chemical spray & hole sealing',
+          imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-abb-bung-utensil-yes',
+          name: 'Bungalow ant control (with utensil removal)',
+          slug: 'bungalow-ant-control-with-utensil-removal',
+          basePrice: 2199,
+          durationMinutes: 105,
+          bestsellerFlag: false,
+          rating: 4.66,
+          reviewCount: 72,
+          description: '• Extensive ant protection for large areas\n• Complete boundary spray & entry-point barrier',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-abb-bung-utensil-no',
+          name: 'Bungalow ant control (without utensil removal)',
+          slug: 'bungalow-ant-control-without-utensil-removal',
+          basePrice: 2199,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 55,
+          description: '• Extensive ant protection for large areas\n• Complete boundary spray & entry-point barrier',
+          imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-abb-kb-utensil-yes',
+          name: 'Ant control - kitchen/bathroom (with utensil removal)',
+          slug: 'ant-control-kitchen-bathroom-with-utensil-removal',
+          basePrice: 1249,
+          durationMinutes: 50,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 322,
+          description: '• Complete ant treatment for confined spaces\n• We\'ll remove utensils before the service begins',
+          imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-abb-kb-utensil-no',
+          name: 'Ant control - kitchen/bathroom (without utensil removal)',
+          slug: 'ant-control-kitchen-bathroom-without-utensil-removal',
+          basePrice: 999,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 557,
+          description: '• Complete ant treatment for confined spaces\n• Excludes removal of utensils & objects before the service begins',
+          imageUrl: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_FULL_HOME_PAINTING_CATEGORY: ServiceCategory = {
+  id: 'cat-full-home-painting',
+  name: 'Home Painting',
+  slug: 'full-home-painting',
+  icon: '🖌️',
+  badge: '4.77 ★ (200k+)',
+  order: 5,
+  subCategories: [
+    {
+      id: 'sub-fhp-unfurnished',
+      name: 'Unfurnished Full home painting',
+      slug: 'unfurnished-full-home-painting',
+      icon: 'home',
+      badge: 'Vacant Home',
+      groupHeader: 'Full Home',
+      displayOrder: 1,
+      description: 'Speedy mechanized painting for vacant homes before moving in.',
+      services: [
+        {
+          id: 'srv-fhp-unf-1bhk',
+          name: 'Unfurnished 1 BHK painting',
+          slug: 'unfurnished-1-bhk-painting',
+          basePrice: 7099,
+          durationMinutes: 480,
+          bestsellerFlag: false,
+          rating: 4.77,
+          reviewCount: 42000,
+          description: '• Complete 2-coat primer & premium emulsion on all walls & ceilings\n• Includes masking tape protection, crack filling and sanding',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-unf-2bhk',
+          name: 'Unfurnished 2 BHK painting',
+          slug: 'unfurnished-2-bhk-painting',
+          basePrice: 11999,
+          durationMinutes: 720,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 88000,
+          description: '• 2 coats premium washable acrylic emulsion with roller finish\n• Free shade consultation and laser measurement',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-unf-3bhk',
+          name: 'Unfurnished 3 BHK painting',
+          slug: 'unfurnished-3-bhk-painting',
+          basePrice: 16499,
+          durationMinutes: 960,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 51000,
+          description: '• Complete home painting for 3 bedrooms, hall, kitchen & lobby\n• Mechanized sanding & vacuum dust collection',
+          imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhp-furnished',
+      name: 'Furnished full home painting',
+      slug: 'furnished-full-home-painting',
+      icon: 'weekend',
+      badge: 'Zero Mess',
+      groupHeader: 'Full Home',
+      displayOrder: 2,
+      description: 'Complete floor and furniture plastic masking with post-job vacuum cleaning.',
+      services: [
+        {
+          id: 'srv-fhp-fur-1bhk',
+          name: '1 BHK Furnished painting',
+          slug: '1-bhk-furnished-painting',
+          basePrice: 9099,
+          durationMinutes: 600,
+          bestsellerFlag: false,
+          rating: 4.76,
+          reviewCount: 31000,
+          description: '• Full plastic sheet covering of furniture, floors & electronics\n• Post-service cleanup and vacuuming guaranteed',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-fur-2bhk',
+          name: '2 BHK Furnished painting',
+          slug: '2-bhk-furnished-painting',
+          basePrice: 14999,
+          durationMinutes: 840,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 112000,
+          description: '• Complete masking of beds, wardrobes, switchboards & tiles\n• Premium royal shine washable paint with 1-year warranty',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-fur-3bhk',
+          name: '3 BHK Furnished painting',
+          slug: '3-bhk-furnished-painting',
+          basePrice: 19999,
+          durationMinutes: 1080,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 78000,
+          description: '• Dedicated project manager & certified trained painters\n• Zero-mess finish with furniture repositioning',
+          imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-fur-4bhk',
+          name: '4 BHK Furnished painting',
+          slug: '4-bhk-furnished-painting',
+          basePrice: 25999,
+          durationMinutes: 1320,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 29000,
+          description: '• Large home premium painting with airless spray & roller finishing\n• Dedicated crew with 4-day express completion',
+          imageUrl: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhp-room-combos',
+      name: 'Room combos',
+      slug: 'room-combos',
+      icon: 'meeting_room',
+      badge: 'Popular',
+      groupHeader: 'Combos',
+      displayOrder: 3,
+      description: 'Multi-room bundle packages tailored to specific living zones.',
+      services: [
+        {
+          id: 'srv-fhp-combo-2',
+          name: 'Any 2 rooms',
+          slug: 'any-2-rooms-combo',
+          basePrice: 4999,
+          durationMinutes: 480,
+          bestsellerFlag: true,
+          rating: 4.75,
+          reviewCount: 64000,
+          description: '• Choice of any 2 bedrooms or living room + bedroom\n• Full masking & zero-drip painting',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-combo-3',
+          name: 'Any 3 rooms',
+          slug: 'any-3-rooms-combo',
+          basePrice: 7499,
+          durationMinutes: 720,
+          bestsellerFlag: false,
+          rating: 4.77,
+          reviewCount: 41000,
+          description: '• Flexible multi-room package with custom wall colors',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhp-exterior',
+      name: 'Exterior Full Home',
+      slug: 'exterior-full-home',
+      icon: 'deck',
+      badge: 'Weatherproof',
+      groupHeader: 'Specialty',
+      displayOrder: 4,
+      description: 'Heavy duty exterior elastomeric waterproof protection.',
+      services: [
+        {
+          id: 'srv-fhp-ext',
+          name: 'Exterior painting',
+          slug: 'exterior-painting-service',
+          basePrice: 14999,
+          durationMinutes: 960,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 23000,
+          description: '• Weather-proof exterior elastomeric coating protecting against fungus and dampness',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhp-waterproofing',
+      name: 'Waterproofing',
+      slug: 'waterproofing',
+      icon: 'water_drop',
+      badge: '100% Warranty',
+      groupHeader: 'Specialty',
+      displayOrder: 5,
+      description: 'Treats walls from inside with chemical damp barrier injection.',
+      services: [
+        {
+          id: 'srv-fhp-wall-wp',
+          name: 'Wall waterproofing',
+          slug: 'wall-waterproofing-service',
+          basePrice: 2999,
+          durationMinutes: 240,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 48000,
+          description: '• Treats walls from inside • 100% Waterproofing warranty\n• Deep chemical barrier injection eliminating efflorescence & peeling',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-terrace-wp',
+          name: 'Terrace waterproofing',
+          slug: 'terrace-waterproofing-service',
+          basePrice: 6999,
+          durationMinutes: 480,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 19000,
+          description: '• 3-layer fiber membrane polymer coating preventing terrace seepage',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhp-textures',
+      name: 'Textures',
+      slug: 'textures',
+      icon: 'palette',
+      badge: 'Artisan',
+      groupHeader: 'Specialty',
+      displayOrder: 6,
+      description: 'Luxury Italian marble stucco and metallic accent feature walls.',
+      services: [
+        {
+          id: 'srv-fhp-prem-tex',
+          name: 'Premium Textures',
+          slug: 'premium-textures-service',
+          basePrice: 1499,
+          durationMinutes: 180,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 31000,
+          description: '• Designer accent feature wall with metallic, stucco or rustic texture finish',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-fhp-lux-tex',
+          name: 'Luxury Textures',
+          slug: 'luxury-textures-service',
+          basePrice: 2999,
+          durationMinutes: 240,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 17000,
+          description: '• High-end Italian marble stucco and velvet sheen artisan patterns',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fhp-more',
+      name: 'Looking for something else',
+      slug: 'looking-for-something-else',
+      icon: 'help',
+      badge: 'Consultation',
+      groupHeader: 'Specialty',
+      displayOrder: 7,
+      description: 'Book home visit with paint expert for custom shades and laser quotes.',
+      services: [
+        {
+          id: 'srv-fhp-all-in-one',
+          name: 'All-in-one',
+          slug: 'all-in-one-paint-consultation',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 15000,
+          description: '• In-person expert consultation, digital color visualization & detailed quote',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY: ServiceCategory = {
+  id: 'cat-walls-rooms-painting',
+  name: 'Walls & Rooms Painting',
+  slug: 'walls-rooms-painting',
+  icon: '🎨',
+  badge: '4.80 ★ (1.6M)',
+  order: 5,
+  subCategories: [
+    {
+      id: 'sub-wrp-few-walls',
+      name: 'Few wall painting',
+      slug: 'few-wall-painting',
+      icon: 'crop_square',
+      badge: 'Quick Touchup',
+      groupHeader: 'Walls & Rooms',
+      displayOrder: 1,
+      description: 'Single wall accent coats or seepage patch repairs.',
+      services: [
+        {
+          id: 'srv-wrp-1wall',
+          name: '1 wall painting',
+          slug: '1-wall-painting',
+          basePrice: 1499,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.77,
+          reviewCount: 45000,
+          description: '• Single wall repaint or touchup with primer and 2 coats emulsion\n• Complete tape masking of skirting and switches',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-2-3walls',
+          name: '2-3 few walls painting',
+          slug: '2-3-few-walls-painting',
+          basePrice: 2999,
+          durationMinutes: 240,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 68000,
+          description: '• Ideal for accent walls or fixing seepage-damaged patches\n• Primer + putty + 2 coats royal luxury emulsion',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wrp-one-room',
+      name: 'One room painting',
+      slug: 'one-room-painting',
+      icon: 'bedroom_parent',
+      badge: 'Express',
+      groupHeader: 'Walls & Rooms',
+      displayOrder: 2,
+      description: 'Individual bedroom, living hall, kitchen or bath painting.',
+      services: [
+        {
+          id: 'srv-wrp-bedroom',
+          name: 'Bedroom painting',
+          slug: 'bedroom-painting-service',
+          basePrice: 3499,
+          durationMinutes: 300,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 92000,
+          description: '• Walls and ceiling painting for master or guest bedroom\n• Complete furniture plastic tarping and dust-free finish',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-living',
+          name: 'Living room painting',
+          slug: 'living-room-painting-service',
+          basePrice: 4499,
+          durationMinutes: 360,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 63000,
+          description: '• Spacious living area painting with edge cutting and skirting trim\n• Premium stain-resistant washable paint',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-living-dining',
+          name: 'Living & dining room painting',
+          slug: 'living-dining-room-painting-service',
+          basePrice: 5999,
+          durationMinutes: 420,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 47000,
+          description: '• Complete combined living & dining hall painting',
+          imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-lobby',
+          name: 'Lobby / passage painting',
+          slug: 'lobby-passage-painting-service',
+          basePrice: 2499,
+          durationMinutes: 200,
+          bestsellerFlag: false,
+          rating: 4.76,
+          reviewCount: 22000,
+          description: '• Entry hallway and corridor painting with scrub-resistant finish',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-kitchen',
+          name: 'Kitchen painting',
+          slug: 'kitchen-painting-service',
+          basePrice: 2499,
+          durationMinutes: 240,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 38000,
+          description: '• Oil and moisture-resistant anti-fungal kitchen paint',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-bathroom',
+          name: 'Bathroom painting',
+          slug: 'bathroom-painting-service',
+          basePrice: 1499,
+          durationMinutes: 150,
+          bestsellerFlag: false,
+          rating: 4.75,
+          reviewCount: 19000,
+          description: '• Moisture barrier coating for dry zones and ceiling',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-store',
+          name: 'Store room painting',
+          slug: 'store-room-painting-service',
+          basePrice: 1499,
+          durationMinutes: 150,
+          bestsellerFlag: false,
+          rating: 4.72,
+          reviewCount: 12000,
+          description: '• Quick clean repaint for storage and utility rooms',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wrp-multi-rooms',
+      name: 'Two or more rooms painting',
+      slug: 'two-or-more-rooms-painting',
+      icon: 'holiday_village',
+      badge: 'Best Value',
+      groupHeader: 'Walls & Rooms',
+      displayOrder: 3,
+      description: 'Discounted multi-room combination painting packages.',
+      services: [
+        {
+          id: 'srv-wrp-any-2',
+          name: 'Any 2 rooms',
+          slug: 'wrp-any-2-rooms',
+          basePrice: 6499,
+          durationMinutes: 480,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 55000,
+          description: '• Full painting for any 2 selected rooms with floor masking',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-any-3',
+          name: 'Any 3 rooms',
+          slug: 'wrp-any-3-rooms',
+          basePrice: 9499,
+          durationMinutes: 720,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 37000,
+          description: '• Full painting for any 3 selected rooms with complete clean-up',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wrp-doors-grills',
+      name: 'Doors, Grills & Cabinets',
+      slug: 'doors-grills-cabinets',
+      icon: 'door_front',
+      badge: 'Enamel & Polish',
+      groupHeader: 'Wood & Metal',
+      displayOrder: 4,
+      description: 'PU, melamine and synthetic enamel painting for wood and metal.',
+      services: [
+        {
+          id: 'srv-wrp-door',
+          name: 'Door painting',
+          slug: 'door-painting-service',
+          basePrice: 899,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 41000,
+          description: '• High-gloss enamel or melamine polish for wooden/flush doors',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-grill',
+          name: 'Grill painting',
+          slug: 'grill-painting-service',
+          basePrice: 699,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 28000,
+          description: '• Anti-rust primer followed by dual coats synthetic enamel',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-cabinet',
+          name: 'Cabinet painting',
+          slug: 'cabinet-painting-service',
+          basePrice: 1499,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 19000,
+          description: '• PU lacquer or satin finish on wardrobe and cabinet shutters',
+          imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-gate',
+          name: 'Main gate / border painting',
+          slug: 'main-gate-border-painting-service',
+          basePrice: 1499,
+          durationMinutes: 150,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 14000,
+          description: '• Heavy-duty exterior anti-corrosion metal paint',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wrp-grouting',
+      name: 'Tile grouting',
+      slug: 'tile-grouting',
+      icon: 'grid_view',
+      badge: 'Leak Proof',
+      groupHeader: 'Flooring',
+      displayOrder: 5,
+      description: 'Epoxy and waterproof grout replacement stopping floor dampness.',
+      services: [
+        {
+          id: 'srv-wrp-grout',
+          name: 'Tile grouting',
+          slug: 'tile-grouting-service',
+          basePrice: 599,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 31000,
+          description: '• Epoxy or cementitious grout replacement preventing water leakage',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-wrp-exterior-area',
+      name: 'Exterior Area painting',
+      slug: 'exterior-area-painting',
+      icon: 'balcony',
+      badge: 'Weather Proof',
+      groupHeader: 'Flooring',
+      displayOrder: 6,
+      description: 'Balcony and washing area water-repellent coating.',
+      services: [
+        {
+          id: 'srv-wrp-balcony',
+          name: 'Balcony painting',
+          slug: 'balcony-painting-service',
+          basePrice: 1499,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 27000,
+          description: '• Weather-shield exterior emulsion for balcony walls and ceiling',
+          imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wrp-washing',
+          name: 'Washing area painting',
+          slug: 'washing-area-painting-service',
+          basePrice: 1499,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.76,
+          reviewCount: 16000,
+          description: '• Water-repellent wash area and utility balcony coating',
+          imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -3113,6 +3959,10 @@ function UrbanCompanyServiceListingContent() {
     const isKitchenCleaningSlug = ['kitchen-cleaning', 'kitchen'].includes(serviceSlug);
     const isLivingBedroomSlug = ['living-bedroom-cleaning', 'living-bedroom', 'sofa-cleaning'].includes(serviceSlug);
     const isFullHomeSlug = ['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug);
+    const isCockroachSlug = ['cockroach-control', 'cockroach'].includes(serviceSlug);
+    const isAntsBedBugsSlug = ['ants-bed-bugs-control', 'ants-bed-bugs', 'bed-bugs-control', 'ant-control'].includes(serviceSlug);
+    const isFullHomePaintingSlug = ['full-home-painting', 'home-painting'].includes(serviceSlug);
+    const isWallsRoomsPaintingSlug = ['walls-rooms-painting', 'few-walls-rooms', 'wall-painting', 'wall-painting-sub'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -3189,6 +4039,26 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FULL_HOME_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'full-apartment');
           return;
         }
+        if (isCockroachSlug) {
+          setCategoryData(DEFAULT_COCKROACH_CONTROL_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_COCKROACH_CONTROL_CATEGORY.subCategories?.[0]?.slug || 'kitchen-bathroom');
+          return;
+        }
+        if (isAntsBedBugsSlug) {
+          setCategoryData(DEFAULT_ANTS_BED_BUGS_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_ANTS_BED_BUGS_CATEGORY.subCategories?.[0]?.slug || 'bed-bugs-control');
+          return;
+        }
+        if (isFullHomePaintingSlug) {
+          setCategoryData(DEFAULT_FULL_HOME_PAINTING_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FULL_HOME_PAINTING_CATEGORY.subCategories?.[0]?.slug || 'unfurnished-full-home-painting');
+          return;
+        }
+        if (isWallsRoomsPaintingSlug) {
+          setCategoryData(DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY.subCategories?.[0]?.slug || 'few-wall-painting');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -3224,6 +4094,14 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY;
         } else if (isFullHomeSlug) {
           data = DEFAULT_FULL_HOME_CLEANING_CATEGORY;
+        } else if (isCockroachSlug) {
+          data = DEFAULT_COCKROACH_CONTROL_CATEGORY;
+        } else if (isAntsBedBugsSlug) {
+          data = DEFAULT_ANTS_BED_BUGS_CATEGORY;
+        } else if (isFullHomePaintingSlug) {
+          data = DEFAULT_FULL_HOME_PAINTING_CATEGORY;
+        } else if (isWallsRoomsPaintingSlug) {
+          data = DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -3250,6 +4128,14 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY;
       } else if (isFullHomeSlug || data.slug === 'full-home-cleaning' || data.name?.toLowerCase().includes('full home')) {
         data = DEFAULT_FULL_HOME_CLEANING_CATEGORY;
+      } else if (isCockroachSlug || data.slug === 'cockroach-control' || data.name?.toLowerCase().includes('cockroach')) {
+        data = DEFAULT_COCKROACH_CONTROL_CATEGORY;
+      } else if (isAntsBedBugsSlug || data.slug === 'ants-bed-bugs-control' || data.name?.toLowerCase().includes('bed bugs') || data.name?.toLowerCase().includes('ant')) {
+        data = DEFAULT_ANTS_BED_BUGS_CATEGORY;
+      } else if (isFullHomePaintingSlug || data.slug === 'full-home-painting' || (data.name?.toLowerCase().includes('home painting') && !data.name?.toLowerCase().includes('walls'))) {
+        data = DEFAULT_FULL_HOME_PAINTING_CATEGORY;
+      } else if (isWallsRoomsPaintingSlug || data.slug === 'walls-rooms-painting' || data.name?.toLowerCase().includes('walls & rooms') || data.name?.toLowerCase().includes('few wall')) {
+        data = DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY;
       }
 
       setCategoryData(data);
@@ -3327,6 +4213,22 @@ function UrbanCompanyServiceListingContent() {
       } else if (['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_FULL_HOME_CLEANING_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FULL_HOME_CLEANING_CATEGORY.subCategories?.[0]?.slug || 'full-apartment');
+        setError404(false);
+      } else if (['cockroach-control', 'cockroach'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_COCKROACH_CONTROL_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_COCKROACH_CONTROL_CATEGORY.subCategories?.[0]?.slug || 'kitchen-bathroom');
+        setError404(false);
+      } else if (['ants-bed-bugs-control', 'ants-bed-bugs', 'bed-bugs-control', 'ant-control'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_ANTS_BED_BUGS_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_ANTS_BED_BUGS_CATEGORY.subCategories?.[0]?.slug || 'bed-bugs-control');
+        setError404(false);
+      } else if (['full-home-painting', 'home-painting'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_FULL_HOME_PAINTING_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FULL_HOME_PAINTING_CATEGORY.subCategories?.[0]?.slug || 'unfurnished-full-home-painting');
+        setError404(false);
+      } else if (['walls-rooms-painting', 'few-walls-rooms', 'wall-painting', 'wall-painting-sub'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY.subCategories?.[0]?.slug || 'few-wall-painting');
         setError404(false);
       } else {
         setError404(true);
@@ -3492,6 +4394,40 @@ function UrbanCompanyServiceListingContent() {
       ['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug) ||
       ['full-home-cleaning', 'full-home'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('full home')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isCockroachControlCategory = useMemo(() => {
+    return (
+      ['cockroach-control', 'cockroach'].includes(serviceSlug) ||
+      ['cockroach-control', 'cockroach'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('cockroach')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isAntsBedBugsCategory = useMemo(() => {
+    return (
+      ['ants-bed-bugs-control', 'ants-bed-bugs', 'bed-bugs-control', 'ant-control'].includes(serviceSlug) ||
+      ['ants-bed-bugs-control', 'ants-bed-bugs', 'bed-bugs-control', 'ant-control'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('bed bugs') ||
+      categoryData?.name?.toLowerCase().includes('ant')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isFullHomePaintingCategory = useMemo(() => {
+    return (
+      ['full-home-painting', 'home-painting'].includes(serviceSlug) ||
+      ['full-home-painting', 'home-painting'].includes(categoryData?.slug || '') ||
+      (categoryData?.name?.toLowerCase().includes('home painting') && !categoryData?.name?.toLowerCase().includes('walls'))
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isWallsRoomsPaintingCategory = useMemo(() => {
+    return (
+      ['walls-rooms-painting', 'few-walls-rooms', 'wall-painting'].includes(serviceSlug) ||
+      ['walls-rooms-painting', 'few-walls-rooms', 'wall-painting'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('walls & rooms') ||
+      categoryData?.name?.toLowerCase().includes('few wall')
     );
   }, [serviceSlug, categoryData]);
 
@@ -4009,6 +4945,143 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isCockroachControlCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Cockroach Control</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      Instant in 24 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.81
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.5M bookings</span>
+                  </div>
+                </div>
+
+                {/* 60 days warranty strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">60 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-kitchen-bathroom');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isAntsBedBugsCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Ants & Bed Bugs ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      Instant in 14 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.79
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">39K bookings</span>
+                  </div>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-bed-bugs-control');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isFullHomePaintingCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Home Painting</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.77
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">200k+ reviews</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {isWallsRoomsPaintingCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Walls & Rooms Painting</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.80
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.6M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <h2 className="text-xs font-bold text-[#374151] uppercase tracking-wider mb-4 px-2">
               Select a service
             </h2>
@@ -4278,6 +5351,94 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {/* Dedicated Hero Banner for Cockroach Control (Matching Screenshot 3: Long lasting protection) */}
+            {isCockroachControlCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80"
+                    alt="Cockroach Control - Long lasting protection"
+                    className="w-full h-full object-cover opacity-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ‹
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+                          Long lasting protection
+                        </h2>
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ›
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-200 font-medium">
+                        2-visit targeted gel treatment + spray with 60 days warranty
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Ants & Bed Bugs (Matching Screenshot 2: Sleeping peaceful woman) */}
+            {isAntsBedBugsCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=1200&q=80"
+                    alt="Ants & Bed Bugs Control - Peaceful restful sleep"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ‹
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+                          100% bug-free sleep guarantee
+                        </h2>
+                        <span className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center text-sm font-bold">
+                          ›
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-200 font-medium">
+                        Unique 2-visit treatment targeting eggs, nymphs & adult colonies
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Painting (Matching Screenshots 4 & 5: Pay only after satisfaction) */}
+            {(isFullHomePaintingCategory || isWallsRoomsPaintingCategory) && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=1200&q=80"
+                    alt="Painting - Pay only after satisfaction"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1.5">
+                      <span className="inline-block bg-[#2563eb] text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-sm tracking-wider">
+                        For the first time ever
+                      </span>
+                      <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                        Pay only after satisfaction
+                      </h2>
+                      <p className="text-xs text-gray-200 font-medium">
+                        100% floor & furniture plastic masking • Certified Asian Paints / Berger paints
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Header / Hero Banner with Rating & Quick Slot info */}
             <div className="bg-white rounded-2xl border border-gray-200/90 p-6 shadow-xs space-y-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -4433,7 +5594,11 @@ function UrbanCompanyServiceListingContent() {
                     isMakeupCategory ||
                     isKitchenCleaningCategory ||
                     isLivingBedroomCategory ||
-                    isFullHomeCategory
+                    isFullHomeCategory ||
+                    isCockroachControlCategory ||
+                    isAntsBedBugsCategory ||
+                    isFullHomePaintingCategory ||
+                    isWallsRoomsPaintingCategory
                   ) {
                     return true;
                   }
@@ -4480,6 +5645,63 @@ function UrbanCompanyServiceListingContent() {
                       </div>
 
                       {/* Custom Section Banners (Urban Company Style) */}
+                      {subCat.slug === 'kitchen-bathroom' && isCockroachControlCategory && (
+                        <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100/60 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#d97706] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              60 Days Warranty
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Targeted kitchen & drain cockroach eradication
+                            </h3>
+                            <p className="text-xs text-amber-900 font-medium">
+                              2-visit treatment with odorless herbal gel dots + spray
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-amber-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80" alt="Cockroach Control" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {subCat.slug === 'bed-bugs-control' && isAntsBedBugsCategory && (
+                        <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-100/60 border border-purple-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#5e23dc] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Guaranteed Sleep
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Bed bugs 2-visit deep eradication
+                            </h3>
+                            <p className="text-xs text-purple-900 font-medium">
+                              Pre-service inspection + dual chemical wash targeting nymphs & eggs
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-purple-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=400&q=80" alt="Bed Bugs" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {subCat.slug === 'waterproofing' && (
+                        <div className="bg-gradient-to-r from-blue-50 via-sky-50 to-cyan-100/60 border border-sky-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#0284c7] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              100% Warranty
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Treats walls from inside
+                            </h3>
+                            <p className="text-xs text-sky-900 font-medium">
+                              Deep chemical damp injection eliminating efflorescence & peeling
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-sky-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80" alt="Waterproofing" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
                       {subCat.slug === 'value-deals' && isBathroomCleaningCategory && (
                         <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
                           <div className="space-y-1">

@@ -513,8 +513,24 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-e-5', name: 'Furniture Assembly', slug: 'furniture-assembly', icon: '🪑', badge: null, groupHeader: null, displayOrder: 5 },
   ],
   'painting-waterproofing': [
-    { id: 'sub-p-1', name: 'Painting & Waterproofing', slug: 'painting', icon: '🖌️', badge: null, groupHeader: null, displayOrder: 1 },
-    { id: 'sub-p-2', name: 'Wall Painting & Waterproofing', slug: 'wall-painting-sub', icon: '🎨', badge: null, groupHeader: null, displayOrder: 2 },
+    {
+      id: 'sub-p-full-home',
+      name: 'Full home painting',
+      slug: 'full-home-painting',
+      icon: '🏠',
+      badge: '1/2/3/4 BHK',
+      groupHeader: null,
+      displayOrder: 1,
+    },
+    {
+      id: 'sub-p-walls-rooms',
+      name: 'Few walls & rooms',
+      slug: 'walls-rooms-painting',
+      icon: '🎨',
+      badge: '1/2/3 rooms',
+      groupHeader: null,
+      displayOrder: 2,
+    },
   ],
   'instahelp': [
     { id: 'sub-ih-1', name: 'Daily Helpers & Cooks', slug: 'daily-helpers-sub', icon: '👩‍🍳', badge: null, groupHeader: null, displayOrder: 1 },
@@ -833,6 +849,14 @@ export default function UrbanCompanyModal({
         router.push('/services/living-bedroom-cleaning');
       } else if (subSlug === 'full-home-cleaning' || subSlug === 'full-home' || subSlug === 'full-home-by-room-cleaning' || subSlug === 'full-home-by-room') {
         router.push('/services/full-home-cleaning');
+      } else if (subSlug === 'cockroach-control') {
+        router.push('/services/cockroach-control');
+      } else if (subSlug === 'ants-bed-bugs-control' || subSlug === 'bed-bugs-control' || subSlug === 'ants-control') {
+        router.push('/services/ants-bed-bugs-control');
+      } else if (subSlug === 'full-home-painting' || subSlug === 'home-painting') {
+        router.push('/services/full-home-painting');
+      } else if (subSlug === 'walls-rooms-painting' || subSlug === 'few-walls-rooms' || subSlug === 'wall-painting-sub') {
+        router.push('/services/walls-rooms-painting');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }
@@ -1032,6 +1056,93 @@ export default function UrbanCompanyModal({
                     ungrouped.push(sub);
                   }
                 });
+
+                if (category.slug === 'painting-waterproofing' || category.slug === 'painting') {
+                  return (
+                    <div
+                      key={category.id || category.slug}
+                      id={`modal-section-${category.slug}`}
+                      className="space-y-4 scroll-mt-6"
+                    >
+                      <div className="border-b border-gray-100 pb-2">
+                        <h3 className="text-[20px] font-black text-[#111827] tracking-tight">
+                          Painting & Waterproofing
+                        </h3>
+                        <p className="text-[13px] font-medium text-gray-500 mt-0.5">
+                          Select your scope
+                        </p>
+                      </div>
+
+                      <div className="space-y-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            if (onSelectService) onSelectService('Full home painting', 'painting-waterproofing');
+                            router.push('/services/full-home-painting');
+                          }}
+                          className="w-full bg-white hover:bg-slate-50/80 border border-gray-200/90 hover:border-[#5e23dc] rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-4 cursor-pointer transition-all shadow-xs hover:shadow-md group text-left"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
+                              <img
+                                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80"
+                                alt="Full home painting"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                            <div>
+                              <h4 className="text-base sm:text-lg font-black text-[#111827] group-hover:text-[#5e23dc] transition-colors">
+                                Full home painting
+                              </h4>
+                              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
+                                1/2/3/4 BHK & above
+                              </p>
+                            </div>
+                          </div>
+                          <span className="material-symbols-outlined text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-1 transition-all text-xl shrink-0">
+                            chevron_right
+                          </span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            if (onSelectService) onSelectService('Few walls & rooms', 'painting-waterproofing');
+                            router.push('/services/walls-rooms-painting');
+                          }}
+                          className="w-full bg-white hover:bg-slate-50/80 border border-gray-200/90 hover:border-[#5e23dc] rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-4 cursor-pointer transition-all shadow-xs hover:shadow-md group text-left"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
+                              <img
+                                src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80"
+                                alt="Few walls & rooms"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </div>
+                            <div>
+                              <h4 className="text-base sm:text-lg font-black text-[#111827] group-hover:text-[#5e23dc] transition-colors">
+                                Few walls & rooms
+                              </h4>
+                              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
+                                Individual walls or 1/2/3 rooms
+                              </p>
+                            </div>
+                          </div>
+                          <span className="material-symbols-outlined text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-1 transition-all text-xl shrink-0">
+                            chevron_right
+                          </span>
+                        </button>
+                      </div>
+
+                      {catIndex < activeList.length - 1 && (
+                        <div className="h-[1px] bg-gray-100 w-full pt-2" />
+                      )}
+                    </div>
+                  );
+                }
 
                 return (
                   <div
