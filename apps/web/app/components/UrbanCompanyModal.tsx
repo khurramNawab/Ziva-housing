@@ -13,6 +13,8 @@ interface ServiceTier {
   imageUrl?: string | null;
   features: string[];
   displayOrder: number;
+  oilTag?: string | null;
+  etaBadge?: string | null;
 }
 
 interface ServiceSubCategory {
@@ -63,14 +65,14 @@ function slugify(text: string): string {
 }
 
 const TIER_IMAGES: Record<string, string> = {
-  'luxe': 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
-  'spa-women-luxe': 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
-  'prime': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
-  'spa-women-prime': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
-  'ayurveda': 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=80',
-  'spa-women-ayurveda': 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=80',
-  'prime-relaxation': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
-  'stress-relief': 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=80',
+  'luxe': '/services/spa-luxe-stones.jpg',
+  'spa-women-luxe': '/services/spa-luxe-stones.jpg',
+  'prime': '/services/spa-prime-massage.jpg',
+  'spa-women-prime': '/services/spa-prime-massage.jpg',
+  'ayurveda': '/services/spa-ayurveda-potli.jpg',
+  'spa-women-ayurveda': '/services/spa-ayurveda-potli.jpg',
+  'prime-relaxation': '/services/spa-prime-massage.jpg',
+  'stress-relief': '/services/spa-ayurveda-potli.jpg',
 };
 
 const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
@@ -228,47 +230,40 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       tiers: [
         {
           id: 'tier-m-luxe',
-          name: 'Luxe Deep Tissue',
-          slug: 'luxe-deep-tissue',
-          description: 'Intensive muscle recovery with hot oil & acupressure points by senior therapists',
+          name: 'Luxe',
+          slug: 'luxe',
+          oilTag: 'AROMA OIL',
+          description: 'Curated therapies with only Highly rated therapists & oils',
           badge: 'Top rated',
-          startingPrice: 999,
-          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          startingPrice: 898,
+          imageUrl: '/services/spa-luxe-stones.jpg',
           features: ['Deep muscle relief', 'Warm lavender aromatics', 'Certified senior masseurs'],
           displayOrder: 1,
         },
         {
           id: 'tier-m-prime',
-          name: 'Prime Relaxation',
-          slug: 'prime-relaxation',
-          description: 'Swedish & reflexology blend designed to melt away corporate stress & fatigue',
-          badge: 'Popular',
-          startingPrice: 999,
-          imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=80',
+          name: 'Prime',
+          slug: 'prime',
+          etaBadge: 'Arriving in 44 mins',
+          description: 'Regular oil massages with standard techniques & therapist',
+          badge: null,
+          startingPrice: 699,
+          imageUrl: '/services/spa-prime-massage.jpg',
           features: ['Swedish rhythmic strokes', 'Organic carrier oils', 'Post-session hot towel wipe'],
           displayOrder: 2,
         },
         {
-          id: 'tier-m-classic',
-          name: 'Classic Relax',
-          slug: 'classic-relax',
-          description: 'Head, neck, shoulder and back express destress therapy for quick relief',
+          id: 'tier-m-ayurveda',
+          name: 'Ayurveda',
+          slug: 'ayurveda',
+          oilTag: 'HERBAL OIL',
+          etaBadge: 'Arriving in 59 mins',
+          description: 'Traditional herbal tailam oil therapies for joint comfort and rejuvenation',
           badge: null,
           startingPrice: 699,
-          imageUrl: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=80',
-          features: ['Quick stress relief', 'Almond oil scalp nourish', '30-min targeted session'],
-          displayOrder: 3,
-        },
-        {
-          id: 'tier-m-ayurveda',
-          name: 'Stress Relief Ayurvedic',
-          slug: 'stress-relief-ayurvedic',
-          description: 'Traditional herbal tailam oil therapies for joint comfort and rejuvenation',
-          badge: 'Herbal',
-          startingPrice: 799,
-          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          imageUrl: '/services/spa-ayurveda-potli.jpg',
           features: ['Ayurvedic medicated oils', 'Joint mobility strokes', 'Detoxifying relaxation'],
-          displayOrder: 4,
+          displayOrder: 3,
         },
       ],
     },
@@ -320,10 +315,11 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
           id: 'tier-w-luxe',
           name: 'Luxe',
           slug: 'luxe',
+          oilTag: 'AROMA OIL',
           description: 'Curated therapies with only Highly rated therapists & oils',
           badge: 'Top rated',
           startingPrice: 898,
-          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          imageUrl: '/services/spa-luxe-stones.jpg',
           features: ['Top 1% rated therapists', 'Cold-pressed almond & sesame oils', 'Calming ambient aroma & music'],
           displayOrder: 1,
         },
@@ -331,10 +327,11 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
           id: 'tier-w-prime',
           name: 'Prime',
           slug: 'prime',
-          description: 'Quality experience with branded aroma oils by verified therapists',
+          etaBadge: 'Arriving in 44 mins',
+          description: 'Regular oil massages with standard techniques & therapist',
           badge: null,
           startingPrice: 699,
-          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          imageUrl: '/services/spa-prime-massage.jpg',
           features: ['Background-verified therapists', 'Pure organic essential oils', 'Single-use hygienic kit'],
           displayOrder: 2,
         },
@@ -342,10 +339,12 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
           id: 'tier-w-ayurveda',
           name: 'Ayurveda',
           slug: 'ayurveda',
-          description: 'Healing Ayurvedic therapies with authentic herbal tailam and oils',
-          badge: 'Herbal',
+          oilTag: 'HERBAL OIL',
+          etaBadge: 'Arriving in 59 mins',
+          description: null,
+          badge: null,
           startingPrice: 699,
-          imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=80',
+          imageUrl: '/services/spa-ayurveda-potli.jpg',
           features: ['Classical Ayurvedic oils', 'Pressure-point marmas therapy', 'Muscle fatigue relief'],
           displayOrder: 3,
         },
@@ -802,7 +801,11 @@ export default function UrbanCompanyModal({
     if (onSelectService) {
       onSelectService(`${subCategory.name} - ${tier.name}`, catSlug);
     }
-    router.push(`/services/${catSlug}?subCategory=${subSlug}&tier=${tierSlug}`);
+    if (subSlug === 'spa-for-women' || subSlug === 'massage-for-men') {
+      router.push(`/services/${subSlug}?subCategory=${tierSlug}&tier=${tierSlug}`);
+    } else {
+      router.push(`/services/${catSlug}?subCategory=${subSlug}&tier=${tierSlug}`);
+    }
   };
 
   return (
@@ -822,12 +825,9 @@ export default function UrbanCompanyModal({
                 <span className="material-symbols-outlined text-[18px]">arrow_back</span>
               </button>
               <div>
-                <h3 className="text-[17px] font-bold text-[#111827] leading-tight">
+                <h3 className="text-[18px] sm:text-[20px] font-extrabold text-[#111827] leading-tight">
                   Select your preference
                 </h3>
-                <p className="text-[11px] text-gray-500 font-medium">
-                  {selectedSubCategoryForTier.categoryName} • {selectedSubCategoryForTier.subCategory.name}
-                </p>
               </div>
             </div>
           ) : (
@@ -860,10 +860,10 @@ export default function UrbanCompanyModal({
         >
           {selectedSubCategoryForTier ? (
             /* ════════════════════ SCREEN 2: SELECT YOUR PREFERENCE (TIERS) WITH LEFT PHOTO ════════════════════ */
-            <div className="space-y-4 animate-fadeIn">
-              {/* Derma Facials Cryotherapy Banner for Salon for Women (Screenshot 5) */}
-              {selectedSubCategoryForTier.subCategory.slug === 'salon-for-women' ? (
-                <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#0284c7] via-[#0369a1] to-[#1e3a8a] text-white p-4 shadow-md flex items-center justify-between gap-4 border border-sky-400/40">
+            <div className="space-y-3.5 animate-fadeIn">
+              {/* Derma Facials Cryotherapy Banner for Salon for Women */}
+              {selectedSubCategoryForTier.subCategory.slug === 'salon-for-women' && (
+                <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#0284c7] via-[#0369a1] to-[#1e3a8a] text-white p-4 shadow-md flex items-center justify-between gap-4 border border-sky-400/40 mb-2">
                   <div className="space-y-1 max-w-[300px]">
                     <h4 className="text-base sm:text-lg font-black tracking-tight leading-tight">
                       Derma Facials
@@ -876,33 +876,29 @@ export default function UrbanCompanyModal({
                     <img src="/services/cryofacial-therapy.jpg" alt="Cryofacial Therapy" className="w-full h-full object-cover" />
                   </div>
                 </div>
-              ) : (
-                <div className="space-y-0.5">
-                  <span className="text-xs font-bold text-[#5e23dc] uppercase tracking-wider">
-                    Tier Selection
-                  </span>
-                  <p className="text-[13px] text-gray-600">
-                    Select from our range of services tailored to your standard and needs:
-                  </p>
-                </div>
               )}
 
-              <div className="space-y-4 pt-1">
+              <div className="space-y-3 pt-0.5">
                 {(selectedSubCategoryForTier.subCategory.tiers || []).map((tier) => {
                   const tierImg =
                     tier.imageUrl ||
                     TIER_IMAGES[tier.slug] ||
                     TIER_IMAGES[slugify(tier.name)] ||
-                    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80';
+                    '/services/spa-luxe-stones.jpg';
 
                   return (
                     <div
                       key={tier.id}
                       onClick={() => handleTierSelect(tier)}
-                      className="p-4 sm:p-5 rounded-2xl border border-gray-200 hover:border-[#5e23dc] hover:bg-purple-50/20 transition-all cursor-pointer group shadow-xs hover:shadow-md relative bg-white flex flex-col sm:flex-row gap-4 items-start"
+                      className="p-3.5 sm:p-4 rounded-2xl border border-gray-200/90 hover:border-gray-900 transition-all cursor-pointer group bg-white flex items-center gap-3.5 sm:gap-4 shadow-2xs hover:shadow-md"
                     >
                       {/* Left Side Relevant Photo */}
-                      <div className="w-full sm:w-28 h-28 sm:h-28 rounded-2xl overflow-hidden bg-gray-100 shrink-0 shadow-2xs relative">
+                      <div className="w-24 sm:w-28 h-20 sm:h-24 rounded-xl overflow-hidden bg-gray-100 shrink-0 shadow-2xs relative">
+                        {tier.badge && (
+                          <span className="absolute top-1.5 left-1.5 z-10 bg-[#eab308] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-xs">
+                            <span className="text-[10px]">✪</span> {tier.badge}
+                          </span>
+                        )}
                         <img
                           src={tierImg}
                           alt={tier.name}
@@ -910,61 +906,42 @@ export default function UrbanCompanyModal({
                         />
                       </div>
 
-                      {/* Middle & Right Content */}
-                      <div className="flex-1 min-w-0 space-y-2 w-full">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <h4 className="text-[17px] font-extrabold text-[#111827] group-hover:text-[#5e23dc] transition-colors">
-                                {tier.name}
-                              </h4>
-                              {tier.badge && (
-                                <span className="bg-[#eff6ff] text-[#1d4ed8] text-[10px] font-bold px-2 py-0.5 rounded-md border border-[#bfdbfe]">
-                                  {tier.badge}
-                                </span>
-                              )}
-                            </div>
-                            {tier.description && (
-                              <p className="text-[12px] text-gray-500 mt-1 leading-relaxed">
-                                {tier.description}
-                              </p>
+                      {/* Right Side Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="text-[16px] sm:text-[17px] font-extrabold text-[#111827] leading-tight group-hover:text-[#5e23dc] transition-colors">
+                              {tier.name}
+                            </h4>
+                            {tier.oilTag && (
+                              <span className="text-[9.5px] font-extrabold text-[#4b5563] uppercase tracking-wider px-2 py-0.5 rounded-md border border-gray-200 bg-gray-50/80">
+                                {tier.oilTag}
+                              </span>
                             )}
                           </div>
-
-                          {tier.startingPrice && (
-                            <div className="text-right shrink-0 ml-2">
-                              <span className="text-[10px] text-gray-500 block font-medium">Starting at</span>
-                              <span className="text-[16px] font-extrabold text-[#111827]">
-                                ₹{tier.startingPrice}
-                              </span>
-                            </div>
-                          )}
+                          <span className="material-symbols-outlined text-[18px] text-gray-400 group-hover:text-gray-900 group-hover:translate-x-0.5 transition-all shrink-0">
+                            chevron_right
+                          </span>
                         </div>
 
-                        {/* Features bullets */}
-                        {tier.features && tier.features.length > 0 && (
-                          <div className="space-y-1 pt-1.5 border-t border-gray-100">
-                            {tier.features.slice(0, 3).map((feat, idx) => (
-                              <div key={idx} className="flex items-center gap-1.5 text-[11.5px] text-gray-600 font-medium">
-                                <span className="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">
-                                  check_circle
-                                </span>
-                                <span>{feat}</span>
-                              </div>
-                            ))}
+                        {tier.etaBadge && (
+                          <div className="flex items-center gap-1 text-[11.5px] font-bold text-emerald-600 mt-1">
+                            <span className="text-[12px]">⚡</span>
+                            <span>{tier.etaBadge}</span>
                           </div>
                         )}
 
-                        {/* Explore button */}
-                        <div className="pt-2 flex justify-end">
-                          <button
-                            type="button"
-                            className="text-xs font-bold text-[#5e23dc] bg-purple-50 group-hover:bg-[#5e23dc] group-hover:text-white px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs"
-                          >
-                            <span>Explore {tier.name}</span>
-                            <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                          </button>
-                        </div>
+                        {tier.startingPrice && (
+                          <div className="text-[13px] font-medium text-[#374151] mt-1">
+                            Starts at <span className="font-extrabold text-[#111827]">₹{tier.startingPrice}</span>
+                          </div>
+                        )}
+
+                        {tier.description && (
+                          <p className="text-[11.5px] text-[#6b7280] leading-snug line-clamp-2 mt-1">
+                            {tier.description}
+                          </p>
+                        )}
                       </div>
                     </div>
                   );

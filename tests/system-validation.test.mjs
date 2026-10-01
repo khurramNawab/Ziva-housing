@@ -76,6 +76,9 @@ async function runTestSuite() {
     'instahelp-helper.jpg',
     'washing-machine-clean.jpg',
     'cryofacial-therapy.jpg',
+    'spa-luxe-stones.jpg',
+    'spa-prime-massage.jpg',
+    'spa-ayurveda-potli.jpg',
     'electrician-service.jpg',
     'packers-movers.jpg',
     'babysitting.jpg',
@@ -178,11 +181,24 @@ async function runTestSuite() {
   }
 
   try {
+    const spaRes = await fetchUrl(`${WEB_URL}/services/spa-for-women`);
+    assert(spaRes.status === 200, 'Dedicated Spa for Women Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('therapies & spa') && serviceSrc.includes('699'), 'Spa for Women Curated therapies banner verified');
+    assert(serviceSrc.includes('Stress relief Swedish therapy') && serviceSrc.includes('Authentic Abhyanga body therapy'), 'Spa for Women therapies verified');
+    assert(serviceSrc.includes('4.85+ Rated Senior Therapists') && serviceSrc.includes('100% Genuine Aroma & Herbal Oils'), 'Spa for Women UC Promise verified');
+  } catch (err) {
+    assert(false, 'Dedicated Spa for Women page reachable', err.message);
+  }
+
+  try {
     const modalSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/components/UrbanCompanyModal.tsx'), 'utf8');
     assert(modalSrc.includes('Derma Facials') && modalSrc.includes('Cryofacial Cold Therapy'), 'Modal Derma Facials Cryofacial Cold Therapy banner verified');
     assert(modalSrc.includes('CASMARA') && modalSrc.includes('CIREPIL') && modalSrc.includes('799'), 'Modal Luxe tier with CASMARA & CIREPIL verified');
     assert(modalSrc.includes('O3+') && modalSrc.includes('RICA') && modalSrc.includes('599'), 'Modal Prime tier with O3+ & RICA verified');
     assert(modalSrc.includes('48 mins') && modalSrc.includes('59 mins'), 'Modal subcategory duration badges verified');
+    assert(modalSrc.includes('AROMA OIL') && modalSrc.includes('HERBAL OIL'), 'Modal AROMA OIL & HERBAL OIL preference tags verified');
+    assert(modalSrc.includes('898') && modalSrc.includes('Arriving in 44 mins'), 'Modal Luxe & Prime preference pricing and ETA badges verified');
   } catch (err) {
     assert(false, 'Modal component source check reachable', err.message);
   }

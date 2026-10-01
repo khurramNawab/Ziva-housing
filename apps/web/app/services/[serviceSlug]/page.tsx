@@ -78,13 +78,13 @@ function getApiUrl(path: string): string {
 const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   // Salon for Women
   'salon-for-women': 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
-  'spa-for-women': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+  'spa-for-women': '/services/spa-luxe-stones.jpg',
   'hair-studio-women': 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80',
   'makeup-saree-styling': 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=400&q=80',
   
   // Salon for Men
   'salon-for-men': 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
-  'massage-for-men': 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+  'massage-for-men': '/services/spa-prime-massage.jpg',
 
   // Cleaning & Pest Control (Distinct dedicated images)
   'bathroom-kitchen-cleaning': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
@@ -172,6 +172,12 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'signature-facial-cleanup': '/services/cryofacial-therapy.jpg',
   'pedicure-manicure': 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
   'bleach-detan-massage': 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+
+  // Spa & Massage
+  'luxe': '/services/spa-luxe-stones.jpg',
+  'prime': '/services/spa-prime-massage.jpg',
+  'ayurveda': '/services/spa-ayurveda-potli.jpg',
+  'targeted-relief': '/services/spa-luxe-stones.jpg',
 
   // InstaHelp
   'daily-helpers-sub': '/services/instahelp-helper.jpg',
@@ -1335,6 +1341,247 @@ const DEFAULT_WASHING_MACHINE_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_SPA_CATEGORY: ServiceCategory = {
+  id: 'cat-spa-women',
+  name: 'Spa for Women',
+  slug: 'spa-for-women',
+  icon: '💆‍♀️',
+  badge: 'In 44 mins',
+  order: 2,
+  subCategories: [
+    {
+      id: 'sub-spa-luxe',
+      name: 'Luxe (Curated therapies)',
+      slug: 'luxe',
+      icon: 'spa',
+      badge: 'Top rated',
+      groupHeader: 'Therapy Selection',
+      displayOrder: 1,
+      description: 'Curated therapies with only Highly rated therapists & oils.',
+      services: [
+        {
+          id: 'srv-spa-stress-relief',
+          name: 'Stress relief Swedish therapy',
+          slug: 'stress-relief-swedish-therapy',
+          basePrice: 898,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 32000,
+          description: '• Relieves daily stress and fatigue\n• Swedish strokes with calming lavender aroma oil\n• Includes complimentary hot towel therapy\n• Option: 60 mins (₹898) | 90 mins (₹1,299)',
+          imageUrl: '/services/spa-luxe-stones.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-deep-tissue',
+          name: 'Deep tissue muscle therapy',
+          slug: 'deep-tissue-muscle-therapy',
+          basePrice: 999,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 45000,
+          description: '• Intensive firm pressure on chronic muscle knots and stiffness\n• Warm sesame & eucalyptus therapeutic blend\n• Acupressure trigger-point release\n• Option: 60 mins (₹999) | 90 mins (₹1,449)',
+          imageUrl: '/services/spa-luxe-stones.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-post-workout',
+          name: 'Post-workout pain recovery',
+          slug: 'post-workout-pain-recovery',
+          basePrice: 1049,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 18000,
+          description: '• Breaks down lactic acid build-up after workouts\n• Deep stretching and joint mobilization\n• Premium warming therapeutic oil',
+          imageUrl: '/services/spa-luxe-stones.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-head-shoulder',
+          name: 'Head, neck & shoulder destress',
+          slug: 'head-neck-shoulder-destress',
+          basePrice: 549,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 28000,
+          description: '• Instant desk fatigue and migraine relief\n• Warm almond oil scalp nourishment\n• Upper back and trapezius tension release',
+          imageUrl: '/services/spa-luxe-stones.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-spa-prime',
+      name: 'Prime (Regular oil massages)',
+      slug: 'prime',
+      icon: 'healing',
+      badge: 'In 44 mins',
+      groupHeader: 'Therapy Selection',
+      displayOrder: 2,
+      description: 'Regular oil massages with standard techniques & therapist.',
+      services: [
+        {
+          id: 'srv-spa-prime-swedish',
+          name: 'Classic Swedish relaxation massage',
+          slug: 'classic-swedish-relaxation-massage',
+          basePrice: 699,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 62000,
+          description: '• Gentle rhythmic long gliding strokes with standard branded aroma oils\n• Relieves muscular tension and calms mind\n• Performed by verified trained therapists',
+          imageUrl: '/services/spa-prime-massage.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-prime-stress',
+          name: 'Stress relief body massage',
+          slug: 'stress-relief-body-massage',
+          basePrice: 749,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 55000,
+          description: '• Medium pressure therapy targeting lower back and shoulder tension\n• Natural carrier oil blend\n• Fresh single-use disposable sheet guarantee',
+          imageUrl: '/services/spa-prime-massage.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-prime-back',
+          name: 'Express back tension massage',
+          slug: 'express-back-tension-massage',
+          basePrice: 449,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 41000,
+          description: '• Targeted 30-min quick relief for office-goers\n• Focuses on spine, shoulder blades and neck\n• Relaxing post-massage warm wipe',
+          imageUrl: '/services/spa-prime-massage.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-prime-foot',
+          name: 'Foot reflexology & leg massage',
+          slug: 'foot-reflexology-leg-massage',
+          basePrice: 449,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 33000,
+          description: '• Stimulates acupoints on soles and relieves calf swelling\n• Restores healthy blood circulation\n• Soothing mentholated foot balm',
+          imageUrl: '/services/spa-prime-massage.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-spa-ayurveda',
+      name: 'Ayurveda (Herbal oil therapies)',
+      slug: 'ayurveda',
+      icon: 'self_improvement',
+      badge: 'In 59 mins',
+      groupHeader: 'Therapy Selection',
+      displayOrder: 3,
+      description: 'Healing Ayurvedic therapies with authentic herbal tailam and oils.',
+      services: [
+        {
+          id: 'srv-spa-ayur-abhyanga',
+          name: 'Authentic Abhyanga body therapy',
+          slug: 'authentic-abhyanga-body-therapy',
+          basePrice: 699,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 48000,
+          description: '• Traditional synchronized seven-posture massage with warm Dhanwantharam tailam\n• Pacifies Vata dosha and boosts vitality\n• Warm herbal steam towel finish',
+          imageUrl: '/services/spa-ayurveda-potli.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-ayur-potli',
+          name: 'Potli Kizhi pain relief therapy',
+          slug: 'potli-kizhi-pain-relief-therapy',
+          basePrice: 899,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 29000,
+          description: '• Warm medicated herbal poultice compress dipped in heated oil\n• Ideal for chronic lower back, sciatica and knee joint pain\n• Improves flexibility and reduces inflammation',
+          imageUrl: '/services/spa-ayurveda-potli.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-ayur-shirodhara',
+          name: 'Shirodhara mind destress therapy',
+          slug: 'shirodhara-mind-destress-therapy',
+          basePrice: 999,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.90,
+          reviewCount: 19000,
+          description: '• Continuous rhythmic stream of warm herbal oil over forehead ajna chakra\n• Treats insomnia, chronic headaches, stress and anxiety\n• Deeply meditative state of mental serenity',
+          imageUrl: '/services/spa-ayurveda-potli.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-ayur-padabhyanga',
+          name: 'Padabhyanga Ayurvedic foot massage',
+          slug: 'padabhyanga-ayurvedic-foot-massage',
+          basePrice: 499,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 22000,
+          description: '• Kansa vatki bronze bowl massage with warm sesame tailam\n• Calms nerves and promotes sound deep sleep\n• Eliminates foot dryness and cracking',
+          imageUrl: '/services/spa-ayurveda-potli.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-spa-targeted',
+      name: 'Targeted relief',
+      slug: 'targeted-relief',
+      icon: 'pan_tool',
+      badge: null,
+      groupHeader: 'Quick Relief',
+      displayOrder: 4,
+      description: 'Focused 30-45 min sessions targeting stubborn pain areas.',
+      services: [
+        {
+          id: 'srv-spa-head-shoulder-2',
+          name: 'Head, neck & shoulder destress',
+          slug: 'head-neck-shoulder-destress-quick',
+          basePrice: 549,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 28000,
+          description: '• Instant desk fatigue and migraine relief\n• Warm almond oil scalp nourishment\n• Upper back and trapezius tension release',
+          imageUrl: '/services/spa-luxe-stones.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-spa-foot-calf',
+          name: 'Foot reflexology & calf release',
+          slug: 'foot-reflexology-calf-release',
+          basePrice: 599,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 21000,
+          description: '• Acupressure foot massage restoring circulation and relieving swollen, tired feet',
+          imageUrl: '/services/spa-prime-massage.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -1379,6 +1626,12 @@ function UrbanCompanyServiceListingContent() {
 
   // Fetch full category hierarchy menu from backend
   const fetchCategoryHierarchy = useCallback(async () => {
+    const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
+    const isSpaSlug = ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women'].includes(serviceSlug);
+    const isSalonLuxeSlug = !isSpaSlug && ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
+    const isInstaHelpSlug = ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug);
+    const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
+
     try {
       setLoading(true);
       setError404(false);
@@ -1395,15 +1648,23 @@ function UrbanCompanyServiceListingContent() {
         });
       }
 
-      const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
-      const isSalonLuxeSlug = ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
-      const isInstaHelpSlug = ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug);
-      const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
-
       if (!res.ok) {
         if (isAcSlug) {
           setCategoryData(DEFAULT_AC_CATEGORY);
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AC_CATEGORY.subCategories?.[0]?.slug || 'annual-plan');
+          return;
+        }
+        if (isSpaSlug) {
+          setCategoryData(DEFAULT_SPA_CATEGORY);
+          let defaultSub = 'luxe';
+          if (initialTierParam && ['luxe', 'prime', 'ayurveda', 'targeted-relief'].includes(initialTierParam)) {
+            defaultSub = initialTierParam;
+          } else if (serviceSlug === 'spa-prime') {
+            defaultSub = 'prime';
+          } else if (serviceSlug === 'spa-ayurveda') {
+            defaultSub = 'ayurveda';
+          }
+          setActiveSubCategorySlug(initialSubCatParam || defaultSub);
           return;
         }
         if (isSalonLuxeSlug) {
@@ -1438,6 +1699,8 @@ function UrbanCompanyServiceListingContent() {
       if (!data || data.isActive === false) {
         if (isAcSlug) {
           data = DEFAULT_AC_CATEGORY;
+        } else if (isSpaSlug) {
+          data = DEFAULT_SPA_CATEGORY;
         } else if (isSalonLuxeSlug) {
           data = DEFAULT_SALON_LUXE_CATEGORY;
         } else if (isInstaHelpSlug) {
@@ -1452,6 +1715,8 @@ function UrbanCompanyServiceListingContent() {
 
       if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
         data = DEFAULT_AC_CATEGORY;
+      } else if (isSpaSlug || (data.slug === 'spa-for-women' || data.name?.toLowerCase().includes('spa') && !data.name?.toLowerCase().includes('salon'))) {
+        data = DEFAULT_SPA_CATEGORY;
       } else if (isSalonLuxeSlug || data.slug === 'salon-luxe' || data.name?.toLowerCase().includes('salon')) {
         data = DEFAULT_SALON_LUXE_CATEGORY;
       } else if (isInstaHelpSlug || data.slug === 'instahelp') {
@@ -1495,6 +1760,14 @@ function UrbanCompanyServiceListingContent() {
       if (['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_AC_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AC_CATEGORY.subCategories?.[0]?.slug || 'annual-plan');
+        setError404(false);
+      } else if (isSpaSlug) {
+        setCategoryData(DEFAULT_SPA_CATEGORY);
+        let defaultSub = 'luxe';
+        if (initialTierParam && ['luxe', 'prime', 'ayurveda', 'targeted-relief'].includes(initialTierParam)) {
+          defaultSub = initialTierParam;
+        }
+        setActiveSubCategorySlug(initialSubCatParam || defaultSub);
         setError404(false);
       } else if (['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_SALON_LUXE_CATEGORY);
@@ -1599,13 +1872,23 @@ function UrbanCompanyServiceListingContent() {
     );
   }, [serviceSlug, categoryData]);
 
+  const isSpaCategory = useMemo(() => {
+    return (
+      ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women'].includes(serviceSlug) ||
+      ['spa-for-women', 'spa', 'massage-for-men'].includes(categoryData?.slug || '') ||
+      (categoryData?.name?.toLowerCase().includes('spa') && !categoryData?.name?.toLowerCase().includes('salon')) ||
+      categoryData?.name?.toLowerCase().includes('massage')
+    );
+  }, [serviceSlug, categoryData]);
+
   const isSalonLuxeCategory = useMemo(() => {
+    if (isSpaCategory) return false;
     return (
       ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug) ||
       ['salon-luxe', 'salon-for-women', 'womens-salon-spa'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('salon')
     );
-  }, [serviceSlug, categoryData]);
+  }, [serviceSlug, categoryData, isSpaCategory]);
 
   const isInstaHelpCategory = useMemo(() => {
     return (
@@ -1841,6 +2124,46 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isSpaCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Spa for Women</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 44 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.88
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">3.4 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+
+                {/* Top Rated Badge Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#eab308]">workspace_premium</span>
+                    <span className="text-xs font-bold text-[#111827]">Curated Luxury Therapies</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+              </div>
+            )}
+
             {isSalonLuxeCategory && (
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
@@ -2005,6 +2328,29 @@ function UrbanCompanyServiceListingContent() {
                 </div>
                 <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/10 shrink-0">
                   <img src="/services/ac-foam-jet-hero.jpg" alt="Foam-jet AC Service" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Spa (Matching Urban Company Curated Therapies) */}
+            {isSpaCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#2e1065] via-[#4c1d95] to-[#581c87] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-purple-800">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-[#eab308] text-black text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-xs">
+                    ✪ Top rated
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight">
+                    Curated<br /><span className="text-amber-300">therapies & spa</span>
+                  </h2>
+                  <p className="text-xs text-purple-200 font-medium leading-relaxed">
+                    Curated therapies with only Highly rated therapists & authentic aroma oils
+                  </p>
+                  <div className="text-sm font-extrabold text-amber-300 pt-1">
+                    Starting ₹699
+                  </div>
+                </div>
+                <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0">
+                  <img src="/services/spa-luxe-stones.jpg" alt="Spa Luxe Stones" className="w-full h-full object-cover" />
                 </div>
               </div>
             )}
@@ -2505,7 +2851,35 @@ function UrbanCompanyServiceListingContent() {
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 space-y-4 sticky top-24">
             {/* UC Promise Card (Exact Urban Company Style) */}
-            {isSalonLuxeCategory ? (
+            {isSpaCategory ? (
+              <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
+                    <span>UC Promise</span>
+                  </h3>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-0.5 flex items-center justify-center">
+                    <div className="w-full h-full bg-white rounded-full flex items-center justify-center text-[7px] font-black text-purple-900 uppercase tracking-tighter text-center leading-none">
+                      QUALITY ASSURED
+                    </div>
+                  </div>
+                </div>
+                <ul className="space-y-2 text-xs text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">4.85+ Rated Senior Therapists</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">100% Genuine Aroma & Herbal Oils</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                    <span className="font-semibold text-gray-800">Single-use Sanitized Kits & Sheets</span>
+                  </li>
+                </ul>
+              </div>
+            ) : isSalonLuxeCategory ? (
               <>
                 <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/80 rounded-2xl p-3 flex items-center justify-between shadow-2xs">
                   <div className="flex items-center gap-2">
