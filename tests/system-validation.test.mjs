@@ -69,6 +69,9 @@ async function runTestSuite() {
   const webPublicDir = path.resolve(__dirname, '../apps/web/public/services');
   const requiredPhotos = [
     'ac-service.jpg',
+    'ac-foam-jet-hero.jpg',
+    'ac-repair-gas.jpg',
+    'ac-installation.jpg',
     'electrician-service.jpg',
     'packers-movers.jpg',
     'babysitting.jpg',
@@ -122,6 +125,19 @@ async function runTestSuite() {
     assert(srvSrc.includes('All Home Service Categories') && srvSrc.includes('VIP Club Membership'), 'Services catalog page and layout synchronized');
   } catch (err) {
     assert(false, 'Services page reachable', err.message);
+  }
+
+  try {
+    const acRes = await fetchUrl(`${WEB_URL}/services/ac`);
+    assert(acRes.status === 200, 'Dedicated AC Service Page loads (HTTP 200)');
+    const acSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(acSrc.includes('Annual plan') && acSrc.includes('30% OFF'), 'AC Annual plan section verified with 30% OFF badge');
+    assert(acSrc.includes('Foam-jet') && acSrc.includes('Power Saver'), 'AC Foam-jet Service section verified with Power Saver');
+    assert(acSrc.includes('Repair & gas refill'), 'AC Repair & gas refill section verified');
+    assert(acSrc.includes('Installation/uninstallation'), 'AC Installation/uninstallation section verified');
+    assert(acSrc.includes('UC Promise') && acSrc.includes('Select an address'), 'UC Promise card and Address Selector integrated');
+  } catch (err) {
+    assert(false, 'Dedicated AC Service page reachable', err.message);
   }
 
   // --- Suite 3: Dedicated Role-Based Panels Routing ---

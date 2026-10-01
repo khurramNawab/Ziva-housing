@@ -121,10 +121,17 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'kitchen-wardrobes': '/services/modular-kitchen.jpg',
   'full-home-interiors': '/services/modular-kitchen.jpg',
 
-  // AC & Appliance (Exact Alias Mapping)
-  'ac-service-sub': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
-  'ac-service': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
-  'ac-service-repair': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80',
+  // AC & Appliance (Dedicated Urban Company Hierarchy)
+  'annual-plan': '/services/ac-foam-jet-hero.jpg',
+  'ac-service-sub': '/services/ac-service.jpg',
+  'ac-service': '/services/ac-service.jpg',
+  'service': '/services/ac-service.jpg',
+  'foam-jet-service': '/services/ac-service.jpg',
+  'repair-gas-refill': '/services/ac-repair-gas.jpg',
+  'ac-repair': '/services/ac-repair-gas.jpg',
+  'installation-uninstallation': '/services/ac-installation.jpg',
+  'ac-installation': '/services/ac-installation.jpg',
+  'ac-service-repair': '/services/ac-service.jpg',
   'washing-machine': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
   'washing-machine-sub': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=400&q=80',
   'washing-fridge-sub': 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80',
@@ -256,6 +263,195 @@ function slugify(text: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
+const DEFAULT_AC_CATEGORY: ServiceCategory = {
+  id: 'cat-ac',
+  name: 'AC',
+  slug: 'ac-appliance-repair',
+  icon: '❄️',
+  badge: '44 mins',
+  order: 4,
+  subCategories: [
+    {
+      id: 'sub-ac-annual',
+      name: 'Annual plan',
+      slug: 'annual-plan',
+      icon: 'calendar_month',
+      badge: '30% OFF',
+      groupHeader: 'Air Conditioner',
+      displayOrder: 1,
+      description: 'Year-round AC servicing & unlimited breakdown support from ₹399/AC.',
+      services: [
+        {
+          id: 'srv-ac-annual-2',
+          name: 'Annual plan (2 times/year)',
+          slug: 'ac-annual-plan-2',
+          basePrice: 1198,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 104200,
+          description: 'Deep coil cleaning with foam-jet twice a year, unlimited free breakdown visits, and 10% extra discount on spare parts & gas refill.',
+          imageUrl: '/services/ac-foam-jet-hero.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-ac-1',
+      name: 'Service',
+      slug: 'ac-service-sub',
+      icon: 'ac_unit',
+      badge: 'Most Booked',
+      groupHeader: 'Air Conditioner',
+      displayOrder: 2,
+      description: 'Deep cleans AC coils for better cooling & efficient energy consumption.',
+      services: [
+        {
+          id: 'srv-ac-foam-1',
+          name: 'Foam-jet service (1 AC)',
+          slug: 'foam-jet-service-1ac',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 1250000,
+          description: 'Indoor power jet coil foam wash, filter cleaning, outdoor condenser wash & cooling audit.',
+          imageUrl: '/services/ac-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ac-foam-2',
+          name: 'Foam-jet service (2 ACs)',
+          slug: 'foam-jet-service-2ac',
+          basePrice: 949,
+          durationMinutes: 80,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 820000,
+          description: 'Dual split AC complete servicing with power jet & anti-bacterial treatment. Save 5%.',
+          imageUrl: '/services/ac-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ac-foam-3',
+          name: 'Foam-jet service (3 ACs)',
+          slug: 'foam-jet-service-3ac',
+          basePrice: 1399,
+          durationMinutes: 110,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 410000,
+          description: '3 indoor units + outdoor condenser power wash with leak & airflow audit. Save 7%.',
+          imageUrl: '/services/ac-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ac-foam-4',
+          name: 'Foam-jet service (4 ACs)',
+          slug: 'foam-jet-service-4ac',
+          basePrice: 1799,
+          durationMinutes: 140,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 290000,
+          description: 'Whole-home AC deep service with foam-jet technology and compressor performance test. Save 10%.',
+          imageUrl: '/services/ac-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ac-power-saver',
+          name: 'Power Saver Foam-jet AC service',
+          slug: 'power-saver-foam-jet-ac',
+          basePrice: 599,
+          durationMinutes: 55,
+          bestsellerFlag: true,
+          rating: 4.85,
+          reviewCount: 520000,
+          description: 'Specialized fin-straightening, dust-free foam wash & blower motor lubrication for up to 25% lower energy draw.',
+          imageUrl: '/services/ac-foam-jet-hero.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-ac-repair',
+      name: 'Repair & gas refill',
+      slug: 'repair-gas-refill',
+      icon: 'build',
+      badge: 'Quick Visit',
+      groupHeader: 'Air Conditioner',
+      displayOrder: 3,
+      description: 'Expert 18-step diagnosis, PCB electronics repair & 100% certified gas charging.',
+      services: [
+        {
+          id: 'srv-ac-repair-diag',
+          name: 'AC repair',
+          slug: 'ac-repair-inspection',
+          basePrice: 299,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 460000,
+          description: 'Comprehensive 18-step diagnosis, electrical wiring inspection, PCB error code troubleshooting & cooling check.',
+          imageUrl: '/services/ac-repair-gas.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ac-gas-refill',
+          name: 'Gas refill & checkup',
+          slug: 'ac-gas-refill-checkup',
+          basePrice: 2499,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 275000,
+          description: 'Nitrogen pressure testing, leak braze repair, vacuum evacuation, and 100% certified R32 / R410A gas charging with 60 days warranty.',
+          imageUrl: '/services/ac-repair-gas.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-ac-install',
+      name: 'Installation/uninstallation',
+      slug: 'installation-uninstallation',
+      icon: 'home_repair_service',
+      badge: 'Precision',
+      groupHeader: 'Air Conditioner',
+      displayOrder: 4,
+      description: 'Precision wall mounting, laser bracket leveling & safe uninstallation.',
+      services: [
+        {
+          id: 'srv-ac-install',
+          name: 'AC installation',
+          slug: 'ac-installation-service',
+          basePrice: 1199,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 320000,
+          description: 'Precision laser-level indoor bracket mount, core hole drilling with dust collector, copper piping flare connection & vacuum test.',
+          imageUrl: '/services/ac-installation.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-ac-uninstall',
+          name: 'AC uninstallation',
+          slug: 'ac-uninstallation-service',
+          basePrice: 699,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 185000,
+          description: 'Safe refrigerant pump-down & locking into compressor, indoor/outdoor dismounting, copper pipe sealing with protective caps.',
+          imageUrl: '/services/ac-installation.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -316,14 +512,21 @@ function UrbanCompanyServiceListingContent() {
         });
       }
 
+      const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
+
       if (!res.ok) {
+        if (isAcSlug) {
+          setCategoryData(DEFAULT_AC_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AC_CATEGORY.subCategories?.[0]?.slug || 'annual-plan');
+          return;
+        }
         setError404(true);
         return;
       }
 
       const json = await res.json();
       const raw = json?.data || json;
-      const data = raw?.category
+      let data = raw?.category
         ? {
             ...raw.category,
             subCategories: raw.subCategories || raw.category.subCategories,
@@ -332,8 +535,24 @@ function UrbanCompanyServiceListingContent() {
         : raw;
 
       if (!data || data.isActive === false) {
-        setError404(true);
-        return;
+        if (isAcSlug) {
+          data = DEFAULT_AC_CATEGORY;
+        } else {
+          setError404(true);
+          return;
+        }
+      }
+
+      if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
+        const existingSubs = data.subCategories || [];
+        const missingSubs = DEFAULT_AC_CATEGORY.subCategories!.filter(
+          (defSub) => !existingSubs.some((s: any) => slugify(s.slug) === slugify(defSub.slug) || s.name.toLowerCase() === defSub.name.toLowerCase())
+        );
+        data = {
+          ...data,
+          name: 'AC',
+          subCategories: [...DEFAULT_AC_CATEGORY.subCategories!, ...existingSubs.filter((s: any) => !DEFAULT_AC_CATEGORY.subCategories!.some((d) => slugify(d.slug) === slugify(s.slug)))],
+        };
       }
 
       setCategoryData(data);
@@ -368,7 +587,13 @@ function UrbanCompanyServiceListingContent() {
       }
     } catch (err) {
       console.error('Error fetching service menu:', err);
-      setError404(true);
+      if (['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_AC_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AC_CATEGORY.subCategories?.[0]?.slug || 'annual-plan');
+        setError404(false);
+      } else {
+        setError404(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -447,6 +672,15 @@ function UrbanCompanyServiceListingContent() {
     if (!categoryData || !categoryData.subCategories) return null;
     return categoryData.subCategories.find((s) => s.slug === activeSubCategorySlug) || categoryData.subCategories[0] || null;
   }, [categoryData, activeSubCategorySlug]);
+
+  const isAcCategory = useMemo(() => {
+    return (
+      ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug) ||
+      ['ac', 'ac-service', 'ac-appliance-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase() === 'ac' ||
+      categoryData?.name?.toLowerCase().includes('air conditioner')
+    );
+  }, [serviceSlug, categoryData]);
 
   const availableTiers = useMemo(() => {
     return (currentSubCategory?.tiers || []).filter((t: any) => t.isActive !== false);
@@ -636,6 +870,36 @@ function UrbanCompanyServiceListingContent() {
           
           {/* ════════════════════ LEFT COLUMN: "Select a service" (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-200/90 p-4 shadow-xs sticky top-24">
+            {isAcCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">AC</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.84
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.2M reviews</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">City, Building, apartment or street...</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <h2 className="text-xs font-bold text-[#374151] uppercase tracking-wider mb-4 px-2">
               Select a service
             </h2>
@@ -680,6 +944,26 @@ function UrbanCompanyServiceListingContent() {
           {/* ════════════════════ CENTER COLUMN: Main Content & Services (6 Cols) ════════════════════ */}
           <div className="lg:col-span-6 space-y-6">
             
+            {/* Dedicated Hero Banner for AC (Matching Urban Company Foam-Jet Cleaning) */}
+            {isAcCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#334155] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-slate-700">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                    Power-Jet Technology
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight">
+                    Foam-jet<br /><span className="text-purple-300">AC service</span>
+                  </h2>
+                  <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                    Deep cleans AC coils for better cooling & lowers electricity bills
+                  </p>
+                </div>
+                <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/10 shrink-0">
+                  <img src="/services/ac-foam-jet-hero.jpg" alt="Foam-jet AC Service" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            )}
+
             {/* Header / Hero Banner with Rating & Quick Slot info */}
             <div className="bg-white rounded-2xl border border-gray-200/90 p-6 shadow-xs space-y-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -870,6 +1154,45 @@ function UrbanCompanyServiceListingContent() {
                         </span>
                       </div>
 
+                      {/* Custom Section Banners (Urban Company Style) */}
+                      {subCat.slug === 'annual-plan' && (
+                        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-100/60 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#16a34a] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              30% OFF
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Annual service plan
+                            </h3>
+                            <p className="text-xs text-emerald-800 font-medium">
+                              From ₹399/AC • 2 full visits/yr • 10% extra discount with Plus
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
+                            <img src="/services/ac-foam-jet-hero.jpg" alt="Annual Plan" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {(subCat.slug === 'ac-service-sub' || subCat.slug === 'ac-service' || subCat.slug === 'service') && (
+                        <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-100/60 border border-purple-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#5e23dc] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              Power Saver
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Foam-jet AC service
+                            </h3>
+                            <p className="text-xs text-purple-900 font-medium">
+                              Deep cleans AC coils for efficient cooling & prevents water leakage
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-purple-100 shrink-0 hidden sm:block">
+                            <img src="/services/ac-service.jpg" alt="Foam-jet Service" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
                       {/* Service Cards Feed under this section */}
                       <div className="space-y-4">
                         {subServices.map((service) => {
@@ -1007,6 +1330,33 @@ function UrbanCompanyServiceListingContent() {
 
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 space-y-4 sticky top-24">
+            {/* UC Promise Card (Exact Urban Company Style) */}
+            <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[#5e23dc] text-base">verified</span>
+                  <span>UC Promise</span>
+                </h3>
+                <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                  100% Quality
+                </span>
+              </div>
+              <ul className="space-y-2 text-xs text-gray-700">
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                  <span className="font-semibold text-gray-800">Verified Professionals</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                  <span className="font-semibold text-gray-800">Hassle-free booking</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#16a34a] text-sm">check_circle</span>
+                  <span className="font-semibold text-gray-800">Transparent Pricing</span>
+                </li>
+              </ul>
+            </div>
+
             <div className="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs space-y-4">
               <h2 className="text-sm font-bold text-[#111827] flex items-center justify-between border-b border-gray-100 pb-3">
                 <span>Cart Summary</span>
