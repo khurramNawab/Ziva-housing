@@ -3905,6 +3905,304 @@ const DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_TELEVISION_REPAIR_CATEGORY: ServiceCategory = {
+  id: 'cat-television-repair',
+  name: 'Television Repair',
+  slug: 'television-repair',
+  icon: '📺',
+  badge: 'Earliest Fri, 9:00 AM',
+  order: 5,
+  subCategories: [
+    {
+      id: 'sub-tv-checkup',
+      name: 'TV check-up',
+      slug: 'tv-check-up',
+      icon: 'troubleshoot',
+      badge: '₹249 Only',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Expert inspection to diagnose screen, motherboard, backlight, display, power or sound problems.',
+      services: [
+        {
+          id: 'srv-tv-checkup-main',
+          name: 'TV check-up',
+          slug: 'tv-check-up-main',
+          basePrice: 249,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.77,
+          reviewCount: 166000,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• CRT TVs, sound bars & set-top boxes not covered',
+          imageUrl: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-tv-installation',
+      name: 'TV installation',
+      slug: 'tv-installation',
+      icon: 'tv',
+      badge: 'Starts at ₹399',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Precision wall mounting with bracket fitting, cable routing, and testing.',
+      services: [
+        {
+          id: 'srv-tv-install-main',
+          name: 'TV installation',
+          slug: 'tv-install-main',
+          basePrice: 399,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 64000,
+          description: '• The TV will be installed with care.\n• The area will be cleaned once work is done.',
+          imageUrl: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-tv-uninstallation',
+      name: 'TV uninstallation',
+      slug: 'tv-uninstallation',
+      icon: 'build',
+      badge: 'Starts at ₹349',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'Safe unmounting from wall mount/bracket, cable decoupling and packing support.',
+      services: [
+        {
+          id: 'srv-tv-uninstall-main',
+          name: 'TV uninstallation',
+          slug: 'tv-uninstall-main',
+          basePrice: 349,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 14000,
+          description: '• The TV will be uninstalled with care.\n• The area will be cleaned once work is done.',
+          imageUrl: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_CHIMNEY_REPAIR_CATEGORY: ServiceCategory = {
+  id: 'cat-chimney-repair',
+  name: 'Chimney Repair',
+  slug: 'chimney-repair',
+  icon: '🍳',
+  badge: 'Instant in 24 mins',
+  order: 6,
+  subCategories: [
+    {
+      id: 'sub-chim-combos',
+      name: 'Combos',
+      slug: 'combos',
+      icon: 'auto_awesome',
+      badge: 'Save 20%',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Chimney & gas stove value combos with foam-jet deep degreasing.',
+      services: [
+        {
+          id: 'srv-chim-deep-stove',
+          name: 'Deep service with gas stove',
+          slug: 'deep-service-with-gas-stove',
+          basePrice: 1199,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.72,
+          reviewCount: 1400,
+          description: '• Foam-jet technology used for cleaning filters & chimney\n• Gas stove deep cleaning included',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-chim-basic-stove',
+          name: 'Basic service with gas stove',
+          slug: 'basic-service-with-gas-stove',
+          basePrice: 859,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.74,
+          reviewCount: 6900,
+          description: '• Mesh & baffle filter cleaning using water & chemical wash\n• ₹859 (was ₹1,099 • 20% OFF)',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-chim-2visits-annual',
+          name: '2 visits, Chimney deep service',
+          slug: '2-visits-chimney-deep-service',
+          basePrice: 1599,
+          durationMinutes: 180,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 714,
+          description: '• Thorough cleaning of filters, outer body, motor & duct pipe\n• Complete peace of mind with 2 servicing sessions in 12 months\n• Save up to ₹250 on 2 visits',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-chim-repair',
+      name: 'Repair',
+      slug: 'repair',
+      icon: 'build',
+      badge: 'From ₹249',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Motor noise, suction failure, light repair and PCB electrical inspection.',
+      services: [
+        {
+          id: 'srv-chim-checkup',
+          name: 'Chimney check-up',
+          slug: 'chimney-check-up',
+          basePrice: 249,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 21000,
+          description: '• Visitation fee will be adjusted in the final repair invoice\n• Thorough multi-point safety & suction analysis',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-chim-service',
+      name: 'Service',
+      slug: 'service',
+      icon: 'cleaning_services',
+      badge: 'Popular',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'Deep and basic baffle filter, motor and duct chemical degreasing.',
+      services: [
+        {
+          id: 'srv-chim-deep-srv',
+          name: 'Deep chimney service',
+          slug: 'deep-chimney-service',
+          basePrice: 799,
+          durationMinutes: 75,
+          bestsellerFlag: true,
+          rating: 4.75,
+          reviewCount: 166000,
+          description: '• Complete grease removal from motor, blowers, filters & outer body\n• Restores maximum exhaust suction efficiency',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-chim-basic-srv',
+          name: 'Basic chimney service',
+          slug: 'basic-chimney-service',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.75,
+          reviewCount: 31000,
+          description: '• Outer surface and baffle filter cleaning in 45 mins\n• Quick degreasing for lightly soiled kitchens',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-chim-install',
+      name: 'Installation/uninstallation',
+      slug: 'installation-uninstallation',
+      icon: 'home_repair_service',
+      badge: 'Precision',
+      groupHeader: 'Select a service',
+      displayOrder: 4,
+      description: 'Wall ducting, core cutting, chimney unmounting and island installations.',
+      services: [
+        {
+          id: 'srv-chim-inst-wall',
+          name: 'Chimney installation',
+          slug: 'chimney-installation',
+          basePrice: 549,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 10000,
+          description: '• Accurate wall bracket leveling, exhaust duct hose routing & seal\n• Full operational load check with safety test',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-chim-uninst',
+          name: 'Chimney uninstallation',
+          slug: 'chimney-uninstallation',
+          basePrice: 399,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 4000,
+          description: '• Careful detachment of duct, bracket removal and wall restoration\n• Safely boxed for relocation',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-chim-beyond-inst',
+          name: 'Beyond chimney installation',
+          slug: 'beyond-chimney-installation',
+          basePrice: 899,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 1400,
+          description: '• Island chimney, ceiling duct extension, and specialized glass hood fittings\n• Heavy-duty ceiling anchor hardware included',
+          imageUrl: '/services/chimney.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_REFRIGERATOR_CATEGORY: ServiceCategory = {
+  id: 'cat-refrigerator',
+  name: 'Refrigerator',
+  slug: 'refrigerator',
+  icon: '🧊',
+  badge: 'Earliest Fri, 9:00 AM',
+  order: 7,
+  subCategories: [
+    {
+      id: 'sub-ref-checkup',
+      name: 'Refrigerator check-up',
+      slug: 'refrigerator-check-up',
+      icon: 'kitchen',
+      badge: '₹199 Only',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Compressor, cooling coil, thermostat, PCB & gas leakage diagnostics.',
+      services: [
+        {
+          id: 'srv-ref-checkup-main',
+          name: 'Refrigerator check-up',
+          slug: 'refrigerator-check-up-main',
+          basePrice: 199,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.73,
+          reviewCount: 189000,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• Single door, double door, triple door and side-by-side inverter models covered\n• Full diagnostic report with upfront quote before repair begins',
+          imageUrl: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -3963,6 +4261,9 @@ function UrbanCompanyServiceListingContent() {
     const isAntsBedBugsSlug = ['ants-bed-bugs-control', 'ants-bed-bugs', 'bed-bugs-control', 'ant-control'].includes(serviceSlug);
     const isFullHomePaintingSlug = ['full-home-painting', 'home-painting'].includes(serviceSlug);
     const isWallsRoomsPaintingSlug = ['walls-rooms-painting', 'few-walls-rooms', 'wall-painting', 'wall-painting-sub'].includes(serviceSlug);
+    const isTelevisionRepairSlug = ['television-repair', 'television', 'tv-repair', 'tv'].includes(serviceSlug);
+    const isChimneyRepairSlug = ['chimney-repair', 'chimney'].includes(serviceSlug);
+    const isRefrigeratorSlug = ['refrigerator', 'refrigerator-repair', 'fridge'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -4059,6 +4360,21 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY.subCategories?.[0]?.slug || 'few-wall-painting');
           return;
         }
+        if (isTelevisionRepairSlug) {
+          setCategoryData(DEFAULT_TELEVISION_REPAIR_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_TELEVISION_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'tv-check-up');
+          return;
+        }
+        if (isChimneyRepairSlug) {
+          setCategoryData(DEFAULT_CHIMNEY_REPAIR_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_CHIMNEY_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'combos');
+          return;
+        }
+        if (isRefrigeratorSlug) {
+          setCategoryData(DEFAULT_REFRIGERATOR_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_REFRIGERATOR_CATEGORY.subCategories?.[0]?.slug || 'refrigerator-check-up');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -4102,6 +4418,12 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_FULL_HOME_PAINTING_CATEGORY;
         } else if (isWallsRoomsPaintingSlug) {
           data = DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY;
+        } else if (isTelevisionRepairSlug) {
+          data = DEFAULT_TELEVISION_REPAIR_CATEGORY;
+        } else if (isChimneyRepairSlug) {
+          data = DEFAULT_CHIMNEY_REPAIR_CATEGORY;
+        } else if (isRefrigeratorSlug) {
+          data = DEFAULT_REFRIGERATOR_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -4136,6 +4458,12 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_FULL_HOME_PAINTING_CATEGORY;
       } else if (isWallsRoomsPaintingSlug || data.slug === 'walls-rooms-painting' || data.name?.toLowerCase().includes('walls & rooms') || data.name?.toLowerCase().includes('few wall')) {
         data = DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY;
+      } else if (isTelevisionRepairSlug || data.slug === 'television-repair' || data.slug === 'television' || data.name?.toLowerCase().includes('television') || data.name?.toLowerCase().includes('tv repair')) {
+        data = DEFAULT_TELEVISION_REPAIR_CATEGORY;
+      } else if (isChimneyRepairSlug || data.slug === 'chimney-repair' || data.slug === 'chimney' || data.name?.toLowerCase().includes('chimney')) {
+        data = DEFAULT_CHIMNEY_REPAIR_CATEGORY;
+      } else if (isRefrigeratorSlug || data.slug === 'refrigerator' || data.name?.toLowerCase().includes('refrigerator') || data.name?.toLowerCase().includes('fridge')) {
+        data = DEFAULT_REFRIGERATOR_CATEGORY;
       }
 
       setCategoryData(data);
@@ -4229,6 +4557,18 @@ function UrbanCompanyServiceListingContent() {
       } else if (['walls-rooms-painting', 'few-walls-rooms', 'wall-painting', 'wall-painting-sub'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY.subCategories?.[0]?.slug || 'few-wall-painting');
+        setError404(false);
+      } else if (['television-repair', 'television', 'tv-repair', 'tv'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_TELEVISION_REPAIR_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_TELEVISION_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'tv-check-up');
+        setError404(false);
+      } else if (['chimney-repair', 'chimney'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_CHIMNEY_REPAIR_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_CHIMNEY_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'combos');
+        setError404(false);
+      } else if (['refrigerator', 'refrigerator-repair', 'fridge'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_REFRIGERATOR_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_REFRIGERATOR_CATEGORY.subCategories?.[0]?.slug || 'refrigerator-check-up');
         setError404(false);
       } else {
         setError404(true);
@@ -4428,6 +4768,32 @@ function UrbanCompanyServiceListingContent() {
       ['walls-rooms-painting', 'few-walls-rooms', 'wall-painting'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('walls & rooms') ||
       categoryData?.name?.toLowerCase().includes('few wall')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isTelevisionRepairCategory = useMemo(() => {
+    return (
+      ['television-repair', 'television', 'tv-repair', 'tv'].includes(serviceSlug) ||
+      ['television-repair', 'television', 'tv-repair', 'tv'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('television') ||
+      categoryData?.name?.toLowerCase().includes('tv repair')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isChimneyRepairCategory = useMemo(() => {
+    return (
+      ['chimney-repair', 'chimney'].includes(serviceSlug) ||
+      ['chimney-repair', 'chimney'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('chimney')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isRefrigeratorCategory = useMemo(() => {
+    return (
+      ['refrigerator', 'refrigerator-repair', 'fridge'].includes(serviceSlug) ||
+      ['refrigerator', 'refrigerator-repair', 'fridge'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('refrigerator') ||
+      categoryData?.name?.toLowerCase().includes('fridge')
     );
   }, [serviceSlug, categoryData]);
 
@@ -4757,7 +5123,7 @@ function UrbanCompanyServiceListingContent() {
                     <h1 className="text-2xl font-black text-[#111827]">Washing Machine ...</h1>
                     <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
                       <span className="material-symbols-outlined text-[12px]">bolt</span>
-                      In 44 mins
+                      Earliest Fri, 9:00 AM
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
@@ -4784,6 +5150,123 @@ function UrbanCompanyServiceListingContent() {
                   type="button"
                   onClick={() => {
                     const el = document.getElementById('subcat-section-washing-machine-jet-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isTelevisionRepairCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Television Repair</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      Earliest Fri, 9:00 AM
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.82
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.2 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 180 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-tv-check-up');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isChimneyRepairCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Chimney Repair</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      Instant in 24 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.72
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">96K reviews</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 180 day warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+              </div>
+            )}
+
+            {isRefrigeratorCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Refrigerator</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      Earliest Fri, 9:00 AM
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.75
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.9 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 180 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-refrigerator-check-up');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
@@ -5191,20 +5674,70 @@ function UrbanCompanyServiceListingContent() {
 
             {/* Dedicated Hero Banner for Washing Machine Repair */}
             {isWashingMachineCategory && (
-              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f766e] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-slate-700">
-                <div className="space-y-2 max-w-sm">
-                  <span className="inline-block bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
-                    Skin-safe chemicals
-                  </span>
-                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight">
-                    Select your service
-                  </h2>
-                  <p className="text-xs text-slate-300 font-medium leading-relaxed">
-                    Deep power drum decontamination with non-toxic chemical descaling
-                  </p>
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-[#0f172a] group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="/services/washing-machine-clean.jpg"
+                    alt="Washing Machine Clean"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-5 sm:p-6">
+                    <div className="flex items-center justify-between text-white">
+                      <div className="space-y-1">
+                        <span className="inline-block bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                          Skin-safe chemicals
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight">
+                          Select your service
+                        </h2>
+                        <p className="text-xs text-slate-200 font-medium leading-relaxed">
+                          Deep power drum decontamination with non-toxic chemical descaling
+                        </p>
+                      </div>
+                      <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-xs border border-white/20 flex items-center justify-center text-white shrink-0 shadow-lg">
+                        <span className="material-symbols-outlined text-xl">volume_up</span>
+                      </div>
+                    </div>
+                    {/* Video Progress Bar */}
+                    <div className="w-full bg-white/30 h-1 rounded-full mt-4 overflow-hidden">
+                      <div className="bg-white h-full w-3/5 rounded-full" />
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/10 shrink-0">
-                  <img src="/services/washing-machine-clean.jpg" alt="Washing Machine Clean" className="w-full h-full object-cover" />
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Refrigerator */}
+            {isRefrigeratorCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-[#0f172a] group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=1200&q=80"
+                    alt="Refrigerator Diagnostics"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex flex-col justify-end p-5 sm:p-6">
+                    <div className="flex items-center justify-between text-white">
+                      <div className="space-y-1">
+                        <span className="inline-block bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                          Precision Diagnostics
+                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+                          Refrigerator check-up
+                        </h2>
+                        <p className="text-xs text-gray-200 font-medium leading-relaxed">
+                          Single, double door & inverter compressor multi-point diagnostics
+                        </p>
+                      </div>
+                      <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-xs border border-white/20 flex items-center justify-center text-white shrink-0 shadow-lg">
+                        <span className="material-symbols-outlined text-2xl fill-white">play_arrow</span>
+                      </div>
+                    </div>
+                    {/* Video Progress Bar */}
+                    <div className="w-full bg-white/30 h-1 rounded-full mt-4 overflow-hidden">
+                      <div className="bg-white h-full w-2/5 rounded-full" />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -5598,7 +6131,11 @@ function UrbanCompanyServiceListingContent() {
                     isCockroachControlCategory ||
                     isAntsBedBugsCategory ||
                     isFullHomePaintingCategory ||
-                    isWallsRoomsPaintingCategory
+                    isWallsRoomsPaintingCategory ||
+                    isTelevisionRepairCategory ||
+                    isChimneyRepairCategory ||
+                    isRefrigeratorCategory ||
+                    isWashingMachineCategory
                   ) {
                     return true;
                   }
@@ -5645,6 +6182,24 @@ function UrbanCompanyServiceListingContent() {
                       </div>
 
                       {/* Custom Section Banners (Urban Company Style) */}
+                      {subCat.slug === 'combos' && isChimneyRepairCategory && (
+                        <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100/60 border border-orange-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1.5 max-w-sm">
+                            <span className="bg-[#ea580c] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              UPTO 10% OFF
+                            </span>
+                            <h3 className="text-base sm:text-lg font-black text-[#111827]">
+                              Chimney deep service: 2 visits in 12 months
+                            </h3>
+                            <p className="text-xs text-orange-950 font-medium">
+                              Thorough cleaning of filters, outer body, motor & duct pipe. Save up to ₹250 on 2 visits!
+                            </p>
+                          </div>
+                          <div className="w-32 h-20 rounded-xl overflow-hidden shadow-2xs border border-orange-200 shrink-0">
+                            <img src="/services/chimney.jpg" alt="Chimney Deep Service" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
                       {subCat.slug === 'kitchen-bathroom' && isCockroachControlCategory && (
                         <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100/60 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
                           <div className="space-y-1">

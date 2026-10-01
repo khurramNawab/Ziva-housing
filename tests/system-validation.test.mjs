@@ -301,6 +301,36 @@ async function runTestSuite() {
   }
 
   try {
+    const tvRes = await fetchUrl(`${WEB_URL}/services/television-repair`);
+    assert(tvRes.status === 200, 'Dedicated Television Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('TV check-up') && serviceSrc.includes('TV installation') && serviceSrc.includes('TV uninstallation'), 'Television Repair services verified');
+    assert(serviceSrc.includes('Television Repair') && serviceSrc.includes('1.2 M bookings'), 'Television Repair header and 1.2M bookings verified');
+  } catch (err) {
+    assert(false, 'Dedicated Television Repair page reachable', err.message);
+  }
+
+  try {
+    const chimRes = await fetchUrl(`${WEB_URL}/services/chimney-repair`);
+    assert(chimRes.status === 200, 'Dedicated Chimney Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Chimney deep service: 2 visits in 12 months'), 'Chimney deep service 2 visits promo banner verified');
+    assert(serviceSrc.includes('Deep service with gas stove') && serviceSrc.includes('Basic service with gas stove'), 'Chimney combos verified');
+    assert(serviceSrc.includes('Chimney Repair') && serviceSrc.includes('96K reviews'), 'Chimney Repair header and 96K reviews verified');
+  } catch (err) {
+    assert(false, 'Dedicated Chimney Repair page reachable', err.message);
+  }
+
+  try {
+    const refRes = await fetchUrl(`${WEB_URL}/services/refrigerator`);
+    assert(refRes.status === 200, 'Dedicated Refrigerator Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Refrigerator check-up') && serviceSrc.includes('1.9 M bookings'), 'Refrigerator check-up and 1.9M bookings verified');
+  } catch (err) {
+    assert(false, 'Dedicated Refrigerator page reachable', err.message);
+  }
+
+  try {
     const modalSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/components/UrbanCompanyModal.tsx'), 'utf8');
     assert(modalSrc.includes('Derma Facials') && modalSrc.includes('Cryofacial Cold Therapy'), 'Modal Derma Facials Cryofacial Cold Therapy banner verified');
     assert(modalSrc.includes('CASMARA') && modalSrc.includes('CIREPIL') && modalSrc.includes('799'), 'Modal Luxe tier with CASMARA & CIREPIL verified');
@@ -312,6 +342,7 @@ async function runTestSuite() {
     assert(modalSrc.includes('Cockroach Control') && modalSrc.includes('Ants & Bed Bugs Control'), 'Modal Pest Control subcategories verified');
     assert(modalSrc.includes('55 mins') && modalSrc.includes('74 mins'), 'Modal 55 mins and 74 mins duration badges verified');
     assert(modalSrc.includes('Select your scope') && modalSrc.includes('Full home painting') && modalSrc.includes('Few walls & rooms'), 'Modal Painting & Waterproofing Scope Selection verified');
+    assert(modalSrc.includes('/services/television-repair') && modalSrc.includes('/services/chimney-repair') && modalSrc.includes('/services/refrigerator'), 'Modal appliance subcategory routes verified');
   } catch (err) {
     assert(false, 'Modal component source check reachable', err.message);
   }

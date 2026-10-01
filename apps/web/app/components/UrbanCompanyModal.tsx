@@ -857,6 +857,14 @@ export default function UrbanCompanyModal({
         router.push('/services/full-home-painting');
       } else if (subSlug === 'walls-rooms-painting' || subSlug === 'few-walls-rooms' || subSlug === 'wall-painting-sub') {
         router.push('/services/walls-rooms-painting');
+      } else if (subSlug === 'television' || subSlug === 'television-repair' || subSlug === 'tv-repair') {
+        router.push('/services/television-repair');
+      } else if (subSlug === 'chimney' || subSlug === 'chimney-repair') {
+        router.push('/services/chimney-repair');
+      } else if (subSlug === 'refrigerator' || subSlug === 'refrigerator-repair' || subSlug === 'fridge') {
+        router.push('/services/refrigerator');
+      } else if (subSlug === 'washing-machine' || subSlug === 'washing-machine-repair') {
+        router.push('/services/washing-machine-repair');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }
