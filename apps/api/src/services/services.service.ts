@@ -281,6 +281,11 @@ const SEED_CATEGORIES = [
       { id: 'sub-ac-5', name: 'RO/Water Purifier', slug: 'ro-water-purifier', icon: '💧', displayOrder: 8, isActive: true },
       { id: 'sub-ac-6', name: 'Geyser', slug: 'geyser', icon: '♨️', displayOrder: 9, isActive: true },
       { id: 'sub-ac-7', name: 'Television', slug: 'television', icon: '📺', displayOrder: 10, isActive: true },
+      { id: 'sub-ac-8', name: 'Air Cooler', slug: 'air-cooler', icon: '❄️', displayOrder: 11, isActive: true },
+      { id: 'sub-ac-9', name: 'Laptop Repair', slug: 'laptop-repair', icon: '💻', displayOrder: 12, isActive: true },
+      { id: 'sub-ac-10', name: 'Stove/Hob', slug: 'stove-service-repair', icon: '🔥', displayOrder: 13, isActive: true },
+      { id: 'sub-ac-11', name: 'Microwave', slug: 'microwave-repair', icon: '📻', badge: '60 mins', displayOrder: 14, isActive: true },
+      { id: 'sub-ac-12', name: 'Native Water Purifier', slug: 'native-water-purifier', icon: '💧', badge: 'Sale', displayOrder: 15, isActive: true },
     ],
   },
   {
@@ -291,11 +296,14 @@ const SEED_CATEGORIES = [
     order: 5,
     isActive: true,
     subCategories: [
-      { id: 'sub-e-1', name: 'Electrician', slug: 'electrician-sub', icon: '⚡', badge: '19 mins', displayOrder: 1, isActive: true },
-      { id: 'sub-e-2', name: 'Plumber', slug: 'plumber-sub', icon: '🔧', badge: '19 mins', displayOrder: 2, isActive: true },
-      { id: 'sub-e-3', name: 'Carpenter', slug: 'carpenter-sub', icon: '🪚', badge: '19 mins', displayOrder: 3, isActive: true },
-      { id: 'sub-e-4', name: 'Fan Installation', slug: 'fan-installation', icon: '🌀', displayOrder: 4, isActive: true },
+      { id: 'sub-e-1', name: 'Electrician', slug: 'electrician-sub', icon: '⚡', badge: '25 mins', displayOrder: 1, isActive: true },
+      { id: 'sub-e-2', name: 'Plumber', slug: 'plumber-sub', icon: '🔧', badge: '25 mins', displayOrder: 2, isActive: true },
+      { id: 'sub-e-3', name: 'Carpenter', slug: 'carpenter-sub', icon: '🪚', badge: '25 mins', displayOrder: 3, isActive: true },
+      { id: 'sub-e-4', name: 'Fan Installation', slug: 'fan-installation', icon: '🌀', badge: '25 mins', displayOrder: 4, isActive: true },
       { id: 'sub-e-5', name: 'Furniture Assembly', slug: 'furniture-assembly', icon: '🪑', displayOrder: 5, isActive: true },
+      { id: 'sub-e-6', name: 'Geyser Service & Repair', slug: 'geyser-service-repair', icon: '♨️', badge: '25 mins', displayOrder: 6, isActive: true },
+      { id: 'sub-e-7', name: 'Festival Lights Installation', slug: 'festival-lights-installation', icon: '💡', badge: '25 mins', displayOrder: 7, isActive: true },
+      { id: 'sub-e-8', name: 'Native Smart Locks', slug: 'native-smart-locks', icon: '🔐', badge: 'Sale', displayOrder: 8, isActive: true },
     ],
   },
   {
@@ -306,8 +314,9 @@ const SEED_CATEGORIES = [
     order: 6,
     isActive: true,
     subCategories: [
-      { id: 'sub-p-1', name: 'Painting & Waterproofing', slug: 'painting', icon: '🖌️', displayOrder: 1, isActive: true },
-      { id: 'sub-p-2', name: 'Wall Painting & Waterproofing', slug: 'wall-painting-sub', icon: '🎨', displayOrder: 2, isActive: true },
+      { id: 'sub-p-1', name: 'Full home painting', slug: 'full-home-painting', icon: '🏠', badge: '1/2/3/4 BHK', displayOrder: 1, isActive: true },
+      { id: 'sub-p-2', name: 'Few walls & rooms', slug: 'walls-rooms-painting', icon: '🎨', badge: '1/2/3 rooms', displayOrder: 2, isActive: true },
+      { id: 'sub-p-3', name: 'Wall Painting & Waterproofing', slug: 'wall-painting-sub', icon: '🖌️', displayOrder: 3, isActive: true },
     ],
   },
   {

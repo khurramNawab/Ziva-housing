@@ -139,6 +139,8 @@ const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
   'microwave-repair': 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=300&h=300&q=80',
 
   // Painting & Waterproofing
+  'full-home-painting': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=300&h=300&q=80',
+  'walls-rooms-painting': 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=300&h=300&q=80',
   'wall-painting-sub': 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=300&h=300&q=80',
   'painting': 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=300&h=300&q=80',
 
@@ -505,6 +507,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-ac-9', name: 'Laptop Repair', slug: 'laptop-repair', icon: '💻', badge: null, groupHeader: 'Other Appliances', displayOrder: 12 },
     { id: 'sub-ac-10', name: 'Stove/Hob', slug: 'stove-service-repair', icon: '🔥', badge: null, groupHeader: 'Other Appliances', displayOrder: 13 },
     { id: 'sub-ac-11', name: 'Microwave', slug: 'microwave-repair', icon: '📻', badge: '60 mins', groupHeader: 'Other Appliances', displayOrder: 14 },
+    { id: 'sub-ac-native-wp', name: 'Native Water Purifier', slug: 'native-water-purifier', icon: '💧', badge: 'Sale', groupHeader: 'Other Appliances', displayOrder: 15 },
   ],
   'ac': [
     { id: 'sub-ac-annual', name: 'Annual plan', slug: 'annual-plan', icon: 'calendar_month', badge: '30% OFF', groupHeader: 'Air Conditioner', displayOrder: 1 },
@@ -526,6 +529,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-epc-furn', name: 'Furniture Assembly', slug: 'furniture-assembly', icon: '🪑', badge: null, groupHeader: 'Home installation', displayOrder: 5 },
     { id: 'sub-epc-geyser', name: 'Geyser Service & Repair', slug: 'geyser-service-repair', icon: '♨️', badge: '25 mins', groupHeader: 'Home installation', displayOrder: 6 },
     { id: 'sub-epc-lights', name: 'Festival Lights Installation', slug: 'festival-lights-installation', icon: '💡', badge: '25 mins', groupHeader: 'Home installation', displayOrder: 7 },
+    { id: 'sub-epc-locks', name: 'Native Smart Locks', slug: 'native-smart-locks', icon: '🔐', badge: 'Sale', groupHeader: 'Home installation', displayOrder: 8 },
   ],
   'painting-waterproofing': [
     {
@@ -534,7 +538,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       slug: 'full-home-painting',
       icon: '🏠',
       badge: '1/2/3/4 BHK',
-      groupHeader: null,
+      groupHeader: 'Select your scope',
       displayOrder: 1,
     },
     {
@@ -543,7 +547,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       slug: 'walls-rooms-painting',
       icon: '🎨',
       badge: '1/2/3 rooms',
-      groupHeader: null,
+      groupHeader: 'Select your scope',
       displayOrder: 2,
     },
   ],
@@ -810,6 +814,29 @@ export default function UrbanCompanyModal({
       console.warn('Using fallback categories in modal:', err);
     }
   }, []);
+
+  useEffect(() => {
+    // Cross-tab and window sync with Admin Panel
+    const handleRefresh = () => fetchCategoryData();
+    window.addEventListener('focus', handleRefresh);
+    window.addEventListener('storage', handleRefresh);
+
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel('ziva_admin_sync');
+      bc.onmessage = (msg) => {
+        if (msg.data?.type === 'SERVICES_UPDATED') {
+          fetchCategoryData();
+        }
+      };
+    } catch {}
+
+    return () => {
+      window.removeEventListener('focus', handleRefresh);
+      window.removeEventListener('storage', handleRefresh);
+      if (bc) bc.close();
+    };
+  }, [fetchCategoryData]);
 
   useEffect(() => {
     if (isOpen) {
@@ -1110,92 +1137,7 @@ export default function UrbanCompanyModal({
                   }
                 });
 
-                if (category.slug === 'painting-waterproofing' || category.slug === 'painting') {
-                  return (
-                    <div
-                      key={category.id || category.slug}
-                      id={`modal-section-${category.slug}`}
-                      className="space-y-4 scroll-mt-6"
-                    >
-                      <div className="border-b border-gray-100 pb-2">
-                        <h3 className="text-[20px] font-black text-[#111827] tracking-tight">
-                          Painting & Waterproofing
-                        </h3>
-                        <p className="text-[13px] font-medium text-gray-500 mt-0.5">
-                          Select your scope
-                        </p>
-                      </div>
 
-                      <div className="space-y-3">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onClose();
-                            if (onSelectService) onSelectService('Full home painting', 'painting-waterproofing');
-                            router.push('/services/full-home-painting');
-                          }}
-                          className="w-full bg-white hover:bg-slate-50/80 border border-gray-200/90 hover:border-[#5e23dc] rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-4 cursor-pointer transition-all shadow-xs hover:shadow-md group text-left"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
-                              <img
-                                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80"
-                                alt="Full home painting"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-                            <div>
-                              <h4 className="text-base sm:text-lg font-black text-[#111827] group-hover:text-[#5e23dc] transition-colors">
-                                Full home painting
-                              </h4>
-                              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
-                                1/2/3/4 BHK & above
-                              </p>
-                            </div>
-                          </div>
-                          <span className="material-symbols-outlined text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-1 transition-all text-xl shrink-0">
-                            chevron_right
-                          </span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onClose();
-                            if (onSelectService) onSelectService('Few walls & rooms', 'painting-waterproofing');
-                            router.push('/services/walls-rooms-painting');
-                          }}
-                          className="w-full bg-white hover:bg-slate-50/80 border border-gray-200/90 hover:border-[#5e23dc] rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-4 cursor-pointer transition-all shadow-xs hover:shadow-md group text-left"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
-                              <img
-                                src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=400&q=80"
-                                alt="Few walls & rooms"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-                            <div>
-                              <h4 className="text-base sm:text-lg font-black text-[#111827] group-hover:text-[#5e23dc] transition-colors">
-                                Few walls & rooms
-                              </h4>
-                              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
-                                Individual walls or 1/2/3 rooms
-                              </p>
-                            </div>
-                          </div>
-                          <span className="material-symbols-outlined text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-1 transition-all text-xl shrink-0">
-                            chevron_right
-                          </span>
-                        </button>
-                      </div>
-
-                      {catIndex < activeList.length - 1 && (
-                        <div className="h-[1px] bg-gray-100 w-full pt-2" />
-                      )}
-                    </div>
-                  );
-                }
 
                 return (
                   <div

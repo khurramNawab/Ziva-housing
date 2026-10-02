@@ -6911,7 +6911,13 @@ function UrbanCompanyServiceListingContent() {
         }
       }
 
-      if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
+      const hasLiveDbServices =
+        Array.isArray(data.subCategories) &&
+        data.subCategories.length > 0 &&
+        data.subCategories.some((s: any) => (Array.isArray(s.services) && s.services.length > 0) || (Array.isArray(s.tiers) && s.tiers.length > 0));
+
+      if (!hasLiveDbServices) {
+        if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
         data = DEFAULT_AC_CATEGORY;
       } else if (isSpaSlug || (data.slug === 'spa-for-women' || data.name?.toLowerCase().includes('spa') && !data.name?.toLowerCase().includes('salon'))) {
         data = DEFAULT_SPA_CATEGORY;
@@ -6973,6 +6979,7 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_NATIVE_SMART_LOCKS_CATEGORY;
       } else if (isNativeWaterPurifierSlug || data.slug === 'native-water-purifier' || (data.name?.toLowerCase().includes('native') && data.name?.toLowerCase().includes('water'))) {
         data = DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY;
+        }
       }
 
       setCategoryData(data);
