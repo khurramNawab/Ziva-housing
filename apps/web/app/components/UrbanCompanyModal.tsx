@@ -904,6 +904,8 @@ export default function UrbanCompanyModal({
         router.push('/services/furniture-assembly');
       } else if (subSlug === 'festival-lights-installation' || subSlug === 'festival-lights') {
         router.push('/services/festival-lights-installation');
+      } else if (subSlug === 'interior-modular-kitchen' || subSlug === 'modular-kitchen' || subSlug === 'modular-kitchen-woodwork') {
+        router.push('/services/interior-modular-kitchen');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }

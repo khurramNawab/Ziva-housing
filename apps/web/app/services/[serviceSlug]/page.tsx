@@ -273,29 +273,105 @@ const SUBCATEGORY_BADGE_MAP: Record<string, string> = {
 };
 
 const ICON_MAP: Record<string, string> = {
+  // Kitchen & Cooking
+  'savings': '🏷️',
+  'air': '💨',
+  'soup_kitchen': '🍲',
+  'kitchen': '🍳',
+  'countertops': '🧽',
+  'modular_kitchen': '📐',
+  'interior-modular-kitchen': '📐',
+  'modular-kitchen-woodwork': '📐',
+  'microwave': '♨️',
+  'restaurant': '🍽️',
+  'add_task': '➕',
+  'local_dining': '🍽️',
+
+  // AC & Appliances
+  'ac_unit': '❄️',
+  'ac-appliance-repair': '❄️',
+  'heat_pump': '🔥',
+  'calendar_month': '📅',
+  'troubleshoot': '🔍',
+  'tune': '⚙️',
+  'local_laundry_service': '🧺',
+  'washing-machine': '🧺',
+  'refrigerator': '🧊',
+  'water_heater': '♨️',
+  'geyser': '♨️',
+  'water_purifier': '💧',
+  'water_drop': '💧',
+  'tv': '📺',
+  'desktop_mac': '💻',
+  'laptop': '💻',
+  'precision_manufacturing': '⚙️',
+
+  // Handyman, EPC & Woodwork
+  'handyman': '🔧',
+  'build': '🔨',
+  'home_repair_service': '🔧',
+  'electrician-plumber-carpenter': '🔧',
+  'valve': '🚰',
+  'plumbing': '🔧',
+  'bolt': '⚡',
+  'power': '🔌',
+  'carpenter': '🪚',
+  'table_restaurant': '🪵',
+  'chair': '🪑',
+  'bed': '🛏️',
+  'shelves': '📚',
+  'door_sliding': '🚪',
+  'furniture-assembly': '🪑',
+  'fan': '🌀',
+  'toys': '🌀',
+  'festival': '✨',
+  'lights': '💡',
+  'lightbulb': '💡',
+  'celebration': '🎉',
+  'auto_awesome': '✨',
+
+  // Cleaning & Pest Control
   'vacuum': '🧹',
   'cleaning': '🧹',
+  'cleaning_services': '🧹',
+  'sanitizer': '🧴',
+  'pest_control': '🪳',
+  'bug_report': '🐜',
+
+  // Painting
+  'format_paint': '🖌️',
+  'painting-waterproofing': '🖌️',
+  'imagesearch_roller': '🖌️',
+  'palette': '🎨',
+
+  // Salon, Spa & Care
   'face_retouching_natural': '🧖‍♀️',
   'womens-salon-spa': '🧖‍♀️',
   'content_cut': '🧔‍♂️',
   'person_grooming': '🧔‍♂️',
   'mens-salon-massage': '🧔‍♂️',
-  'ac_unit': '❄️',
-  'ac-appliance-repair': '❄️',
-  'handyman': '🔧',
-  'electrician-plumber-carpenter': '🔧',
-  'format_paint': '🖌️',
-  'painting-waterproofing': '🖌️',
+  'spa': '💆‍♀️',
+  'healing': '💆‍♂️',
   'support_agent': '👩‍🍳',
   'instahelp': '👩‍🍳',
+  'child_care': '👶',
+  'elderly': '👵',
+  'local_shipping': '📦',
 };
 
-function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️') {
+function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️'): React.ReactNode {
   if (!iconStr) return fallback;
   const trimmed = iconStr.trim();
   if (ICON_MAP[trimmed]) return ICON_MAP[trimmed];
   if (ICON_MAP[trimmed.toLowerCase()]) return ICON_MAP[trimmed.toLowerCase()];
-  return trimmed;
+  if (/\p{Extended_Pictographic}/u.test(trimmed)) {
+    return trimmed;
+  }
+  return (
+    <span className="material-symbols-outlined text-[19px] leading-none select-none text-gray-700 shrink-0">
+      {trimmed}
+    </span>
+  );
 }
 
 function slugify(text: string): string {
@@ -2497,6 +2573,157 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
           reviewCount: 160000,
           description: '• Hospital-grade antibacterial mop eliminating kitchen bacteria and grease',
           imageUrl: '/services/kitchen-cleaning-counter.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY: ServiceCategory = {
+  id: 'cat-interior-modular-kitchen',
+  name: 'Interior & Modular Kitchen',
+  slug: 'interior-modular-kitchen',
+  icon: '📐',
+  badge: '4.86 ★ (1.1M)',
+  order: 11,
+  subCategories: [
+    {
+      id: 'sub-imk-woodwork',
+      name: 'Modular Kitchen & Woodwork',
+      slug: 'modular-kitchen-woodwork',
+      icon: '📐',
+      badge: 'Free Design',
+      groupHeader: 'Kitchen Design',
+      displayOrder: 1,
+      description: 'Custom end-to-end modular kitchens with 3D design, marine-grade BWR plywood & 10-year warranty.',
+      services: [
+        {
+          id: 'srv-imk-consultation',
+          name: 'Modular kitchen design consultation',
+          slug: 'modular-kitchen-design-consultation',
+          basePrice: 199,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 320000,
+          description: '• In-home site measurement & laser layout\n• Personalized 3D visual render with material selector\n• Fully adjusted against manufacturing bill',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-imk-l-shape',
+          name: 'L-Shaped modular kitchen package',
+          slug: 'l-shaped-modular-kitchen-package',
+          basePrice: 49999,
+          durationMinutes: 180,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 410000,
+          description: '• Boiling Water Resistant (BWR) marine plywood cabinetry\n• Soft-close German hinges, tandem drawers & cutlery trays\n• Quartz / Granite countertop installation support',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-imk-parallel',
+          name: 'Straight & Parallel modular kitchen',
+          slug: 'straight-parallel-modular-kitchen',
+          basePrice: 39999,
+          durationMinutes: 180,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 230000,
+          description: '• Optimized parallel counter space layout with acrylic high-gloss shutters\n• Stainless steel wire baskets & anti-termite treated carcass',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-imk-island',
+          name: 'Island & U-Shaped luxury kitchen',
+          slug: 'island-u-shaped-luxury-kitchen',
+          basePrice: 79999,
+          durationMinutes: 240,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 150000,
+          description: '• Premium PU lacquer finish with breakfast counter island\n• Integrated chimney space, pull-out pantry tall unit & under-cabinet LED profile lighting',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-imk-wardrobes',
+      name: 'Kitchen wardrobes & lofts',
+      slug: 'kitchen-wardrobes-lofts',
+      icon: 'door_sliding',
+      badge: 'Bestseller',
+      groupHeader: 'Storage Solutions',
+      displayOrder: 2,
+      description: 'Floor-to-ceiling storage units, overhead lofts, and hydraulic cabinet shutter installation.',
+      services: [
+        {
+          id: 'srv-imk-loft-woodwork',
+          name: 'Overhead kitchen loft woodwork',
+          slug: 'overhead-kitchen-loft-woodwork',
+          basePrice: 8999,
+          durationMinutes: 120,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 180000,
+          description: '• Maximizes vertical dead space up to the ceiling\n• Water-resistant laminate matching kitchen shutters\n• Concealed magnetic push-to-open latches',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-imk-tall-pantry',
+          name: 'Tall pantry unit with pull-out baskets',
+          slug: 'tall-pantry-unit-pullout',
+          basePrice: 14999,
+          durationMinutes: 150,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 120000,
+          description: '• 6-tier heavy-duty chrome baskets for groceries\n• High load-bearing soft-closing runners',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-imk-renovation',
+      name: 'Kitchen renovation & repair',
+      slug: 'kitchen-renovation-repair',
+      icon: 'build',
+      badge: 'From ₹999',
+      groupHeader: 'Refurbishment',
+      displayOrder: 3,
+      description: 'Shutter replacement, hinge fixing, countertop replacement and hardware modernization.',
+      services: [
+        {
+          id: 'srv-imk-shutter-replacement',
+          name: 'Kitchen shutter & hinge overhaul',
+          slug: 'kitchen-shutter-hinge-overhaul',
+          basePrice: 1499,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 290000,
+          description: '• Realign sagging doors, replace rusty hinges with soft-close hinges\n• Handle tightening and anti-scratch edge banding',
+          imageUrl: '/services/modular-kitchen.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-imk-countertop-replacement',
+          name: 'Countertop replacement & sink refit',
+          slug: 'countertop-replacement-sink-refit',
+          basePrice: 4999,
+          durationMinutes: 180,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 95000,
+          description: '• Removal of chipped granite/quartz slab and precision installation of new counter\n• Silicone sealing around sink to prevent water seepage into woodwork',
+          imageUrl: '/services/modular-kitchen.jpg',
           isActive: true,
         },
       ],
@@ -6216,7 +6443,8 @@ function UrbanCompanyServiceListingContent() {
     const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
     const isBathroomCleaningSlug = ['bathroom-cleaning', 'bathroom', 'bathroom-cleaning-services'].includes(serviceSlug);
     const isMakeupSlug = ['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug);
-    const isKitchenCleaningSlug = ['kitchen-cleaning', 'kitchen'].includes(serviceSlug);
+    const isInteriorModularKitchenSlug = ['interior-modular-kitchen', 'modular-kitchen', 'modular-kitchen-woodwork', 'kitchen-interior', 'interiors'].includes(serviceSlug);
+    const isKitchenCleaningSlug = !isInteriorModularKitchenSlug && ['kitchen-cleaning', 'kitchen'].includes(serviceSlug);
     const isLivingBedroomSlug = ['living-bedroom-cleaning', 'living-bedroom', 'sofa-cleaning'].includes(serviceSlug);
     const isFullHomeSlug = ['full-home-cleaning', 'full-home', 'full-home-by-room-cleaning', 'full-home-by-room'].includes(serviceSlug);
     const isCockroachSlug = ['cockroach-control', 'cockroach'].includes(serviceSlug);
@@ -6296,6 +6524,11 @@ function UrbanCompanyServiceListingContent() {
         if (isMakeupSlug) {
           setCategoryData(DEFAULT_MAKEUP_CATEGORY);
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_MAKEUP_CATEGORY.subCategories?.[0]?.slug || 'packages');
+          return;
+        }
+        if (isInteriorModularKitchenSlug) {
+          setCategoryData(DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY.subCategories?.[0]?.slug || 'modular-kitchen-woodwork');
           return;
         }
         if (isKitchenCleaningSlug) {
@@ -6432,6 +6665,8 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_BATHROOM_CLEANING_CATEGORY;
         } else if (isMakeupSlug) {
           data = DEFAULT_MAKEUP_CATEGORY;
+        } else if (isInteriorModularKitchenSlug) {
+          data = DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY;
         } else if (isKitchenCleaningSlug) {
           data = DEFAULT_KITCHEN_CLEANING_CATEGORY;
         } else if (isLivingBedroomSlug) {
@@ -6494,7 +6729,9 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_BATHROOM_CLEANING_CATEGORY;
       } else if (isMakeupSlug || data.slug === 'makeup-saree-styling' || data.name?.toLowerCase().includes('makeup')) {
         data = DEFAULT_MAKEUP_CATEGORY;
-      } else if (isKitchenCleaningSlug || data.slug === 'kitchen-cleaning' || data.name?.toLowerCase().includes('kitchen')) {
+      } else if (isInteriorModularKitchenSlug || data.slug === 'interior-modular-kitchen' || data.name?.toLowerCase().includes('modular kitchen') || (data.name?.toLowerCase().includes('interior') && data.name?.toLowerCase().includes('kitchen'))) {
+        data = DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY;
+      } else if (isKitchenCleaningSlug || data.slug === 'kitchen-cleaning' || (data.name?.toLowerCase().includes('kitchen') && !data.name?.toLowerCase().includes('interior') && !data.name?.toLowerCase().includes('modular'))) {
         data = DEFAULT_KITCHEN_CLEANING_CATEGORY;
       } else if (isLivingBedroomSlug || data.slug === 'living-bedroom-cleaning' || data.name?.toLowerCase().includes('living') || data.name?.toLowerCase().includes('bedroom')) {
         data = DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY;
@@ -6601,6 +6838,10 @@ function UrbanCompanyServiceListingContent() {
       } else if (['makeup-saree-styling', 'makeup', 'party-makeup', 'makeup-and-styling'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_MAKEUP_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_MAKEUP_CATEGORY.subCategories?.[0]?.slug || 'packages');
+        setError404(false);
+      } else if (['interior-modular-kitchen', 'modular-kitchen', 'modular-kitchen-woodwork', 'kitchen-interior', 'interiors'].includes(serviceSlug)) {
+        setCategoryData(DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY.subCategories?.[0]?.slug || 'modular-kitchen-woodwork');
         setError404(false);
       } else if (['kitchen-cleaning', 'kitchen'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_KITCHEN_CLEANING_CATEGORY);
@@ -6828,13 +7069,27 @@ function UrbanCompanyServiceListingContent() {
     );
   }, [serviceSlug, categoryData]);
 
-  const isKitchenCleaningCategory = useMemo(() => {
+  const isInteriorModularKitchenCategory = useMemo(() => {
     return (
-      ['kitchen-cleaning', 'kitchen'].includes(serviceSlug) ||
-      ['kitchen-cleaning', 'kitchen'].includes(categoryData?.slug || '') ||
-      categoryData?.name?.toLowerCase().includes('kitchen')
+      ['interior-modular-kitchen', 'modular-kitchen', 'modular-kitchen-woodwork', 'kitchen-interior', 'interiors'].includes(serviceSlug) ||
+      ['interior-modular-kitchen', 'modular-kitchen', 'modular-kitchen-woodwork'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('modular kitchen') ||
+      (categoryData?.name?.toLowerCase().includes('interior') && categoryData?.name?.toLowerCase().includes('kitchen'))
     );
   }, [serviceSlug, categoryData]);
+
+  const isKitchenCleaningCategory = useMemo(() => {
+    if (isInteriorModularKitchenCategory) return false;
+    return (
+      !serviceSlug.includes('modular') &&
+      !serviceSlug.includes('interior') &&
+      (['kitchen-cleaning', 'kitchen'].includes(serviceSlug) ||
+      ['kitchen-cleaning', 'kitchen'].includes(categoryData?.slug || '') ||
+      (categoryData?.name?.toLowerCase().includes('kitchen') &&
+       !categoryData?.name?.toLowerCase().includes('interior') &&
+       !categoryData?.name?.toLowerCase().includes('modular')))
+    );
+  }, [serviceSlug, categoryData, isInteriorModularKitchenCategory]);
 
   const isLivingBedroomCategory = useMemo(() => {
     return (
@@ -8056,6 +8311,36 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isInteriorModularKitchenCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Interior & Modular Kitchen</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Verified
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.86
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.1M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {isLivingBedroomCategory && (
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
@@ -8276,15 +8561,17 @@ function UrbanCompanyServiceListingContent() {
                         : 'text-gray-700 hover:bg-gray-50 hover:text-black font-medium border border-transparent'
                     }`}
                   >
-                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-xl shadow-2xs shrink-0">
-                      {renderServiceIcon(subCat.icon, '🛠️')}
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-xl shadow-2xs shrink-0 overflow-hidden">
+                      <span className="shrink-0 flex items-center justify-center leading-none">
+                        {renderServiceIcon(subCat.icon, '🛠️')}
+                      </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-xs md:text-[13px] block truncate">
+                      <div className="text-xs md:text-[13px] font-bold block truncate leading-tight">
                         {subCat.name}
-                      </span>
+                      </div>
                       {subCat.badge && (
-                        <span className="inline-block bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 rounded-xs mt-0.5">
+                        <span className="inline-block bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.5 rounded-xs mt-1">
                           {subCat.badge}
                         </span>
                       )}
@@ -8681,6 +8968,36 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {/* Dedicated Hero Banner for Interior & Modular Kitchen */}
+            {isInteriorModularKitchenCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-[#1e293b] group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="/services/modular-kitchen.jpg"
+                    alt="Interior & Modular Kitchen - Custom woodwork & design"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80';
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex items-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <span className="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                        10-Year Warranty
+                      </span>
+                      <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
+                        Modular kitchen & custom woodwork
+                      </h2>
+                      <p className="text-xs text-slate-200 font-medium">
+                        BWR marine plywood, German soft-close fittings & personalized 3D design
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Dedicated Hero Banner for Kitchen Cleaning (Matching Screenshot 1: Gas stove & counter) */}
             {isKitchenCleaningCategory && (
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
@@ -8689,6 +9006,10 @@ function UrbanCompanyServiceListingContent() {
                     src="/services/kitchen-cleaning-counter.jpg"
                     alt="Kitchen Cleaning - Spotless counters & deep degreasing"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-5 sm:p-6">
                     <div className="text-white space-y-1">
@@ -9010,6 +9331,7 @@ function UrbanCompanyServiceListingContent() {
                   if (
                     isBathroomCleaningCategory ||
                     isMakeupCategory ||
+                    isInteriorModularKitchenCategory ||
                     isKitchenCleaningCategory ||
                     isLivingBedroomCategory ||
                     isFullHomeCategory ||
@@ -9637,7 +9959,8 @@ function UrbanCompanyServiceListingContent() {
               isCarpenterCategory ||
               isFanInstallationCategory ||
               isFestivalLightsCategory ||
-              isFurnitureAssemblyCategory ? (
+              isFurnitureAssemblyCategory ||
+              isInteriorModularKitchenCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">

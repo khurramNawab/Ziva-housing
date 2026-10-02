@@ -492,6 +492,16 @@ async function runTestSuite() {
     assert(false, 'Dedicated Geyser Service & Repair page reachable', err.message);
   }
 
+  try {
+    const kitchenRes = await fetchUrl(`${WEB_URL}/services/interior-modular-kitchen`);
+    assert(kitchenRes.status === 200, 'Dedicated Interior & Modular Kitchen Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Interior & Modular Kitchen') && serviceSrc.includes('Modular kitchen & custom woodwork'), 'Modular Kitchen header & hero verified');
+    assert(serviceSrc.includes('Modular kitchen design consultation') && serviceSrc.includes('L-Shaped modular kitchen package'), 'Modular Kitchen services verified');
+  } catch (err) {
+    assert(false, 'Dedicated Interior & Modular Kitchen page reachable', err.message);
+  }
+
   // --- Suite 3: Dedicated Role-Based Panels Routing ---
   console.log('\n🛡️ [SUITE 3] Dedicated Panels & Workspaces Routing');
   const panelRoutes = [
