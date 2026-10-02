@@ -52,13 +52,13 @@ const CATEGORY_STYLE_MAP: Record<string, { icon: string; imgUrl?: string; bg: st
     icon: 'ac_unit', 
     imgUrl: '/services/ac-service.jpg',
     bg: 'bg-[#f0f9ff]', 
-    defaultBadge: '44 mins' 
+    defaultBadge: '25 mins' 
   },
   'electrician-plumber-carpenter': { 
     icon: 'build', 
     imgUrl: '/services/electrician-service.jpg',
     bg: 'bg-[#faf5ff]', 
-    defaultBadge: '19 mins' 
+    defaultBadge: '25 mins' 
   },
   'painting-waterproofing': { 
     icon: 'format_paint', 
@@ -98,8 +98,8 @@ const DEFAULT_HERO_CATEGORIES: ServiceCategory[] = [
   { id: 'c-clean', name: 'Cleaning & Pest Control', slug: 'cleaning', icon: 'cleaning_services', badge: '44 mins', isActive: true, order: 1 },
   { id: 'c-wsalon', name: "Women's Salon & Spa", slug: 'womens-salon-spa', icon: 'spa', badge: null, isActive: true, order: 2 },
   { id: 'c-msalon', name: "Men's Salon & Massage", slug: 'mens-salon-massage', icon: 'face', badge: null, isActive: true, order: 3 },
-  { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: 'ac_unit', badge: '44 mins', isActive: true, order: 4 },
-  { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: 'build', badge: '19 mins', isActive: true, order: 5 },
+  { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: 'ac_unit', badge: '25 mins', isActive: true, order: 4 },
+  { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: 'build', badge: '25 mins', isActive: true, order: 5 },
   { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: 'format_paint', badge: null, isActive: true, order: 6 },
   { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: 'restaurant', badge: null, isActive: true, order: 7 },
 ];

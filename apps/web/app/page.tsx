@@ -48,9 +48,9 @@ function renderCategoryIcon(iconStr?: string | null, slug?: string, fallback = '
 }
 
 const TRUST_STATS = [
+  { value: '4.8★', label: 'Service Rating*', icon: 'star' },
+  { value: '12M+', label: 'Customers Globally*', icon: 'group' },
   { value: '2,500+', label: 'Happy Customers', icon: 'sentiment_very_satisfied' },
-  { value: '4.8★', label: 'Average Rating', icon: 'star' },
-  { value: '250+', label: 'Verified Partners', icon: 'verified_user' },
   { value: '₹10,000', label: 'Damage Cover', icon: 'shield' },
 ];
 
@@ -355,15 +355,15 @@ function ServicesContent() {
             </div>
           </div>
         </div>
-        {/* MOST BOOKED SERVICES (Instant Book Cards) */}
+        {/* SPOTLIGHT SERVICES (Instant Book Cards) */}
         <section className="py-12 max-w-[1280px] mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-[22px] md:text-[28px] font-extrabold text-[#111827]">
-                Most Booked Doorstep Services
+                In the spotlight
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Highest rated by verified customers this month
+                Most Booked Doorstep Services — Highest rated by verified customers this month
               </p>
             </div>
             <button

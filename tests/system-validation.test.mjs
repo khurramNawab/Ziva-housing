@@ -110,7 +110,8 @@ async function runTestSuite() {
     const pageSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/page.tsx'), 'utf8');
     assert(pageSrc.includes('All Home Service Categories'), 'Hero categories section rendered');
     assert(pageSrc.includes('VIP Club Membership'), 'Ziva Plus VIP Club Card section rendered');
-    assert(pageSrc.includes('Most Booked Doorstep Services'), 'Most booked doorstep services rendered');
+    assert(pageSrc.includes('In the spotlight') && pageSrc.includes('Most Booked Doorstep Services'), 'Spotlight section rendered');
+    assert(pageSrc.includes('12M+') && pageSrc.includes('Customers Globally*'), 'UC scale metrics verified (12M+ Customers Globally)');
     assert(pageSrc.includes('2,500+') && pageSrc.includes('Happy Customers'), 'Realistic startup numbers verified (2,500+ Customers)');
     assert(!pageSrc.includes('Loved by 50,000+ Happy Homes'), 'Unrealistic 50,000+ happy homes banner removed');
     assert(!pageSrc.includes('ZIVA PLUS MEMBERSHIP — SAVE ₹150+ ON EVERY BOOKING\n                </div>'), 'Harsh full-width promo bar removed from under stats');
@@ -444,6 +445,51 @@ async function runTestSuite() {
     assert(serviceSrc.includes('Drill & hang (Wall art / mirror / clock)') && serviceSrc.includes('Main door lock replacement'), 'Carpenter services verified');
   } catch (err) {
     assert(false, 'Dedicated Carpenter page reachable', err.message);
+  }
+
+  try {
+    const fanRes = await fetchUrl(`${WEB_URL}/services/fan-installation`);
+    assert(fanRes.status === 200, 'Dedicated Fan Installation Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Fan Installation') && serviceSrc.includes('926 bookings'), 'Fan Installation header and 926 bookings verified');
+    assert(serviceSrc.includes('Decorative ceiling fan installation/replacement') && serviceSrc.includes('Smart fan installation/replacement'), 'Fan installation services verified');
+    assert(serviceSrc.includes('Fan uninstallation'), 'Fan uninstallation service verified');
+  } catch (err) {
+    assert(false, 'Dedicated Fan Installation page reachable', err.message);
+  }
+
+  try {
+    const festRes = await fetchUrl(`${WEB_URL}/services/festival-lights-installation`);
+    assert(festRes.status === 200, 'Dedicated Festival Lights Installation Page loads (HTTP 200)');
+    const festAliasRes = await fetchUrl(`${WEB_URL}/services/festival-lights`);
+    assert(festAliasRes.status === 200, 'Dedicated Festival Lights alias Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Festival Lights ...') && serviceSrc.includes('Light uninstallations'), 'Festival Lights header and sections verified');
+    assert(serviceSrc.includes('Balcony lights') && serviceSrc.includes('Railing lights') && serviceSrc.includes('Mandir lights'), 'Festival lights subcategories verified');
+    assert(serviceSrc.includes('Light uninstallation (per light)') && serviceSrc.includes('Balcony lights installation (heavy)'), 'Festival lights services verified');
+  } catch (err) {
+    assert(false, 'Dedicated Festival Lights page reachable', err.message);
+  }
+
+  try {
+    const furnRes = await fetchUrl(`${WEB_URL}/services/furniture-assembly`);
+    assert(furnRes.status === 200, 'Dedicated Furniture Assembly Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Furniture Assembly') && serviceSrc.includes('1.2M bookings'), 'Furniture Assembly header and 1.2M bookings verified');
+    assert(serviceSrc.includes('Single bed assembly') && serviceSrc.includes('2-door wardrobe assembly'), 'Furniture assembly beds & wardrobes verified');
+    assert(serviceSrc.includes('Ergonomic / Office chair assembly') && serviceSrc.includes('Bookshelf / Display rack assembly'), 'Furniture assembly chairs & shelves verified');
+  } catch (err) {
+    assert(false, 'Dedicated Furniture Assembly page reachable', err.message);
+  }
+
+  try {
+    const geyserRes = await fetchUrl(`${WEB_URL}/services/geyser-service-repair`);
+    assert(geyserRes.status === 200, 'Dedicated Geyser Service & Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Geyser Service &...') && serviceSrc.includes('1.5 M bookings'), 'Geyser Service & Repair header and 1.5M bookings verified');
+    assert(serviceSrc.includes('Geyser check-up') && serviceSrc.includes('Geyser service') && serviceSrc.includes('Geyser installation'), 'Geyser services verified');
+  } catch (err) {
+    assert(false, 'Dedicated Geyser Service & Repair page reachable', err.message);
   }
 
   // --- Suite 3: Dedicated Role-Based Panels Routing ---

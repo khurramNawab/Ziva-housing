@@ -882,7 +882,9 @@ export default function UrbanCompanyModal({
         router.push('/services/washing-machine-repair');
       } else if (subSlug === 'air-cooler' || subSlug === 'air-cooler-repair' || subSlug === 'air-cooler-service') {
         router.push('/services/air-cooler-repair');
-      } else if (subSlug === 'geyser' || subSlug === 'geyser-repair' || subSlug === 'geyser-service-repair') {
+      } else if (subSlug === 'geyser-service-repair') {
+        router.push('/services/geyser-service-repair');
+      } else if (subSlug === 'geyser' || subSlug === 'geyser-repair') {
         router.push('/services/geyser-repair');
       } else if (subSlug === 'ro-water-purifier' || subSlug === 'water-purifier' || subSlug === 'native-water-purifier') {
         router.push('/services/water-purifier');
@@ -896,12 +898,12 @@ export default function UrbanCompanyModal({
         router.push('/services/plumber');
       } else if (subSlug === 'carpenter' || subSlug === 'carpenter-sub' || subSlug === 'carpentry') {
         router.push('/services/carpenter');
-      } else if (subSlug === 'fan-installation') {
-        router.push('/services/electrician?subCategory=fan');
+      } else if (subSlug === 'fan-installation' || subSlug === 'fan') {
+        router.push('/services/fan-installation');
       } else if (subSlug === 'furniture-assembly') {
-        router.push('/services/carpenter?subCategory=furniture-assembly');
-      } else if (subSlug === 'festival-lights-installation') {
-        router.push('/services/electrician?subCategory=light');
+        router.push('/services/furniture-assembly');
+      } else if (subSlug === 'festival-lights-installation' || subSlug === 'festival-lights') {
+        router.push('/services/festival-lights-installation');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }

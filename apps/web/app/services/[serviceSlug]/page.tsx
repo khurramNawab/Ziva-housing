@@ -5332,6 +5332,839 @@ const DEFAULT_CARPENTER_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_FAN_INSTALLATION_CATEGORY: ServiceCategory = {
+  id: 'cat-fan-installation',
+  name: 'Fan Installation',
+  slug: 'fan-installation',
+  icon: 'mode_fan',
+  badge: 'Instant in 25 mins',
+  order: 16,
+  subCategories: [
+    {
+      id: 'sub-fan-install-replace',
+      name: 'Installation/replacement',
+      slug: 'installation-replacement',
+      icon: 'mode_fan',
+      badge: 'From ₹135',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Installation & replacement of decorative ceiling fans, smart BLDC fans, exhaust fans, and regulators.',
+      services: [
+        {
+          id: 'srv-fan-decorative',
+          name: 'Decorative ceiling fan installation/replacement',
+          slug: 'decorative-ceiling-fan-installation-replacement',
+          basePrice: 449,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 323,
+          description: '• Assembly of multi-blade decorative fan with chandelier/underlight\n• Downrod fixing, hook mounting & speed testing\n• 2 options available',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-smart',
+          name: 'Smart fan installation/replacement',
+          slug: 'smart-fan-installation-replacement',
+          basePrice: 294,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 136,
+          description: '• BLDC smart fan mounting with remote pairing & Wi-Fi configuration\n• 2 options available',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-ceiling',
+          name: 'Ceiling fan installation/replacement',
+          slug: 'ceiling-fan-installation-replacement',
+          basePrice: 249,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 236,
+          description: '• Standard 3-blade or 4-blade ceiling fan installation & balancing\n• 2 options available',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-exhaust',
+          name: 'Exhaust fan installation/replacement',
+          slug: 'exhaust-fan-installation-replacement',
+          basePrice: 249,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 36,
+          description: '• Kitchen or bathroom exhaust fan wall duct / glass cut mounting\n• 2 options available',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-wall',
+          name: 'Wall fan installation/replacement',
+          slug: 'wall-fan-installation-replacement',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 56,
+          description: '• Wall anchor drilling, bracket mounting & oscillation test',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-regulator',
+          name: 'Fan regulator installation/replacement',
+          slug: 'fan-regulator-installation-replacement',
+          basePrice: 159,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 50,
+          description: '• Rotary or step regulator replacement on modular switchboard',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-pedestal',
+          name: 'Pedestal fan installation',
+          slug: 'pedestal-fan-installation',
+          basePrice: 135,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 16,
+          description: '• Unboxing, stand assembly, blade cage fitting and speed test',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-tower',
+          name: 'Tower fan installation',
+          slug: 'tower-fan-installation',
+          basePrice: 199,
+          durationMinutes: 15,
+          bestsellerFlag: false,
+          rating: 4.95,
+          reviewCount: 10,
+          description: '• Base plate assembly, cord setup & oscillation test',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-fan-repair',
+          name: 'Fan repair',
+          slug: 'fan-repair',
+          basePrice: 135,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 236,
+          description: '• Capacitor replacement, squeaking noise lubrication, speed check',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-fan-uninstallation',
+      name: 'Uninstallation',
+      slug: 'uninstallation',
+      icon: 'remove_circle_outline',
+      badge: '₹179',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Careful removal and packing of ceiling, wall or exhaust fans.',
+      services: [
+        {
+          id: 'srv-fan-uninstall',
+          name: 'Fan uninstallation',
+          slug: 'fan-uninstallation',
+          basePrice: 179,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 16,
+          description: '• Safe electrical disconnection, downrod de-mounting & blade dismantling',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_FESTIVAL_LIGHTS_CATEGORY: ServiceCategory = {
+  id: 'cat-festival-lights',
+  name: 'Festival Lights Installation',
+  slug: 'festival-lights-installation',
+  icon: 'festival',
+  badge: 'Instant in 25 mins',
+  order: 17,
+  subCategories: [
+    {
+      id: 'sub-lights-uninstall',
+      name: 'Light uninstallations',
+      slug: 'light-uninstallations',
+      icon: 'remove_circle_outline',
+      badge: 'From ₹149',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Careful dismantling of decorative and string lights with neat cord coil packing.',
+      services: [
+        {
+          id: 'srv-light-uninstall-per-light',
+          name: 'Light uninstallation (per light)',
+          slug: 'light-uninstallation-per-light',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 4000,
+          description: '• Removal of lights from height up to 10 ft\n• Safe packing in original boxes (if provided)',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-balcony',
+      name: 'Balcony lights',
+      slug: 'balcony-lights',
+      icon: 'balcony',
+      badge: 'From ₹349',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Balcony railing curtain lights, string fairy lights and outdoor ambient lighting.',
+      services: [
+        {
+          id: 'srv-balcony-heavy',
+          name: 'Balcony lights installation (heavy)',
+          slug: 'balcony-lights-installation-heavy',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 5000,
+          description: '• Heavy-duty curtain or cascaded LED fairy lights for balcony grill',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-balcony-string',
+          name: 'Balcony lights installation (string)',
+          slug: 'balcony-lights-installation-string',
+          basePrice: 349,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 3000,
+          description: '• Neat string light layout with zip ties on balcony boundary',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-railing',
+      name: 'Railing lights',
+      slug: 'railing-lights',
+      icon: 'fence',
+      badge: 'From ₹349',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'Terrace and staircase railing light installations with secure cable ties.',
+      services: [
+        {
+          id: 'srv-railing-heavy',
+          name: 'Railing lights installation (heavy)',
+          slug: 'railing-lights-installation-heavy',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 4000,
+          description: '• Heavy cascade and rope light styling on terrace railing',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-railing-string',
+          name: 'Railing lights installation (string)',
+          slug: 'railing-lights-installation-string',
+          basePrice: 349,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 3000,
+          description: '• Linear fairy string lights along handrail & spindles',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-railing-curtain',
+          name: 'Railing lights installation (curtain)',
+          slug: 'railing-lights-installation-curtain',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 3000,
+          description: '• Vertical waterfall curtain lights on boundary grill',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-room',
+      name: 'Room lights',
+      slug: 'room-lights',
+      icon: 'living',
+      badge: 'From ₹349',
+      groupHeader: 'Select a service',
+      displayOrder: 4,
+      description: 'Indoor mood lighting, curtain LED backdrop and wall fairy lights.',
+      services: [
+        {
+          id: 'srv-room-curtain',
+          name: 'Room light decoration (curtain)',
+          slug: 'room-light-decoration-curtain',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 4000,
+          description: '• Curtain backdrop fairy lighting for bedrooms & living rooms',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-room-string',
+          name: 'Room light decoration (string)',
+          slug: 'room-light-decoration-string',
+          basePrice: 349,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.87,
+          reviewCount: 3000,
+          description: '• Ceiling border or photo-wall fairy string lights',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-mandir',
+      name: 'Mandir lights',
+      slug: 'mandir-lights',
+      icon: 'temple_hindu',
+      badge: 'From ₹399',
+      groupHeader: 'Select a service',
+      displayOrder: 5,
+      description: 'Spiritual puja room & temple lighting with warm ambient glow.',
+      services: [
+        {
+          id: 'srv-mandir-decor',
+          name: 'Mandir light decoration',
+          slug: 'mandir-light-decoration',
+          basePrice: 399,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 4000,
+          description: '• Golden warm LED strip & miniature fairy bells for home mandir',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-outdoor',
+      name: 'Outdoor lights',
+      slug: 'outdoor-lights',
+      icon: 'yard',
+      badge: 'From ₹599',
+      groupHeader: 'Select a service',
+      displayOrder: 6,
+      description: 'Façade, entrance gate and boundary pillar festival lighting.',
+      services: [
+        {
+          id: 'srv-outdoor-decor',
+          name: 'Outdoor light decoration',
+          slug: 'outdoor-light-decoration',
+          basePrice: 599,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 3000,
+          description: '• Weatherproof outdoor canopy and exterior entrance gate lighting',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-garden',
+      name: 'Garden lights',
+      slug: 'garden-lights',
+      icon: 'park',
+      badge: 'From ₹699',
+      groupHeader: 'Select a service',
+      displayOrder: 7,
+      description: 'Tree trunk fairy wrapping, pathway spike lights and hedge decor.',
+      services: [
+        {
+          id: 'srv-garden-decor',
+          name: 'Garden light decoration',
+          slug: 'garden-light-decoration',
+          basePrice: 699,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 3000,
+          description: '• Tree wrapping, shrub fairy canopy and lawn decorative spots',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-xmas',
+      name: 'Xmas light decor',
+      slug: 'xmas-light-decor',
+      icon: 'celebration',
+      badge: 'From ₹499',
+      groupHeader: 'Select a service',
+      displayOrder: 8,
+      description: 'Christmas tree illumination and festive winter holiday decor.',
+      services: [
+        {
+          id: 'srv-xmas-decor',
+          name: 'Christmas light decoration',
+          slug: 'christmas-light-decoration',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 2000,
+          description: '• Christmas tree fairy lights, garland weaving and star toppers',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-lights-custom',
+      name: 'Custom services',
+      slug: 'custom-services',
+      icon: 'tune',
+      badge: 'Flexible',
+      groupHeader: 'Select a service',
+      displayOrder: 9,
+      description: 'Dedicated electrician by the hour, large custom setups and consultations.',
+      services: [
+        {
+          id: 'srv-lights-consult',
+          name: 'Electrician consultation',
+          slug: 'electrician-consultation',
+          basePrice: 149,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 1000,
+          description: '• Load inspection, extension board planning and decorative advice',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-lights-custom-large',
+          name: 'Custom light decoration (large)',
+          slug: 'custom-light-decoration-large',
+          basePrice: 999,
+          durationMinutes: 120,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 2000,
+          description: '• End-to-end full home festival decoration as per custom layout',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-lights-assistant',
+          name: 'Light assistant per hour',
+          slug: 'light-assistant-per-hour',
+          basePrice: 249,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 2000,
+          description: '• On-demand hourly electrician assistant for light hanging & wiring',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_FURNITURE_ASSEMBLY_CATEGORY: ServiceCategory = {
+  id: 'cat-furniture-assembly',
+  name: 'Furniture Assembly',
+  slug: 'furniture-assembly',
+  icon: 'chair',
+  badge: 'Instant in 25 mins',
+  order: 18,
+  subCategories: [
+    {
+      id: 'sub-furn-beds',
+      name: 'Beds',
+      slug: 'beds',
+      icon: 'bed',
+      badge: 'From ₹349',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Single, queen, king, hydraulic and bunk bed assembly.',
+      services: [
+        {
+          id: 'srv-bed-single',
+          name: 'Single bed assembly',
+          slug: 'single-bed-assembly',
+          basePrice: 349,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 24000,
+          description: '• Headboard, side rails, slats & footboard assembly with hardware tightening',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-bed-queen-king',
+          name: 'Double / Queen / King bed assembly',
+          slug: 'double-queen-king-bed-assembly',
+          basePrice: 499,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 45000,
+          description: '• Frame assembly, center support beam, headboard bolts & slat alignment',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-bed-hydraulic',
+          name: 'Bed with hydraulic storage assembly',
+          slug: 'bed-with-hydraulic-storage-assembly',
+          basePrice: 699,
+          durationMinutes: 120,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 18000,
+          description: '• Gas lift mechanism installation, bed frame assembly & storage platform test',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-bed-bunk',
+          name: 'Bunk bed assembly',
+          slug: 'bunk-bed-assembly',
+          basePrice: 799,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 9000,
+          description: '• Upper & lower bunk assembly, guardrail mounting, ladder installation & safety test',
+          imageUrl: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-wardrobes',
+      name: 'Wardrobes',
+      slug: 'wardrobes',
+      icon: 'door_sliding',
+      badge: 'From ₹599',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Hinged and sliding door wardrobe assembly with internal shelf leveling.',
+      services: [
+        {
+          id: 'srv-wardrobe-2door',
+          name: '2-door wardrobe assembly',
+          slug: '2-door-wardrobe-assembly',
+          basePrice: 599,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 32000,
+          description: '• Carcass frame assembly, back panel nailing, hinge alignment & door fixing',
+          imageUrl: 'https://images.unsplash.com/photo-1558997519-83ea9252def8?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wardrobe-3door',
+          name: '3-door wardrobe assembly',
+          slug: '3-door-wardrobe-assembly',
+          basePrice: 899,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 21000,
+          description: '• 3-door carcass build, internal drawer fittings, shelf pegs & door alignment',
+          imageUrl: 'https://images.unsplash.com/photo-1558997519-83ea9252def8?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-wardrobe-sliding',
+          name: 'Sliding door wardrobe assembly',
+          slug: 'sliding-door-wardrobe-assembly',
+          basePrice: 1199,
+          durationMinutes: 150,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 14000,
+          description: '• Top & bottom sliding track alignment, anti-jump roller fitting & door balancing',
+          imageUrl: 'https://images.unsplash.com/photo-1558997519-83ea9252def8?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-tables',
+      name: 'Tables & Desks',
+      slug: 'tables-desks',
+      icon: 'desk',
+      badge: 'From ₹199',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'Study desks, dining tables, work from home stations and center tables.',
+      services: [
+        {
+          id: 'srv-desk-office',
+          name: 'Study / Office desk assembly',
+          slug: 'study-office-desk-assembly',
+          basePrice: 299,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 52000,
+          description: '• Leg bracket fixing, modesty panel, cable tray & drawer unit alignment',
+          imageUrl: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-table-dining',
+          name: 'Dining table assembly (4-6 seater)',
+          slug: 'dining-table-assembly',
+          basePrice: 399,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 28000,
+          description: '• Tabletop leg frame mounting, crossbar tightening & level balancing',
+          imageUrl: 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-table-coffee',
+          name: 'Coffee / Center table assembly',
+          slug: 'coffee-center-table-assembly',
+          basePrice: 199,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 35000,
+          description: '• Quick frame & leg assembly with floor-protector feet',
+          imageUrl: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-chairs',
+      name: 'Chairs',
+      slug: 'chairs',
+      icon: 'chair_alt',
+      badge: 'From ₹199',
+      groupHeader: 'Select a service',
+      displayOrder: 4,
+      description: 'Ergonomic office chairs, gaming chairs, and dining chair sets.',
+      services: [
+        {
+          id: 'srv-chair-office',
+          name: 'Ergonomic / Office chair assembly',
+          slug: 'ergonomic-office-chair-assembly',
+          basePrice: 199,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 68000,
+          description: '• Wheel caster fitting, hydraulic gas cylinder, armrest & seat plate assembly',
+          imageUrl: 'https://images.unsplash.com/photo-1580481077194-c744747ebc7b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-chair-gaming',
+          name: 'Gaming chair assembly',
+          slug: 'gaming-chair-assembly',
+          basePrice: 249,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 19000,
+          description: '• High-back frame assembly, recline bracket, side plastic covers & lumbar pillow',
+          imageUrl: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-drawers',
+      name: 'Drawers & Cabinets',
+      slug: 'drawers-cabinets',
+      icon: 'inventory_2',
+      badge: 'From ₹449',
+      groupHeader: 'Select a service',
+      displayOrder: 5,
+      description: 'Chest of drawers, sideboards and kitchen storage cabinets.',
+      services: [
+        {
+          id: 'srv-drawers-chest',
+          name: 'Chest of drawers assembly',
+          slug: 'chest-of-drawers-assembly',
+          basePrice: 449,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 16000,
+          description: '• Outer carcass build, drawer slide runner mounting & handle fixing',
+          imageUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-cabinet-storage',
+          name: 'Kitchen / Storage cabinet assembly',
+          slug: 'kitchen-storage-cabinet-assembly',
+          basePrice: 499,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 22000,
+          description: '• Multi-shelf unit assembly, door hinge alignment & magnetic catch',
+          imageUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-shelves',
+      name: 'Shelves & Racks',
+      slug: 'shelves-racks',
+      icon: 'shelves',
+      badge: 'From ₹199',
+      groupHeader: 'Select a service',
+      displayOrder: 6,
+      description: 'Bookshelves, wall floating shelves and utility racks.',
+      services: [
+        {
+          id: 'srv-shelves-bookshelf',
+          name: 'Bookshelf / Display rack assembly',
+          slug: 'bookshelf-display-rack-assembly',
+          basePrice: 299,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 39000,
+          description: '• Multi-tier bookshelf assembly, backboard fixing & anti-tip wall anchor',
+          imageUrl: 'https://images.unsplash.com/photo-1594671581654-2785ac5ced4a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-shelves-wall',
+          name: 'Wall shelf mounting & assembly',
+          slug: 'wall-shelf-mounting-assembly',
+          basePrice: 199,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 42000,
+          description: '• Laser level bracket drilling & floating shelf mounting',
+          imageUrl: 'https://images.unsplash.com/photo-1594671581654-2785ac5ced4a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-tv',
+      name: 'TV units',
+      slug: 'tv-units',
+      icon: 'tv_gen',
+      badge: 'From ₹399',
+      groupHeader: 'Select a service',
+      displayOrder: 7,
+      description: 'Floor standing TV units and wall-hung media consoles.',
+      services: [
+        {
+          id: 'srv-tv-console',
+          name: 'TV console / unit assembly',
+          slug: 'tv-console-unit-assembly',
+          basePrice: 399,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.85,
+          reviewCount: 31000,
+          description: '• Floor media console assembly, wire grommets & shelf partitioning',
+          imageUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-tv-wall-unit',
+          name: 'Wall-mounted TV unit assembly',
+          slug: 'wall-mounted-tv-unit-assembly',
+          basePrice: 599,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 25000,
+          description: '• Heavy anchor wall drilling, bracket mounting & floating media unit leveling',
+          imageUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-furn-shoe',
+      name: 'Shoe racks',
+      slug: 'shoe-racks',
+      icon: 'dry_cleaning',
+      badge: 'From ₹249',
+      groupHeader: 'Select a service',
+      displayOrder: 8,
+      description: 'Shoe rack cabinets, tilt-out shoe organizers and entry benches.',
+      services: [
+        {
+          id: 'srv-shoe-rack',
+          name: 'Shoe rack assembly',
+          slug: 'shoe-rack-assembly',
+          basePrice: 249,
+          durationMinutes: 40,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 44000,
+          description: '• Tilt-out or hinged shoe cabinet build with tiered shelf pegs',
+          imageUrl: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -5394,13 +6227,16 @@ function UrbanCompanyServiceListingContent() {
     const isChimneyRepairSlug = ['chimney-repair', 'chimney'].includes(serviceSlug);
     const isRefrigeratorSlug = ['refrigerator', 'refrigerator-repair', 'fridge'].includes(serviceSlug);
     const isAirCoolerSlug = ['air-cooler', 'air-cooler-repair', 'cooler-repair'].includes(serviceSlug);
-    const isGeyserSlug = ['geyser', 'geyser-repair', 'water-heater'].includes(serviceSlug);
+    const isGeyserSlug = ['geyser', 'geyser-repair', 'water-heater', 'geyser-service-repair'].includes(serviceSlug);
     const isWaterPurifierSlug = ['water-purifier', 'ro-water-purifier', 'water-purifier-service', 'ro-repair'].includes(serviceSlug);
     const isLaptopRepairSlug = ['laptop', 'laptop-repair', 'computer-repair', 'desktop-repair'].includes(serviceSlug);
     const isStoveRepairSlug = ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(serviceSlug);
     const isPlumberSlug = ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(serviceSlug);
     const isElectricianSlug = ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(serviceSlug);
     const isCarpenterSlug = ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug);
+    const isFanInstallationSlug = ['fan-installation', 'fan', 'ceiling-fan'].includes(serviceSlug);
+    const isFestivalLightsSlug = ['festival-lights-installation', 'festival-lights', 'lights-installation'].includes(serviceSlug);
+    const isFurnitureAssemblySlug = ['furniture-assembly', 'furniture', 'assembly'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -5552,6 +6388,21 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_CARPENTER_CATEGORY.subCategories?.[0]?.slug || 'drill-hang');
           return;
         }
+        if (isFanInstallationSlug) {
+          setCategoryData(DEFAULT_FAN_INSTALLATION_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FAN_INSTALLATION_CATEGORY.subCategories?.[0]?.slug || 'installation-replacement');
+          return;
+        }
+        if (isFestivalLightsSlug) {
+          setCategoryData(DEFAULT_FESTIVAL_LIGHTS_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FESTIVAL_LIGHTS_CATEGORY.subCategories?.[0]?.slug || 'light-uninstallations');
+          return;
+        }
+        if (isFurnitureAssemblySlug) {
+          setCategoryData(DEFAULT_FURNITURE_ASSEMBLY_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FURNITURE_ASSEMBLY_CATEGORY.subCategories?.[0]?.slug || 'beds');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -5617,6 +6468,12 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_ELECTRICIAN_CATEGORY;
         } else if (isCarpenterSlug) {
           data = DEFAULT_CARPENTER_CATEGORY;
+        } else if (isFanInstallationSlug) {
+          data = DEFAULT_FAN_INSTALLATION_CATEGORY;
+        } else if (isFestivalLightsSlug) {
+          data = DEFAULT_FESTIVAL_LIGHTS_CATEGORY;
+        } else if (isFurnitureAssemblySlug) {
+          data = DEFAULT_FURNITURE_ASSEMBLY_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -5673,6 +6530,12 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_ELECTRICIAN_CATEGORY;
       } else if (isCarpenterSlug || data.slug === 'carpenter' || data.slug === 'carpentry' || data.name?.toLowerCase().includes('carpent')) {
         data = DEFAULT_CARPENTER_CATEGORY;
+      } else if (isFanInstallationSlug || data.slug === 'fan-installation' || data.slug === 'fan' || data.name?.toLowerCase().includes('fan')) {
+        data = DEFAULT_FAN_INSTALLATION_CATEGORY;
+      } else if (isFestivalLightsSlug || data.slug === 'festival-lights-installation' || data.slug === 'festival-lights' || data.name?.toLowerCase().includes('festival')) {
+        data = DEFAULT_FESTIVAL_LIGHTS_CATEGORY;
+      } else if (isFurnitureAssemblySlug || data.slug === 'furniture-assembly' || data.slug === 'furniture' || data.name?.toLowerCase().includes('furniture')) {
+        data = DEFAULT_FURNITURE_ASSEMBLY_CATEGORY;
       }
 
       setCategoryData(data);
@@ -5810,6 +6673,18 @@ function UrbanCompanyServiceListingContent() {
       } else if (isCarpenterSlug) {
         setCategoryData(DEFAULT_CARPENTER_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_CARPENTER_CATEGORY.subCategories?.[0]?.slug || 'drill-hang');
+        setError404(false);
+      } else if (isFanInstallationSlug) {
+        setCategoryData(DEFAULT_FAN_INSTALLATION_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FAN_INSTALLATION_CATEGORY.subCategories?.[0]?.slug || 'installation-replacement');
+        setError404(false);
+      } else if (isFestivalLightsSlug) {
+        setCategoryData(DEFAULT_FESTIVAL_LIGHTS_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FESTIVAL_LIGHTS_CATEGORY.subCategories?.[0]?.slug || 'light-uninstallations');
+        setError404(false);
+      } else if (isFurnitureAssemblySlug) {
+        setCategoryData(DEFAULT_FURNITURE_ASSEMBLY_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FURNITURE_ASSEMBLY_CATEGORY.subCategories?.[0]?.slug || 'beds');
         setError404(false);
       } else {
         setError404(true);
@@ -6048,8 +6923,8 @@ function UrbanCompanyServiceListingContent() {
 
   const isGeyserCategory = useMemo(() => {
     return (
-      ['geyser', 'geyser-repair', 'water-heater'].includes(serviceSlug) ||
-      ['geyser', 'geyser-repair', 'water-heater'].includes(categoryData?.slug || '') ||
+      ['geyser', 'geyser-repair', 'water-heater', 'geyser-service-repair'].includes(serviceSlug) ||
+      ['geyser', 'geyser-repair', 'water-heater', 'geyser-service-repair'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('geyser')
     );
   }, [serviceSlug, categoryData]);
@@ -6100,6 +6975,30 @@ function UrbanCompanyServiceListingContent() {
       ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug) ||
       ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('carpent')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isFanInstallationCategory = useMemo(() => {
+    return (
+      ['fan-installation', 'fan', 'ceiling-fan'].includes(serviceSlug) ||
+      ['fan-installation', 'fan', 'ceiling-fan'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('fan installation')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isFestivalLightsCategory = useMemo(() => {
+    return (
+      ['festival-lights-installation', 'festival-lights', 'lights-installation'].includes(serviceSlug) ||
+      ['festival-lights-installation', 'festival-lights', 'lights-installation'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('festival lights')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isFurnitureAssemblyCategory = useMemo(() => {
+    return (
+      ['furniture-assembly', 'furniture', 'assembly'].includes(serviceSlug) ||
+      ['furniture-assembly', 'furniture', 'assembly'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('furniture assembly')
     );
   }, [serviceSlug, categoryData]);
 
@@ -6277,13 +7176,25 @@ function UrbanCompanyServiceListingContent() {
       <Navbar />
 
       <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-8 py-6 md:py-8">
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-2 text-xs text-gray-500 mb-6">
-          <Link href="/" className="hover:text-[#5e23dc]">Home</Link>
-          <span>/</span>
-          <Link href="/services" className="hover:text-[#5e23dc]">Home Services</Link>
-          <span>/</span>
-          <span className="text-[#111827] font-semibold">{categoryData.name}</span>
+        {/* Breadcrumb Navigation & In-Service Quick Search */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <Link href="/" className="hover:text-[#5e23dc]">Home</Link>
+            <span>/</span>
+            <Link href="/services" className="hover:text-[#5e23dc]">Home Services</Link>
+            <span>/</span>
+            <span className="text-[#111827] font-semibold">{categoryData.name}</span>
+          </div>
+          <div className="relative sm:w-80">
+            <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3.5 py-2 shadow-2xs focus-within:border-[#5e23dc] focus-within:ring-2 focus-within:ring-[#5e23dc]/10 transition-all">
+              <span className="material-symbols-outlined text-gray-400 text-lg">search</span>
+              <input
+                type="text"
+                placeholder={`Search in ${categoryData.name}`}
+                className="w-full bg-transparent text-xs text-gray-800 placeholder:text-gray-400 focus:outline-none"
+              />
+            </div>
+          </div>
         </div>
 
         {/* 3-Column Urban Company Layout (Left Sticky Nav, Center Service Feed, Right Cart) */}
@@ -6923,6 +7834,134 @@ function UrbanCompanyServiceListingContent() {
                 >
                   View Services
                 </button>
+              </div>
+            )}
+
+            {isFanInstallationCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Fan Installation</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.84
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">926 bookings</span>
+                  </div>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-installation-replacement');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isFestivalLightsCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Festival Lights ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                </div>
+
+                {/* 3x3 Subcategory Icon Grid */}
+                <div className="grid grid-cols-3 gap-2 pt-1">
+                  {(categoryData?.subCategories || []).map((sub) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById(`subcat-section-${sub.slug}`);
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        setActiveSubCategorySlug(sub.slug);
+                      }}
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                        activeSubCategorySlug === sub.slug
+                          ? 'border-[#5e23dc] bg-purple-50/60 shadow-2xs'
+                          : 'border-gray-200 bg-white hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mb-1">
+                        <span className="material-symbols-outlined text-[#5e23dc] text-xl">
+                          {sub.icon || 'lightbulb'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold text-gray-800 line-clamp-2 leading-tight">
+                        {sub.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isFurnitureAssemblyCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Furniture Assembly</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.82
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.2M bookings</span>
+                  </div>
+                </div>
+
+                {/* Subcategory Icon Grid */}
+                <div className="grid grid-cols-3 gap-2 pt-1">
+                  {(categoryData?.subCategories || []).map((sub) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById(`subcat-section-${sub.slug}`);
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        setActiveSubCategorySlug(sub.slug);
+                      }}
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                        activeSubCategorySlug === sub.slug
+                          ? 'border-[#5e23dc] bg-purple-50/60 shadow-2xs'
+                          : 'border-gray-200 bg-white hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center mb-1">
+                        <span className="material-symbols-outlined text-[#5e23dc] text-xl">
+                          {sub.icon || 'chair'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-bold text-gray-800 line-clamp-2 leading-tight">
+                        {sub.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -7989,7 +9028,10 @@ function UrbanCompanyServiceListingContent() {
                     isStoveRepairCategory ||
                     isPlumberCategory ||
                     isElectricianCategory ||
-                    isCarpenterCategory
+                    isCarpenterCategory ||
+                    isFanInstallationCategory ||
+                    isFestivalLightsCategory ||
+                    isFurnitureAssemblyCategory
                   ) {
                     return true;
                   }
@@ -8470,8 +9512,8 @@ function UrbanCompanyServiceListingContent() {
 
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 space-y-4 sticky top-24">
-            {/* Air Cooler & Plumber Promo Strip */}
-            {(isAirCoolerCategory || isPlumberCategory) && (
+            {/* Air Cooler, Plumber & Festival Lights Promo Strip */}
+            {(isAirCoolerCategory || isPlumberCategory || isFestivalLightsCategory) && (
               <div className="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-2xs flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-base">percent</span>
@@ -8592,7 +9634,10 @@ function UrbanCompanyServiceListingContent() {
               isChimneyRepairCategory ||
               isPlumberCategory ||
               isElectricianCategory ||
-              isCarpenterCategory ? (
+              isCarpenterCategory ||
+              isFanInstallationCategory ||
+              isFestivalLightsCategory ||
+              isFurnitureAssemblyCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
