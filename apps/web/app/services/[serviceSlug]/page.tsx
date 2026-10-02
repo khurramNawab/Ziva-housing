@@ -4563,6 +4563,775 @@ const DEFAULT_STOVE_REPAIR_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_PLUMBER_CATEGORY: ServiceCategory = {
+  id: 'cat-plumber',
+  name: 'Plumber',
+  slug: 'plumber',
+  icon: '🪠',
+  badge: 'Instant in 25 mins',
+  order: 13,
+  subCategories: [
+    {
+      id: 'sub-plumb-tap-mixer',
+      name: 'Tap & mixer',
+      slug: 'tap-mixer',
+      icon: 'faucet',
+      badge: 'From ₹49',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Repair and replacement of leaky taps, spindles, wall mixers and basin cartridges.',
+      services: [
+        {
+          id: 'srv-plumb-tap-repair',
+          name: 'Tap repair',
+          slug: 'tap-repair',
+          basePrice: 49,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.75,
+          reviewCount: 840000,
+          description: '• Repair of leaky tap, spindle change & washer replacement\n• 30-day service warranty on repair work',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-tap-replace',
+          name: 'Tap replacement',
+          slug: 'tap-replacement',
+          basePrice: 89,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 320000,
+          description: '• Precision installation of pillar tap, bib tap, angle cock or two-way bib tap\n• Teflon tape sealing with leak test',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-mixer-repair',
+          name: 'Mixer repair',
+          slug: 'mixer-repair',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 210000,
+          description: '• Wall mixer or basin mixer cartridge overhaul\n• Dual hot & cold water flow alignment and seal fix',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-mixer-replace',
+          name: 'Mixer replacement',
+          slug: 'mixer-replacement',
+          basePrice: 299,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 180000,
+          description: '• Complete uninstallation of old mixer & mounting of new mixer unit\n• Gasket alignment and high pressure integrity test',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-plumb-toilet',
+      name: 'Toilet',
+      slug: 'toilet',
+      icon: 'wc',
+      badge: 'From ₹99',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Flush tank repair, jet spray installation, commode seat covers and complete toilet fittings.',
+      services: [
+        {
+          id: 'srv-plumb-flush-tank',
+          name: 'Flush tank repair',
+          slug: 'flush-tank-repair',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.74,
+          reviewCount: 190000,
+          description: '• Siphon repair, push button replacement, ball cock valve fix or water continuous overflow fix',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-jet-spray',
+          name: 'Jet spray repair/installation',
+          slug: 'jet-spray-repair-installation',
+          basePrice: 99,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 290000,
+          description: '• Replacement or new fitting of bidet spray / health faucet with flexible braided pipe',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-seat-cover',
+          name: 'Toilet seat cover replacement',
+          slug: 'toilet-seat-cover-replacement',
+          basePrice: 149,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 140000,
+          description: '• Mounting of soft-close or standard oval/square commode seat cover with stainless steel bolts',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-commode-install',
+          name: 'Toilet pot replacement/installation',
+          slug: 'toilet-pot-replacement-installation',
+          basePrice: 499,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 65000,
+          description: '• Western wall-hung or floor-mounted toilet pot uninstallation, flange alignment & grouting',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-plumb-basin-sink',
+      name: 'Basin & sink',
+      slug: 'basin-sink',
+      icon: 'wash',
+      badge: 'From ₹149',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'Wash basin installation, kitchen sink coupling, bottle trap replacement and drain pipe fixes.',
+      services: [
+        {
+          id: 'srv-plumb-basin-install',
+          name: 'Wash basin installation',
+          slug: 'wash-basin-installation',
+          basePrice: 299,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 95000,
+          description: '• Precision wall bracket drilling, ceramic basin level alignment and waste coupling fitting',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-sink-drainage',
+          name: 'Sink drainage repair',
+          slug: 'sink-drainage-repair',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.76,
+          reviewCount: 120000,
+          description: '• Waste pipe unclogging, seal leak fix and kitchen sink coupling re-alignment',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-plumb-bath-fittings',
+      name: 'Bath fittings',
+      slug: 'bath-fittings',
+      icon: 'shower',
+      badge: 'From ₹79',
+      groupHeader: 'Select a service',
+      displayOrder: 4,
+      description: 'Shower installation, towel rod, soap holder, clothes rack and bathroom accessories fitting.',
+      services: [
+        {
+          id: 'srv-plumb-shower-install',
+          name: 'Shower installation / repair',
+          slug: 'shower-installation-repair',
+          basePrice: 99,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 110000,
+          description: '• Overhead shower head, hand shower or shower arm replacement and wall drill mounting',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-towel-rod',
+          name: 'Towel rod / ring / holder installation',
+          slug: 'towel-rod-installation',
+          basePrice: 79,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 145000,
+          description: '• Wall drilling with anchors for towel rails, robe hooks, tumbler holders and soap trays',
+          imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-plumb-drain-leakage',
+      name: 'Drain & leakage',
+      slug: 'drain-leakage',
+      icon: 'water_damage',
+      badge: 'From ₹199',
+      groupHeader: 'Select a service',
+      displayOrder: 5,
+      description: 'Water pipe leakage fix, major drain unclogging and underground pipeline diagnostic.',
+      services: [
+        {
+          id: 'srv-plumb-pipe-leak',
+          name: 'Water pipe leakage repair',
+          slug: 'water-pipe-leakage-repair',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.75,
+          reviewCount: 240000,
+          description: '• CPVC, UPVC or GI pipe joint leak repair with solvent cement / compression coupler',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-drain-blockage',
+          name: 'Blockage removal (drain/sink)',
+          slug: 'blockage-removal-drain-sink',
+          basePrice: 249,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.72,
+          reviewCount: 160000,
+          description: '• Mechanical snake spring / chemical cleaning of floor traps, kitchen line and drain pipes',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-plumb-water-motor',
+      name: 'Water motor',
+      slug: 'water-motor',
+      icon: 'settings_input_component',
+      badge: 'From ₹199',
+      groupHeader: 'Select a service',
+      displayOrder: 6,
+      description: 'Submersible, monoblock and pressure booster pump diagnostics, repair and new installations.',
+      services: [
+        {
+          id: 'srv-plumb-motor-checkup',
+          name: 'Water motor check-up',
+          slug: 'water-motor-check-up',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.70,
+          reviewCount: 85000,
+          description: '• Comprehensive motor capacitor, winding continuity and priming valve diagnostic',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-plumb-motor-install',
+          name: 'Water motor installation',
+          slug: 'water-motor-installation',
+          basePrice: 499,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 52000,
+          description: '• Complete pipe plumbing connection, non-return valve fitting and electrical switch setup',
+          imageUrl: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_ELECTRICIAN_CATEGORY: ServiceCategory = {
+  id: 'cat-electrician',
+  name: 'Electrician',
+  slug: 'electrician',
+  icon: '⚡',
+  badge: 'Instant in 25 mins',
+  order: 14,
+  subCategories: [
+    {
+      id: 'sub-elec-switch-socket',
+      name: 'Switch & socket',
+      slug: 'switch-socket',
+      icon: 'power',
+      badge: 'From ₹49',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Fixing sparks, replacing modular switches, 6A/16A power sockets and switchboard wiring.',
+      services: [
+        {
+          id: 'srv-elec-switch-repair',
+          name: 'Switch/socket repair',
+          slug: 'switch-socket-repair',
+          basePrice: 49,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 750000,
+          description: '• Diagnosis & repair of sparking, loose wire or broken switch/socket\n• 30-day warranty on all electrical repairs',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-switch-replace',
+          name: 'Switch/socket replacement',
+          slug: 'switch-socket-replacement',
+          basePrice: 69,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 420000,
+          description: '• Replacement of modular switch, 3-pin socket or heavy appliance socket (AC/Geyser)',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-board-install',
+          name: 'Switchboard installation',
+          slug: 'switchboard-installation',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 190000,
+          description: '• Complete assembly, internal plate wiring and flush wall mounting of switchboard',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-elec-fan',
+      name: 'Fan',
+      slug: 'fan',
+      icon: 'mode_fan',
+      badge: 'From ₹99',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Ceiling fan repair, new fan installation, speed regulator replacement and exhaust fan fitting.',
+      services: [
+        {
+          id: 'srv-elec-fan-repair',
+          name: 'Ceiling fan repair',
+          slug: 'ceiling-fan-repair',
+          basePrice: 99,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.78,
+          reviewCount: 620000,
+          description: '• Capacitor replacement, noisy bearing lubrication or regulator wiring fix',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-fan-install',
+          name: 'Ceiling fan installation',
+          slug: 'ceiling-fan-installation',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.85,
+          reviewCount: 510000,
+          description: '• Downrod assembly, blade balancing, safety pin lock & ceiling hook mounting',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-exhaust-fan',
+          name: 'Exhaust fan installation',
+          slug: 'exhaust-fan-installation',
+          basePrice: 199,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 180000,
+          description: '• Kitchen or bathroom circular/square duct fitting & safe plug connection',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-elec-light',
+      name: 'Light',
+      slug: 'light',
+      icon: 'lightbulb',
+      badge: 'From ₹49',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'LED lights, downlights, wall sconces, cove light strips and chandelier installations.',
+      services: [
+        {
+          id: 'srv-elec-bulb-replace',
+          name: 'Bulb / tube light replacement',
+          slug: 'bulb-tubelight-replacement',
+          basePrice: 49,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 310000,
+          description: '• Holder repair, LED batten installation or bulb replacement at height up to 10ft',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-ceiling-light',
+          name: 'Ceiling light installation',
+          slug: 'ceiling-light-installation',
+          basePrice: 99,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.83,
+          reviewCount: 220000,
+          description: '• False ceiling spotlight, panel light or COB light drill mounting and wiring',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-chandelier',
+          name: 'Chandelier installation',
+          slug: 'chandelier-installation',
+          basePrice: 299,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 95000,
+          description: '• Heavy-duty anchor bracket fixing, multi-arm crystal light assembly and testing',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-elec-mcb-fuse',
+      name: 'MCB & fuse',
+      slug: 'mcb-fuse',
+      icon: 'electrical_services',
+      badge: 'From ₹149',
+      groupHeader: 'Select a service',
+      displayOrder: 4,
+      description: 'Diagnosis of sudden tripping, distribution box rewiring, single/double pole MCB and isolator.',
+      services: [
+        {
+          id: 'srv-elec-mcb-repair',
+          name: 'MCB repair & diagnosis',
+          slug: 'mcb-repair-diagnosis',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 160000,
+          description: '• Diagnostic check of frequent tripping, short circuits and main line phase balance',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-mcb-replace',
+          name: 'MCB replacement',
+          slug: 'mcb-replacement',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 130000,
+          description: '• Replacement of burnt single-pole, double-pole MCB or RCCB in distribution board',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-elec-inverter',
+      name: 'Inverter & stabilizer',
+      slug: 'inverter-stabilizer',
+      icon: 'battery_charging_full',
+      badge: 'From ₹199',
+      groupHeader: 'Select a service',
+      displayOrder: 5,
+      description: 'Inverter repair, battery water top-up, wiring bypass and new inverter installation.',
+      services: [
+        {
+          id: 'srv-elec-inverter-checkup',
+          name: 'Inverter check-up & fuse repair',
+          slug: 'inverter-check-up-fuse-repair',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.75,
+          reviewCount: 115000,
+          description: '• Battery terminal cleaning, voltage check, fuse replacement and charging check',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-elec-inverter-install',
+          name: 'Inverter installation',
+          slug: 'inverter-installation',
+          basePrice: 499,
+          durationMinutes: 90,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 70000,
+          description: '• Complete dual line wiring, changeover switch connection and battery trolley setup',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-elec-doorbell',
+      name: 'Doorbell',
+      slug: 'doorbell',
+      icon: 'notifications',
+      badge: 'From ₹99',
+      groupHeader: 'Select a service',
+      displayOrder: 6,
+      description: 'Ding-dong bell, wireless chime, sensor bell wiring and repair.',
+      services: [
+        {
+          id: 'srv-elec-bell-install',
+          name: 'Doorbell repair / installation',
+          slug: 'doorbell-repair-installation',
+          basePrice: 99,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.79,
+          reviewCount: 140000,
+          description: '• Wall drilling, chime wiring and bell push switch replacement / test',
+          imageUrl: '/services/electrician-service.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_CARPENTER_CATEGORY: ServiceCategory = {
+  id: 'cat-carpenter',
+  name: 'Carpenter',
+  slug: 'carpenter',
+  icon: '🪚',
+  badge: 'Instant in 25 mins',
+  order: 15,
+  subCategories: [
+    {
+      id: 'sub-carp-drill-hang',
+      name: 'Drill & hang',
+      slug: 'drill-hang',
+      icon: 'handyman',
+      badge: 'From ₹49',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Wall drilling for paintings, mirrors, floating shelves, clock and TV wall mounting.',
+      services: [
+        {
+          id: 'srv-carp-drill-hang',
+          name: 'Drill & hang (Wall art / mirror / clock)',
+          slug: 'drill-and-hang-wall-art-mirror',
+          basePrice: 49,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 580000,
+          description: '• Precision laser level drilling with heavy-duty anchors & screws\n• 30-day warranty on all woodwork & carpentry',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-carp-tv-mount',
+          name: 'TV wall mount installation',
+          slug: 'tv-wall-mount-installation',
+          basePrice: 249,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.85,
+          reviewCount: 320000,
+          description: '• Wall mounting of fixed, tilt or full-motion swivel bracket for TVs up to 65 inches',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-carp-door-window',
+      name: 'Door & window',
+      slug: 'door-window',
+      icon: 'door_front',
+      badge: 'From ₹79',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Fixing jammed doors, creaking hinges, door closers, magnetic stoppers and window latches.',
+      services: [
+        {
+          id: 'srv-carp-door-repair',
+          name: 'Door repair & alignment',
+          slug: 'door-repair-alignment',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.76,
+          reviewCount: 210000,
+          description: '• Bottom edge wood planing, hinge tightening & smooth floor clearance alignment',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-carp-door-stopper',
+          name: 'Door stopper / closer installation',
+          slug: 'door-stopper-closer-installation',
+          basePrice: 79,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.80,
+          reviewCount: 130000,
+          description: '• Hydraulic auto-closer or floor-mount magnetic stopper installation',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-carp-lock-handle',
+      name: 'Lock & handle',
+      slug: 'lock-handle',
+      icon: 'lock',
+      badge: 'From ₹99',
+      groupHeader: 'Select a service',
+      displayOrder: 3,
+      description: 'Main door mortise locks, cylindrical locks, door handles, latches and tower bolts.',
+      services: [
+        {
+          id: 'srv-carp-lock-replace',
+          name: 'Main door lock replacement',
+          slug: 'main-door-lock-replacement',
+          basePrice: 249,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 175000,
+          description: '• Chisel grooving, mortise or rim deadbolt installation with 3 keys tested',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-carp-handle-latch',
+          name: 'Handle & latch repair',
+          slug: 'handle-latch-repair',
+          basePrice: 99,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 120000,
+          description: '• Fixing loose handles, tightening latches or replacing broken tower bolts',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-carp-cupboard-drawer',
+      name: 'Cupboard & drawer',
+      slug: 'cupboard-drawer',
+      icon: 'kitchen',
+      badge: 'From ₹99',
+      groupHeader: 'Select a service',
+      displayOrder: 4,
+      description: 'Drawer channel repair, wardrobe soft-close hinges, cabinet handle and alignment.',
+      services: [
+        {
+          id: 'srv-carp-drawer-channel',
+          name: 'Drawer channel repair / replacement',
+          slug: 'drawer-channel-repair-replacement',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.75,
+          reviewCount: 160000,
+          description: '• Telescopic ball bearing or soft-close slide channel alignment & replacement',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-carp-furniture-assembly',
+      name: 'Furniture assembly',
+      slug: 'furniture-assembly',
+      icon: 'chair',
+      badge: 'From ₹249',
+      groupHeader: 'Select a service',
+      displayOrder: 5,
+      description: 'Bed, wardrobe, dining table, desk and modular flatpack assembly with power tools.',
+      services: [
+        {
+          id: 'srv-carp-bed-assembly',
+          name: 'Bed assembly',
+          slug: 'bed-assembly',
+          basePrice: 399,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 145000,
+          description: '• King/Queen size bed assembly with hydraulic or drawer storage alignment',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-carp-table-assembly',
+          name: 'Table / desk assembly',
+          slug: 'table-desk-assembly',
+          basePrice: 249,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 110000,
+          description: '• Study desk, dining table or coffee table assembly and structural wobble test',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-carp-curtain-blinds',
+      name: 'Curtain & blinds',
+      slug: 'curtain-blinds',
+      icon: 'blinds',
+      badge: 'From ₹99',
+      groupHeader: 'Select a service',
+      displayOrder: 6,
+      description: 'Curtain rod installation, bracket drilling and roller/vertical blinds mounting.',
+      services: [
+        {
+          id: 'srv-carp-curtain-rod',
+          name: 'Curtain rod installation',
+          slug: 'curtain-rod-installation',
+          basePrice: 99,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 280000,
+          description: '• Wall or ceiling bracket drilling for single or double curtain rods up to 10ft',
+          imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -4629,6 +5398,9 @@ function UrbanCompanyServiceListingContent() {
     const isWaterPurifierSlug = ['water-purifier', 'ro-water-purifier', 'water-purifier-service', 'ro-repair'].includes(serviceSlug);
     const isLaptopRepairSlug = ['laptop', 'laptop-repair', 'computer-repair', 'desktop-repair'].includes(serviceSlug);
     const isStoveRepairSlug = ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(serviceSlug);
+    const isPlumberSlug = ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(serviceSlug);
+    const isElectricianSlug = ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(serviceSlug);
+    const isCarpenterSlug = ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -4765,6 +5537,21 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_STOVE_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'service');
           return;
         }
+        if (isPlumberSlug) {
+          setCategoryData(DEFAULT_PLUMBER_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_PLUMBER_CATEGORY.subCategories?.[0]?.slug || 'tap-mixer');
+          return;
+        }
+        if (isElectricianSlug) {
+          setCategoryData(DEFAULT_ELECTRICIAN_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_ELECTRICIAN_CATEGORY.subCategories?.[0]?.slug || 'switch-socket');
+          return;
+        }
+        if (isCarpenterSlug) {
+          setCategoryData(DEFAULT_CARPENTER_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_CARPENTER_CATEGORY.subCategories?.[0]?.slug || 'drill-hang');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -4824,6 +5611,12 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_LAPTOP_REPAIR_CATEGORY;
         } else if (isStoveRepairSlug) {
           data = DEFAULT_STOVE_REPAIR_CATEGORY;
+        } else if (isPlumberSlug) {
+          data = DEFAULT_PLUMBER_CATEGORY;
+        } else if (isElectricianSlug) {
+          data = DEFAULT_ELECTRICIAN_CATEGORY;
+        } else if (isCarpenterSlug) {
+          data = DEFAULT_CARPENTER_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -4874,6 +5667,12 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_LAPTOP_REPAIR_CATEGORY;
       } else if (isStoveRepairSlug || data.slug === 'stove-service-repair' || data.slug === 'gas-stove' || data.name?.toLowerCase().includes('stove') || data.name?.toLowerCase().includes('hob')) {
         data = DEFAULT_STOVE_REPAIR_CATEGORY;
+      } else if (isPlumberSlug || data.slug === 'plumber' || data.slug === 'plumbing' || data.name?.toLowerCase().includes('plumb')) {
+        data = DEFAULT_PLUMBER_CATEGORY;
+      } else if (isElectricianSlug || data.slug === 'electrician' || data.name?.toLowerCase().includes('electr')) {
+        data = DEFAULT_ELECTRICIAN_CATEGORY;
+      } else if (isCarpenterSlug || data.slug === 'carpenter' || data.slug === 'carpentry' || data.name?.toLowerCase().includes('carpent')) {
+        data = DEFAULT_CARPENTER_CATEGORY;
       }
 
       setCategoryData(data);
@@ -4999,6 +5798,18 @@ function UrbanCompanyServiceListingContent() {
       } else if (isStoveRepairSlug) {
         setCategoryData(DEFAULT_STOVE_REPAIR_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_STOVE_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'service');
+        setError404(false);
+      } else if (isPlumberSlug) {
+        setCategoryData(DEFAULT_PLUMBER_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_PLUMBER_CATEGORY.subCategories?.[0]?.slug || 'tap-mixer');
+        setError404(false);
+      } else if (isElectricianSlug) {
+        setCategoryData(DEFAULT_ELECTRICIAN_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_ELECTRICIAN_CATEGORY.subCategories?.[0]?.slug || 'switch-socket');
+        setError404(false);
+      } else if (isCarpenterSlug) {
+        setCategoryData(DEFAULT_CARPENTER_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_CARPENTER_CATEGORY.subCategories?.[0]?.slug || 'drill-hang');
         setError404(false);
       } else {
         setError404(true);
@@ -5265,6 +6076,30 @@ function UrbanCompanyServiceListingContent() {
       ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('stove') ||
       categoryData?.name?.toLowerCase().includes('hob')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isPlumberCategory = useMemo(() => {
+    return (
+      ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(serviceSlug) ||
+      ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('plumb')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isElectricianCategory = useMemo(() => {
+    return (
+      ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(serviceSlug) ||
+      ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('electr')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isCarpenterCategory = useMemo(() => {
+    return (
+      ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug) ||
+      ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('carpent')
     );
   }, [serviceSlug, categoryData]);
 
@@ -5962,6 +6797,135 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isPlumberCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Plumber</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.79
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">3.8M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 30 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-tap-mixer');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isElectricianCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Electrician</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.82
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">3.2M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">30-day warranty on all repairs</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-switch-socket');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isCarpenterCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Carpenter</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.78
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.8M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">30-day warranty on woodwork</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-drill-hang');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
             {isBathroomCleaningCategory && (
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
@@ -6558,6 +7522,72 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {/* Dedicated Hero Banner for Plumber (Matching Screenshot 2) */}
+            {isPlumberCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-[#0f172a] group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1200&q=80"
+                    alt="Plumber - Affordable repairs starting at just ₹49"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <span className="inline-block bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                        Professional Doorstep Plumbing
+                      </span>
+                      <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+                        Affordable repairs starting at just ₹49
+                      </h2>
+                      <p className="text-xs sm:text-sm text-gray-200 font-medium">
+                        Tap, mixer, flush tank, drainage & pipe leakage expert fixes
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Electrician (Matching Screenshot 3) */}
+            {isElectricianCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-700 to-emerald-800 text-white p-5 sm:p-6 shadow-md border border-emerald-400/30 flex items-center justify-between gap-4">
+                <div className="space-y-2">
+                  <span className="bg-white/20 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
+                    Certified Electricians
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+                    30-day warranty on<br />all electrical repairs
+                  </h2>
+                  <p className="text-xs text-emerald-100 font-medium">
+                    Safe insulated tools, background-verified technicians & standard pricing
+                  </p>
+                </div>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/30 text-white shrink-0 shadow-lg">
+                  <span className="material-symbols-outlined text-3xl sm:text-4xl">bolt</span>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Carpenter (Matching Screenshot 4) */}
+            {isCarpenterCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-teal-700 via-cyan-800 to-teal-900 text-white p-5 sm:p-6 shadow-md border border-teal-400/30 flex items-center justify-between gap-4">
+                <div className="space-y-2">
+                  <span className="bg-white/20 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
+                    Master Woodcraft
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+                    30-day warranty on<br />all woodwork & carpentry
+                  </h2>
+                  <p className="text-xs text-teal-100 font-medium">
+                    Precision laser-drilling, furniture assembly, lock replacement & repairs
+                  </p>
+                </div>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/30 text-white shrink-0 shadow-lg">
+                  <span className="material-symbols-outlined text-3xl sm:text-4xl">handyman</span>
+                </div>
+              </div>
+            )}
+
             {/* Dedicated Hero Banner for Bathroom Cleaning (Matching Screenshot 2: Germ-free under rims) */}
             {isBathroomCleaningCategory && (
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
@@ -6956,7 +7986,10 @@ function UrbanCompanyServiceListingContent() {
                     isGeyserCategory ||
                     isWaterPurifierCategory ||
                     isLaptopRepairCategory ||
-                    isStoveRepairCategory
+                    isStoveRepairCategory ||
+                    isPlumberCategory ||
+                    isElectricianCategory ||
+                    isCarpenterCategory
                   ) {
                     return true;
                   }
@@ -7437,8 +8470,8 @@ function UrbanCompanyServiceListingContent() {
 
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 space-y-4 sticky top-24">
-            {/* Air Cooler Promo Strip (Screenshot 1) */}
-            {isAirCoolerCategory && (
+            {/* Air Cooler & Plumber Promo Strip */}
+            {(isAirCoolerCategory || isPlumberCategory) && (
               <div className="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-2xs flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-base">percent</span>
@@ -7556,7 +8589,10 @@ function UrbanCompanyServiceListingContent() {
               isStoveRepairCategory ||
               isTelevisionRepairCategory ||
               isRefrigeratorCategory ||
-              isChimneyRepairCategory ? (
+              isChimneyRepairCategory ||
+              isPlumberCategory ||
+              isElectricianCategory ||
+              isCarpenterCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">

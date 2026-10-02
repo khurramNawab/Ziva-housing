@@ -125,9 +125,18 @@ const SUBCATEGORY_PHOTO_MAP: Record<string, string> = {
   'television-sub': 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=300&h=300&q=80',
 
   // Electrician, Plumber & Carpenter
+  'electrician': 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=300&h=300&q=80',
   'electrician-sub': 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=300&h=300&q=80',
+  'plumber': 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=300&h=300&q=80',
   'plumber-sub': 'https://images.unsplash.com/photo-1505798577917-a65157d3320a?auto=format&fit=crop&w=300&h=300&q=80',
+  'carpenter': 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=300&h=300&q=80',
   'carpenter-sub': 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=300&h=300&q=80',
+  'fan-installation': 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&w=300&h=300&q=80',
+  'furniture-assembly': 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=300&h=300&q=80',
+  'geyser-service-repair': '/services/geyser.jpg',
+  'festival-lights-installation': 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=300&h=300&q=80',
+  'microwave': 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=300&h=300&q=80',
+  'microwave-repair': 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?auto=format&fit=crop&w=300&h=300&q=80',
 
   // Painting & Waterproofing
   'wall-painting-sub': 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=300&h=300&q=80',
@@ -495,6 +504,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-ac-8', name: 'Air Cooler', slug: 'air-cooler', icon: '❄️', badge: null, groupHeader: 'Other Appliances', displayOrder: 11 },
     { id: 'sub-ac-9', name: 'Laptop Repair', slug: 'laptop-repair', icon: '💻', badge: null, groupHeader: 'Other Appliances', displayOrder: 12 },
     { id: 'sub-ac-10', name: 'Stove/Hob', slug: 'stove-service-repair', icon: '🔥', badge: null, groupHeader: 'Other Appliances', displayOrder: 13 },
+    { id: 'sub-ac-11', name: 'Microwave', slug: 'microwave-repair', icon: '📻', badge: '60 mins', groupHeader: 'Other Appliances', displayOrder: 14 },
   ],
   'ac': [
     { id: 'sub-ac-annual', name: 'Annual plan', slug: 'annual-plan', icon: 'calendar_month', badge: '30% OFF', groupHeader: 'Air Conditioner', displayOrder: 1 },
@@ -509,11 +519,13 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-ac-install', name: 'Installation/uninstallation', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
   ],
   'electrician-plumber-carpenter': [
-    { id: 'sub-e-1', name: 'Electrician', slug: 'electrician-sub', icon: '⚡', badge: '19 mins', groupHeader: null, displayOrder: 1 },
-    { id: 'sub-e-2', name: 'Plumber', slug: 'plumber-sub', icon: '🔧', badge: '19 mins', groupHeader: null, displayOrder: 2 },
-    { id: 'sub-e-3', name: 'Carpenter', slug: 'carpenter-sub', icon: '🪚', badge: '19 mins', groupHeader: null, displayOrder: 3 },
-    { id: 'sub-e-4', name: 'Fan Installation', slug: 'fan-installation', icon: '🌀', badge: null, groupHeader: null, displayOrder: 4 },
-    { id: 'sub-e-5', name: 'Furniture Assembly', slug: 'furniture-assembly', icon: '🪑', badge: null, groupHeader: null, displayOrder: 5 },
+    { id: 'sub-epc-elec', name: 'Electrician', slug: 'electrician', icon: '⚡', badge: '25 mins', groupHeader: 'Home repairs', displayOrder: 1 },
+    { id: 'sub-epc-plumb', name: 'Plumber', slug: 'plumber', icon: '🪠', badge: null, groupHeader: 'Home repairs', displayOrder: 2 },
+    { id: 'sub-epc-carp', name: 'Carpenter', slug: 'carpenter', icon: '🪚', badge: null, groupHeader: 'Home repairs', displayOrder: 3 },
+    { id: 'sub-epc-fan', name: 'Fan Installation', slug: 'fan-installation', icon: '🌀', badge: '25 mins', groupHeader: 'Home installation', displayOrder: 4 },
+    { id: 'sub-epc-furn', name: 'Furniture Assembly', slug: 'furniture-assembly', icon: '🪑', badge: null, groupHeader: 'Home installation', displayOrder: 5 },
+    { id: 'sub-epc-geyser', name: 'Geyser Service & Repair', slug: 'geyser-service-repair', icon: '♨️', badge: '25 mins', groupHeader: 'Home installation', displayOrder: 6 },
+    { id: 'sub-epc-lights', name: 'Festival Lights Installation', slug: 'festival-lights-installation', icon: '💡', badge: '25 mins', groupHeader: 'Home installation', displayOrder: 7 },
   ],
   'painting-waterproofing': [
     {
@@ -878,6 +890,18 @@ export default function UrbanCompanyModal({
         router.push('/services/laptop-repair');
       } else if (subSlug === 'stove-service-repair' || subSlug === 'gas-stove' || subSlug === 'stove' || subSlug === 'hob') {
         router.push('/services/stove-service-repair');
+      } else if (subSlug === 'electrician' || subSlug === 'electrician-sub') {
+        router.push('/services/electrician');
+      } else if (subSlug === 'plumber' || subSlug === 'plumber-sub' || subSlug === 'plumbing') {
+        router.push('/services/plumber');
+      } else if (subSlug === 'carpenter' || subSlug === 'carpenter-sub' || subSlug === 'carpentry') {
+        router.push('/services/carpenter');
+      } else if (subSlug === 'fan-installation') {
+        router.push('/services/electrician?subCategory=fan');
+      } else if (subSlug === 'furniture-assembly') {
+        router.push('/services/carpenter?subCategory=furniture-assembly');
+      } else if (subSlug === 'festival-lights-installation') {
+        router.push('/services/electrician?subCategory=light');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }

@@ -398,8 +398,52 @@ async function runTestSuite() {
     assert(modalSrc.includes('Select your scope') && modalSrc.includes('Full home painting') && modalSrc.includes('Few walls & rooms'), 'Modal Painting & Waterproofing Scope Selection verified');
     assert(modalSrc.includes('/services/television-repair') && modalSrc.includes('/services/chimney-repair') && modalSrc.includes('/services/refrigerator'), 'Modal appliance subcategory routes verified');
     assert(modalSrc.includes('/services/air-cooler-repair') && modalSrc.includes('/services/geyser-repair') && modalSrc.includes('/services/laptop-repair') && modalSrc.includes('/services/stove-service-repair'), 'Modal new appliance subcategory routes verified');
+    assert(modalSrc.includes("groupHeader: 'Home repairs'") && modalSrc.includes("groupHeader: 'Home installation'"), 'EPC Modal Home repairs and Home installation sections verified');
+    assert(modalSrc.includes('Fan Installation') && modalSrc.includes('Festival Lights Installation') && modalSrc.includes('Furniture Assembly'), 'EPC Modal installation services verified');
+    assert(modalSrc.includes('Microwave') && modalSrc.includes('60 mins'), 'Appliance Modal Microwave with 60 mins badge verified');
+    assert(modalSrc.includes('/services/electrician') && modalSrc.includes('/services/plumber') && modalSrc.includes('/services/carpenter'), 'EPC Modal routing links verified');
   } catch (err) {
     assert(false, 'Modal component source check reachable', err.message);
+  }
+
+  try {
+    const plumberRes = await fetchUrl(`${WEB_URL}/services/plumber`);
+    assert(plumberRes.status === 200, 'Dedicated Plumber Page loads (HTTP 200)');
+    const plumbingRes = await fetchUrl(`${WEB_URL}/services/plumbing`);
+    assert(plumbingRes.status === 200, 'Dedicated Plumbing alias Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('4.79') && serviceSrc.includes('3.8M bookings') && serviceSrc.includes('Up to 30 days warranty'), 'Plumber rating, bookings and warranty verified');
+    assert(serviceSrc.includes('Affordable repairs starting at just ₹49'), 'Plumber affordable repairs hero verified');
+    assert(serviceSrc.includes('Tap & mixer') && serviceSrc.includes('Toilet') && serviceSrc.includes('Basin & sink'), 'Plumber subcategories verified');
+    assert(serviceSrc.includes('Tap repair') && serviceSrc.includes('Mixer repair') && serviceSrc.includes('Flush tank repair'), 'Plumber repair services verified');
+  } catch (err) {
+    assert(false, 'Dedicated Plumber page reachable', err.message);
+  }
+
+  try {
+    const elecRes = await fetchUrl(`${WEB_URL}/services/electrician`);
+    assert(elecRes.status === 200, 'Dedicated Electrician Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('4.82') && serviceSrc.includes('3.2M bookings') && serviceSrc.includes('30-day warranty on all repairs'), 'Electrician rating, bookings and warranty verified');
+    assert(serviceSrc.includes('30-day warranty on all electrical repairs'), 'Electrician hero banner verified');
+    assert(serviceSrc.includes('Switch & socket') && serviceSrc.includes('MCB & fuse') && serviceSrc.includes('Inverter & stabilizer'), 'Electrician subcategories verified');
+    assert(serviceSrc.includes('Switch/socket repair') && serviceSrc.includes('Ceiling fan repair') && serviceSrc.includes('Switchboard installation'), 'Electrician services verified');
+  } catch (err) {
+    assert(false, 'Dedicated Electrician page reachable', err.message);
+  }
+
+  try {
+    const carpRes = await fetchUrl(`${WEB_URL}/services/carpenter`);
+    assert(carpRes.status === 200, 'Dedicated Carpenter Page loads (HTTP 200)');
+    const carpentryRes = await fetchUrl(`${WEB_URL}/services/carpentry`);
+    assert(carpentryRes.status === 200, 'Dedicated Carpentry alias Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('4.78') && serviceSrc.includes('1.8M bookings') && serviceSrc.includes('30-day warranty on woodwork'), 'Carpenter rating, bookings and warranty verified');
+    assert(serviceSrc.includes('30-day warranty on all woodwork & carpentry'), 'Carpenter hero banner verified');
+    assert(serviceSrc.includes('Drill & hang') && serviceSrc.includes('Door & window') && serviceSrc.includes('Lock & handle'), 'Carpenter subcategories verified');
+    assert(serviceSrc.includes('Drill & hang (Wall art / mirror / clock)') && serviceSrc.includes('Main door lock replacement'), 'Carpenter services verified');
+  } catch (err) {
+    assert(false, 'Dedicated Carpenter page reachable', err.message);
   }
 
   // --- Suite 3: Dedicated Role-Based Panels Routing ---
