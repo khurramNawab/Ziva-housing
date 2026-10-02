@@ -531,6 +531,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-epc-lights', name: 'Festival Lights Installation', slug: 'festival-lights-installation', icon: '💡', badge: '25 mins', groupHeader: 'Home installation', displayOrder: 7 },
     { id: 'sub-epc-locks', name: 'Native Smart Locks', slug: 'native-smart-locks', icon: '🔐', badge: 'Sale', groupHeader: 'Home installation', displayOrder: 8 },
   ],
+  // Select your scope: Painting & Waterproofing unified into standard 4-column grid matching all other sections
   'painting-waterproofing': [
     {
       id: 'sub-p-full-home',
@@ -538,7 +539,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       slug: 'full-home-painting',
       icon: '🏠',
       badge: '1/2/3/4 BHK',
-      groupHeader: 'Select your scope',
+      groupHeader: null,
       displayOrder: 1,
     },
     {
@@ -547,8 +548,17 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
       slug: 'walls-rooms-painting',
       icon: '🎨',
       badge: '1/2/3 rooms',
-      groupHeader: 'Select your scope',
+      groupHeader: null,
       displayOrder: 2,
+    },
+    {
+      id: 'sub-p-waterproofing',
+      name: 'Wall Painting & Waterproofing',
+      slug: 'wall-painting-sub',
+      icon: '🖌️',
+      badge: null,
+      groupHeader: null,
+      displayOrder: 3,
     },
   ],
   'instahelp': [
