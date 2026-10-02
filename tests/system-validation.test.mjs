@@ -331,6 +331,60 @@ async function runTestSuite() {
   }
 
   try {
+    const coolerRes = await fetchUrl(`${WEB_URL}/services/air-cooler-repair`);
+    assert(coolerRes.status === 200, 'Dedicated Air Cooler Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Air Cooler Service &...') && serviceSrc.includes('215K bookings'), 'Air Cooler Service header and 215K bookings verified');
+    assert(serviceSrc.includes('Air cooler check-up') && serviceSrc.includes('Air cooler service'), 'Air Cooler check-up and service verified');
+    assert(serviceSrc.includes('Get visitation fee off'), 'Air Cooler visitation fee discount verified');
+  } catch (err) {
+    assert(false, 'Dedicated Air Cooler Repair page reachable', err.message);
+  }
+
+  try {
+    const geyserRes = await fetchUrl(`${WEB_URL}/services/geyser-repair`);
+    assert(geyserRes.status === 200, 'Dedicated Geyser Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Geyser Service &...') && serviceSrc.includes('1.5 M bookings'), 'Geyser Service header and 1.5M bookings verified');
+    assert(serviceSrc.includes('Geyser check-up') && serviceSrc.includes('Geyser installation') && serviceSrc.includes('Geyser uninstallation'), 'Geyser check-up, installation and uninstallation verified');
+  } catch (err) {
+    assert(false, 'Dedicated Geyser Repair page reachable', err.message);
+  }
+
+  try {
+    const roRes = await fetchUrl(`${WEB_URL}/services/water-purifier`);
+    assert(roRes.status === 200, 'Dedicated Water Purifier Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Water Purifier Service &...') && serviceSrc.includes('1.1M reviews'), 'Water Purifier header and 1.1M reviews verified');
+    assert(serviceSrc.includes("India's longest") && serviceSrc.includes('1 year warranty'), 'Water Purifier 1 year warranty showcase verified');
+    assert(serviceSrc.includes('Most Advanced Filter Kit') && serviceSrc.includes('RO Membrane'), 'Water Purifier filter kit showcase verified');
+  } catch (err) {
+    assert(false, 'Dedicated Water Purifier page reachable', err.message);
+  }
+
+  try {
+    const lapRes = await fetchUrl(`${WEB_URL}/services/laptop-repair`);
+    assert(lapRes.status === 200, 'Dedicated Laptop Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Laptop Repair') && serviceSrc.includes('472K bookings'), 'Laptop Repair header and 472K bookings verified');
+    assert(serviceSrc.includes('For smoother, faster performance') && serviceSrc.includes('Laptop/Desktop service'), 'Laptop Repair performance banner and service verified');
+    assert(serviceSrc.includes('Component Installation') && serviceSrc.includes('Laptop check-up'), 'Laptop Repair components & check-up verified');
+  } catch (err) {
+    assert(false, 'Dedicated Laptop Repair page reachable', err.message);
+  }
+
+  try {
+    const stoveRes = await fetchUrl(`${WEB_URL}/services/stove-service-repair`);
+    assert(stoveRes.status === 200, 'Dedicated Stove Service & Repair Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Stove Service &...') && serviceSrc.includes('456K bookings'), 'Stove Service header and 456K bookings verified');
+    assert(serviceSrc.includes('Gas stove steam service') && serviceSrc.includes('Hob steam service'), 'Gas stove & hob steam service verified');
+    assert(serviceSrc.includes('Gas stove check-up') && serviceSrc.includes('Hob check-up'), 'Gas stove & hob check-up verified');
+  } catch (err) {
+    assert(false, 'Dedicated Stove Service & Repair page reachable', err.message);
+  }
+
+  try {
     const modalSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/components/UrbanCompanyModal.tsx'), 'utf8');
     assert(modalSrc.includes('Derma Facials') && modalSrc.includes('Cryofacial Cold Therapy'), 'Modal Derma Facials Cryofacial Cold Therapy banner verified');
     assert(modalSrc.includes('CASMARA') && modalSrc.includes('CIREPIL') && modalSrc.includes('799'), 'Modal Luxe tier with CASMARA & CIREPIL verified');
@@ -343,6 +397,7 @@ async function runTestSuite() {
     assert(modalSrc.includes('55 mins') && modalSrc.includes('74 mins'), 'Modal 55 mins and 74 mins duration badges verified');
     assert(modalSrc.includes('Select your scope') && modalSrc.includes('Full home painting') && modalSrc.includes('Few walls & rooms'), 'Modal Painting & Waterproofing Scope Selection verified');
     assert(modalSrc.includes('/services/television-repair') && modalSrc.includes('/services/chimney-repair') && modalSrc.includes('/services/refrigerator'), 'Modal appliance subcategory routes verified');
+    assert(modalSrc.includes('/services/air-cooler-repair') && modalSrc.includes('/services/geyser-repair') && modalSrc.includes('/services/laptop-repair') && modalSrc.includes('/services/stove-service-repair'), 'Modal new appliance subcategory routes verified');
   } catch (err) {
     assert(false, 'Modal component source check reachable', err.message);
   }

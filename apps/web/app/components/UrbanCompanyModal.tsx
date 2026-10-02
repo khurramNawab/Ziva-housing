@@ -492,6 +492,9 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-ac-5', name: 'RO/Water Purifier', slug: 'ro-water-purifier', icon: '💧', badge: null, groupHeader: 'Other Appliances', displayOrder: 8 },
     { id: 'sub-ac-6', name: 'Geyser', slug: 'geyser', icon: '♨️', badge: null, groupHeader: 'Other Appliances', displayOrder: 9 },
     { id: 'sub-ac-7', name: 'Television', slug: 'television', icon: '📺', badge: null, groupHeader: 'Other Appliances', displayOrder: 10 },
+    { id: 'sub-ac-8', name: 'Air Cooler', slug: 'air-cooler', icon: '❄️', badge: null, groupHeader: 'Other Appliances', displayOrder: 11 },
+    { id: 'sub-ac-9', name: 'Laptop Repair', slug: 'laptop-repair', icon: '💻', badge: null, groupHeader: 'Other Appliances', displayOrder: 12 },
+    { id: 'sub-ac-10', name: 'Stove/Hob', slug: 'stove-service-repair', icon: '🔥', badge: null, groupHeader: 'Other Appliances', displayOrder: 13 },
   ],
   'ac': [
     { id: 'sub-ac-annual', name: 'Annual plan', slug: 'annual-plan', icon: 'calendar_month', badge: '30% OFF', groupHeader: 'Air Conditioner', displayOrder: 1 },
@@ -865,6 +868,16 @@ export default function UrbanCompanyModal({
         router.push('/services/refrigerator');
       } else if (subSlug === 'washing-machine' || subSlug === 'washing-machine-repair') {
         router.push('/services/washing-machine-repair');
+      } else if (subSlug === 'air-cooler' || subSlug === 'air-cooler-repair' || subSlug === 'air-cooler-service') {
+        router.push('/services/air-cooler-repair');
+      } else if (subSlug === 'geyser' || subSlug === 'geyser-repair' || subSlug === 'geyser-service-repair') {
+        router.push('/services/geyser-repair');
+      } else if (subSlug === 'ro-water-purifier' || subSlug === 'water-purifier' || subSlug === 'native-water-purifier') {
+        router.push('/services/water-purifier');
+      } else if (subSlug === 'laptop-repair' || subSlug === 'laptop') {
+        router.push('/services/laptop-repair');
+      } else if (subSlug === 'stove-service-repair' || subSlug === 'gas-stove' || subSlug === 'stove' || subSlug === 'hob') {
+        router.push('/services/stove-service-repair');
       } else {
         router.push(`/services/${catSlug}?subCategory=${subSlug}`);
       }

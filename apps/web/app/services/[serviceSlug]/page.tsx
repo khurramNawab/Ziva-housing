@@ -4203,6 +4203,366 @@ const DEFAULT_REFRIGERATOR_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_AIR_COOLER_CATEGORY: ServiceCategory = {
+  id: 'cat-air-cooler-repair',
+  name: 'Air Cooler Service & Repair',
+  slug: 'air-cooler-repair',
+  icon: '❄️',
+  badge: 'Instant in 25 mins',
+  order: 8,
+  subCategories: [
+    {
+      id: 'sub-acool-repair-service',
+      name: 'Repair & service',
+      slug: 'repair-service',
+      icon: 'build',
+      badge: 'From ₹249',
+      groupHeader: 'Repair & service',
+      displayOrder: 1,
+      description: 'Motor, pump descaling, water leakage, fan noise & cooling pad maintenance.',
+      services: [
+        {
+          id: 'srv-acool-checkup',
+          name: 'Air cooler check-up',
+          slug: 'air-cooler-check-up',
+          basePrice: 249,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.61,
+          reviewCount: 74000,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• Complete 15-point inspection of motor, pump, blades and water tray',
+          imageUrl: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-acool-service',
+          name: 'Air cooler service',
+          slug: 'air-cooler-service-main',
+          basePrice: 599,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.70,
+          reviewCount: 20000,
+          description: '• Descaling of pump & base. Side pad replacement will cost extra.\n• High-pressure deep washing of tank, cooling honeycombs & body',
+          imageUrl: 'https://images.unsplash.com/photo-1585338107529-13afc5f02586?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_GEYSER_CATEGORY: ServiceCategory = {
+  id: 'cat-geyser-repair',
+  name: 'Geyser Service & Repair',
+  slug: 'geyser-repair',
+  icon: '♨️',
+  badge: 'Instant in 25 mins',
+  order: 9,
+  subCategories: [
+    {
+      id: 'sub-geyser-repair-service',
+      name: 'Repair & service',
+      slug: 'repair-service',
+      icon: 'build',
+      badge: 'From ₹249',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Heating element, thermostat, pressure valve and tank descaling solutions.',
+      services: [
+        {
+          id: 'srv-geyser-checkup',
+          name: 'Geyser check-up',
+          slug: 'geyser-check-up',
+          basePrice: 249,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.72,
+          reviewCount: 152000,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• Diagnostic check of electrical coil, safety valve & thermostat',
+          imageUrl: '/services/geyser.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-geyser-service',
+          name: 'Geyser service',
+          slug: 'geyser-service-main',
+          basePrice: 599,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.76,
+          reviewCount: 105000,
+          description: '• Exterior & interior cleaning with descaling of the geyser\n• We do not service gas geysers\n• Mineral scale removal restores 30% faster water heating',
+          imageUrl: '/services/geyser.jpg',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-geyser-install-uninstall',
+      name: 'Installation & uninstallation',
+      slug: 'installation-uninstallation',
+      icon: 'home_repair_service',
+      badge: 'Precision',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Heavy duty wall bracket installation, inlet/outlet braided pipe connections & testing.',
+      services: [
+        {
+          id: 'srv-geyser-install',
+          name: 'Geyser installation',
+          slug: 'geyser-installation',
+          basePrice: 499,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.78,
+          reviewCount: 64000,
+          description: '• The geyser will be installed with care\n• Safety load check and leak test before handover',
+          imageUrl: '/services/geyser.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-geyser-uninstall',
+          name: 'Geyser uninstallation',
+          slug: 'geyser-uninstallation',
+          basePrice: 399,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 16000,
+          description: '• Safe detachment, water drain out and wall decoupling\n• Safely boxed for transport',
+          imageUrl: '/services/geyser.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_WATER_PURIFIER_CATEGORY: ServiceCategory = {
+  id: 'cat-water-purifier',
+  name: 'Water Purifier Service & Installation',
+  slug: 'water-purifier',
+  icon: '💧',
+  badge: 'In 44 mins',
+  order: 10,
+  subCategories: [
+    {
+      id: 'sub-wp-checkup-repair',
+      name: 'Service & Repair',
+      slug: 'service-repair',
+      icon: 'water_drop',
+      badge: '1 Year Warranty',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: "India's longest 1 year warranty with 100% genuine RO membranes & filtration kit.",
+      services: [
+        {
+          id: 'srv-wp-checkup',
+          name: 'Water purifier check-up',
+          slug: 'water-purifier-check-up',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 1100000,
+          description: '• Complete 12-point health checkup & TDS water quality testing\n• Visitation fee adjusted in repair bill',
+          imageUrl: '/services/ro-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-wp-native-service',
+          name: 'Native water purifier service',
+          slug: 'native-water-purifier-service',
+          basePrice: 699,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.84,
+          reviewCount: 340000,
+          description: '• Full machine chemical tank sanitize & pipe flushing\n• Includes external pre-filter clean & TDS optimization',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-wp-repair-spare-parts',
+          name: 'Repair with spare parts',
+          slug: 'repair-with-spare-parts',
+          basePrice: 1499,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.82,
+          reviewCount: 520000,
+          description: "• Comprehensive membrane + multi-stage filter replacement\n• Backed by India's longest 1 Year unconditional warranty",
+          imageUrl: '/services/ro-water-purifier.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_LAPTOP_REPAIR_CATEGORY: ServiceCategory = {
+  id: 'cat-laptop-repair',
+  name: 'Laptop Repair',
+  slug: 'laptop-repair',
+  icon: '💻',
+  badge: 'Instant in 44 mins',
+  order: 11,
+  subCategories: [
+    {
+      id: 'sub-laptop-services',
+      name: 'Select a service',
+      slug: 'select-service',
+      icon: 'laptop_mac',
+      badge: 'Popular',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'Doorstep desktop and laptop hardware, thermal paste, component upgrade & diagnostics.',
+      services: [
+        {
+          id: 'srv-lap-service',
+          name: 'Laptop/Desktop service',
+          slug: 'laptop-desktop-service',
+          basePrice: 599,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.81,
+          reviewCount: 24000,
+          description: '• Internal cleaning of fans, vents & components\n• Enhances speed, cooling & battery efficiency\n• High-grade thermal paste application',
+          imageUrl: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lap-upgrade',
+          name: 'System upgrade consultation',
+          slug: 'system-upgrade-consultation',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.81,
+          reviewCount: 5000,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• RAM, NVMe SSD & battery compatibility inspection',
+          imageUrl: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lap-component-install',
+          name: 'Component Installation',
+          slug: 'component-installation',
+          basePrice: 600,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 946,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• Precision installation of screen, keyboard, GPU or SSD',
+          imageUrl: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-lap-checkup',
+          name: 'Laptop check-up',
+          slug: 'laptop-check-up',
+          basePrice: 199,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.79,
+          reviewCount: 56000,
+          description: '• Complete Check-up at home to identify issues before repair\n• Boot failure, blue screen, water damage & motherboard check',
+          imageUrl: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_STOVE_REPAIR_CATEGORY: ServiceCategory = {
+  id: 'cat-stove-repair',
+  name: 'Stove Service & Repair',
+  slug: 'stove-service-repair',
+  icon: '🔥',
+  badge: 'Instant in 44 mins',
+  order: 12,
+  subCategories: [
+    {
+      id: 'sub-stove-service',
+      name: 'Service',
+      slug: 'service',
+      icon: 'cleaning_services',
+      badge: 'Steam Clean',
+      groupHeader: 'Select a service',
+      displayOrder: 1,
+      description: 'High-temperature steam sterilization of brass burners, gas nozzles and glass cooktops.',
+      services: [
+        {
+          id: 'srv-stove-steam',
+          name: 'Gas stove steam service',
+          slug: 'gas-stove-steam-service',
+          basePrice: 399,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.69,
+          reviewCount: 41000,
+          description: '• Cleanup of burners, nozzles & internal parts with steam machine\n• 140°C pressurized steam breaks grease and opens blocked holes',
+          imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-hob-steam',
+          name: 'Hob steam service',
+          slug: 'hob-steam-service',
+          basePrice: 549,
+          durationMinutes: 75,
+          bestsellerFlag: false,
+          rating: 4.70,
+          reviewCount: 12000,
+          description: '• Cleanup of burners, nozzles & internal parts with steam machine\n• Gentle chemical wash on toughened glass hob surface',
+          imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-stove-repair',
+      name: 'Repair',
+      slug: 'repair',
+      icon: 'build',
+      badge: 'From ₹149',
+      groupHeader: 'Select a service',
+      displayOrder: 2,
+      description: 'Flame height adjustment, gas leakage detection, knob replacement and spark ignition repair.',
+      services: [
+        {
+          id: 'srv-stove-checkup',
+          name: 'Gas stove check-up',
+          slug: 'gas-stove-check-up',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.70,
+          reviewCount: 62000,
+          description: '• Repairs for issues like low flame, gas leakage, knob, pipe issues & other faults\n• Instant flame balance & gas safety verification',
+          imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-hob-checkup',
+          name: 'Hob check-up',
+          slug: 'hob-check-up',
+          basePrice: 149,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.74,
+          reviewCount: 32000,
+          description: '• Visitation fee will be adjusted in the final repair quote\n• Auto-ignition spark generator and pulse valve diagnosis',
+          imageUrl: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -4264,6 +4624,11 @@ function UrbanCompanyServiceListingContent() {
     const isTelevisionRepairSlug = ['television-repair', 'television', 'tv-repair', 'tv'].includes(serviceSlug);
     const isChimneyRepairSlug = ['chimney-repair', 'chimney'].includes(serviceSlug);
     const isRefrigeratorSlug = ['refrigerator', 'refrigerator-repair', 'fridge'].includes(serviceSlug);
+    const isAirCoolerSlug = ['air-cooler', 'air-cooler-repair', 'cooler-repair'].includes(serviceSlug);
+    const isGeyserSlug = ['geyser', 'geyser-repair', 'water-heater'].includes(serviceSlug);
+    const isWaterPurifierSlug = ['water-purifier', 'ro-water-purifier', 'water-purifier-service', 'ro-repair'].includes(serviceSlug);
+    const isLaptopRepairSlug = ['laptop', 'laptop-repair', 'computer-repair', 'desktop-repair'].includes(serviceSlug);
+    const isStoveRepairSlug = ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -4375,6 +4740,31 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_REFRIGERATOR_CATEGORY.subCategories?.[0]?.slug || 'refrigerator-check-up');
           return;
         }
+        if (isAirCoolerSlug) {
+          setCategoryData(DEFAULT_AIR_COOLER_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AIR_COOLER_CATEGORY.subCategories?.[0]?.slug || 'repair-service');
+          return;
+        }
+        if (isGeyserSlug) {
+          setCategoryData(DEFAULT_GEYSER_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_GEYSER_CATEGORY.subCategories?.[0]?.slug || 'repair-service');
+          return;
+        }
+        if (isWaterPurifierSlug) {
+          setCategoryData(DEFAULT_WATER_PURIFIER_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WATER_PURIFIER_CATEGORY.subCategories?.[0]?.slug || 'service-repair');
+          return;
+        }
+        if (isLaptopRepairSlug) {
+          setCategoryData(DEFAULT_LAPTOP_REPAIR_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_LAPTOP_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'select-service');
+          return;
+        }
+        if (isStoveRepairSlug) {
+          setCategoryData(DEFAULT_STOVE_REPAIR_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_STOVE_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'service');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -4424,6 +4814,16 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_CHIMNEY_REPAIR_CATEGORY;
         } else if (isRefrigeratorSlug) {
           data = DEFAULT_REFRIGERATOR_CATEGORY;
+        } else if (isAirCoolerSlug) {
+          data = DEFAULT_AIR_COOLER_CATEGORY;
+        } else if (isGeyserSlug) {
+          data = DEFAULT_GEYSER_CATEGORY;
+        } else if (isWaterPurifierSlug) {
+          data = DEFAULT_WATER_PURIFIER_CATEGORY;
+        } else if (isLaptopRepairSlug) {
+          data = DEFAULT_LAPTOP_REPAIR_CATEGORY;
+        } else if (isStoveRepairSlug) {
+          data = DEFAULT_STOVE_REPAIR_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -4464,6 +4864,16 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_CHIMNEY_REPAIR_CATEGORY;
       } else if (isRefrigeratorSlug || data.slug === 'refrigerator' || data.name?.toLowerCase().includes('refrigerator') || data.name?.toLowerCase().includes('fridge')) {
         data = DEFAULT_REFRIGERATOR_CATEGORY;
+      } else if (isAirCoolerSlug || data.slug === 'air-cooler' || data.slug === 'air-cooler-repair' || data.name?.toLowerCase().includes('cooler')) {
+        data = DEFAULT_AIR_COOLER_CATEGORY;
+      } else if (isGeyserSlug || data.slug === 'geyser' || data.slug === 'geyser-repair' || data.name?.toLowerCase().includes('geyser')) {
+        data = DEFAULT_GEYSER_CATEGORY;
+      } else if (isWaterPurifierSlug || data.slug === 'water-purifier' || data.slug === 'ro-water-purifier' || data.name?.toLowerCase().includes('water purifier')) {
+        data = DEFAULT_WATER_PURIFIER_CATEGORY;
+      } else if (isLaptopRepairSlug || data.slug === 'laptop-repair' || data.slug === 'laptop' || data.name?.toLowerCase().includes('laptop')) {
+        data = DEFAULT_LAPTOP_REPAIR_CATEGORY;
+      } else if (isStoveRepairSlug || data.slug === 'stove-service-repair' || data.slug === 'gas-stove' || data.name?.toLowerCase().includes('stove') || data.name?.toLowerCase().includes('hob')) {
+        data = DEFAULT_STOVE_REPAIR_CATEGORY;
       }
 
       setCategoryData(data);
@@ -4569,6 +4979,26 @@ function UrbanCompanyServiceListingContent() {
       } else if (['refrigerator', 'refrigerator-repair', 'fridge'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_REFRIGERATOR_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_REFRIGERATOR_CATEGORY.subCategories?.[0]?.slug || 'refrigerator-check-up');
+        setError404(false);
+      } else if (isAirCoolerSlug) {
+        setCategoryData(DEFAULT_AIR_COOLER_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_AIR_COOLER_CATEGORY.subCategories?.[0]?.slug || 'repair-service');
+        setError404(false);
+      } else if (isGeyserSlug) {
+        setCategoryData(DEFAULT_GEYSER_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_GEYSER_CATEGORY.subCategories?.[0]?.slug || 'repair-service');
+        setError404(false);
+      } else if (isWaterPurifierSlug) {
+        setCategoryData(DEFAULT_WATER_PURIFIER_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_WATER_PURIFIER_CATEGORY.subCategories?.[0]?.slug || 'service-repair');
+        setError404(false);
+      } else if (isLaptopRepairSlug) {
+        setCategoryData(DEFAULT_LAPTOP_REPAIR_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_LAPTOP_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'select-service');
+        setError404(false);
+      } else if (isStoveRepairSlug) {
+        setCategoryData(DEFAULT_STOVE_REPAIR_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_STOVE_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'service');
         setError404(false);
       } else {
         setError404(true);
@@ -4794,6 +5224,47 @@ function UrbanCompanyServiceListingContent() {
       ['refrigerator', 'refrigerator-repair', 'fridge'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('refrigerator') ||
       categoryData?.name?.toLowerCase().includes('fridge')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isAirCoolerCategory = useMemo(() => {
+    return (
+      ['air-cooler', 'air-cooler-repair', 'cooler-repair'].includes(serviceSlug) ||
+      ['air-cooler', 'air-cooler-repair', 'cooler-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('cooler')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isGeyserCategory = useMemo(() => {
+    return (
+      ['geyser', 'geyser-repair', 'water-heater'].includes(serviceSlug) ||
+      ['geyser', 'geyser-repair', 'water-heater'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('geyser')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isWaterPurifierCategory = useMemo(() => {
+    return (
+      ['water-purifier', 'ro-water-purifier', 'water-purifier-service', 'ro-repair'].includes(serviceSlug) ||
+      ['water-purifier', 'ro-water-purifier', 'water-purifier-service', 'ro-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('water purifier')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isLaptopRepairCategory = useMemo(() => {
+    return (
+      ['laptop', 'laptop-repair', 'computer-repair', 'desktop-repair'].includes(serviceSlug) ||
+      ['laptop', 'laptop-repair', 'computer-repair', 'desktop-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('laptop')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isStoveRepairCategory = useMemo(() => {
+    return (
+      ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(serviceSlug) ||
+      ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('stove') ||
+      categoryData?.name?.toLowerCase().includes('hob')
     );
   }, [serviceSlug, categoryData]);
 
@@ -5276,6 +5747,221 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isAirCoolerCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Air Cooler Service &...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.66
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">215K bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 30 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-repair-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isGeyserCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Geyser Service &...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.74
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.5 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 30 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-repair-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isWaterPurifierCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Water Purifier Service &...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.79
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.1M reviews</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">India&apos;s longest 1 year warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-service-repair');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isLaptopRepairCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Laptop Repair</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 44 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.81
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">472K bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 180 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-select-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isStoveRepairCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Stove Service &...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 44 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.75
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">456K bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">Up to 30 days warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
             {isBathroomCleaningCategory && (
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
@@ -5742,6 +6428,136 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {/* Dedicated Hero Banner for Laptop Repair (Matching Screenshot 4) */}
+            {isLaptopRepairCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-[#0f172a] group">
+                <div className="w-full h-56 sm:h-72 relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=80"
+                    alt="Laptop service - For smoother, faster performance"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5 sm:p-6">
+                    <div className="text-white space-y-1">
+                      <span className="inline-block bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider">
+                        Hardware & Software Tune-Up
+                      </span>
+                      <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+                        Laptop service
+                      </h2>
+                      <p className="text-xs sm:text-sm text-gray-200 font-medium">
+                        For smoother, faster performance
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Showcase for Water Purifier (Matching Screenshot 3) */}
+            {isWaterPurifierCategory && (
+              <div className="space-y-5">
+                {/* 1 Year Warranty Banner */}
+                <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-sky-600 to-blue-700 text-white p-5 sm:p-6 shadow-md border border-blue-400/30 flex items-center justify-between">
+                  <div className="space-y-2">
+                    <span className="bg-white/20 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
+                      Maximum Protection
+                    </span>
+                    <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+                      India&apos;s longest<br />1 year warranty
+                    </h2>
+                    <p className="text-xs text-sky-100 font-medium">
+                      Complete comprehensive coverage on all RO spares & filter kits
+                    </p>
+                  </div>
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/30 text-white shrink-0 shadow-lg">
+                    <span className="material-symbols-outlined text-3xl sm:text-4xl">shield</span>
+                  </div>
+                </div>
+
+                {/* Feature Comparison Table */}
+                <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-200 shadow-xs space-y-3">
+                  <h3 className="text-sm sm:text-base font-black text-[#111827]">Feature Comparison</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left">
+                      <thead>
+                        <tr className="border-b border-gray-200 text-gray-500">
+                          <th className="py-2 font-bold">Feature</th>
+                          <th className="py-2 px-3 font-bold text-emerald-700 bg-emerald-50 rounded-t-lg">Urban Company</th>
+                          <th className="py-2 px-3 font-bold">Local</th>
+                          <th className="py-2 px-3 font-bold">Brand</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 font-medium">
+                        <tr>
+                          <td className="py-2.5 text-gray-700">Genuine RO membrane & spares</td>
+                          <td className="py-2.5 px-3 text-emerald-700 bg-emerald-50 font-bold">✓ 100% genuine</td>
+                          <td className="py-2.5 px-3 text-red-500">✗ Unverified</td>
+                          <td className="py-2.5 px-3 text-gray-700">✓ Genuine</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 text-gray-700">Service & filter warranty</td>
+                          <td className="py-2.5 px-3 text-emerald-700 bg-emerald-50 font-bold">✓ 365 days</td>
+                          <td className="py-2.5 px-3 text-red-500">✗ None</td>
+                          <td className="py-2.5 px-3 text-gray-700">30-90 days</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 text-gray-700">On-demand visit</td>
+                          <td className="py-2.5 px-3 text-emerald-700 bg-emerald-50 font-bold">✓ Instant in 25 mins</td>
+                          <td className="py-2.5 px-3 text-amber-600">Same day</td>
+                          <td className="py-2.5 px-3 text-gray-700">3-5 business days</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2.5 text-gray-700">Pre-service TDS measurement</td>
+                          <td className="py-2.5 px-3 text-emerald-700 bg-emerald-50 font-bold">✓ Standardized</td>
+                          <td className="py-2.5 px-3 text-red-500">✗ Rare</td>
+                          <td className="py-2.5 px-3 text-gray-700">✓ Standardized</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Filtration Kit Showcase */}
+                <div className="bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 border border-gray-200 space-y-3">
+                  <h3 className="text-sm sm:text-base font-black text-[#111827]">Most Advanced Filter Kit</h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
+                    <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-2xs">
+                      <div className="font-bold text-xs text-[#111827]">Sediment Filter</div>
+                      <div className="text-[10px] text-gray-500 mt-0.5">Removes sand & rust</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-2xs">
+                      <div className="font-bold text-xs text-[#111827]">Carbon Filter</div>
+                      <div className="text-[10px] text-gray-500 mt-0.5">Eliminates chlorine & odors</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-2xs">
+                      <div className="font-bold text-xs text-[#111827]">RO Membrane</div>
+                      <div className="text-[10px] text-gray-500 mt-0.5">Blocks heavy metals</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-2xs">
+                      <div className="font-bold text-xs text-[#111827]">Mineralizer</div>
+                      <div className="text-[10px] text-gray-500 mt-0.5">Infuses active minerals</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Supported Brands */}
+                <div className="bg-white rounded-2xl p-4 border border-gray-200 space-y-2">
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">Servicing all major brands</div>
+                  <div className="flex flex-wrap gap-2 text-xs font-semibold text-gray-700">
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Kent</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Aquaguard</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Pureit</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Livpure</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Eureka Forbes</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Havells</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">LG</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-md">Blue Star</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Dedicated Hero Banner for Bathroom Cleaning (Matching Screenshot 2: Germ-free under rims) */}
             {isBathroomCleaningCategory && (
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-200 bg-black group">
@@ -6135,7 +6951,12 @@ function UrbanCompanyServiceListingContent() {
                     isTelevisionRepairCategory ||
                     isChimneyRepairCategory ||
                     isRefrigeratorCategory ||
-                    isWashingMachineCategory
+                    isWashingMachineCategory ||
+                    isAirCoolerCategory ||
+                    isGeyserCategory ||
+                    isWaterPurifierCategory ||
+                    isLaptopRepairCategory ||
+                    isStoveRepairCategory
                   ) {
                     return true;
                   }
@@ -6616,6 +7437,19 @@ function UrbanCompanyServiceListingContent() {
 
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
           <div className="lg:col-span-3 space-y-4 sticky top-24">
+            {/* Air Cooler Promo Strip (Screenshot 1) */}
+            {isAirCoolerCategory && (
+              <div className="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-2xs flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-base">percent</span>
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-[#111827]">Get visitation fee off</div>
+                  <div className="text-[11px] text-gray-500 font-medium">On orders above ₹200</div>
+                </div>
+              </div>
+            )}
+
             {/* UC Promise Card (Exact Urban Company Style) */}
             {isSpaCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
@@ -6713,7 +7547,16 @@ function UrbanCompanyServiceListingContent() {
                   </li>
                 </ul>
               </div>
-            ) : isInstaHelpCategory || isWashingMachineCategory ? (
+            ) : isInstaHelpCategory ||
+              isWashingMachineCategory ||
+              isAirCoolerCategory ||
+              isGeyserCategory ||
+              isWaterPurifierCategory ||
+              isLaptopRepairCategory ||
+              isStoveRepairCategory ||
+              isTelevisionRepairCategory ||
+              isRefrigeratorCategory ||
+              isChimneyRepairCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-black text-[#111827] uppercase tracking-wider flex items-center gap-1.5">
