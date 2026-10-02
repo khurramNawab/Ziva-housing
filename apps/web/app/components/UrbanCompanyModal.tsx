@@ -886,7 +886,9 @@ export default function UrbanCompanyModal({
         router.push('/services/geyser-service-repair');
       } else if (subSlug === 'geyser' || subSlug === 'geyser-repair') {
         router.push('/services/geyser-repair');
-      } else if (subSlug === 'ro-water-purifier' || subSlug === 'water-purifier' || subSlug === 'native-water-purifier') {
+      } else if (subSlug === 'native-water-purifier') {
+        router.push('/services/native-water-purifier');
+      } else if (subSlug === 'ro-water-purifier' || subSlug === 'water-purifier') {
         router.push('/services/water-purifier');
       } else if (subSlug === 'laptop-repair' || subSlug === 'laptop') {
         router.push('/services/laptop-repair');
@@ -904,6 +906,8 @@ export default function UrbanCompanyModal({
         router.push('/services/furniture-assembly');
       } else if (subSlug === 'festival-lights-installation' || subSlug === 'festival-lights') {
         router.push('/services/festival-lights-installation');
+      } else if (subSlug === 'native-smart-locks' || subSlug === 'smart-locks') {
+        router.push('/services/native-smart-locks');
       } else if (subSlug === 'interior-modular-kitchen' || subSlug === 'modular-kitchen' || subSlug === 'modular-kitchen-woodwork') {
         router.push('/services/interior-modular-kitchen');
       } else {

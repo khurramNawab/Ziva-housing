@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 
 interface ServiceCategory {
   id: string;
@@ -336,7 +337,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                     {
                       id: 'water-purifier',
                       name: 'Native Water Purifier',
-                      category: 'ac-appliance-repair',
+                      href: '/services/native-water-purifier',
                       imgUrl: '/services/native-water-purifier.jpg',
                       icon: 'water_drop',
                       badge: 'Sale',
@@ -344,17 +345,15 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                     {
                       id: 'smart-locks',
                       name: 'Native Smart Locks',
-                      category: 'electrician-plumber-carpenter',
+                      href: '/services/native-smart-locks',
                       imgUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=300&h=300&q=80',
                       icon: 'lock',
                       badge: 'Sale',
                     },
                   ].map((prod) => (
-                    <button
-                      suppressHydrationWarning
+                    <Link
                       key={prod.id}
-                      type="button"
-                      onClick={() => onSelectCategory(prod.category)}
+                      href={prod.href}
                       className="flex items-center gap-3 p-2.5 px-3 rounded-xl border border-gray-200/90 hover:border-[#5e23dc] hover:bg-purple-50/40 transition-all text-left group cursor-pointer bg-[#fafafa]"
                     >
                       <div className="relative w-11 h-11 rounded-xl bg-white border border-gray-100 shadow-xs overflow-hidden flex items-center justify-center p-0.5">
@@ -383,7 +382,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                         </span>
                         <span className="text-[10px] text-gray-500 font-medium">Warranty &amp; Installation</span>
                       </div>
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>

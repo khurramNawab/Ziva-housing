@@ -352,11 +352,34 @@ const ICON_MAP: Record<string, string> = {
   'mens-salon-massage': '🧔‍♂️',
   'spa': '💆‍♀️',
   'healing': '💆‍♂️',
-  'support_agent': '👩‍🍳',
-  'instahelp': '👩‍🍳',
-  'child_care': '👶',
-  'elderly': '👵',
-  'local_shipping': '📦',
+  // Smart Locks & Security
+  'smart_lock': '🔐',
+  'smart-lock': '🔐',
+  'lock': '🔒',
+  'key': '🔑',
+  'shield': '🛡️',
+  'door': '🚪',
+  'password': '🔢',
+  'fingerprint': '👆',
+  'face_unlock': '👤',
+  'videocam': '📹',
+  'doorbell': '🔔',
+
+  // Deals, Shopping & Generic
+  'percent': '🏷️',
+  'clean_hands': '✨',
+  'shopping_bag': '🛍️',
+  'styler': '💇‍♀️',
+  'diamond': '💎',
+  'extension': '✨',
+  'groups': '👥',
+  'face': '💆‍♀️',
+  'brush': '🖌️',
+  'flare': '✨',
+  'sparkles': '✨',
+  'self_improvement': '🧘',
+  'pan_tool': '✋',
+  'schedule': '⏱️',
 };
 
 function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️'): React.ReactNode {
@@ -368,7 +391,14 @@ function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️'
     return trimmed;
   }
   return (
-    <span className="material-symbols-outlined text-[19px] leading-none select-none text-gray-700 shrink-0">
+    <span
+      className="material-symbols-outlined text-[19px] leading-none select-none text-gray-700 shrink-0 inline-block overflow-hidden max-w-[24px] max-h-[24px] text-center"
+      style={{
+        fontFamily: "'Material Symbols Outlined', sans-serif",
+        fontFeatureSettings: "'liga'",
+        whiteSpace: 'nowrap',
+      }}
+    >
       {trimmed}
     </span>
   );
@@ -1691,7 +1721,7 @@ const DEFAULT_BATHROOM_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-bc-value-deals',
       name: 'Value deals',
       slug: 'value-deals',
-      icon: 'savings',
+      icon: '🏷️',
       badge: 'Upto 25% OFF',
       groupHeader: 'Bathroom Cleaning',
       displayOrder: 1,
@@ -1755,7 +1785,7 @@ const DEFAULT_BATHROOM_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-bc-deep-clean',
       name: 'One time deep clean',
       slug: 'one-time-deep-clean',
-      icon: 'clean_hands',
+      icon: '✨',
       badge: 'Deep Clean',
       groupHeader: 'Bathroom Cleaning',
       displayOrder: 2,
@@ -1793,7 +1823,7 @@ const DEFAULT_BATHROOM_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-bc-mini-services',
       name: 'Mini services',
       slug: 'mini-services',
-      icon: 'add_task',
+      icon: '➕',
       badge: 'From ₹99',
       groupHeader: 'Add-ons',
       displayOrder: 3,
@@ -2249,7 +2279,7 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-kc-value-deals',
       name: 'Value deals',
       slug: 'value-deals',
-      icon: 'savings',
+      icon: '🏷️',
       badge: 'Upto 25% OFF',
       groupHeader: 'Kitchen Cleaning',
       displayOrder: 1,
@@ -2300,7 +2330,7 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-kc-chimney',
       name: 'Chimney cleaning',
       slug: 'chimney-cleaning',
-      icon: 'air',
+      icon: '💨',
       badge: 'Bestseller',
       groupHeader: 'Kitchen Cleaning',
       displayOrder: 2,
@@ -2338,7 +2368,7 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-kc-occupied',
       name: 'Occupied kitchen cleaning',
       slug: 'occupied-kitchen-cleaning',
-      icon: 'soup_kitchen',
+      icon: '🍲',
       badge: 'Deep Clean',
       groupHeader: 'Kitchen Cleaning',
       displayOrder: 3,
@@ -2363,7 +2393,7 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-kc-appliances',
       name: 'Appliance cleaning',
       slug: 'appliance-cleaning',
-      icon: 'kitchen',
+      icon: '🍳',
       badge: 'From ₹149',
       groupHeader: 'Appliances',
       displayOrder: 4,
@@ -2466,7 +2496,7 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-kc-cabinets',
       name: 'Cabinets & slab',
       slug: 'cabinets-slab',
-      icon: 'countertops',
+      icon: '🧽',
       badge: 'Popular',
       groupHeader: 'Storage & Slab',
       displayOrder: 5,
@@ -2504,7 +2534,7 @@ const DEFAULT_KITCHEN_CLEANING_CATEGORY: ServiceCategory = {
       id: 'sub-kc-mini',
       name: 'Mini services',
       slug: 'mini-services',
-      icon: 'add_task',
+      icon: '➕',
       badge: 'From ₹99',
       groupHeader: 'Add-ons',
       displayOrder: 6,
@@ -6392,6 +6422,156 @@ const DEFAULT_FURNITURE_ASSEMBLY_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_NATIVE_SMART_LOCKS_CATEGORY: ServiceCategory = {
+  id: 'cat-native-smart-locks',
+  name: 'Native Smart Locks',
+  slug: 'native-smart-locks',
+  icon: '🔐',
+  badge: '4.77 ★ (28K)',
+  order: 14,
+  subCategories: [
+    {
+      id: 'sub-nsl-feature-lock',
+      name: 'Feature lock',
+      slug: 'feature-lock',
+      icon: '🔐',
+      badge: 'Bestseller',
+      groupHeader: 'Smart Locks',
+      displayOrder: 1,
+      description: 'Advanced biometric, keypad & camera smart locks with doorstep installation.',
+      services: [
+        {
+          id: 'srv-nsl-pro',
+          name: 'Native Lock Pro',
+          slug: 'native-lock-pro',
+          basePrice: 17299,
+          durationMinutes: 90,
+          bestsellerFlag: true,
+          rating: 4.80,
+          reviewCount: 22000,
+          description: '• 7 ways to unlock\n• Unlock request with visitor photo on every doorbell press\n• Free doorstep installation & 2-year warranty',
+          imageUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-nsl-ultra',
+          name: 'Native Lock Ultra',
+          slug: 'native-lock-ultra',
+          basePrice: 24999,
+          durationMinutes: 120,
+          bestsellerFlag: true,
+          rating: 4.68,
+          reviewCount: 2000,
+          description: '• 9 ways to unlock including face unlock\n• Unlock request with visitor photo on every doorbell press\n• 3D facial recognition sensor & anti-tamper alarm',
+          imageUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-nsl-s',
+          name: 'Native Lock S',
+          slug: 'native-lock-s',
+          basePrice: 8999,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.69,
+          reviewCount: 2000,
+          description: '• 5 ways to unlock\n• Install on any door & go keyless\n• Fast fingerprint sensor & emergency power backup',
+          imageUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
+const DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY: ServiceCategory = {
+  id: 'cat-native-water-purifier',
+  name: 'Native Water Purifier',
+  slug: 'native-water-purifier',
+  icon: '💧',
+  badge: '4.84 ★ (313K)',
+  order: 15,
+  subCategories: [
+    {
+      id: 'sub-nwp-models',
+      name: 'Models',
+      slug: 'models',
+      icon: '💧',
+      badge: '2-Year Filter Life',
+      groupHeader: 'Water Purifiers',
+      displayOrder: 1,
+      description: 'Needs zero service for 2 years. 10-stage RO purification with real-time TDS tracking.',
+      services: [
+        {
+          id: 'srv-nwp-m1',
+          name: 'Native M1',
+          slug: 'native-m1',
+          basePrice: 15499,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 160000,
+          description: '• Needs zero service for 2 years • 10-stage RO+UV+UF+Alkaline purification\n• Smart rinse technology & rapid flow dispensing',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-nwp-m0',
+          name: 'Native M0',
+          slug: 'native-m0',
+          basePrice: 11799,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 12000,
+          description: '• 9-stage RO+UV purification with copper infusion\n• 2-year filter life guarantee & compact wall-mount footprint',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-nwp-m2-pro',
+          name: 'Native M2 Pro',
+          slug: 'native-m2-pro',
+          basePrice: 18699,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.83,
+          reviewCount: 126000,
+          description: '• IoT smart water tracking via mobile app\n• Real-time TDS monitor & filter health alert\n• Food-grade stainless steel storage tank',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-nwp-m1-pro',
+          name: 'Native M1 Pro',
+          slug: 'native-m1-pro',
+          basePrice: 16699,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 9000,
+          description: '• Fast dispense rate (2.5L/min) with mineral boost\n• Smart app connectivity & child lock dispense protection',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-nwp-m3-pro',
+          name: 'Native M3 Pro',
+          slug: 'native-m3-pro',
+          basePrice: 25199,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 3000,
+          description: '• Instant hot, warm & ambient water dispensing\n• 2-year filter life guarantee & touch LED temperature selector\n• Luxury tempered glass front finish',
+          imageUrl: '/services/native-water-purifier.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -6465,6 +6645,8 @@ function UrbanCompanyServiceListingContent() {
     const isFanInstallationSlug = ['fan-installation', 'fan', 'ceiling-fan'].includes(serviceSlug);
     const isFestivalLightsSlug = ['festival-lights-installation', 'festival-lights', 'lights-installation'].includes(serviceSlug);
     const isFurnitureAssemblySlug = ['furniture-assembly', 'furniture', 'assembly'].includes(serviceSlug);
+    const isNativeSmartLocksSlug = ['native-smart-locks', 'smart-locks', 'smart-lock', 'native-locks', 'locks'].includes(serviceSlug);
+    const isNativeWaterPurifierSlug = ['native-water-purifier', 'native-water', 'native-water-purifiers', 'native-ro'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -6636,6 +6818,16 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FURNITURE_ASSEMBLY_CATEGORY.subCategories?.[0]?.slug || 'beds');
           return;
         }
+        if (isNativeSmartLocksSlug) {
+          setCategoryData(DEFAULT_NATIVE_SMART_LOCKS_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_NATIVE_SMART_LOCKS_CATEGORY.subCategories?.[0]?.slug || 'feature-lock');
+          return;
+        }
+        if (isNativeWaterPurifierSlug) {
+          setCategoryData(DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY.subCategories?.[0]?.slug || 'models');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -6709,6 +6901,10 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_FESTIVAL_LIGHTS_CATEGORY;
         } else if (isFurnitureAssemblySlug) {
           data = DEFAULT_FURNITURE_ASSEMBLY_CATEGORY;
+        } else if (isNativeSmartLocksSlug) {
+          data = DEFAULT_NATIVE_SMART_LOCKS_CATEGORY;
+        } else if (isNativeWaterPurifierSlug) {
+          data = DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -6773,6 +6969,10 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_FESTIVAL_LIGHTS_CATEGORY;
       } else if (isFurnitureAssemblySlug || data.slug === 'furniture-assembly' || data.slug === 'furniture' || data.name?.toLowerCase().includes('furniture')) {
         data = DEFAULT_FURNITURE_ASSEMBLY_CATEGORY;
+      } else if (isNativeSmartLocksSlug || data.slug === 'native-smart-locks' || data.name?.toLowerCase().includes('smart lock')) {
+        data = DEFAULT_NATIVE_SMART_LOCKS_CATEGORY;
+      } else if (isNativeWaterPurifierSlug || data.slug === 'native-water-purifier' || (data.name?.toLowerCase().includes('native') && data.name?.toLowerCase().includes('water'))) {
+        data = DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY;
       }
 
       setCategoryData(data);
@@ -6926,6 +7126,14 @@ function UrbanCompanyServiceListingContent() {
       } else if (isFurnitureAssemblySlug) {
         setCategoryData(DEFAULT_FURNITURE_ASSEMBLY_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_FURNITURE_ASSEMBLY_CATEGORY.subCategories?.[0]?.slug || 'beds');
+        setError404(false);
+      } else if (isNativeSmartLocksSlug) {
+        setCategoryData(DEFAULT_NATIVE_SMART_LOCKS_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_NATIVE_SMART_LOCKS_CATEGORY.subCategories?.[0]?.slug || 'feature-lock');
+        setError404(false);
+      } else if (isNativeWaterPurifierSlug) {
+        setCategoryData(DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY.subCategories?.[0]?.slug || 'models');
         setError404(false);
       } else {
         setError404(true);
@@ -7254,6 +7462,22 @@ function UrbanCompanyServiceListingContent() {
       ['furniture-assembly', 'furniture', 'assembly'].includes(serviceSlug) ||
       ['furniture-assembly', 'furniture', 'assembly'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('furniture assembly')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isNativeSmartLocksCategory = useMemo(() => {
+    return (
+      ['native-smart-locks', 'smart-locks', 'smart-lock', 'native-locks', 'locks'].includes(serviceSlug) ||
+      ['native-smart-locks', 'smart-locks', 'smart-lock', 'native-locks', 'locks'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('smart lock')
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isNativeWaterPurifierCategory = useMemo(() => {
+    return (
+      ['native-water-purifier', 'native-water', 'native-water-purifiers', 'native-ro'].includes(serviceSlug) ||
+      ['native-water-purifier', 'native-water', 'native-water-purifiers', 'native-ro'].includes(categoryData?.slug || '') ||
+      (categoryData?.name?.toLowerCase().includes('native') && categoryData?.name?.toLowerCase().includes('water'))
     );
   }, [serviceSlug, categoryData]);
 
@@ -8220,6 +8444,67 @@ function UrbanCompanyServiceListingContent() {
               </div>
             )}
 
+            {isNativeSmartLocksCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <h1 className="text-2xl font-black text-[#111827]">Native Smart Locks</h1>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="w-4 h-4 rounded-full bg-purple-600 text-white flex items-center justify-center text-[10px] font-bold">
+                      ★
+                    </span>
+                    <span className="font-bold text-gray-900">4.77</span>
+                    <span className="text-gray-500 font-medium">(28K bookings)</span>
+                  </div>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-feature-lock');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isNativeWaterPurifierCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Native Water ...</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Earliest Sat, 2:30 PM
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.84
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">(313K bookings)</span>
+                  </div>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-models');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
             {isBathroomCleaningCategory && (
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
@@ -8739,6 +9024,42 @@ function UrbanCompanyServiceListingContent() {
                         For smoother, faster performance
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Native Smart Locks (Matching Screenshot 2) */}
+            {isNativeSmartLocksCategory && (
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-900 bg-black group">
+                <div className="w-full h-64 sm:h-80 relative flex items-center justify-center">
+                  <img
+                    src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80"
+                    alt="Native Smart Locks"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30 pointer-events-none" />
+
+                  {/* Left / Right Carousel Controls */}
+                  <button
+                    type="button"
+                    aria-label="Previous Slide"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-gray-800 flex items-center justify-center shadow-md transition-all cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm font-bold">arrow_back_ios_new</span>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next Slide"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-gray-800 flex items-center justify-center shadow-md transition-all cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm font-bold">arrow_forward_ios</span>
+                  </button>
+
+                  {/* Pagination Bars */}
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
+                    <div className="w-10 h-1 bg-white rounded-full" />
+                    <div className="w-10 h-1 bg-white/30 rounded-full" />
                   </div>
                 </div>
               </div>
@@ -9353,7 +9674,9 @@ function UrbanCompanyServiceListingContent() {
                     isCarpenterCategory ||
                     isFanInstallationCategory ||
                     isFestivalLightsCategory ||
-                    isFurnitureAssemblyCategory
+                    isFurnitureAssemblyCategory ||
+                    isNativeSmartLocksCategory ||
+                    isNativeWaterPurifierCategory
                   ) {
                     return true;
                   }
@@ -9662,7 +9985,10 @@ function UrbanCompanyServiceListingContent() {
                             lowerName.includes('bikini') ||
                             lowerName.includes('delight') ||
                             lowerName.includes('head massage') ||
-                            lowerName.includes('signature mani')
+                            lowerName.includes('signature mani') ||
+                            isNativeWaterPurifierCategory ||
+                            lowerName.includes('native lock pro') ||
+                            lowerName.includes('native lock ultra')
                           ) optionText = '2 options';
 
                           return (
@@ -9753,6 +10079,17 @@ function UrbanCompanyServiceListingContent() {
                                     })}
                                   </div>
                                 )}
+
+                                {/* View details action */}
+                                <div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {}}
+                                    className="text-xs font-bold text-[#5e23dc] hover:underline inline-flex items-center gap-0.5 cursor-pointer pt-0.5"
+                                  >
+                                    View details
+                                  </button>
+                                </div>
                               </div>
 
                               {/* Right Image + Add / Counter Button + Overlay Badge */}
@@ -9767,7 +10104,12 @@ function UrbanCompanyServiceListingContent() {
                                     alt={service.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                   />
-                                  {isPackage ? (
+                                  {isNativeWaterPurifierCategory && (service.slug === 'native-m3-pro' || service.name.includes('M3 Pro')) ? (
+                                    <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-xs text-[#16a34a] text-[9px] font-black px-2 py-0.5 rounded-md shadow-2xs border border-emerald-100 flex items-center gap-1">
+                                      <span>🛡️</span>
+                                      <span>2-year filter life</span>
+                                    </div>
+                                  ) : isNativeSmartLocksCategory || isNativeWaterPurifierCategory ? null : isPackage ? (
                                     <div className="absolute top-2 right-2 bg-emerald-600 text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-2xs">
                                       20% OFF
                                     </div>
@@ -9846,6 +10188,39 @@ function UrbanCompanyServiceListingContent() {
                 </div>
               </div>
             )}
+
+            {/* Native Smart Locks & Native Water Purifier HSBC Offer Promo Strip */}
+            {isNativeSmartLocksCategory ? (
+              <div className="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-2xs flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-sm font-bold">percent</span>
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-[#111827]">Flat 10% off upto ₹2000</div>
+                    <div className="text-[10px] text-gray-500 font-medium">HSBC Bank Full Swipe Offer</div>
+                  </div>
+                </div>
+                <div className="text-[10px] font-bold text-gray-400 bg-gray-50 border border-gray-100 px-1.5 py-0.5 rounded-sm">
+                  4/4
+                </div>
+              </div>
+            ) : isNativeWaterPurifierCategory ? (
+              <div className="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-2xs flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-sm font-bold">percent</span>
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-[#111827]">Flat 10% off upto ₹1750</div>
+                    <div className="text-[10px] text-gray-500 font-medium">HSBC Bank Full Swipe Offer</div>
+                  </div>
+                </div>
+                <div className="text-[10px] font-bold text-gray-400 bg-gray-50 border border-gray-100 px-1.5 py-0.5 rounded-sm">
+                  2/6
+                </div>
+              </div>
+            ) : null}
 
             {/* UC Promise Card (Exact Urban Company Style) */}
             {isSpaCategory ? (
@@ -9960,6 +10335,8 @@ function UrbanCompanyServiceListingContent() {
               isFanInstallationCategory ||
               isFestivalLightsCategory ||
               isFurnitureAssemblyCategory ||
+              isNativeSmartLocksCategory ||
+              isNativeWaterPurifierCategory ||
               isInteriorModularKitchenCategory ? (
               <div className="bg-white rounded-2xl p-4 border border-gray-200/90 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">

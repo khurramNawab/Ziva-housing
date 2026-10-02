@@ -502,6 +502,28 @@ async function runTestSuite() {
     assert(false, 'Dedicated Interior & Modular Kitchen page reachable', err.message);
   }
 
+  try {
+    const smartLocksRes = await fetchUrl(`${WEB_URL}/services/native-smart-locks`);
+    assert(smartLocksRes.status === 200, 'Dedicated Native Smart Locks Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Native Smart Locks') && serviceSrc.includes('28K bookings'), 'Native Smart Locks header and 28K bookings verified');
+    assert(serviceSrc.includes('Native Lock Pro') && serviceSrc.includes('Native Lock Ultra') && serviceSrc.includes('Native Lock S'), 'Native smart locks services verified');
+    assert(serviceSrc.includes('Flat 10% off upto ₹2000') && serviceSrc.includes('HSBC Bank Full Swipe Offer'), 'Native Smart Locks HSBC promo verified');
+  } catch (err) {
+    assert(false, 'Dedicated Native Smart Locks page reachable', err.message);
+  }
+
+  try {
+    const waterPurifierRes = await fetchUrl(`${WEB_URL}/services/native-water-purifier`);
+    assert(waterPurifierRes.status === 200, 'Dedicated Native Water Purifier Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Native Water ...') && serviceSrc.includes('313K bookings'), 'Native Water Purifier header and 313K bookings verified');
+    assert(serviceSrc.includes('Native M3 Pro') && serviceSrc.includes('Native M2 Pro') && serviceSrc.includes('Native M1'), 'Native Water Purifier models verified');
+    assert(serviceSrc.includes('Flat 10% off upto ₹1750') && serviceSrc.includes('HSBC Bank Full Swipe Offer'), 'Native Water Purifier HSBC promo verified');
+  } catch (err) {
+    assert(false, 'Dedicated Native Water Purifier page reachable', err.message);
+  }
+
   // --- Suite 3: Dedicated Role-Based Panels Routing ---
   console.log('\n🛡️ [SUITE 3] Dedicated Panels & Workspaces Routing');
   const panelRoutes = [
