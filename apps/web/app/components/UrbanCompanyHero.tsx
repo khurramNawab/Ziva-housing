@@ -121,17 +121,20 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
         const json = await res.json();
         const data = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : [];
         if (Array.isArray(data) && data.length > 0) {
-          // Filter to strictly pick only the primary 7 main categories for the hero grid
-          const primaryList = data.filter(
-            (c: any) => c.isActive !== false && PRIMARY_HERO_SLUGS.includes(c.slug)
-          );
+          // Dynamically pick all active categories from backend
+          const activeList = data.filter((c: any) => c.isActive !== false);
 
-          if (primaryList.length > 0) {
-            primaryList.sort(
-              (a: any, b: any) => PRIMARY_HERO_SLUGS.indexOf(a.slug) - PRIMARY_HERO_SLUGS.indexOf(b.slug)
-            );
+          if (activeList.length > 0) {
+            activeList.sort((a: any, b: any) => {
+              const idxA = PRIMARY_HERO_SLUGS.indexOf(a.slug);
+              const idxB = PRIMARY_HERO_SLUGS.indexOf(b.slug);
+              if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+              if (idxA !== -1) return -1;
+              if (idxB !== -1) return 1;
+              return (a.order || 0) - (b.order || 0);
+            });
 
-            const formatted: ServiceCategory[] = primaryList.map((c: any) => {
+            const formatted: ServiceCategory[] = activeList.map((c: any) => {
               const style = CATEGORY_STYLE_MAP[c.slug];
               return {
                 id: c.id,
