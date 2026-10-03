@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 
 interface ServiceCategory {
   id: string;
@@ -146,8 +147,16 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
         const json = await res.json();
         const data = Array.isArray(json) ? json : Array.isArray(json?.data) ? json.data : [];
         if (Array.isArray(data) && data.length > 0) {
-          // Dynamically pick all active categories from backend
-          const activeList = data.filter((c: any) => c.isActive !== false);
+          // Dynamically pick active categories from backend and ensure primary defaults are included
+          const rawActive = data.filter((c: any) => c.isActive !== false);
+          const activeList = [...rawActive];
+
+          // Guarantee solar-panels & all primary slugs exist
+          DEFAULT_HERO_CATEGORIES.forEach((def) => {
+            if (!activeList.some((a) => a.slug === def.slug)) {
+              activeList.push(def);
+            }
+          });
 
           if (activeList.length > 0) {
             activeList.sort((a: any, b: any) => {
@@ -372,11 +381,9 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                       badge: 'Sale',
                     },
                   ].map((prod) => (
-                    <button
-                      suppressHydrationWarning
+                    <Link
                       key={prod.id}
-                      type="button"
-                      onClick={() => onSelectCategory(prod.category)}
+                      href={`/services/${prod.category}`}
                       className="flex items-center gap-3 p-2.5 px-3 rounded-xl border border-gray-200/90 hover:border-[#5e23dc] hover:bg-purple-50/40 transition-all text-left group cursor-pointer bg-[#fafafa]"
                     >
                       <div className="relative w-11 h-11 rounded-xl bg-white border border-gray-100 shadow-xs overflow-hidden flex items-center justify-center p-0.5">
@@ -405,7 +412,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                         </span>
                         <span className="text-[10px] text-gray-500 font-medium">Warranty &amp; Installation</span>
                       </div>
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>

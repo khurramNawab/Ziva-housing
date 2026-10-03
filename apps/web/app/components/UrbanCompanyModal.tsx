@@ -589,6 +589,22 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-solar-3', name: 'Inverter & Electrical Diagnostics', slug: 'solar-inverter-repair', icon: '⚡', badge: 'In 30 mins', groupHeader: 'Repairs', displayOrder: 3 },
     { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consultation', groupHeader: 'Consultation', displayOrder: 4 },
   ],
+  'native-smart-locks': [
+    { id: 'sub-nsl-1', name: 'Smart Door Locks', slug: 'feature-lock', icon: '🔐', badge: 'Sale Live', groupHeader: 'Flagship Models', displayOrder: 1 },
+    { id: 'sub-nsl-2', name: 'Installation & Fitting', slug: 'smart-lock-installation', icon: '🔨', badge: 'Free with Lock', groupHeader: 'Services', displayOrder: 2 },
+  ],
+  'native-locks': [
+    { id: 'sub-nsl-1', name: 'Smart Door Locks', slug: 'feature-lock', icon: '🔐', badge: 'Sale Live', groupHeader: 'Flagship Models', displayOrder: 1 },
+    { id: 'sub-nsl-2', name: 'Installation & Fitting', slug: 'smart-lock-installation', icon: '🔨', badge: 'Free with Lock', groupHeader: 'Services', displayOrder: 2 },
+  ],
+  'native-water-purifier': [
+    { id: 'sub-nwp-1', name: 'Native RO Purifiers', slug: 'models', icon: '💧', badge: '2 Yr Filter Life', groupHeader: 'Purifier Models', displayOrder: 1 },
+    { id: 'sub-nwp-2', name: 'Filters & Maintenance', slug: 'filters-maintenance', icon: '🧪', badge: 'Zero Cost Plan', groupHeader: 'Maintenance', displayOrder: 2 },
+  ],
+  'native-water': [
+    { id: 'sub-nwp-1', name: 'Native RO Purifiers', slug: 'models', icon: '💧', badge: '2 Yr Filter Life', groupHeader: 'Purifier Models', displayOrder: 1 },
+    { id: 'sub-nwp-2', name: 'Filters & Maintenance', slug: 'filters-maintenance', icon: '🧪', badge: 'Zero Cost Plan', groupHeader: 'Maintenance', displayOrder: 2 },
+  ],
 };
 
 const ICON_MAP: Record<string, string> = {
@@ -756,10 +772,12 @@ const DEFAULT_CATEGORIES: ServiceCategory[] = [
   { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: '🖌️', badge: null, order: 6, subCategories: DEFAULT_TAXONOMY['painting-waterproofing'] },
   { id: 'c-solar', name: 'Solar Panels', slug: 'solar-panels', icon: '☀️', badge: 'Govt Subsidy', order: 7, subCategories: DEFAULT_TAXONOMY['solar-panels'] },
   { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: '👩‍🍳', badge: null, order: 8, subCategories: DEFAULT_TAXONOMY['instahelp'] },
-  { id: 'c-baby', name: 'Baby Sitting & Childcare', slug: 'baby-sitting-childcare', icon: '👶', badge: null, order: 9, subCategories: DEFAULT_TAXONOMY['baby-sitting-childcare'] },
-  { id: 'c-elder', name: 'Elderly Care', slug: 'elderly-care', icon: '👵', badge: null, order: 10, subCategories: DEFAULT_TAXONOMY['elderly-care'] },
-  { id: 'c-movers', name: 'Packers & Movers', slug: 'packers-movers', icon: '📦', badge: null, order: 11, subCategories: DEFAULT_TAXONOMY['packers-movers'] },
-  { id: 'c-interior', name: 'Interior & Modular Kitchen', slug: 'interior-modular-kitchen', icon: '📐', badge: null, order: 12, subCategories: DEFAULT_TAXONOMY['interior-modular-kitchen'] },
+  { id: 'c-smart-locks', name: 'Native Smart Locks', slug: 'native-smart-locks', icon: '🔐', badge: 'Sale Live', order: 9, subCategories: DEFAULT_TAXONOMY['native-smart-locks'] },
+  { id: 'c-water-purifier', name: 'Native Water Purifier', slug: 'native-water-purifier', icon: '💧', badge: 'Sale Live', order: 10, subCategories: DEFAULT_TAXONOMY['native-water-purifier'] },
+  { id: 'c-baby', name: 'Baby Sitting & Childcare', slug: 'baby-sitting-childcare', icon: '👶', badge: null, order: 11, subCategories: DEFAULT_TAXONOMY['baby-sitting-childcare'] },
+  { id: 'c-elder', name: 'Elderly Care', slug: 'elderly-care', icon: '👵', badge: null, order: 12, subCategories: DEFAULT_TAXONOMY['elderly-care'] },
+  { id: 'c-movers', name: 'Packers & Movers', slug: 'packers-movers', icon: '📦', badge: null, order: 13, subCategories: DEFAULT_TAXONOMY['packers-movers'] },
+  { id: 'c-interior', name: 'Interior & Modular Kitchen', slug: 'interior-modular-kitchen', icon: '📐', badge: null, order: 14, subCategories: DEFAULT_TAXONOMY['interior-modular-kitchen'] },
 ];
 
 export default function UrbanCompanyModal({
@@ -965,8 +983,12 @@ export default function UrbanCompanyModal({
         router.push('/services/furniture-assembly');
       } else if (subSlug === 'festival-lights-installation' || subSlug === 'festival-lights') {
         router.push('/services/festival-lights-installation');
-      } else if (subSlug === 'native-smart-locks' || subSlug === 'smart-locks') {
+      } else if (subSlug === 'native-smart-locks' || subSlug === 'smart-locks' || subSlug === 'feature-lock' || catSlug === 'native-smart-locks') {
         router.push('/services/native-smart-locks');
+      } else if (subSlug === 'native-water-purifier' || subSlug === 'models' || catSlug === 'native-water-purifier') {
+        router.push('/services/native-water-purifier');
+      } else if (subSlug.startsWith('solar') || catSlug === 'solar-panels' || catSlug === 'solar-panel') {
+        router.push('/services/solar-panels');
       } else if (subSlug === 'interior-modular-kitchen' || subSlug === 'modular-kitchen' || subSlug === 'modular-kitchen-woodwork') {
         router.push('/services/interior-modular-kitchen');
       } else {
