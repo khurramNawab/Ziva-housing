@@ -577,10 +577,30 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
   'interior-modular-kitchen': [
     { id: 'sub-imk-1', name: 'Modular Kitchen & Woodwork', slug: 'modular-kitchen-woodwork', icon: '📐', badge: null, groupHeader: null, displayOrder: 1 },
   ],
+  'solar-panels': [
+    { id: 'sub-solar-1', name: 'Solar Rooftop Installation', slug: 'solar-rooftop-installation', icon: '☀️', badge: 'PM Surya Ghar', groupHeader: 'Rooftop Setup', displayOrder: 1 },
+    { id: 'sub-solar-2', name: 'Solar Panel Cleaning & Maintenance', slug: 'solar-panel-cleaning', icon: '💧', badge: 'Boosts 25% Output', groupHeader: 'Maintenance', displayOrder: 2 },
+    { id: 'sub-solar-3', name: 'Inverter & Electrical Diagnostics', slug: 'solar-inverter-repair', icon: '⚡', badge: 'In 30 mins', groupHeader: 'Repairs', displayOrder: 3 },
+    { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consultation', groupHeader: 'Consultation', displayOrder: 4 },
+  ],
+  'solar-panel': [
+    { id: 'sub-solar-1', name: 'Solar Rooftop Installation', slug: 'solar-rooftop-installation', icon: '☀️', badge: 'PM Surya Ghar', groupHeader: 'Rooftop Setup', displayOrder: 1 },
+    { id: 'sub-solar-2', name: 'Solar Panel Cleaning & Maintenance', slug: 'solar-panel-cleaning', icon: '💧', badge: 'Boosts 25% Output', groupHeader: 'Maintenance', displayOrder: 2 },
+    { id: 'sub-solar-3', name: 'Inverter & Electrical Diagnostics', slug: 'solar-inverter-repair', icon: '⚡', badge: 'In 30 mins', groupHeader: 'Repairs', displayOrder: 3 },
+    { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consultation', groupHeader: 'Consultation', displayOrder: 4 },
+  ],
 };
 
 const ICON_MAP: Record<string, string> = {
   // Category & Subcategory Material / Slug names -> Vibrant Emojis
+  'solar-panels': '☀️',
+  'solar-panel': '☀️',
+  'solar_power': '☀️',
+  'solar': '☀️',
+  'solar-rooftop-installation': '☀️',
+  'solar-panel-cleaning': '💧',
+  'solar-inverter-repair': '⚡',
+  'solar-site-survey': '📐',
   'vacuum': '🧹',
   'cleaning': '🧹',
   'cleaning-pest-control': '🧹',
@@ -693,6 +713,7 @@ function renderCategoryIcon(iconStr?: string | null, fallback: string = '🛠️
 
   // Heuristic keyword matching for any material symbol strings
   const lower = trimmed.toLowerCase();
+  if (lower.includes('solar') || lower.includes('sun')) return '☀️';
   if (lower.includes('retouch') || (lower.includes('women') && lower.includes('salon'))) return '🧖‍♀️';
   if (lower.includes('spa')) return '💆‍♀️';
   if (lower.includes('cut') || lower.includes('men') || lower.includes('groom')) return '🧔‍♂️';
@@ -733,11 +754,12 @@ const DEFAULT_CATEGORIES: ServiceCategory[] = [
   { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: '❄️', badge: '44 mins', order: 4, subCategories: DEFAULT_TAXONOMY['ac-appliance-repair'] },
   { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: '🔧', badge: '19 mins', order: 5, subCategories: DEFAULT_TAXONOMY['electrician-plumber-carpenter'] },
   { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: '🖌️', badge: null, order: 6, subCategories: DEFAULT_TAXONOMY['painting-waterproofing'] },
-  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: '👩‍🍳', badge: null, order: 7, subCategories: DEFAULT_TAXONOMY['instahelp'] },
-  { id: 'c-baby', name: 'Baby Sitting & Childcare', slug: 'baby-sitting-childcare', icon: '👶', badge: null, order: 8, subCategories: DEFAULT_TAXONOMY['baby-sitting-childcare'] },
-  { id: 'c-elder', name: 'Elderly Care', slug: 'elderly-care', icon: '👵', badge: null, order: 9, subCategories: DEFAULT_TAXONOMY['elderly-care'] },
-  { id: 'c-movers', name: 'Packers & Movers', slug: 'packers-movers', icon: '📦', badge: null, order: 10, subCategories: DEFAULT_TAXONOMY['packers-movers'] },
-  { id: 'c-interior', name: 'Interior & Modular Kitchen', slug: 'interior-modular-kitchen', icon: '📐', badge: null, order: 11, subCategories: DEFAULT_TAXONOMY['interior-modular-kitchen'] },
+  { id: 'c-solar', name: 'Solar Panels', slug: 'solar-panels', icon: '☀️', badge: 'Govt Subsidy', order: 7, subCategories: DEFAULT_TAXONOMY['solar-panels'] },
+  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: '👩‍🍳', badge: null, order: 8, subCategories: DEFAULT_TAXONOMY['instahelp'] },
+  { id: 'c-baby', name: 'Baby Sitting & Childcare', slug: 'baby-sitting-childcare', icon: '👶', badge: null, order: 9, subCategories: DEFAULT_TAXONOMY['baby-sitting-childcare'] },
+  { id: 'c-elder', name: 'Elderly Care', slug: 'elderly-care', icon: '👵', badge: null, order: 10, subCategories: DEFAULT_TAXONOMY['elderly-care'] },
+  { id: 'c-movers', name: 'Packers & Movers', slug: 'packers-movers', icon: '📦', badge: null, order: 11, subCategories: DEFAULT_TAXONOMY['packers-movers'] },
+  { id: 'c-interior', name: 'Interior & Modular Kitchen', slug: 'interior-modular-kitchen', icon: '📐', badge: null, order: 12, subCategories: DEFAULT_TAXONOMY['interior-modular-kitchen'] },
 ];
 
 export default function UrbanCompanyModal({

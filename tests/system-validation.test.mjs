@@ -524,6 +524,17 @@ async function runTestSuite() {
     assert(false, 'Dedicated Native Water Purifier page reachable', err.message);
   }
 
+  try {
+    const solarRes = await fetchUrl(`${WEB_URL}/services/solar-panels`);
+    assert(solarRes.status === 200, 'Dedicated Solar Panels Page loads (HTTP 200)');
+    const serviceSrc = fs.readFileSync(path.resolve(__dirname, '../apps/web/app/services/[serviceSlug]/page.tsx'), 'utf8');
+    assert(serviceSrc.includes('Solar Panels') && serviceSrc.includes('18.4K installations'), 'Solar Panels header and 18.4K installations verified');
+    assert(serviceSrc.includes('PM Surya Ghar') && serviceSrc.includes('₹78,000'), 'Solar Panels PM Surya Ghar subsidy verified');
+    assert(serviceSrc.includes('Solar Rooftop Installation') && serviceSrc.includes('Solar Panel Cleaning & Maintenance'), 'Solar Panels subcategories verified');
+  } catch (err) {
+    assert(false, 'Dedicated Solar Panels page reachable', err.message);
+  }
+
   // --- Suite 3: Dedicated Role-Based Panels Routing ---
   console.log('\n🛡️ [SUITE 3] Dedicated Panels & Workspaces Routing');
   const panelRoutes = [

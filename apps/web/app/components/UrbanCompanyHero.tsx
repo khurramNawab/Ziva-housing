@@ -81,7 +81,30 @@ const CATEGORY_STYLE_MAP: Record<string, { icon: string; imgUrl?: string; bg: st
   'carpenter': { icon: 'carpenter', bg: 'bg-[#fefce8]' },
   'babysitting-childcare': { icon: 'child_care', imgUrl: '/services/babysitting.jpg', bg: 'bg-[#fef2f2]' },
   'elderly-care': { icon: 'elderly', imgUrl: '/services/elderly-care.jpg', bg: 'bg-[#fdf2f8]' },
-  'interior-modular-kitchen': { icon: 'countertops', imgUrl: '/services/modular-kitchen.jpg', bg: 'bg-[#eff6ff]' },
+  'solar-panels': {
+    icon: 'solar_power',
+    imgUrl: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#fefce8]',
+    defaultBadge: 'Subsidy',
+  },
+  'solar-panel': {
+    icon: 'solar_power',
+    imgUrl: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#fefce8]',
+    defaultBadge: 'Subsidy',
+  },
+  'native-smart-locks': {
+    icon: 'lock',
+    imgUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=300&h=300&q=80',
+    bg: 'bg-[#f8fafc]',
+    defaultBadge: 'Sale',
+  },
+  'native-water-purifier': {
+    icon: 'water_drop',
+    imgUrl: '/services/native-water-purifier.jpg',
+    bg: 'bg-[#f0f9ff]',
+    defaultBadge: 'Sale',
+  },
 };
 
 const PRIMARY_HERO_SLUGS = [
@@ -91,6 +114,7 @@ const PRIMARY_HERO_SLUGS = [
   'ac-appliance-repair',
   'electrician-plumber-carpenter',
   'painting-waterproofing',
+  'solar-panels',
   'instahelp',
 ];
 
@@ -101,7 +125,8 @@ const DEFAULT_HERO_CATEGORIES: ServiceCategory[] = [
   { id: 'c-ac', name: 'AC & Appliance Repair', slug: 'ac-appliance-repair', icon: 'ac_unit', badge: '25 mins', isActive: true, order: 4 },
   { id: 'c-epc', name: 'Electrician, Plumber & Carpenter', slug: 'electrician-plumber-carpenter', icon: 'build', badge: '25 mins', isActive: true, order: 5 },
   { id: 'c-paint', name: 'Painting & Waterproofing', slug: 'painting-waterproofing', icon: 'format_paint', badge: null, isActive: true, order: 6 },
-  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: 'restaurant', badge: null, isActive: true, order: 7 },
+  { id: 'c-solar', name: 'Solar Panels', slug: 'solar-panels', icon: 'solar_power', badge: 'Subsidy', isActive: true, order: 7 },
+  { id: 'c-help', name: 'InstaHelp', slug: 'instahelp', icon: 'restaurant', badge: null, isActive: true, order: 8 },
 ];
 
 export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroProps) {
@@ -184,24 +209,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
     };
   }, [fetchActiveCategories]);
 
-  const nativeProducts = [
-    {
-      id: 'water-purifier',
-      name: 'Native Water Purifier',
-      category: 'ac-appliance-repair',
-      icon: '💧',
-      badge: 'Sale',
-    },
-    {
-      id: 'smart-locks',
-      name: 'Native Smart Locks',
-      category: 'electrician-plumber-carpenter',
-      icon: '🔐',
-      badge: 'Sale',
-    },
-  ];
-
-  // Collage source pool: dynamically picks only active categories
+  // Collage source pool: verified high-resolution images for 2x2 hero grid
   const COLLAGE_POOL = [
     {
       slug: 'womens-salon-spa',
@@ -221,7 +229,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
     {
       slug: 'ac-appliance-repair',
       title: 'AC & Appliance Repair',
-      image: '/services/ac-service.jpg',
+      image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=700&q=80',
     },
     {
       slug: 'electrician-plumber-carpenter',
@@ -234,16 +242,25 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
       image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=700&q=80',
     },
     {
+      slug: 'solar-panels',
+      title: 'Solar Panels & Rooftop',
+      image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=700&q=80',
+    },
+    {
       slug: 'instahelp',
       title: 'InstaHelp & Daily Cook',
       image: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=700&q=80',
     },
   ];
 
-  // Only show active categories in hero collage (max 4 tiles)
-  const activeCollage = COLLAGE_POOL.filter((item) =>
+  // Guaranteed 4 full cards in hero collage (never empty space)
+  const matchingCollage = COLLAGE_POOL.filter((item) =>
     categories.some((c) => c.slug === item.slug || item.slug.startsWith(c.slug))
-  ).slice(0, 4);
+  );
+  const activeCollage = [
+    ...matchingCollage,
+    ...COLLAGE_POOL.filter((p) => !matchingCollage.some((m) => m.slug === p.slug)),
+  ].slice(0, 4);
 
   return (
     <section className="bg-white py-6 md:py-10 border-b border-gray-100 font-[Rubik]">
@@ -261,7 +278,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
             {/* Service Category Box */}
             <div className="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 md:p-6 min-h-[220px]">
               <div className="grid grid-cols-4 gap-2.5 md:gap-3.5">
-                {categories.map((item) => {
+                {categories.slice(0, 7).map((item) => {
                   const styleInfo = CATEGORY_STYLE_MAP[item.slug] || { icon: item.icon || '🛠️', bg: 'bg-[#f8fafc]' };
                   const badgeText = item.badge || styleInfo.defaultBadge;
 
@@ -296,7 +313,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                           )}
                         </div>
 
-                        {/* Pill Badge (e.g. 44 mins, 19 mins) */}
+                        {/* Pill Badge (e.g. 44 mins, 19 mins, Subsidy) */}
                         {badgeText && (
                           <span className="absolute -bottom-1.5 bg-white border border-[#93c5fd] text-[#1d4ed8] text-[9px] font-bold px-1.5 py-0.2 rounded-full shadow-xs whitespace-nowrap">
                             {badgeText}
@@ -319,8 +336,10 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                   className="flex flex-col items-center justify-between p-2 md:p-2.5 rounded-xl hover:bg-gray-50/90 hover:shadow-xs transition-all text-center group cursor-pointer border border-transparent hover:border-gray-200 min-h-[96px]"
                 >
                   <div className="relative flex flex-col items-center justify-center">
-                    <div className="w-12 h-12 md:w-13 md:h-13 rounded-2xl bg-[#f8fafc] flex items-center justify-center text-2xl md:text-3xl shadow-xs group-hover:scale-105 transition-transform duration-200">
-                      <span className="material-symbols-outlined text-[#374151] text-2xl">apps</span>
+                    <div className="w-12 h-12 md:w-13 md:h-13 rounded-2xl bg-[#f8fafc] flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200">
+                      <svg className="w-6 h-6 text-[#374151]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z" />
+                      </svg>
                     </div>
                   </div>
                   <span className="text-[11px] md:text-[12px] font-semibold text-[#1f2937] leading-[14px] mt-2 group-hover:text-[#5e23dc] transition-colors line-clamp-2">
@@ -393,7 +412,7 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
             </div>
           </div>
 
-          {/* Right Column: Hero Collage (6 Columns) - Strictly Active Categories */}
+          {/* Right Column: Hero Collage (6 Columns) - Guaranteed 4 Complete Tiles */}
           <div className="lg:col-span-6 h-full flex flex-col justify-center">
             <div className="grid grid-cols-2 gap-3.5 md:gap-4.5 h-full">
               {activeCollage.map((item, idx) => (
@@ -406,6 +425,9 @@ export default function UrbanCompanyHero({ onSelectCategory }: UrbanCompanyHeroP
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=700&q=80';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-3.5">
                     <span className="text-xs font-bold text-white tracking-wide bg-black/40 backdrop-blur-xs px-2.5 py-1 rounded-lg">

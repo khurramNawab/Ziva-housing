@@ -189,6 +189,13 @@ const SUBCATEGORY_IMAGE_MAP: Record<string, string> = {
   'ayurveda': '/services/spa-ayurveda-potli.jpg',
   'targeted-relief': '/services/spa-luxe-stones.jpg',
 
+  // Solar Panels & Solutions
+  'solar-panels': 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=400&q=80',
+  'solar-rooftop-installation': 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=400&q=80',
+  'solar-panel-cleaning-maintenance': 'https://images.unsplash.com/photo-1508873696983-2df570464756?auto=format&fit=crop&w=400&q=80',
+  'inverter-electrical-diagnostics': 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=400&q=80',
+  'site-survey-subsidy-consultation': 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?auto=format&fit=crop&w=400&q=80',
+
   // InstaHelp
   'daily-helpers-sub': '/services/instahelp-helper.jpg',
   'cook-chef': '/services/instahelp-helper.jpg',
@@ -380,6 +387,14 @@ const ICON_MAP: Record<string, string> = {
   'self_improvement': '🧘',
   'pan_tool': '✋',
   'schedule': '⏱️',
+
+  // Solar & Energy
+  'solar_power': '☀️',
+  'solar-panels': '☀️',
+  'solar-panel': '☀️',
+  'solar': '☀️',
+  'wb_sunny': '☀️',
+  'solar_panel': '☀️',
 };
 
 function renderServiceIcon(iconStr?: string | null, fallback: string = '🛠️'): React.ReactNode {
@@ -6572,6 +6587,182 @@ const DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_SOLAR_PANELS_CATEGORY: ServiceCategory = {
+  id: 'cat-solar-panels',
+  name: 'Solar Panels',
+  slug: 'solar-panels',
+  icon: '☀️',
+  badge: 'Govt Subsidy',
+  order: 10,
+  subCategories: [
+    {
+      id: 'sub-solar-install',
+      name: 'Solar Rooftop Installation',
+      slug: 'solar-rooftop-installation',
+      icon: 'roofing',
+      badge: 'PM Surya Ghar',
+      groupHeader: 'Rooftop Setup',
+      displayOrder: 1,
+      description: 'On-grid and off-grid high-efficiency monocrystalline solar systems with DISCOM net-metering.',
+      services: [
+        {
+          id: 'srv-solar-1kw',
+          name: '1 kW On-Grid Solar Rooftop System',
+          slug: '1kw-ongrid-solar-system',
+          basePrice: 48999,
+          durationMinutes: 360,
+          bestsellerFlag: false,
+          rating: 4.88,
+          reviewCount: 1420,
+          description: '• Complete 1kW rooftop mono-PERC panels\n• Grid-tied smart inverter & MC4 wiring\n• Net-metering assistance with up to ₹30,000 govt subsidy support',
+          imageUrl: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-solar-3kw',
+          name: '3 kW Residential Solar Rooftop Setup',
+          slug: '3kw-residential-solar-setup',
+          basePrice: 139999,
+          durationMinutes: 480,
+          bestsellerFlag: true,
+          rating: 4.92,
+          reviewCount: 3120,
+          description: '• High-efficiency bifacial monocrystalline solar panels\n• 3kW smart MPPT inverter with mobile app generation tracker\n• Heavy-duty anodized aluminium mounting structure & lightning arrester',
+          imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-solar-5kw',
+          name: '5 kW Commercial / Villa Hybrid Solar System',
+          slug: '5kw-commercial-solar-system',
+          basePrice: 229999,
+          durationMinutes: 600,
+          bestsellerFlag: false,
+          rating: 4.95,
+          reviewCount: 890,
+          description: '• 5kW hybrid solar plant with lithium battery storage support\n• 24/7 power backup during outages & zero electricity bill\n• 25-year performance warranty on solar modules',
+          imageUrl: 'https://images.unsplash.com/photo-1545208942-e1c9c916524b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-solar-clean',
+      name: 'Solar Panel Cleaning & Maintenance',
+      slug: 'solar-panel-cleaning',
+      icon: 'water_drop',
+      badge: 'Boosts 25% Output',
+      groupHeader: 'Maintenance',
+      displayOrder: 2,
+      description: 'De-ionized water wash and nano coating to eliminate dust layers and restore maximum energy generation.',
+      services: [
+        {
+          id: 'srv-solar-clean-10',
+          name: 'Pressure Jet Wash & De-ionized Wash (Up to 10 Panels)',
+          slug: 'solar-jet-wash-10-panels',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 2450,
+          description: '• TDS-free de-ionized water spray\n• Micro-fiber soft brush scrubbing\n• Eliminates bird droppings, soot and stubborn grime',
+          imageUrl: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-solar-clean-20',
+          name: 'Deep Solar Wash & Anti-Dust Nano Coating (Up to 20 Panels)',
+          slug: 'solar-nano-coating-20-panels',
+          basePrice: 899,
+          durationMinutes: 60,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 1870,
+          description: '• High-pressure de-mineralized power wash\n• Hydrophobic anti-dust nano coating application\n• 90-day dust repellence for enhanced daily kilowatt generation',
+          imageUrl: 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-solar-clean-ann',
+          name: 'Annual Solar Cleaning Subscription (4 Visits/Year)',
+          slug: 'annual-solar-cleaning-subscription',
+          basePrice: 1699,
+          durationMinutes: 120,
+          bestsellerFlag: false,
+          rating: 4.91,
+          reviewCount: 940,
+          description: '• 4 quarterly deep clean visits per year\n• Periodic inverter diagnostics & wiring inspection\n• Detailed energy output audit report after each visit',
+          imageUrl: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-solar-inv',
+      name: 'Inverter & Electrical Diagnostics',
+      slug: 'solar-inverter-repair',
+      icon: 'electric_meter',
+      badge: 'In 30 mins',
+      groupHeader: 'Repairs',
+      displayOrder: 3,
+      description: 'Certified electrical technicians for MPPT inverter error codes, MC4 cable replacement and earthing inspection.',
+      services: [
+        {
+          id: 'srv-solar-inv-chk',
+          name: 'Solar Inverter Fault Check & Health Audit',
+          slug: 'solar-inverter-health-audit',
+          basePrice: 299,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.82,
+          reviewCount: 1210,
+          description: '• Complete AC/DC voltage test & MPPT tracker analysis\n• Thermal imaging inspection for panel hot spots\n• Earthing resistance and safety circuit check',
+          imageUrl: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-solar-mc4',
+          name: 'MC4 Connector & DC Cable Overhaul',
+          slug: 'mc4-connector-cable-repair',
+          basePrice: 499,
+          durationMinutes: 45,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 630,
+          description: '• Weatherproof IP68 MC4 connector replacement\n• DC cable insulation crimping & SPD surge protector repair\n• Prevents system tripping and power loss',
+          imageUrl: 'https://images.unsplash.com/photo-1544717302-de2939b7ef71?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-solar-srv',
+      name: 'Site Survey & Subsidy Consultation',
+      slug: 'solar-site-survey',
+      icon: 'analytics',
+      badge: '₹99 Consultation',
+      groupHeader: 'Consultation',
+      displayOrder: 4,
+      description: 'On-site shadow analysis, roof structure assessment and assistance with government subsidy paperwork.',
+      services: [
+        {
+          id: 'srv-solar-drone',
+          name: 'Drone Shadow Analysis & Roof Feasibility Survey',
+          slug: 'solar-roof-feasibility-survey',
+          basePrice: 99,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.94,
+          reviewCount: 4500,
+          description: '• Precise roof dimension & structural weight bearing survey\n• 3D shadow simulation for year-round sun exposure\n• Complete assistance for PM-Surya Ghar subsidy approval & DISCOM net meter application',
+          imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 function UrbanCompanyServiceListingContent() {
   const router = useRouter();
   const params = useParams();
@@ -6647,6 +6838,7 @@ function UrbanCompanyServiceListingContent() {
     const isFurnitureAssemblySlug = ['furniture-assembly', 'furniture', 'assembly'].includes(serviceSlug);
     const isNativeSmartLocksSlug = ['native-smart-locks', 'smart-locks', 'smart-lock', 'native-locks', 'locks'].includes(serviceSlug);
     const isNativeWaterPurifierSlug = ['native-water-purifier', 'native-water', 'native-water-purifiers', 'native-ro'].includes(serviceSlug);
+    const isSolarPanelsSlug = ['solar-panels', 'solar-panel', 'solar', 'rooftop-solar', 'solar-rooftop'].includes(serviceSlug);
 
     try {
       setLoading(true);
@@ -6828,6 +7020,11 @@ function UrbanCompanyServiceListingContent() {
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY.subCategories?.[0]?.slug || 'models');
           return;
         }
+        if (isSolarPanelsSlug) {
+          setCategoryData(DEFAULT_SOLAR_PANELS_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_SOLAR_PANELS_CATEGORY.subCategories?.[0]?.slug || 'solar-rooftop-installation');
+          return;
+        }
         setError404(true);
         return;
       }
@@ -6905,6 +7102,8 @@ function UrbanCompanyServiceListingContent() {
           data = DEFAULT_NATIVE_SMART_LOCKS_CATEGORY;
         } else if (isNativeWaterPurifierSlug) {
           data = DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY;
+        } else if (isSolarPanelsSlug) {
+          data = DEFAULT_SOLAR_PANELS_CATEGORY;
         } else {
           setError404(true);
           return;
@@ -6979,7 +7178,9 @@ function UrbanCompanyServiceListingContent() {
         data = DEFAULT_NATIVE_SMART_LOCKS_CATEGORY;
       } else if (isNativeWaterPurifierSlug || data.slug === 'native-water-purifier' || (data.name?.toLowerCase().includes('native') && data.name?.toLowerCase().includes('water'))) {
         data = DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY;
-        }
+      } else if (isSolarPanelsSlug || data.slug === 'solar-panels' || data.slug === 'solar-panel' || data.name?.toLowerCase().includes('solar')) {
+        data = DEFAULT_SOLAR_PANELS_CATEGORY;
+      }
       }
 
       setCategoryData(data);
@@ -7141,6 +7342,10 @@ function UrbanCompanyServiceListingContent() {
       } else if (isNativeWaterPurifierSlug) {
         setCategoryData(DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY.subCategories?.[0]?.slug || 'models');
+        setError404(false);
+      } else if (isSolarPanelsSlug) {
+        setCategoryData(DEFAULT_SOLAR_PANELS_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_SOLAR_PANELS_CATEGORY.subCategories?.[0]?.slug || 'solar-rooftop-installation');
         setError404(false);
       } else {
         setError404(true);
@@ -7485,6 +7690,14 @@ function UrbanCompanyServiceListingContent() {
       ['native-water-purifier', 'native-water', 'native-water-purifiers', 'native-ro'].includes(serviceSlug) ||
       ['native-water-purifier', 'native-water', 'native-water-purifiers', 'native-ro'].includes(categoryData?.slug || '') ||
       (categoryData?.name?.toLowerCase().includes('native') && categoryData?.name?.toLowerCase().includes('water'))
+    );
+  }, [serviceSlug, categoryData]);
+
+  const isSolarPanelsCategory = useMemo(() => {
+    return (
+      ['solar-panels', 'solar-panel', 'solar', 'rooftop-solar', 'solar-solutions'].includes(serviceSlug) ||
+      ['solar-panels', 'solar-panel', 'solar', 'rooftop-solar', 'solar-solutions'].includes(categoryData?.slug || '') ||
+      categoryData?.name?.toLowerCase().includes('solar')
     );
   }, [serviceSlug, categoryData]);
 
@@ -8508,6 +8721,44 @@ function UrbanCompanyServiceListingContent() {
                   className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   View Services
+                </button>
+              </div>
+            )}
+
+            {isSolarPanelsCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Solar Panels</h1>
+                    <span className="bg-amber-50 text-amber-700 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-amber-200 flex items-center gap-1 shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      Govt Subsidy
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.91
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">(18.4K installations)</span>
+                  </div>
+                </div>
+
+                <div className="bg-[#fefce8] p-2.5 rounded-xl border border-amber-200 text-xs text-amber-900 font-medium leading-relaxed">
+                  ⚡ PM Surya Ghar: Free Electricity upto ₹78,000 subsidy + 25-yr warranty
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-solar-rooftop-installation') || document.querySelector('[id^="subcat-section"]');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Solar Solutions
                 </button>
               </div>
             )}
@@ -9877,6 +10128,25 @@ function UrbanCompanyServiceListingContent() {
                           </div>
                           <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-emerald-100 shrink-0 hidden sm:block">
                             <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80" alt="Full Apartment" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {(subCat.slug === 'solar-rooftop-installation' || (isSolarPanelsCategory && subCat.slug === 'solar-rooftop-installation')) && (
+                        <div className="bg-gradient-to-r from-amber-50 via-yellow-50 to-orange-100/60 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-2xs">
+                          <div className="space-y-1">
+                            <span className="bg-[#d97706] text-white text-[9.5px] font-black px-2 py-0.5 rounded-sm uppercase tracking-wide">
+                              PM Surya Ghar: Muft Bijli Yojana
+                            </span>
+                            <h3 className="text-base font-black text-[#111827]">
+                              Direct Central Subsidy upto ₹78,000 on 3kW+
+                            </h3>
+                            <p className="text-xs text-amber-900 font-medium">
+                              Mono PERC Tier-1 panels • 25 Years linear performance warranty • Net metering support
+                            </p>
+                          </div>
+                          <div className="w-24 h-16 rounded-xl overflow-hidden shadow-2xs border border-amber-100 shrink-0 hidden sm:block">
+                            <img src="https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=400&q=80" alt="Solar Rooftop" className="w-full h-full object-cover" />
                           </div>
                         </div>
                       )}
