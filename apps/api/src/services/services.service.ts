@@ -971,15 +971,21 @@ export class ServicesService {
         });
 
         if (categories) {
-          return categories.map((cat) => ({
+          const dbSlugs = new Set(categories.map((c) => c.slug));
+          const missingDefaults = this.inMemoryCategories.filter(
+            (c) => c.isActive && !dbSlugs.has(c.slug)
+          );
+          const allMerged = [...categories, ...missingDefaults].sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+
+          return allMerged.map((cat: any) => ({
             ...cat,
-            subCategories: cat.subCategories.map((sub) => ({
+            subCategories: (cat.subCategories || []).map((sub: any) => ({
               ...sub,
-              tiers: sub.tiers.map((t) => {
+              tiers: (sub.tiers || []).map((t: any) => {
                 const srvs = t.services || [];
                 let startingPrice = t.startingPrice ? Number(t.startingPrice) : null;
                 if (srvs.length > 0) {
-                  const minPrice = Math.min(...srvs.map((s) => Number(s.basePrice || 0)).filter((p) => p > 0));
+                  const minPrice = Math.min(...srvs.map((s: any) => Number(s.basePrice || 0)).filter((p: number) => p > 0));
                   if (minPrice && isFinite(minPrice)) {
                     startingPrice = minPrice;
                   }
@@ -1173,8 +1179,7 @@ export class ServicesService {
           };
         }
 
-        // Category was not found in DB
-        return null;
+        // If category was not found in DB, check in-memory seeds below
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getCategoryMenu: ${err?.message}`);
       }

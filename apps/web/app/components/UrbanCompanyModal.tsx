@@ -857,7 +857,14 @@ export default function UrbanCompanyModal({
               };
             });
 
-          setCategories(activeCategories);
+          // Ensure default primary categories (like solar-panels, native products) are never lost
+          const backendSlugs = new Set(activeCategories.map((c: any) => c.slug));
+          const missingDefaults = DEFAULT_CATEGORIES.filter(
+            (dc) => !backendSlugs.has(dc.slug) && !data.some((b: any) => b.slug === dc.slug && b.isActive === false)
+          );
+          const mergedCategories = [...activeCategories, ...missingDefaults].sort((a, b) => (a.order || 0) - (b.order || 0));
+
+          setCategories(mergedCategories);
         }
       }
     } catch (err) {
