@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
-import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -6763,12 +6763,23 @@ const DEFAULT_SOLAR_PANELS_CATEGORY: ServiceCategory = {
   ],
 };
 
-function UrbanCompanyServiceListingContent() {
+function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: string } = {}) {
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const rawSlug = (params?.serviceSlug as string) || 'cleaning';
+  let derivedSlug = (params?.serviceSlug as string) || '';
+  if (!derivedSlug && pathname) {
+    const parts = pathname.split('?')[0].split('/').filter(Boolean);
+    if (parts.length >= 2 && parts[0] === 'services') {
+      derivedSlug = parts[1];
+    } else if (parts.length === 1 && parts[0] !== 'services') {
+      derivedSlug = parts[0];
+    }
+  }
+
+  const rawSlug = overrideSlug || derivedSlug || 'cleaning';
   const serviceSlug = slugify(rawSlug);
   const initialSubCatParam = searchParams.get('subCategory') ? slugify(searchParams.get('subCategory')!) : null;
   const initialTierParam = searchParams.get('tier') ? slugify(searchParams.get('tier')!) : null;
@@ -11057,7 +11068,7 @@ function UrbanCompanyServiceListingContent() {
   );
 }
 
-export default function UrbanCompanyServiceListingPage() {
+export default function UrbanCompanyServiceListingPage({ overrideSlug }: { overrideSlug?: string } = {}) {
   return (
     <Suspense
       fallback={
@@ -11068,7 +11079,7 @@ export default function UrbanCompanyServiceListingPage() {
         </div>
       }
     >
-      <UrbanCompanyServiceListingContent />
+      <UrbanCompanyServiceListingContent overrideSlug={overrideSlug} />
     </Suspense>
   );
 }

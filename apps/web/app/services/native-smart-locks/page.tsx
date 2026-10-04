@@ -3,5 +3,5 @@
 import DynamicServiceDetailPage from '../[serviceSlug]/page';
 
 export default function NativeSmartLocksPageWrapper() {
-  return <DynamicServiceDetailPage />;
+  return <DynamicServiceDetailPage overrideSlug="native-smart-locks" />;
 }

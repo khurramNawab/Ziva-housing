@@ -3,5 +3,5 @@
 import DynamicServiceDetailPage from '../[serviceSlug]/page';
 
 export default function NativeWaterPurifierPageWrapper() {
-  return <DynamicServiceDetailPage />;
+  return <DynamicServiceDetailPage overrideSlug="native-water-purifier" />;
 }
