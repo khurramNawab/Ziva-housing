@@ -2033,7 +2033,7 @@ export class AdminService {
     if (dto.icon !== undefined) data.icon = dto.icon;
     if (dto.imageUrl !== undefined) data.imageUrl = dto.imageUrl;
     if (dto.badge !== undefined) data.badge = dto.badge;
-    if (dto.estimatedTime !== undefined) data.badge = dto.estimatedTime;
+    else if (dto.estimatedTime !== undefined) data.badge = dto.estimatedTime;
     if (dto.description !== undefined) data.description = dto.description;
     if (dto.displayOrder !== undefined) data.displayOrder = Number(dto.displayOrder);
     if (dto.isActive !== undefined) data.isActive = Boolean(dto.isActive);
