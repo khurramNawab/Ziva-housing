@@ -6769,12 +6769,13 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  let derivedSlug = (params?.serviceSlug as string) || '';
-  if (!derivedSlug && pathname) {
-    const parts = pathname.split('?')[0].split('/').filter(Boolean);
-    if (parts.length >= 2 && parts[0] === 'services') {
+  let derivedSlug = typeof params?.serviceSlug === 'string' ? params.serviceSlug : '';
+  if (!derivedSlug && typeof pathname === 'string') {
+    const cleanPath = pathname.split('?')[0] || '';
+    const parts = cleanPath.split('/').filter(Boolean);
+    if (parts.length >= 2 && parts[0] === 'services' && parts[1]) {
       derivedSlug = parts[1];
-    } else if (parts.length === 1 && parts[0] !== 'services') {
+    } else if (parts.length === 1 && parts[0] && parts[0] !== 'services') {
       derivedSlug = parts[0];
     }
   }
