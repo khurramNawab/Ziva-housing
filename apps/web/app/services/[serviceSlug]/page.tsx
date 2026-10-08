@@ -5604,6 +5604,20 @@ const DEFAULT_CARPENTER_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_EPC_CATEGORY: ServiceCategory = {
+  id: 'cat-epc',
+  name: 'Electrician, Plumber & Carpenter',
+  slug: 'electrician-plumber-carpenter',
+  icon: '🔧',
+  badge: 'Instant in 25 mins',
+  order: 12,
+  subCategories: [
+    ...(DEFAULT_ELECTRICIAN_CATEGORY.subCategories || []).map((sc) => ({ ...sc, groupHeader: 'Electrician Services' })),
+    ...(DEFAULT_PLUMBER_CATEGORY.subCategories || []).map((sc) => ({ ...sc, groupHeader: 'Plumbing Services' })),
+    ...(DEFAULT_CARPENTER_CATEGORY.subCategories || []).map((sc) => ({ ...sc, groupHeader: 'Carpentry Services' })),
+  ],
+};
+
 const DEFAULT_FAN_INSTALLATION_CATEGORY: ServiceCategory = {
   id: 'cat-fan-installation',
   name: 'Fan Installation',
@@ -6842,9 +6856,10 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     const isWaterPurifierSlug = ['water-purifier', 'ro-water-purifier', 'water-purifier-service', 'ro-repair'].includes(serviceSlug);
     const isLaptopRepairSlug = ['laptop', 'laptop-repair', 'computer-repair', 'desktop-repair'].includes(serviceSlug);
     const isStoveRepairSlug = ['stove-service-repair', 'gas-stove', 'gas-stove-repair', 'hob-repair'].includes(serviceSlug);
-    const isPlumberSlug = ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(serviceSlug);
-    const isElectricianSlug = ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(serviceSlug);
-    const isCarpenterSlug = ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug);
+    const isEpcSlug = ['electrician-plumber-carpenter', 'epc', 'electrician-plumber', 'plumber-electrician', 'home-repairs'].includes(serviceSlug);
+    const isPlumberSlug = !isEpcSlug && ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(serviceSlug);
+    const isElectricianSlug = !isEpcSlug && ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(serviceSlug);
+    const isCarpenterSlug = !isEpcSlug && ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug);
     const isFanInstallationSlug = ['fan-installation', 'fan', 'ceiling-fan'].includes(serviceSlug);
     const isFestivalLightsSlug = ['festival-lights-installation', 'festival-lights', 'lights-installation'].includes(serviceSlug);
     const isFurnitureAssemblySlug = ['furniture-assembly', 'furniture', 'assembly'].includes(serviceSlug);
@@ -6992,6 +7007,11 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_STOVE_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'service');
           return;
         }
+        if (isEpcSlug) {
+          setCategoryData(DEFAULT_EPC_CATEGORY);
+          setActiveSubCategorySlug(initialSubCatParam || DEFAULT_EPC_CATEGORY.subCategories?.[0]?.slug || 'switch-socket');
+          return;
+        }
         if (isPlumberSlug) {
           setCategoryData(DEFAULT_PLUMBER_CATEGORY);
           setActiveSubCategorySlug(initialSubCatParam || DEFAULT_PLUMBER_CATEGORY.subCategories?.[0]?.slug || 'tap-mixer');
@@ -7098,6 +7118,8 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           data = DEFAULT_LAPTOP_REPAIR_CATEGORY;
         } else if (isStoveRepairSlug) {
           data = DEFAULT_STOVE_REPAIR_CATEGORY;
+        } else if (isEpcSlug) {
+          data = DEFAULT_EPC_CATEGORY;
         } else if (isPlumberSlug) {
           data = DEFAULT_PLUMBER_CATEGORY;
         } else if (isElectricianSlug) {
@@ -7174,6 +7196,8 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         data = DEFAULT_LAPTOP_REPAIR_CATEGORY;
       } else if (isStoveRepairSlug || data.slug === 'stove-service-repair' || data.slug === 'gas-stove' || data.name?.toLowerCase().includes('stove') || data.name?.toLowerCase().includes('hob')) {
         data = DEFAULT_STOVE_REPAIR_CATEGORY;
+      } else if (isEpcSlug || data.slug === 'electrician-plumber-carpenter' || data.slug === 'epc' || (data.name?.toLowerCase().includes('electrician') && data.name?.toLowerCase().includes('plumber'))) {
+        data = DEFAULT_EPC_CATEGORY;
       } else if (isPlumberSlug || data.slug === 'plumber' || data.slug === 'plumbing' || data.name?.toLowerCase().includes('plumb')) {
         data = DEFAULT_PLUMBER_CATEGORY;
       } else if (isElectricianSlug || data.slug === 'electrician' || data.name?.toLowerCase().includes('electr')) {
@@ -7322,6 +7346,10 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
       } else if (isStoveRepairSlug) {
         setCategoryData(DEFAULT_STOVE_REPAIR_CATEGORY);
         setActiveSubCategorySlug(initialSubCatParam || DEFAULT_STOVE_REPAIR_CATEGORY.subCategories?.[0]?.slug || 'service');
+        setError404(false);
+      } else if (isEpcSlug) {
+        setCategoryData(DEFAULT_EPC_CATEGORY);
+        setActiveSubCategorySlug(initialSubCatParam || DEFAULT_EPC_CATEGORY.subCategories?.[0]?.slug || 'switch-socket');
         setError404(false);
       } else if (isPlumberSlug) {
         setCategoryData(DEFAULT_PLUMBER_CATEGORY);
@@ -7641,29 +7669,41 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     );
   }, [serviceSlug, categoryData]);
 
+  const isEpcCategory = useMemo(() => {
+    return (
+      ['electrician-plumber-carpenter', 'epc', 'electrician-plumber', 'plumber-electrician', 'home-repairs'].includes(serviceSlug) ||
+      ['electrician-plumber-carpenter', 'epc'].includes(categoryData?.slug || '') ||
+      (categoryData?.name?.toLowerCase().includes('electrician') && categoryData?.name?.toLowerCase().includes('plumber')) ||
+      (categoryData?.name?.toLowerCase().includes('electrician') && categoryData?.name?.toLowerCase().includes('carpenter'))
+    );
+  }, [serviceSlug, categoryData]);
+
   const isPlumberCategory = useMemo(() => {
+    if (isEpcCategory) return false;
     return (
       ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(serviceSlug) ||
       ['plumber', 'plumbing', 'plumber-repair', 'plumbing-service'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('plumb')
     );
-  }, [serviceSlug, categoryData]);
+  }, [serviceSlug, categoryData, isEpcCategory]);
 
   const isElectricianCategory = useMemo(() => {
+    if (isEpcCategory) return false;
     return (
       ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(serviceSlug) ||
       ['electrician', 'electrician-service', 'electrical', 'electrical-repair'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('electr')
     );
-  }, [serviceSlug, categoryData]);
+  }, [serviceSlug, categoryData, isEpcCategory]);
 
   const isCarpenterCategory = useMemo(() => {
+    if (isEpcCategory) return false;
     return (
       ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(serviceSlug) ||
       ['carpenter', 'carpentry', 'carpenter-service', 'carpenter-repair'].includes(categoryData?.slug || '') ||
       categoryData?.name?.toLowerCase().includes('carpent')
     );
-  }, [serviceSlug, categoryData]);
+  }, [serviceSlug, categoryData, isEpcCategory]);
 
   const isFanInstallationCategory = useMemo(() => {
     return (
@@ -7886,9 +7926,9 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     <div className="bg-[#f8f9fb] min-h-screen flex flex-col font-[Rubik] text-[#191c1e]">
       <Navbar />
 
-      <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-8 py-6 md:py-8">
+      <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-8 py-6 md:py-8 pb-28 lg:pb-8">
         {/* Breadcrumb Navigation & In-Service Quick Search */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <Link href="/" className="hover:text-[#5e23dc]">Home</Link>
             <span>/</span>
@@ -7907,6 +7947,41 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
             </div>
           </div>
         </div>
+
+        {/* Mobile Horizontal Subcategory Pills Scroller (Sticky on Mobile) */}
+        {(categoryData?.subCategories || []).length > 1 && (
+          <div className="lg:hidden sticky top-[56px] z-30 -mx-4 px-4 py-2.5 bg-[#f8f9fb]/95 backdrop-blur-md border-b border-gray-200/80 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2">
+            {(categoryData.subCategories || []).map((subCat) => {
+              const isSelected = subCat.slug === activeSubCategorySlug;
+              return (
+                <button
+                  key={subCat.id || subCat.slug}
+                  type="button"
+                  onClick={() => {
+                    setActiveSubCategorySlug(subCat.slug);
+                    setActiveTierSlug(null);
+                    const el = document.getElementById(`subcat-section-${subCat.slug}`);
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                  }}
+                  className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#5e23dc] text-white shadow-xs'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                  }`}
+                >
+                  <span>{subCat.name}</span>
+                  {subCat.badge && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-extrabold ${isSelected ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700'}`}>
+                      {subCat.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* 3-Column Urban Company Layout (Left Sticky Nav, Center Service Feed, Right Cart) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -8410,6 +8485,49 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   type="button"
                   onClick={() => {
                     const el = document.getElementById('subcat-section-service');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Services
+                </button>
+              </div>
+            )}
+
+            {isEpcCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-xl md:text-2xl font-black text-[#111827]">Electrician, Plumber &amp; Carpenter</h1>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[12px]">bolt</span>
+                      In 25 mins
+                    </span>
+                    <span className="flex items-center text-amber-500 font-bold ml-1">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.82
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">8.8M bookings</span>
+                  </div>
+                </div>
+
+                {/* Warranty Strip */}
+                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[18px] text-[#5e23dc]">verified_user</span>
+                    <span className="text-xs font-bold text-[#111827]">30-day doorstep warranty</span>
+                  </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
+                </div>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('subcat-section-switch-socket') || document.getElementById('subcat-section-tap-mixer');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
@@ -9435,6 +9553,26 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                     <span className="bg-gray-100 px-3 py-1 rounded-md">LG</span>
                     <span className="bg-gray-100 px-3 py-1 rounded-md">Blue Star</span>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for EPC (Electrician, Plumber & Carpenter) */}
+            {isEpcCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-blue-700 via-indigo-800 to-purple-900 text-white p-5 sm:p-6 shadow-md border border-indigo-400/30 flex items-center justify-between gap-4">
+                <div className="space-y-2">
+                  <span className="bg-white/20 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full">
+                    Instant Home Repairs • 25 Mins
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+                    Electrician, Plumber &amp; Carpenter
+                  </h2>
+                  <p className="text-xs text-indigo-100 font-medium">
+                    Switchboard, taps, fan fitting, drill &amp; hang, lock repair with 30-day doorstep warranty
+                  </p>
+                </div>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/30 text-white shrink-0 shadow-lg">
+                  <span className="material-symbols-outlined text-3xl sm:text-4xl">home_repair_service</span>
                 </div>
               </div>
             )}
@@ -11002,8 +11140,35 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         </div>
       )}
 
+      {/* ════════════════════ MOBILE STICKY BOTTOM CART BAR ════════════════════ */}
+      {cart.length > 0 && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-4 py-3 shadow-[0_-4px_25px_rgba(0,0,0,0.12)] flex items-center justify-between">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-extrabold text-[#111827]">
+                ₹{cartGrandTotal}
+              </span>
+              <span className="text-gray-400 text-xs">•</span>
+              <span className="text-xs font-bold text-emerald-600">
+                {cart.reduce((a, b) => a + b.quantity, 0)} {cart.reduce((a, b) => a + b.quantity, 0) === 1 ? 'item' : 'items'}
+              </span>
+            </div>
+            <span className="text-[10px] text-gray-500 font-medium">Extra ₹200 off applied</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsCheckoutOpen(true)}
+            className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+          >
+            <span>View Cart</span>
+            <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+          </button>
+        </div>
+      )}
+
       {/* ════════════════════ FLOATING MENU QUICK-JUMP BUTTON ════════════════════ */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+      <div className={`fixed ${cart.length > 0 ? 'bottom-20 lg:bottom-6' : 'bottom-6'} left-1/2 -translate-x-1/2 z-40 transition-all`}>
         <button
           type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
