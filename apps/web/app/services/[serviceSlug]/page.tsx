@@ -11168,22 +11168,18 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                     : 'Transparent Pricing'}
                 </li>
               </ul>
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsCheckoutOpen(true)}
-                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-3 rounded-xl shadow-xs transition-colors flex items-center justify-between cursor-pointer"
-                >
-                  <span>
-                    {cart.length > 0
-                      ? `₹${cartGrandTotal}`
-                      : isFullHomeCategory
-                      ? '₹1,349'
-                      : `${cart.reduce((a, b) => a + b.quantity, 0)} ${cart.reduce((a, b) => a + b.quantity, 0) === 1 ? 'item' : 'items'}`}
-                  </span>
-                  <span>View Cart ›</span>
-                </button>
-              </div>
+              {cart.length > 0 && (
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsCheckoutOpen(true)}
+                    className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-3 rounded-xl shadow-xs transition-colors flex items-center justify-between cursor-pointer active:scale-98"
+                  >
+                    <span>₹{cartGrandTotal} ({cart.reduce((a, b) => a + b.quantity, 0)} {cart.reduce((a, b) => a + b.quantity, 0) === 1 ? 'item' : 'items'})</span>
+                    <span>View Cart ›</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -11225,142 +11221,189 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-              <h3 className="text-lg font-bold text-[#111827]">Complete Your Booking</h3>
+              <h3 className="text-lg font-bold text-[#111827]">
+                {cart.length > 0 ? 'Complete Your Booking' : 'Your Cart'}
+              </h3>
               <button
                 onClick={() => setIsCheckoutOpen(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700"
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-3.5 text-xs">
-              {/* Contact Information */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-bold text-gray-700 block mb-1">Your Name</label>
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                  />
+            {cart.length === 0 ? (
+              <div className="py-8 px-4 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-purple-50 text-[#5e23dc] flex items-center justify-center mx-auto text-3xl">
+                  🛒
                 </div>
-                <div>
-                  <label className="font-bold text-gray-700 block mb-1">Phone Number</label>
-                  <input
-                    type="tel"
-                    placeholder="10-digit mobile"
-                    value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                  />
-                </div>
-              </div>
-
-              {/* Date selection */}
-              <div>
-                <label className="font-bold text-gray-700 block mb-1">Select Service Date</label>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                />
-              </div>
-
-              {/* Time slot */}
-              <div>
-                <label className="font-bold text-gray-700 block mb-1">Select Time Slot</label>
-                <div className="grid grid-cols-3 gap-2">
-                  {timeSlots.map((slot) => (
-                    <button
-                      key={slot}
-                      type="button"
-                      onClick={() => setSelectedTimeSlot(slot)}
-                      className={`p-2 rounded-xl text-center font-bold border transition-all ${
-                        selectedTimeSlot === slot
-                          ? 'bg-purple-50 text-[#5e23dc] border-[#5e23dc]'
-                          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                      }`}
-                    >
-                      {slot}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Address */}
-              <div>
-                <label className="font-bold text-gray-700 block mb-1">Doorstep Address</label>
-                <textarea
-                  rows={2}
-                  placeholder="Flat/House No, Building, Street, Landmark"
-                  value={addressLine}
-                  onChange={(e) => setAddressLine(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                />
-              </div>
-
-              {/* City & Pincode */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-bold text-gray-700 block mb-1">City</label>
-                  <input
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                  />
-                </div>
-                <div>
-                  <label className="font-bold text-gray-700 block mb-1">Pincode</label>
-                  <input
-                    type="text"
-                    value={pincode}
-                    onChange={(e) => setPincode(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                  />
-                </div>
-              </div>
-
-              {/* Instructions */}
-              <div>
-                <label className="font-bold text-gray-700 block mb-1">Special Instructions (Optional)</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Ring bell twice, specific parking instructions"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
-                />
-              </div>
-
-              {checkoutError && (
-                <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-semibold flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm">error</span>
-                  <span>{checkoutError}</span>
-                </div>
-              )}
-
-              {/* Total & Action */}
-              <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
-                <div>
-                  <span className="text-gray-500 block text-[11px]">Total Payable</span>
-                  <span className="text-lg font-extrabold text-[#111827]">₹{cartGrandTotal}</span>
+                <div className="space-y-1">
+                  <h4 className="text-lg font-bold text-[#111827]">Your Cart is Empty</h4>
+                  <p className="text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
+                    Please add at least one service from the list below before booking an appointment.
+                  </p>
                 </div>
                 <button
                   type="button"
-                  disabled={bookingLoading}
-                  onClick={handleConfirmOrder}
-                  className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md text-xs flex items-center gap-2 cursor-pointer active:scale-95"
+                  onClick={() => {
+                    setIsCheckoutOpen(false);
+                    const el = document.getElementById('services-feed-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold text-xs px-6 py-2.5 rounded-xl transition-all shadow-md cursor-pointer inline-flex items-center gap-2"
                 >
-                  {bookingLoading ? 'Securing Booking...' : 'Confirm & Book Now'}
+                  <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
+                  <span>Explore & Add Services</span>
                 </button>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-3.5 text-xs">
+                {/* Booked Items Summary Pill */}
+                <div className="bg-[#f8f9fb] rounded-2xl p-3 border border-gray-200/80 space-y-1.5">
+                  <div className="text-[10.5px] font-bold text-gray-400 uppercase tracking-wider flex items-center justify-between">
+                    <span>Selected Services ({cart.reduce((a, b) => a + b.quantity, 0)})</span>
+                    <span className="text-[#5e23dc] font-bold">Subtotal: ₹{cartSubtotal}</span>
+                  </div>
+                  <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
+                    {cart.map((item) => (
+                      <div key={item.service.id} className="flex justify-between items-center text-xs font-semibold text-[#111827]">
+                        <span className="truncate max-w-[240px] flex items-center gap-1">
+                          <span className="text-gray-400">•</span>
+                          {item.service.name} <span className="text-gray-500 font-normal">x {item.quantity}</span>
+                        </span>
+                        <span className="font-extrabold text-[#111827]">₹{item.service.basePrice * item.quantity}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Contact Information */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-bold text-gray-700 block mb-1">Your Name</label>
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold text-gray-700 block mb-1">Phone Number</label>
+                    <input
+                      type="tel"
+                      placeholder="10-digit mobile"
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Date selection */}
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Select Service Date</label>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                  />
+                </div>
+
+                {/* Time slot */}
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Select Time Slot</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {timeSlots.map((slot) => (
+                      <button
+                        key={slot}
+                        type="button"
+                        onClick={() => setSelectedTimeSlot(slot)}
+                        className={`p-2 rounded-xl text-center font-bold border transition-all ${
+                          selectedTimeSlot === slot
+                            ? 'bg-purple-50 text-[#5e23dc] border-[#5e23dc]'
+                            : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Doorstep Address</label>
+                  <textarea
+                    rows={2}
+                    placeholder="Flat/House No, Building, Street, Landmark"
+                    value={addressLine}
+                    onChange={(e) => setAddressLine(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                  />
+                </div>
+
+                {/* City & Pincode */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-bold text-gray-700 block mb-1">City</label>
+                    <input
+                      type="text"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="font-bold text-gray-700 block mb-1">Pincode</label>
+                    <input
+                      type="text"
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value)}
+                      className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Instructions */}
+                <div>
+                  <label className="font-bold text-gray-700 block mb-1">Special Instructions (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Ring bell twice, specific parking instructions"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-gray-200 focus:border-[#5e23dc] outline-none font-medium"
+                  />
+                </div>
+
+                {checkoutError && (
+                  <div className="p-2.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-semibold flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm">error</span>
+                    <span>{checkoutError}</span>
+                  </div>
+                )}
+
+                {/* Total & Action */}
+                <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
+                  <div>
+                    <span className="text-gray-500 block text-[11px]">Total Payable</span>
+                    <span className="text-lg font-extrabold text-[#111827]">₹{cartGrandTotal}</span>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={bookingLoading}
+                    onClick={handleConfirmOrder}
+                    className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md text-xs flex items-center gap-2 cursor-pointer active:scale-95"
+                  >
+                    {bookingLoading ? 'Securing Booking...' : 'Confirm & Book Now'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
