@@ -9,11 +9,18 @@ function getApiBaseUrl(): string {
   return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 }
 
+function getRedirectUrl(): string | null {
+  if (typeof window === 'undefined') return null;
+  const param = new URLSearchParams(window.location.search).get('redirect');
+  return param && param.startsWith('/') ? param : null;
+}
+
 type Step = 'form' | 'otp';
 type Role = 'CUSTOMER' | 'OWNER' | 'AGENT' | 'SERVICE_PROVIDER';
 
 export default function RegisterPage() {
   const router = useRouter();
+
   const [step, setStep] = useState<Step>('form');
   const [role, setRole] = useState<Role>('CUSTOMER');
   const [otpValues, setOtpValues] = useState(['', '', '', '', '', '']);
@@ -122,6 +129,16 @@ export default function RegisterPage() {
       try {
         payload = JSON.parse(atob(accessToken.split('.')[1] || '{}'));
       } catch {}
+
+      const redirectUrl = getRedirectUrl();
+      if (redirectUrl) {
+        try {
+          router.push(redirectUrl);
+        } catch {
+          window.location.href = redirectUrl;
+        }
+        return;
+      }
 
       const targetRole = payload.role || role;
       if (targetRole === 'CUSTOMER') router.push('/dashboard/customer');

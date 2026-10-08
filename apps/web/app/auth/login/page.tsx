@@ -9,8 +9,15 @@ function getApiBaseUrl(): string {
   return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 }
 
+function getRedirectUrl(): string | null {
+  if (typeof window === 'undefined') return null;
+  const param = new URLSearchParams(window.location.search).get('redirect');
+  return param && param.startsWith('/') ? param : null;
+}
+
 export default function LoginPage() {
   const router = useRouter();
+
   const [form, setForm] = useState({ identifier: '', password: '' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,6 +47,16 @@ export default function LoginPage() {
   const [forgotSuccess, setForgotSuccess] = useState('');
 
   const navigateToRole = (role: string) => {
+    const redirectUrl = getRedirectUrl();
+    if (redirectUrl) {
+      try {
+        router.push(redirectUrl);
+      } catch {
+        window.location.href = redirectUrl;
+      }
+      return;
+    }
+
     let dest = '/dashboard/customer';
     if (role === 'CUSTOMER') dest = '/dashboard/customer';
     else if (role === 'OWNER') dest = '/dashboard/owner';

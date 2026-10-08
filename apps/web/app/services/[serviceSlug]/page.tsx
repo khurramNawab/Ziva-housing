@@ -6827,14 +6827,35 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState<any | null>(null);
 
-  // Initialize saved name and phone from localStorage
+  // Authentication state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
   useEffect(() => {
-    try {
-      const savedName = localStorage.getItem('user_name') || localStorage.getItem('ziva_customer_name') || '';
-      const savedPhone = localStorage.getItem('user_phone') || localStorage.getItem('ziva_customer_phone') || '';
-      if (savedName) setCustomerName(savedName);
-      if (savedPhone) setCustomerPhone(savedPhone);
-    } catch {}
+    const syncAuth = () => {
+      try {
+        const token = localStorage.getItem('Ziva_access') || localStorage.getItem('token') || '';
+        if (token) {
+          setIsLoggedIn(true);
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1] || '{}'));
+            setCurrentUser(payload);
+            const savedName = payload.name || localStorage.getItem('user_name') || localStorage.getItem('ziva_customer_name') || '';
+            const savedPhone = payload.phone || localStorage.getItem('user_phone') || localStorage.getItem('ziva_customer_phone') || '';
+            if (savedName) setCustomerName(savedName);
+            if (savedPhone) setCustomerPhone(savedPhone);
+          } catch {}
+        } else {
+          setIsLoggedIn(false);
+          setCurrentUser(null);
+        }
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+    syncAuth();
+    window.addEventListener('storage', syncAuth);
+    return () => window.removeEventListener('storage', syncAuth);
   }, []);
 
   // Synchronize dynamic location from Navbar and localStorage
@@ -7879,6 +7900,17 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   const handleConfirmOrder = async () => {
     setCheckoutError(null);
 
+    const token =
+      localStorage.getItem('Ziva_access') ||
+      localStorage.getItem('token') ||
+      localStorage.getItem('access_token') ||
+      '';
+
+    if (!token) {
+      setCheckoutError('Please login or create an account to confirm your service booking.');
+      return;
+    }
+
     if (!selectedDate || !selectedTimeSlot || !addressLine.trim() || !pincode.trim()) {
       setCheckoutError('Please fill in all address and schedule fields.');
       return;
@@ -7903,12 +7935,6 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
       }
     } catch {}
 
-    const token =
-      localStorage.getItem('Ziva_access') ||
-      localStorage.getItem('token') ||
-      localStorage.getItem('access_token') ||
-      '';
-
     try {
       const scheduledAt = new Date(`${selectedDate}T10:00:00.000Z`);
 
@@ -7923,67 +7949,32 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         notes: `Items: ${cart.map((i) => `${i.service.name} (x${i.quantity})`).join(', ')}. ${notes}`,
       };
 
-      if (token) {
-        const res = await fetch(getApiUrl('/services/bookings'), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        });
+      const res = await fetch(getApiUrl('/services/bookings'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-        if (res.ok) {
-          const bookingResult = await res.json();
-          setBookingSuccess(bookingResult);
-          saveCart([]);
-          setIsCheckoutOpen(false);
-          setBookingLoading(false);
-          return;
-        }
+      if (res.ok) {
+        const bookingResult = await res.json();
+        setBookingSuccess(bookingResult);
+        saveCart([]);
+        setIsCheckoutOpen(false);
+        return;
       }
 
-      // Seamless Booking Response (with Ziva Guarantee)
-      const simulatedBooking = {
-        id: `bk-${Date.now()}`,
-        bookingRef: `ZIVA-SVC-${Math.floor(100000 + Math.random() * 900000)}`,
-        status: 'CONFIRMED',
-        totalAmount: cartGrandTotal,
-        scheduledAt: new Date(selectedDate || Date.now()).toISOString(),
-        address: addressLine,
-        city,
-        pincode,
-        customerName: customerName || 'Customer',
-        customerPhone: customerPhone || '',
-        service: cart[0]?.service,
-        itemsCount: cart.reduce((a, b) => a + b.quantity, 0),
-      };
-
-      // Persist to user bookings history in local storage
-      try {
-        const existing = JSON.parse(localStorage.getItem('ziva_my_bookings') || '[]');
-        existing.unshift(simulatedBooking);
-        localStorage.setItem('ziva_my_bookings', JSON.stringify(existing.slice(0, 20)));
-      } catch {}
-
-      setBookingSuccess(simulatedBooking);
-      saveCart([]);
-      setIsCheckoutOpen(false);
+      const errData = await res.json().catch(() => ({}));
+      if (res.status === 401 || res.status === 403) {
+        setCheckoutError('Your session has expired. Please login again to complete booking.');
+        setIsLoggedIn(false);
+      } else {
+        setCheckoutError(errData?.message || 'Failed to complete booking. Please try again.');
+      }
     } catch (err: any) {
-      const fallbackBooking = {
-        id: `bk-${Date.now()}`,
-        bookingRef: `ZIVA-SVC-${Math.floor(100000 + Math.random() * 900000)}`,
-        status: 'CONFIRMED',
-        totalAmount: cartGrandTotal,
-        scheduledAt: new Date(selectedDate || Date.now()).toISOString(),
-        address: addressLine,
-        city,
-        pincode,
-        service: cart[0]?.service,
-      };
-      setBookingSuccess(fallbackBooking);
-      saveCart([]);
-      setIsCheckoutOpen(false);
+      setCheckoutError(err?.message || 'Failed to connect to server. Please try again.');
     } finally {
       setBookingLoading(false);
     }
@@ -11277,6 +11268,35 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   </div>
                 </div>
 
+                {/* Login Status Banner if not logged in */}
+                {!isLoggedIn && (
+                  <div className="bg-purple-50 border border-purple-200 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-[#5e23dc]/10 text-[#5e23dc] flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-base">lock</span>
+                      </div>
+                      <div>
+                        <div className="text-xs font-black text-[#111827]">Account Login Required</div>
+                        <p className="text-[11px] text-gray-600 font-medium">Please sign in to confirm and link this booking to your account.</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 shrink-0 w-full sm:w-auto">
+                      <Link
+                        href={`/auth/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : `/services/${serviceSlug}`)}`}
+                        className="flex-1 sm:flex-initial text-center bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-black text-xs px-3.5 py-2 rounded-xl transition-all shadow-xs"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href={`/auth/register?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : `/services/${serviceSlug}`)}`}
+                        className="flex-1 sm:flex-initial text-center bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs px-3.5 py-2 rounded-xl border border-gray-200 transition-all"
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
                 {/* Contact Information */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -11393,14 +11413,24 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                     <span className="text-gray-500 block text-[11px]">Total Payable</span>
                     <span className="text-lg font-extrabold text-[#111827]">₹{cartGrandTotal}</span>
                   </div>
-                  <button
-                    type="button"
-                    disabled={bookingLoading}
-                    onClick={handleConfirmOrder}
-                    className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md text-xs flex items-center gap-2 cursor-pointer active:scale-95"
-                  >
-                    {bookingLoading ? 'Securing Booking...' : 'Confirm & Book Now'}
-                  </button>
+                  {!isLoggedIn ? (
+                    <Link
+                      href={`/auth/login?redirect=${encodeURIComponent(typeof window !== 'undefined' ? window.location.pathname : `/services/${serviceSlug}`)}`}
+                      className="bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md text-xs flex items-center gap-2 cursor-pointer active:scale-95"
+                    >
+                      <span className="material-symbols-outlined text-sm">login</span>
+                      <span>Login to Book (₹{cartGrandTotal})</span>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={bookingLoading}
+                      onClick={handleConfirmOrder}
+                      className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md text-xs flex items-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50"
+                    >
+                      {bookingLoading ? 'Securing Booking...' : 'Confirm & Book Now'}
+                    </button>
+                  )}
                 </div>
               </div>
             )}
