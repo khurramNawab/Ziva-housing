@@ -185,6 +185,10 @@ export default function Navbar() {
     localStorage.setItem('Ziva_city', display);
     localStorage.removeItem('Ziva_lat');
     localStorage.removeItem('Ziva_lon');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ziva_location_changed', { detail: { city: display } }));
+      window.dispatchEvent(new Event('storage'));
+    }
     setAreaSearch('');
     setAreaSuggestions([]);
     setShowLocModal(false);
@@ -214,6 +218,12 @@ export default function Navbar() {
       // Auto-detect on first load
       detectLocation();
     }
+
+    const handleOpenLocModal = () => setShowLocModal(true);
+    window.addEventListener('ziva_open_location_modal', handleOpenLocModal);
+    return () => {
+      window.removeEventListener('ziva_open_location_modal', handleOpenLocModal);
+    };
   }, []);
 
   // Close dropdown on outside click

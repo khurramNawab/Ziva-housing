@@ -87,6 +87,10 @@ export default function Navbar() {
           const detectedCity = await reverseGeocode(latitude, longitude);
           setCity(detectedCity);
           localStorage.setItem('Ziva_city', detectedCity);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('ziva_location_changed', { detail: { city: detectedCity } }));
+            window.dispatchEvent(new Event('storage'));
+          }
           setLocating(false);
           setShowLocModal(false);
         },
@@ -99,6 +103,10 @@ export default function Navbar() {
               const fallbackLoc = `${ipData.city}, ${ipData.region_code || ipData.country_name}`;
               setCity(fallbackLoc);
               localStorage.setItem('Ziva_city', fallbackLoc);
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('ziva_location_changed', { detail: { city: fallbackLoc } }));
+                window.dispatchEvent(new Event('storage'));
+              }
             } else {
               setCity('Kolkata');
             }
@@ -185,6 +193,10 @@ export default function Navbar() {
     localStorage.setItem('Ziva_city', display);
     localStorage.removeItem('Ziva_lat');
     localStorage.removeItem('Ziva_lon');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ziva_location_changed', { detail: { city: display } }));
+      window.dispatchEvent(new Event('storage'));
+    }
     setAreaSearch('');
     setAreaSuggestions([]);
     setShowLocModal(false);
@@ -214,6 +226,12 @@ export default function Navbar() {
       // Auto-detect on first load
       detectLocation();
     }
+
+    const handleOpenLocModal = () => setShowLocModal(true);
+    window.addEventListener('ziva_open_location_modal', handleOpenLocModal);
+    return () => {
+      window.removeEventListener('ziva_open_location_modal', handleOpenLocModal);
+    };
   }, []);
 
   // Close dropdown on outside click
@@ -359,13 +377,7 @@ export default function Navbar() {
                     {['Bangalore', 'Delhi NCR', 'Mumbai', 'Hyderabad', 'Pune', 'Chennai', 'Noida', 'Kolkata'].map((c) => (
                       <button
                         key={c}
-                        onClick={() => {
-                          setCity(c);
-                          localStorage.setItem('Ziva_city', c);
-                          localStorage.removeItem('Ziva_lat');
-                          localStorage.removeItem('Ziva_lon');
-                          setShowLocModal(false);
-                        }}
+                        onClick={() => selectArea(c, c)}
                         className={`text-left px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                           city === c
                             ? 'bg-[#5e23dc] text-white'
@@ -635,8 +647,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 🧭 Dedicated Mode Toggle Sub-Bar (Directly below Navbar) */}
-      <div className="border-t border-[#f0ecf6] bg-[#fbfbfe] py-2 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]" suppressHydrationWarning>
+      {/* 🧭 Dedicated Mode Toggle Sub-Bar (Directly below Navbar - Desktop) */}
+      <div className="hidden md:block border-t border-[#f0ecf6] bg-[#fbfbfe] py-2 px-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]" suppressHydrationWarning>
         <div className="max-w-[1280px] mx-auto flex items-center justify-center">
           <div className="inline-flex items-center p-1 bg-[#eceef2] rounded-full border border-[#ded8ea] shadow-inner gap-1">
             <Link

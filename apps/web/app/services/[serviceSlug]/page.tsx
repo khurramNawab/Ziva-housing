@@ -6814,11 +6814,48 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('09:00 AM');
   const [addressLine, setAddressLine] = useState('');
-  const [city, setCity] = useState('Bangalore');
-  const [pincode, setPincode] = useState('560001');
+  const [userLocation, setUserLocation] = useState('Kolkata');
+  const [city, setCity] = useState('Kolkata');
+  const [pincode, setPincode] = useState('700019');
   const [notes, setNotes] = useState('');
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState<any | null>(null);
+
+  // Synchronize dynamic location from Navbar and localStorage
+  useEffect(() => {
+    const syncLocation = () => {
+      try {
+        const saved = localStorage.getItem('Ziva_city') || localStorage.getItem('user_address');
+        if (saved && saved !== 'Detecting...' && saved !== 'Select Location') {
+          setUserLocation(saved);
+          const firstPart = saved.split(',')[0]?.trim() || saved;
+          setCity(firstPart);
+          if (!addressLine) {
+            setAddressLine(saved);
+          }
+        }
+      } catch {}
+    };
+
+    syncLocation();
+    window.addEventListener('storage', syncLocation);
+    const handleLocChanged = (e: any) => {
+      if (e?.detail?.city) {
+        setUserLocation(e.detail.city);
+        const firstPart = e.detail.city.split(',')[0]?.trim() || e.detail.city;
+        setCity(firstPart);
+        if (!addressLine) {
+          setAddressLine(e.detail.city);
+        }
+      }
+    };
+    window.addEventListener('ziva_location_changed', handleLocChanged);
+
+    return () => {
+      window.removeEventListener('storage', syncLocation);
+      window.removeEventListener('ziva_location_changed', handleLocChanged);
+    };
+  }, [addressLine]);
 
   // Static Coupon Verification State
   const VALID_STATIC_COUPONS = useMemo(() => ['ZIVA200', 'STYLE200', 'WELCOME25', 'ZIVA25', 'SAVE200'], []);
@@ -7948,9 +7985,34 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           </div>
         </div>
 
+        {/* Mobile Compact Dynamic Location Bar */}
+        <div className="lg:hidden mb-3.5 flex items-center justify-between bg-white border border-gray-200 rounded-2xl px-3.5 py-2.5 shadow-2xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-full bg-purple-50 text-[#5e23dc] flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-[17px]">location_on</span>
+            </div>
+            <div className="min-w-0">
+              <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider leading-none">Service Location</div>
+              <div className="text-xs font-bold text-[#111827] truncate mt-0.5">{userLocation || 'Kolkata'}</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+              }
+            }}
+            className="shrink-0 text-xs font-bold text-[#5e23dc] hover:text-[#4500b4] px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <span>Change</span>
+            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+          </button>
+        </div>
+
         {/* Mobile Horizontal Subcategory Pills Scroller (Sticky on Mobile) */}
         {(categoryData?.subCategories || []).length > 1 && (
-          <div className="lg:hidden sticky top-[56px] z-30 -mx-4 px-4 py-2.5 bg-[#f8f9fb]/95 backdrop-blur-md border-b border-gray-200/80 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2">
+          <div className="lg:hidden sticky top-[56px] sm:top-[64px] z-40 -mx-4 px-4 py-2.5 bg-white/95 backdrop-blur-md border-b border-gray-200/80 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2 shadow-2xs">
             {(categoryData.subCategories || []).map((subCat) => {
               const isSelected = subCat.slug === activeSubCategorySlug;
               return (
@@ -7968,7 +8030,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                     isSelected
                       ? 'bg-[#5e23dc] text-white shadow-xs'
-                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                      : 'bg-[#f8f9fb] text-gray-700 border border-gray-200 hover:bg-gray-100'
                   }`}
                 >
                   <span>{subCat.name}</span>
@@ -8008,13 +8070,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -8039,13 +8109,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
 
                 {/* Top Rated Badge Strip */}
                 <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
@@ -8078,13 +8156,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -8109,13 +8195,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -8913,13 +9007,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -8944,13 +9046,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -8974,13 +9084,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -9004,13 +9122,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -9034,13 +9160,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -9065,13 +9199,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -9172,13 +9314,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
@@ -9202,13 +9352,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
 
                 {/* Address Selector Box */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
                   <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
                   <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
-                    <span className="truncate">Old Ballygunge Road, Kolkata</span>
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
                     <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
 
