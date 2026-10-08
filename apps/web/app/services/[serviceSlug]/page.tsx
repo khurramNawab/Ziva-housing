@@ -6868,7 +6868,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   const timeSlots = ['08:00 AM', '10:30 AM', '01:00 PM', '03:30 PM', '06:00 PM'];
 
   // Fetch full category hierarchy menu from backend
-  const fetchCategoryHierarchy = useCallback(async () => {
+  const fetchCategoryHierarchy = useCallback(async (showLoadingScreen: boolean = false) => {
     const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
     const isSpaSlug = ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women'].includes(serviceSlug);
     const isSalonLuxeSlug = !isSpaSlug && ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
@@ -6904,7 +6904,9 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     const isSolarPanelsSlug = ['solar-panels', 'solar-panel', 'solar', 'rooftop-solar', 'solar-rooftop'].includes(serviceSlug);
 
     try {
-      setLoading(true);
+      if (showLoadingScreen) {
+        setLoading(true);
+      }
       setError404(false);
       const encodedSlug = encodeURIComponent(serviceSlug);
       let res: Response;
@@ -7432,9 +7434,15 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   }, [serviceSlug, initialSubCatParam, initialTierParam]);
 
   useEffect(() => {
-    fetchCategoryHierarchy();
+    fetchCategoryHierarchy(true);
 
-    const handleRefresh = () => fetchCategoryHierarchy();
+    const handleRefresh = (e?: StorageEvent | FocusEvent) => {
+      // Ignore local storage cart/location updates to prevent unwanted page re-renders or scroll jumps
+      if (e instanceof StorageEvent && (e.key?.startsWith('ziva_cart_') || e.key === 'ziva_city' || e.key === 'user_address')) {
+        return;
+      }
+      fetchCategoryHierarchy(false);
+    };
     window.addEventListener('focus', handleRefresh);
     window.addEventListener('storage', handleRefresh);
 
@@ -7443,7 +7451,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
       bc = new BroadcastChannel('ziva_admin_sync');
       bc.onmessage = (msg) => {
         if (msg.data?.type === 'SERVICES_UPDATED') {
-          fetchCategoryHierarchy();
+          fetchCategoryHierarchy(false);
         }
       };
     } catch {}
@@ -7472,7 +7480,11 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     } catch (e) {}
   };
 
-  const handleAddToCart = (service: ServiceItem, subCatName?: string, tierName?: string) => {
+  const handleAddToCart = (e: React.MouseEvent | undefined, service: ServiceItem, subCatName?: string, tierName?: string) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const existingIndex = cart.findIndex((item) => item.service.id === service.id);
     const newCart = [...cart];
     if (existingIndex > -1 && newCart[existingIndex]) {
@@ -7488,7 +7500,11 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     saveCart(newCart);
   };
 
-  const handleUpdateQuantity = (serviceId: string, delta: number) => {
+  const handleUpdateQuantity = (e: React.MouseEvent | undefined, serviceId: string, delta: number) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     const newCart = [...cart];
     const existingIndex = newCart.findIndex((item) => item.service.id === serviceId);
     if (existingIndex > -1 && newCart[existingIndex]) {
@@ -10686,7 +10702,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                                   <div className="flex items-center justify-between w-full bg-white border border-[#5e23dc] rounded-xl px-2 py-1.5 shadow-xs">
                                     <button
                                       type="button"
-                                      onClick={() => handleUpdateQuantity(service.id, -1)}
+                                      onClick={(e) => handleUpdateQuantity(e, service.id, -1)}
                                       className="w-7 h-7 rounded-md hover:bg-purple-50 flex items-center justify-center text-base font-bold text-[#5e23dc] cursor-pointer"
                                     >
                                       -
@@ -10696,7 +10712,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                                     </span>
                                     <button
                                       type="button"
-                                      onClick={() => handleUpdateQuantity(service.id, 1)}
+                                      onClick={(e) => handleUpdateQuantity(e, service.id, 1)}
                                       className="w-7 h-7 rounded-md hover:bg-purple-50 flex items-center justify-center text-base font-bold text-[#5e23dc] cursor-pointer"
                                     >
                                       +
@@ -10705,8 +10721,9 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                                 ) : (
                                   <button
                                     type="button"
-                                    onClick={() =>
+                                    onClick={(e) =>
                                       handleAddToCart(
+                                        e,
                                         service,
                                         subCat.name,
                                         availableTiers.find((t) => t.id === service.tierId)?.name
@@ -10990,7 +11007,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                           </span>
                           <button
                             type="button"
-                            onClick={() => handleUpdateQuantity(item.service.id, -item.quantity)}
+                            onClick={(e) => handleUpdateQuantity(e, item.service.id, -item.quantity)}
                             className="text-gray-400 hover:text-red-500 text-xs"
                           >
                             ×
