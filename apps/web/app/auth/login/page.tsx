@@ -266,8 +266,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-[#f8f9fb] text-[#191c1e] font-[Rubik] antialiased min-h-screen flex items-center justify-center p-3 md:p-6 overflow-hidden">
-      <div className="w-full max-w-[1100px] bg-white rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden border border-[#eceef0]">
+    <div className="bg-[#f8f9fb] text-[#191c1e] font-[Rubik] antialiased min-h-screen flex flex-col items-center justify-center p-3 md:p-6">
+      
+      {/* Top Header Bar with Home link */}
+      <div className="w-full max-w-[1100px] mb-3 flex items-center justify-between">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs font-bold text-gray-700 hover:text-[#5e23dc] bg-white hover:bg-purple-50 px-3.5 py-2 rounded-xl border border-gray-200/90 shadow-2xs transition-all group cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-base group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+          <span>Back to Home</span>
+        </Link>
+        <Link
+          href="/"
+          className="text-[11px] font-semibold text-gray-500 hover:text-[#5e23dc] transition-colors flex items-center gap-1"
+        >
+          <span className="material-symbols-outlined text-sm">roofing</span>
+          <span>Ziva Housing Portal</span>
+        </Link>
+      </div>
+
+      <div className="w-full max-w-[1100px] bg-white rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden border border-[#eceef0] relative">
 
         {/* Left Side: Image / Brand */}
         <div
@@ -276,9 +295,16 @@ export default function LoginPage() {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-[#191919]/90 via-[#191919]/40 to-transparent" />
 
-          <div className="relative z-10">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/logo.png" alt="Ziva Housing Logo" className="h-10 w-auto object-contain" />
+          <div className="relative z-10 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 group">
+              <img src="/logo.png" alt="Ziva Housing Logo" className="h-10 w-auto object-contain group-hover:scale-105 transition-transform" />
+            </Link>
+            <Link
+              href="/"
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1 transition-all"
+            >
+              <span className="material-symbols-outlined text-sm">home</span>
+              <span>Home</span>
             </Link>
           </div>
 
@@ -293,17 +319,33 @@ export default function LoginPage() {
         {/* Right Side: Form */}
         <div className="w-full md:w-1/2 p-6 md:p-8 lg:p-10 flex flex-col bg-white justify-center">
           {/* Mobile Brand Header */}
-          <div className="md:hidden mb-4 text-center">
+          <div className="md:hidden mb-4 flex items-center justify-between">
             <Link href="/" className="inline-flex items-center gap-2">
-              <img src="/logo.png" alt="Ziva Housing Logo" className="h-9 w-auto object-contain" />
+              <img src="/logo.png" alt="Ziva Housing Logo" className="h-8 w-auto object-contain" />
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1 text-xs font-bold text-[#5e23dc] bg-purple-50 hover:bg-purple-100 px-3 py-1.5 rounded-lg border border-purple-100 transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm">home</span>
+              <span>Back to Home</span>
             </Link>
           </div>
 
-          <div className="mb-4">
-            <h2 className="text-[24px] leading-[32px] font-bold text-[#191c1e]">Welcome Back</h2>
-            <p className="text-[13px] leading-[18px] text-[#494455] mt-0.5">
-              Login as Customer, Owner, Agent, or Service Vendor
-            </p>
+          <div className="mb-4 flex items-start justify-between">
+            <div>
+              <h2 className="text-[24px] leading-[32px] font-bold text-[#191c1e]">Welcome Back</h2>
+              <p className="text-[13px] leading-[18px] text-[#494455] mt-0.5">
+                Login as Customer, Owner, Agent, or Service Vendor
+              </p>
+            </div>
+            <Link
+              href="/"
+              className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-gray-500 hover:text-[#5e23dc] bg-gray-50 hover:bg-purple-50 px-2.5 py-1 rounded-lg border border-gray-200 transition-colors"
+            >
+              <span className="material-symbols-outlined text-xs">home</span>
+              <span>Home</span>
+            </Link>
           </div>
 
           {/* Tab Toggle as direct Links */}
