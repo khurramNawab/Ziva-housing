@@ -6804,7 +6804,6 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   const [activeTierSlug, setActiveTierSlug] = useState<string | null>(initialTierParam);
   const [loading, setLoading] = useState(true);
   const [error404, setError404] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Cart state
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -7985,34 +7984,9 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           </div>
         </div>
 
-        {/* Mobile Compact Dynamic Location Bar */}
-        <div className="lg:hidden mb-3.5 flex items-center justify-between bg-white border border-gray-200 rounded-2xl px-3.5 py-2.5 shadow-2xs">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-purple-50 text-[#5e23dc] flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-[17px]">location_on</span>
-            </div>
-            <div className="min-w-0">
-              <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider leading-none">Service Location</div>
-              <div className="text-xs font-bold text-[#111827] truncate mt-0.5">{userLocation || 'Kolkata'}</div>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
-              }
-            }}
-            className="shrink-0 text-xs font-bold text-[#5e23dc] hover:text-[#4500b4] px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer flex items-center gap-1"
-          >
-            <span>Change</span>
-            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-          </button>
-        </div>
-
         {/* Mobile Horizontal Subcategory Pills Scroller (Sticky on Mobile) */}
         {(categoryData?.subCategories || []).length > 1 && (
-          <div className="lg:hidden sticky top-[56px] sm:top-[64px] z-40 -mx-4 px-4 py-2.5 bg-white/95 backdrop-blur-md border-b border-gray-200/80 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2 shadow-2xs">
+          <div className="lg:hidden sticky top-[56px] z-30 -mx-4 px-4 py-2.5 bg-white/95 backdrop-blur-md border-b border-gray-200/80 mb-4 overflow-x-auto no-scrollbar flex items-center gap-2 shadow-2xs scroll-smooth">
             {(categoryData.subCategories || []).map((subCat) => {
               const isSelected = subCat.slug === activeSubCategorySlug;
               return (
@@ -8024,10 +7998,12 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                     setActiveTierSlug(null);
                     const el = document.getElementById(`subcat-section-${subCat.slug}`);
                     if (el) {
-                      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      const yOffset = -120;
+                      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
                     }
                   }}
-                  className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-none ${
                     isSelected
                       ? 'bg-[#5e23dc] text-white shadow-xs'
                       : 'bg-[#f8f9fb] text-gray-700 border border-gray-200 hover:bg-gray-100'
@@ -8035,7 +8011,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 >
                   <span>{subCat.name}</span>
                   {subCat.badge && (
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-extrabold ${isSelected ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700'}`}>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-extrabold ${isSelected ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
                       {subCat.badge}
                     </span>
                   )}
@@ -11322,68 +11298,6 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
             <span>View Cart</span>
             <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
           </button>
-        </div>
-      )}
-
-      {/* ════════════════════ FLOATING MENU QUICK-JUMP BUTTON ════════════════════ */}
-      <div className={`fixed ${cart.length > 0 ? 'bottom-20 lg:bottom-6' : 'bottom-6'} left-1/2 -translate-x-1/2 z-40 transition-all`}>
-        <button
-          type="button"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="bg-[#111827] hover:bg-black text-white px-5 py-2.5 rounded-full shadow-2xl font-extrabold text-xs flex items-center gap-2 cursor-pointer transition-transform hover:scale-105 border border-gray-700"
-        >
-          <span className="material-symbols-outlined text-sm">menu</span>
-          <span>Menu</span>
-        </button>
-      </div>
-
-      {/* ════════════════════ FLOATING MENU DRAWER ════════════════════ */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/50 backdrop-blur-2xs animate-fadeIn">
-          <div className="bg-white rounded-t-3xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[75vh] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-              <h3 className="text-base font-extrabold text-[#111827]">
-                Quick Jump to Section
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-7 h-7 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center font-bold text-xs cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              {(categoryData?.subCategories || []).map((sub) => {
-                const subServices = sub.services || (categoryData?.services || []).filter((s) => s.subCategoryId === sub.id);
-                return (
-                  <button
-                    key={sub.id}
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setActiveSubCategorySlug(sub.slug);
-                      setActiveTierSlug(null);
-                      const el = document.getElementById(`subcat-section-${sub.slug}`);
-                      if (el) {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-purple-50 text-left transition-colors font-bold text-xs text-gray-800 border border-gray-100 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span>{renderServiceIcon(sub.icon, '🛠️')}</span>
-                      <span>{sub.name}</span>
-                    </div>
-                    <span className="text-[11px] font-bold text-[#5e23dc] bg-purple-100 px-2 py-0.5 rounded-full">
-                      {subServices.length}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
       )}
 
