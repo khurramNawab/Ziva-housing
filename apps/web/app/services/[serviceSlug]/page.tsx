@@ -7987,7 +7987,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* ════════════════════ LEFT COLUMN: "Select a service" (3 Cols) ════════════════════ */}
-          <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-200/90 p-4 shadow-xs sticky top-24">
+          <div className="hidden lg:block lg:col-span-3 bg-white rounded-2xl border border-gray-200/90 p-4 shadow-xs lg:sticky lg:top-24">
             {isAcCategory && (
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
@@ -9256,7 +9256,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           </div>
 
           {/* ════════════════════ CENTER COLUMN: Main Content & Services (6 Cols) ════════════════════ */}
-          <div className="lg:col-span-6 space-y-6">
+          <div className="w-full lg:col-span-6 space-y-6 min-w-0">
             
             {/* Dedicated Hero Banner for AC (Matching Urban Company Foam-Jet Cleaning) */}
             {isAcCategory && (
@@ -9985,13 +9985,13 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                         }`}
                       >
                         {badgeText && (
-                          <span className="absolute top-2 left-2 z-10 bg-[#16a34a] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shadow-2xs">
+                          <span className="absolute top-1.5 left-1.5 z-10 bg-[#16a34a] text-white text-[7.5px] sm:text-[8.5px] font-extrabold px-1.5 py-0.5 rounded shadow-xs max-w-[85%] truncate leading-tight pointer-events-none">
                             {badgeText}
                           </span>
                         )}
 
                         {/* Subcategory Photo Thumbnail */}
-                        <div className="w-full h-20 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
+                        <div className="w-full h-16 sm:h-20 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
                           <img
                             src={subImg}
                             alt={sub.name}
@@ -9999,7 +9999,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                           />
                         </div>
 
-                        <span className="text-[11.5px] font-bold text-[#111827] leading-tight line-clamp-2 group-hover:text-[#5e23dc] transition-colors">
+                        <span className="text-[11px] sm:text-[11.5px] font-bold text-[#111827] leading-tight line-clamp-2 break-words text-center w-full group-hover:text-[#5e23dc] transition-colors">
                           {sub.name}
                         </span>
                       </button>
@@ -10602,7 +10602,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           </div>
 
           {/* ════════════════════ RIGHT COLUMN: Sticky Cart & Booking Summary (3 Cols) ════════════════════ */}
-          <div className="lg:col-span-3 space-y-4 sticky top-24">
+          <div className="hidden lg:block lg:col-span-3 space-y-4 lg:sticky lg:top-24">
             {/* Air Cooler, Plumber & Festival Lights Promo Strip */}
             {(isAirCoolerCategory || isPlumberCategory || isFestivalLightsCategory) && (
               <div className="bg-white rounded-2xl p-3.5 border border-emerald-100 shadow-2xs flex items-center gap-3">

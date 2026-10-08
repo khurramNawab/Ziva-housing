@@ -496,7 +496,7 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-ac-annual', name: 'Annual plan', slug: 'annual-plan', icon: 'calendar_month', badge: '30% OFF', groupHeader: 'Air Conditioner', displayOrder: 1 },
     { id: 'sub-ac-1', name: 'Service', slug: 'ac-service-sub', icon: 'ac_unit', badge: 'Most Booked', groupHeader: 'Air Conditioner', displayOrder: 2 },
     { id: 'sub-ac-repair', name: 'Repair & gas refill', slug: 'repair-gas-refill', icon: 'build', badge: 'Quick Visit', groupHeader: 'Air Conditioner', displayOrder: 3 },
-    { id: 'sub-ac-install', name: 'Installation/uninstallation', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
+    { id: 'sub-ac-install', name: 'Install & Uninstall', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
     { id: 'sub-ac-2', name: 'Washing Machine', slug: 'washing-machine', icon: '🧺', badge: null, groupHeader: 'Other Appliances', displayOrder: 5 },
     { id: 'sub-ac-3', name: 'Refrigerator', slug: 'refrigerator', icon: '🧊', badge: null, groupHeader: 'Other Appliances', displayOrder: 6 },
     { id: 'sub-ac-4', name: 'Chimney', slug: 'chimney', icon: '🍳', badge: null, groupHeader: 'Other Appliances', displayOrder: 7 },
@@ -513,13 +513,13 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-ac-annual', name: 'Annual plan', slug: 'annual-plan', icon: 'calendar_month', badge: '30% OFF', groupHeader: 'Air Conditioner', displayOrder: 1 },
     { id: 'sub-ac-1', name: 'Service', slug: 'ac-service-sub', icon: 'ac_unit', badge: 'Most Booked', groupHeader: 'Air Conditioner', displayOrder: 2 },
     { id: 'sub-ac-repair', name: 'Repair & gas refill', slug: 'repair-gas-refill', icon: 'build', badge: 'Quick Visit', groupHeader: 'Air Conditioner', displayOrder: 3 },
-    { id: 'sub-ac-install', name: 'Installation/uninstallation', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
+    { id: 'sub-ac-install', name: 'Install & Uninstall', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
   ],
   'ac-service': [
     { id: 'sub-ac-annual', name: 'Annual plan', slug: 'annual-plan', icon: 'calendar_month', badge: '30% OFF', groupHeader: 'Air Conditioner', displayOrder: 1 },
     { id: 'sub-ac-1', name: 'Service', slug: 'ac-service-sub', icon: 'ac_unit', badge: 'Most Booked', groupHeader: 'Air Conditioner', displayOrder: 2 },
     { id: 'sub-ac-repair', name: 'Repair & gas refill', slug: 'repair-gas-refill', icon: 'build', badge: 'Quick Visit', groupHeader: 'Air Conditioner', displayOrder: 3 },
-    { id: 'sub-ac-install', name: 'Installation/uninstallation', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
+    { id: 'sub-ac-install', name: 'Install & Uninstall', slug: 'installation-uninstallation', icon: 'home_repair_service', badge: 'Precision', groupHeader: 'Air Conditioner', displayOrder: 4 },
   ],
   'electrician-plumber-carpenter': [
     { id: 'sub-epc-elec', name: 'Electrician', slug: 'electrician', icon: '⚡', badge: '25 mins', groupHeader: 'Home repairs', displayOrder: 1 },
@@ -578,16 +578,16 @@ const DEFAULT_TAXONOMY: Record<string, ServiceSubCategory[]> = {
     { id: 'sub-imk-1', name: 'Modular Kitchen & Woodwork', slug: 'modular-kitchen-woodwork', icon: '📐', badge: null, groupHeader: null, displayOrder: 1 },
   ],
   'solar-panels': [
-    { id: 'sub-solar-1', name: 'Solar Rooftop Installation', slug: 'solar-rooftop-installation', icon: '☀️', badge: 'PM Surya Ghar', groupHeader: 'Rooftop Setup', displayOrder: 1 },
-    { id: 'sub-solar-2', name: 'Solar Panel Cleaning & Maintenance', slug: 'solar-panel-cleaning', icon: '💧', badge: 'Boosts 25% Output', groupHeader: 'Maintenance', displayOrder: 2 },
+    { id: 'sub-solar-1', name: 'Solar Rooftop Installation', slug: 'solar-rooftop-installation', icon: '☀️', badge: 'Govt Subsidy', groupHeader: 'Rooftop Setup', displayOrder: 1 },
+    { id: 'sub-solar-2', name: 'Solar Panel Cleaning & Maintenance', slug: 'solar-panel-cleaning', icon: '💧', badge: 'Boost 25%', groupHeader: 'Maintenance', displayOrder: 2 },
     { id: 'sub-solar-3', name: 'Inverter & Electrical Diagnostics', slug: 'solar-inverter-repair', icon: '⚡', badge: 'In 30 mins', groupHeader: 'Repairs', displayOrder: 3 },
-    { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consultation', groupHeader: 'Consultation', displayOrder: 4 },
+    { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consult', groupHeader: 'Consultation', displayOrder: 4 },
   ],
   'solar-panel': [
-    { id: 'sub-solar-1', name: 'Solar Rooftop Installation', slug: 'solar-rooftop-installation', icon: '☀️', badge: 'PM Surya Ghar', groupHeader: 'Rooftop Setup', displayOrder: 1 },
-    { id: 'sub-solar-2', name: 'Solar Panel Cleaning & Maintenance', slug: 'solar-panel-cleaning', icon: '💧', badge: 'Boosts 25% Output', groupHeader: 'Maintenance', displayOrder: 2 },
+    { id: 'sub-solar-1', name: 'Solar Rooftop Installation', slug: 'solar-rooftop-installation', icon: '☀️', badge: 'Govt Subsidy', groupHeader: 'Rooftop Setup', displayOrder: 1 },
+    { id: 'sub-solar-2', name: 'Solar Panel Cleaning & Maintenance', slug: 'solar-panel-cleaning', icon: '💧', badge: 'Boost 25%', groupHeader: 'Maintenance', displayOrder: 2 },
     { id: 'sub-solar-3', name: 'Inverter & Electrical Diagnostics', slug: 'solar-inverter-repair', icon: '⚡', badge: 'In 30 mins', groupHeader: 'Repairs', displayOrder: 3 },
-    { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consultation', groupHeader: 'Consultation', displayOrder: 4 },
+    { id: 'sub-solar-4', name: 'Site Survey & Subsidy Consultation', slug: 'solar-site-survey', icon: '📐', badge: '₹99 Consult', groupHeader: 'Consultation', displayOrder: 4 },
   ],
   'native-smart-locks': [
     { id: 'sub-nsl-1', name: 'Smart Door Locks', slug: 'feature-lock', icon: '🔐', badge: 'Sale Live', groupHeader: 'Flagship Models', displayOrder: 1 },
@@ -760,7 +760,9 @@ function renderCategoryIcon(iconStr?: string | null, fallback: string = '🛠️
 
 function cleanText(text?: string | null): string {
   if (!text) return '';
-  return text.replace(/_/g, ' ');
+  return text
+    .replace(/_/g, ' ')
+    .replace(/([a-zA-Z0-9])\/([a-zA-Z0-9])/g, '$1 / $2');
 }
 
 const DEFAULT_CATEGORIES: ServiceCategory[] = [
@@ -1223,7 +1225,7 @@ export default function UrbanCompanyModal({
 
                     {/* Ungrouped items */}
                     {ungrouped.length > 0 && (
-                      <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
+                      <div className="grid grid-cols-4 gap-2 sm:gap-3">
                         {ungrouped.map((sub) => {
                           const subPhoto = getSubPhoto(sub);
 
@@ -1232,16 +1234,16 @@ export default function UrbanCompanyModal({
                               key={sub.id || sub.slug}
                               type="button"
                               onClick={() => handleSubCategoryClick(sub, category)}
-                              className="relative bg-white hover:bg-purple-50/50 border border-gray-200/80 hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 text-center cursor-pointer transition-all hover:scale-[1.03] group shadow-2xs hover:shadow-md min-h-[125px]"
+                              className="relative bg-white hover:bg-purple-50/50 border border-gray-200/80 hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 text-center cursor-pointer transition-all hover:scale-[1.03] group shadow-2xs hover:shadow-md min-h-[118px] overflow-hidden"
                             >
                               {sub.badge && (
-                                <span className="absolute top-1.5 left-1.5 z-10 bg-[#16a34a] text-white text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-md shadow-2xs">
+                                <span className="absolute top-1 left-1 z-10 bg-[#16a34a] text-white text-[7.5px] sm:text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-xs max-w-[85%] truncate leading-tight pointer-events-none">
                                   {cleanText(sub.badge)}
                                 </span>
                               )}
 
                               {/* Realistic Photo Thumbnail */}
-                              <div className="w-full h-16 sm:h-18 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
+                              <div className="w-full h-14 sm:h-16 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
                                 <img
                                   src={subPhoto}
                                   alt={sub.name}
@@ -1256,7 +1258,7 @@ export default function UrbanCompanyModal({
                                 />
                               </div>
 
-                              <span className="text-[11px] font-extrabold text-[#111827] leading-tight line-clamp-2 group-hover:text-[#5e23dc] transition-colors pb-0.5">
+                              <span className="text-[10px] sm:text-[11px] font-extrabold text-[#111827] leading-tight line-clamp-2 break-words text-center w-full group-hover:text-[#5e23dc] transition-colors pb-0.5">
                                 {cleanText(sub.name)}
                               </span>
                             </button>
@@ -1271,7 +1273,7 @@ export default function UrbanCompanyModal({
                         <h4 className="text-[13px] font-bold text-[#4b5563]">
                           {cleanText(group.header)}
                         </h4>
-                        <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
+                        <div className="grid grid-cols-4 gap-2 sm:gap-3">
                           {group.items.map((sub) => {
                             const subPhoto = getSubPhoto(sub);
 
@@ -1280,16 +1282,16 @@ export default function UrbanCompanyModal({
                                 key={sub.id || sub.slug}
                                 type="button"
                                 onClick={() => handleSubCategoryClick(sub, category)}
-                                className="relative bg-white hover:bg-purple-50/50 border border-gray-200/80 hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 text-center cursor-pointer transition-all hover:scale-[1.03] group shadow-2xs hover:shadow-md min-h-[125px]"
+                                className="relative bg-white hover:bg-purple-50/50 border border-gray-200/80 hover:border-[#5e23dc] rounded-2xl flex flex-col items-center justify-between p-2 text-center cursor-pointer transition-all hover:scale-[1.03] group shadow-2xs hover:shadow-md min-h-[118px] overflow-hidden"
                               >
                                 {sub.badge && (
-                                  <span className="absolute top-1.5 left-1.5 z-10 bg-[#16a34a] text-white text-[8.5px] font-extrabold px-1.5 py-0.5 rounded-md shadow-2xs">
+                                  <span className="absolute top-1 left-1 z-10 bg-[#16a34a] text-white text-[7.5px] sm:text-[8px] font-extrabold px-1.5 py-0.5 rounded shadow-xs max-w-[85%] truncate leading-tight pointer-events-none">
                                     {cleanText(sub.badge)}
                                   </span>
                                 )}
 
                                 {/* Realistic Photo Thumbnail */}
-                                <div className="w-full h-16 sm:h-18 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
+                                <div className="w-full h-14 sm:h-16 rounded-xl overflow-hidden bg-gray-100 mb-1.5 relative shadow-2xs">
                                   <img
                                     src={subPhoto}
                                     alt={sub.name}
@@ -1304,7 +1306,7 @@ export default function UrbanCompanyModal({
                                   />
                                 </div>
 
-                                <span className="text-[11px] font-extrabold text-[#111827] leading-tight line-clamp-2 group-hover:text-[#5e23dc] transition-colors pb-0.5">
+                                <span className="text-[10px] sm:text-[11px] font-extrabold text-[#111827] leading-tight line-clamp-2 break-words text-center w-full group-hover:text-[#5e23dc] transition-colors pb-0.5">
                                   {cleanText(sub.name)}
                                 </span>
                               </button>
