@@ -7153,7 +7153,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         if (isAcSlug) {
           data = DEFAULT_AC_CATEGORY;
         } else if (isSpaSlug) {
-          data = DEFAULT_SPA_CATEGORY;
+          data = serviceSlug.includes('men') ? { ...DEFAULT_SPA_CATEGORY, name: 'Massage for Men', slug: 'massage-for-men' } : DEFAULT_SPA_CATEGORY;
         } else if (isSalonLuxeSlug) {
           data = DEFAULT_SALON_LUXE_CATEGORY;
         } else if (isInstaHelpSlug) {
@@ -7231,7 +7231,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
         data = DEFAULT_AC_CATEGORY;
       } else if (isSpaSlug || (data.slug === 'spa-for-women' || data.name?.toLowerCase().includes('spa') && !data.name?.toLowerCase().includes('salon'))) {
-        data = DEFAULT_SPA_CATEGORY;
+        data = serviceSlug.includes('men') ? { ...DEFAULT_SPA_CATEGORY, name: 'Massage for Men', slug: 'massage-for-men' } : DEFAULT_SPA_CATEGORY;
       } else if (isSalonLuxeSlug || data.slug === 'salon-luxe' || data.name?.toLowerCase().includes('salon')) {
         data = DEFAULT_SALON_LUXE_CATEGORY;
       } else if (isInstaHelpSlug || data.slug === 'instahelp') {
@@ -8145,7 +8145,9 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
               <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h1 className="text-2xl font-black text-[#111827]">Spa for Women</h1>
+                    <h1 className="text-2xl font-black text-[#111827]">
+                      {categoryData?.name || (serviceSlug.includes('men') ? 'Massage for Men' : 'Spa for Women')}
+                    </h1>
                     <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-0.5">
                       <span className="material-symbols-outlined text-[12px]">bolt</span>
                       In 44 mins
@@ -8178,51 +8180,44 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   </div>
                 </button>
 
-                {/* Curated Luxury Therapies Top Rated Button */}
+                {/* Curated Luxury Therapies Strip (Interactive & Functional) */}
                 <button
                   type="button"
                   id="curated-luxury-therapies-btn"
                   onClick={() => {
-                    setActiveSubCategorySlug('luxe');
-                    setActiveTierSlug('luxe');
-                    const el = document.getElementById('subcat-section-luxe') || document.getElementById('subcat-section-sub-spa-luxe');
+                    const luxeSub = (categoryData?.subCategories || []).find(
+                      (s) => s.slug === 'luxe' || s.slug === 'sub-spa-luxe' || s.slug.includes('luxe') || s.name.toLowerCase().includes('luxe') || s.name.toLowerCase().includes('curated')
+                    );
+                    const targetSlug = luxeSub ? luxeSub.slug : 'luxe';
+                    setActiveSubCategorySlug(targetSlug);
+                    setActiveTierSlug(targetSlug);
+                    if (categoryData?.slug || serviceSlug) {
+                      router.replace(`/services/${categoryData?.slug || serviceSlug}?subCategory=${targetSlug}&tier=${targetSlug}`, { scroll: false });
+                    }
+                    const el = document.getElementById(`subcat-section-${targetSlug}`) || document.getElementById('subcat-section-luxe') || document.getElementById('subcat-section-sub-spa-luxe');
                     if (el) {
-                      el.scrollIntoView({ behavior: 'smooth' });
+                      const y = el.getBoundingClientRect().top + window.pageYOffset - 110;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
                     }
                   }}
-                  className={`w-full rounded-xl p-2.5 border text-left transition-all cursor-pointer group flex items-center justify-between shadow-2xs ${
-                    activeSubCategorySlug === 'luxe' || activeSubCategorySlug === 'sub-spa-luxe' || activeTierSlug === 'luxe' || !activeSubCategorySlug
-                      ? 'bg-gradient-to-r from-amber-50 to-purple-50/70 border-amber-300 ring-1 ring-amber-200'
-                      : 'bg-[#f8f9fb] hover:bg-amber-50/40 border-gray-200'
+                  className={`w-full rounded-xl p-2.5 border text-left transition-all cursor-pointer group flex items-center justify-between ${
+                    activeSubCategorySlug === 'luxe' || activeSubCategorySlug === 'sub-spa-luxe' || activeSubCategorySlug?.includes('luxe') || activeTierSlug === 'luxe' || !activeSubCategorySlug
+                      ? 'bg-gradient-to-r from-amber-50/90 via-purple-50/70 to-amber-50/90 border-amber-300 ring-2 ring-amber-300/40 shadow-xs'
+                      : 'bg-[#f8f9fb] hover:bg-gray-100 border-gray-200'
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[18px] text-[#eab308]">workspace_premium</span>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-bold text-[#111827]">Curated Luxury Therapies</span>
-                        <span className="bg-[#eab308] text-black text-[9px] font-black uppercase px-1.5 py-0.2 rounded-full tracking-wider">
-                          Top rated
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-gray-500 font-medium">Swedish, deep tissue & stress relief</span>
-                    </div>
+                    <span className="text-xs font-bold text-[#111827]">Curated Luxury Therapies</span>
                   </div>
-                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-0.5 transition-transform shrink-0">chevron_right</span>
-                </button>
-
-                {/* View Services Purple Action Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveSubCategorySlug('luxe');
-                    setActiveTierSlug('luxe');
-                    const el = document.getElementById('subcat-section-luxe') || document.getElementById('subcat-section-sub-spa-luxe');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-                >
-                  View Curated Therapies
+                  <div className="flex items-center gap-1">
+                    <span className="bg-[#eab308] text-black text-[8.5px] font-black uppercase px-1.5 py-0.2 rounded-full tracking-wider">
+                      Top rated
+                    </span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-0.5 transition-transform">
+                      chevron_right
+                    </span>
+                  </div>
                 </button>
               </div>
             )}
@@ -9529,7 +9524,22 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
 
             {/* Dedicated Hero Banner for Spa (Matching Urban Company Curated Therapies) */}
             {isSpaCategory && (
-              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#2e1065] via-[#4c1d95] to-[#581c87] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-purple-800">
+              <div
+                onClick={() => {
+                  const luxeSub = (categoryData?.subCategories || []).find(
+                    (s) => s.slug === 'luxe' || s.slug === 'sub-spa-luxe' || s.slug.includes('luxe') || s.name.toLowerCase().includes('luxe') || s.name.toLowerCase().includes('curated')
+                  );
+                  const targetSlug = luxeSub ? luxeSub.slug : 'luxe';
+                  setActiveSubCategorySlug(targetSlug);
+                  setActiveTierSlug(targetSlug);
+                  const el = document.getElementById(`subcat-section-${targetSlug}`) || document.getElementById('subcat-section-luxe') || document.getElementById('subcat-section-sub-spa-luxe');
+                  if (el) {
+                    const y = el.getBoundingClientRect().top + window.pageYOffset - 110;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                  }
+                }}
+                className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#2e1065] via-[#4c1d95] to-[#581c87] text-white p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-purple-800 cursor-pointer hover:shadow-xl hover:border-purple-600 transition-all group"
+              >
                 <div className="space-y-2 max-w-sm">
                   <span className="inline-block bg-[#eab308] text-black text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-xs">
                     ✪ Top rated
@@ -9540,12 +9550,13 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   <p className="text-xs text-purple-200 font-medium leading-relaxed">
                     Curated therapies with only Highly rated therapists & authentic aroma oils
                   </p>
-                  <div className="text-sm font-extrabold text-amber-300 pt-1">
-                    Starting ₹699
+                  <div className="text-sm font-extrabold text-amber-300 pt-1 flex items-center gap-2">
+                    <span>Starting ₹699</span>
+                    <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold group-hover:bg-white/30 transition-colors">Explore Therapies ↓</span>
                   </div>
                 </div>
                 <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0">
-                  <img src="/services/spa-luxe-stones.jpg" alt="Spa Luxe Stones" className="w-full h-full object-cover" />
+                  <img src="/services/spa-luxe-stones.jpg" alt="Spa Luxe Stones" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
               </div>
             )}
