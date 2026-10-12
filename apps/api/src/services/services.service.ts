@@ -1330,6 +1330,33 @@ export class ServicesService {
     });
     if (!cat) return null;
     const services = this.inMemoryServices.filter((s) => s.categoryId === cat.id && s.isActive);
+    const existingSubs = (cat as any).subCategories;
+    const subCategories = existingSubs && existingSubs.length > 0
+      ? existingSubs.map((sub: any) => ({
+          ...sub,
+          services: sub.services && sub.services.length > 0
+            ? sub.services
+            : services.filter((s) => s.subCategoryId === sub.id),
+        }))
+      : [
+          {
+            id: `sub-${cat.id}`,
+            name: cat.name,
+            slug: cat.slug,
+            icon: cat.icon,
+            badge: null,
+            groupHeader: null,
+            displayOrder: 1,
+            isActive: true,
+            tiers: [],
+            services,
+          },
+        ];
+
+    const allResolvedServices = services.length > 0 
+      ? services 
+      : (existingSubs ? existingSubs.flatMap((sub: any) => sub.services || []) : []);
+
     return {
       id: cat.id,
       name: cat.name,
@@ -1339,21 +1366,8 @@ export class ServicesService {
       description: null,
       order: cat.order,
       isActive: cat.isActive,
-      subCategories: [
-        {
-          id: `sub-${cat.id}`,
-          name: cat.name,
-          slug: cat.slug,
-          icon: cat.icon,
-          badge: null,
-          groupHeader: null,
-          displayOrder: 1,
-          isActive: true,
-          tiers: [],
-          services,
-        },
-      ],
-      services,
+      subCategories,
+      services: allResolvedServices,
     };
   }
 

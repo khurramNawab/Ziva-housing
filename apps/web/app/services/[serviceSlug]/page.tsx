@@ -6908,7 +6908,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   // Fetch full category hierarchy menu from backend
   const fetchCategoryHierarchy = useCallback(async (showLoadingScreen: boolean = false) => {
     const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
-    const isSpaSlug = ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women'].includes(serviceSlug);
+    const isSpaSlug = ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug);
     const isSalonLuxeSlug = !isSpaSlug && ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
     const isInstaHelpSlug = ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug);
     const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
@@ -6974,6 +6974,8 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
             defaultSub = 'prime';
           } else if (serviceSlug === 'spa-ayurveda') {
             defaultSub = 'ayurveda';
+          } else if (['spa-luxe', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug)) {
+            defaultSub = 'luxe';
           }
           setActiveSubCategorySlug(initialSubCatParam || defaultSub);
           return;
@@ -7336,6 +7338,12 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         let defaultSub = 'luxe';
         if (initialTierParam && ['luxe', 'prime', 'ayurveda', 'targeted-relief'].includes(initialTierParam)) {
           defaultSub = initialTierParam;
+        } else if (serviceSlug === 'spa-prime') {
+          defaultSub = 'prime';
+        } else if (serviceSlug === 'spa-ayurveda') {
+          defaultSub = 'ayurveda';
+        } else if (['spa-luxe', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug)) {
+          defaultSub = 'luxe';
         }
         setActiveSubCategorySlug(initialSubCatParam || defaultSub);
         setError404(false);
@@ -7570,10 +7578,12 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
 
   const isSpaCategory = useMemo(() => {
     return (
-      ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women'].includes(serviceSlug) ||
-      ['spa-for-women', 'spa', 'massage-for-men'].includes(categoryData?.slug || '') ||
+      ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug) ||
+      ['spa-for-women', 'spa', 'massage-for-men', 'curated-luxury-therapies', 'spa-luxe'].includes(categoryData?.slug || '') ||
       (categoryData?.name?.toLowerCase().includes('spa') && !categoryData?.name?.toLowerCase().includes('salon')) ||
-      categoryData?.name?.toLowerCase().includes('massage')
+      categoryData?.name?.toLowerCase().includes('massage') ||
+      categoryData?.name?.toLowerCase().includes('curated luxury') ||
+      categoryData?.name?.toLowerCase().includes('luxury therap')
     );
   }, [serviceSlug, categoryData]);
 
@@ -8168,14 +8178,52 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   </div>
                 </button>
 
-                {/* Top Rated Badge Strip */}
-                <div className="bg-[#f8f9fb] hover:bg-gray-100 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group flex items-center justify-between">
+                {/* Curated Luxury Therapies Top Rated Button */}
+                <button
+                  type="button"
+                  id="curated-luxury-therapies-btn"
+                  onClick={() => {
+                    setActiveSubCategorySlug('luxe');
+                    setActiveTierSlug('luxe');
+                    const el = document.getElementById('subcat-section-luxe') || document.getElementById('subcat-section-sub-spa-luxe');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className={`w-full rounded-xl p-2.5 border text-left transition-all cursor-pointer group flex items-center justify-between shadow-2xs ${
+                    activeSubCategorySlug === 'luxe' || activeSubCategorySlug === 'sub-spa-luxe' || activeTierSlug === 'luxe' || !activeSubCategorySlug
+                      ? 'bg-gradient-to-r from-amber-50 to-purple-50/70 border-amber-300 ring-1 ring-amber-200'
+                      : 'bg-[#f8f9fb] hover:bg-amber-50/40 border-gray-200'
+                  }`}
+                >
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-[18px] text-[#eab308]">workspace_premium</span>
-                    <span className="text-xs font-bold text-[#111827]">Curated Luxury Therapies</span>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-[#111827]">Curated Luxury Therapies</span>
+                        <span className="bg-[#eab308] text-black text-[9px] font-black uppercase px-1.5 py-0.2 rounded-full tracking-wider">
+                          Top rated
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-medium">Swedish, deep tissue & stress relief</span>
+                    </div>
                   </div>
-                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc]">chevron_right</span>
-                </div>
+                  <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] group-hover:translate-x-0.5 transition-transform shrink-0">chevron_right</span>
+                </button>
+
+                {/* View Services Purple Action Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveSubCategorySlug('luxe');
+                    setActiveTierSlug('luxe');
+                    const el = document.getElementById('subcat-section-luxe') || document.getElementById('subcat-section-sub-spa-luxe');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="w-full bg-[#5e23dc] hover:bg-[#4d19bf] text-white font-extrabold text-xs py-2.5 px-4 rounded-xl shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                >
+                  View Curated Therapies
+                </button>
               </div>
             )}
 
