@@ -14,6 +14,8 @@ interface Booking {
   status: string;
   totalAmount: number;
   notes?: string;
+  customerName?: string;
+  customerPhone?: string;
   service: {
     name: string;
     imageUrl?: string;
@@ -63,6 +65,7 @@ export default function VendorDashboard() {
 
   const [activeJobs, setActiveJobs] = useState<Booking[]>([]);
   const [openJobs, setOpenJobs] = useState<Booking[]>([]);
+  const [completedJobs, setCompletedJobs] = useState<Booking[]>([]);
   const [secondsLeft, setSecondsLeft] = useState(299);
 
   useEffect(() => {
@@ -107,16 +110,71 @@ export default function VendorDashboard() {
         setProviderProfile(profJson.data || profJson);
       }
 
-      // 2. Fetch bookings (role-aware — returns provider's assigned bookings)
-      const res = await fetch(getApiUrl('/services/bookings/my'), {
-        headers: { Authorization: `Bearer ${accToken}` },
-      });
-      if (res.ok) {
-        const json = await res.json();
-        const bookings = json.data || json || [];
-        setActiveJobs(bookings.filter((b: Booking) => ['ASSIGNED', 'IN_PROGRESS'].includes(b.status)));
-        setOpenJobs(bookings.filter((b: Booking) => b.status === 'PENDING'));
-      }
+      // 2. Fetch assigned bookings for provider
+      let myBookings: Booking[] = [];
+      try {
+        const res = await fetch(getApiUrl('/services/bookings/my'), {
+          headers: { Authorization: `Bearer ${accToken}` },
+        });
+        if (res.ok) {
+          const json = await res.json();
+          myBookings = json.data || json || [];
+        }
+      } catch (e) {}
+
+      // 3. Fetch open unassigned bookings
+      let availableBookings: Booking[] = [];
+      try {
+        const openRes = await fetch(getApiUrl('/services/bookings/open'), {
+          headers: { Authorization: `Bearer ${accToken}` },
+        });
+        if (openRes.ok) {
+          const openJson = await openRes.json();
+          availableBookings = openJson.data || openJson || [];
+        }
+      } catch (e) {}
+
+      // 4. Merge with local storage Ziva_user_bookings for full offline/demo resilience
+      try {
+        const localList: any[] = JSON.parse(localStorage.getItem('Ziva_user_bookings') || '[]');
+        localList.forEach((lb) => {
+          const bookingObj: Booking = {
+            id: lb.id || 'bk-demo',
+            bookingRef: lb.bookingRef || 'JVH-SVC-DEMO',
+            scheduledAt: lb.scheduledAt || new Date().toISOString(),
+            address: lb.address || 'Doorstep Address',
+            city: lb.city || 'Kolkata',
+            pincode: lb.pincode || '700019',
+            status: lb.status || 'PENDING',
+            totalAmount: Number(lb.totalAmount || 1299),
+            notes: lb.notes,
+            customerName: lb.customerName || 'Customer',
+            customerPhone: lb.customerPhone || '9876543210',
+            service: {
+              name: lb.service?.name || 'Home Service',
+              imageUrl: lb.service?.imageUrl,
+            },
+          };
+
+          if (['ASSIGNED', 'IN_PROGRESS'].includes(bookingObj.status)) {
+            if (!myBookings.some((b) => b.id === bookingObj.id)) {
+              myBookings.push(bookingObj);
+            }
+          } else if (bookingObj.status === 'PENDING') {
+            if (!availableBookings.some((b) => b.id === bookingObj.id)) {
+              availableBookings.push(bookingObj);
+            }
+          } else if (bookingObj.status === 'COMPLETED') {
+            if (!myBookings.some((b) => b.id === bookingObj.id)) {
+              myBookings.push(bookingObj);
+            }
+          }
+        });
+      } catch (e) {}
+
+      setActiveJobs(myBookings.filter((b: Booking) => ['ASSIGNED', 'IN_PROGRESS'].includes(b.status)));
+      setOpenJobs(availableBookings.filter((b: Booking) => b.status === 'PENDING'));
+      setCompletedJobs(myBookings.filter((b: Booking) => b.status === 'COMPLETED'));
     } catch (err) {
       console.error(err);
     } finally {
@@ -156,13 +214,46 @@ export default function VendorDashboard() {
   const handleAcceptJob = async (bookingId: string) => {
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      // Correct endpoint: PATCH /bookings/:id/status with body {status:'ASSIGNED'}
-      const res = await fetch(`${apiBase}/api/v1/services/bookings/${bookingId}/status`, {
+      await fetch(`${apiBase}/api/v1/services/bookings/${bookingId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: 'ASSIGNED' }),
-      });
-      if (res.ok) fetchProviderData(token);
+      }).catch(() => {});
+
+      // Update local storage
+      try {
+        const stored = JSON.parse(localStorage.getItem('Ziva_user_bookings') || '[]');
+        const updated = stored.map((b: any) =>
+          b.id === bookingId || b.bookingRef === bookingId ? { ...b, status: 'ASSIGNED' } : b
+        );
+        localStorage.setItem('Ziva_user_bookings', JSON.stringify(updated));
+      } catch (e) {}
+
+      fetchProviderData(token);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleUpdateStatus = async (bookingId: string, newStatus: string) => {
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      await fetch(`${apiBase}/api/v1/services/bookings/${bookingId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ status: newStatus }),
+      }).catch(() => {});
+
+      // Update local storage
+      try {
+        const stored = JSON.parse(localStorage.getItem('Ziva_user_bookings') || '[]');
+        const updated = stored.map((b: any) =>
+          b.id === bookingId || b.bookingRef === bookingId ? { ...b, status: newStatus } : b
+        );
+        localStorage.setItem('Ziva_user_bookings', JSON.stringify(updated));
+      } catch (e) {}
+
+      fetchProviderData(token);
     } catch (err) {
       console.error(err);
     }
@@ -457,73 +548,211 @@ export default function VendorDashboard() {
             </div>
           </div>
 
-          {/* Middle Column (5 cols): Jobs & Dispatches */}
-          <div className="md:col-span-5 flex flex-col gap-5">
-            <div className="flex flex-col gap-3">
+          {/* Middle Column (5 cols): Dynamic Jobs & Operations */}
+          <div className="md:col-span-5 flex flex-col gap-6">
+
+            {/* 1. ACTIVE & ASSIGNED JOBS SECTION */}
+            <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <h3 className="text-[20px] font-bold text-[#191c1e] flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#5e23dc]">radar</span>
-                  Incoming Requests
+                <h3 className="text-[18px] font-bold text-[#191c1e] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#5e23dc]">assignment</span>
+                  Active Assigned Jobs
                 </h3>
-                <span className="bg-[#ffdad6] text-[#ba1a1a] px-3 py-1 rounded-full text-[12px] font-bold border border-[#ba1a1a]/20">
-                  {openJobs.length} Pending
+                <span className="bg-[#e8ddff] text-[#4500b4] px-3 py-0.5 rounded-full text-xs font-bold">
+                  {activeJobs.length} In Progress
                 </span>
               </div>
 
-              {/* Job Card 1 */}
-              <div className="bg-white border border-[#5e23dc]/20 rounded-xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#5e23dc] rounded-l-xl" />
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#f2f4f6] flex items-center justify-center border border-[#eceef0]">
-                      <span className="material-symbols-outlined text-[#494455]" style={{ fontSize: '28px' }}>
-                        water_damage
-                      </span>
-                    </div>
-                    <div>
-                      <h4 className="text-[16px] text-[#191c1e] font-bold">Emergency Service Request</h4>
-                      <p className="text-[13px] text-[#494455] flex items-center gap-1 mt-1">
-                        <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
-                          location_on
-                        </span>
-                        Bangalore Urban • Sector 4
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <div className="text-[18px] font-bold text-[#191c1e]">₹2,500 - ₹4,000</div>
-                    <div className="text-[12px] text-[#494455]">Est. Payout</div>
-                  </div>
+              {activeJobs.length === 0 ? (
+                <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center text-xs text-gray-500 space-y-1 shadow-xs">
+                  <p className="font-bold text-gray-700">No active service jobs currently assigned.</p>
+                  <p>When you accept incoming requests below or admin dispatches a booking, it will appear here.</p>
                 </div>
-                <div className="flex items-center justify-between pt-3 border-t border-[#eceef0]">
-                  <div className="flex items-center gap-2 text-[#ba1a1a]">
-                    <span className="material-symbols-outlined animate-pulse" style={{ fontSize: '18px' }}>
-                      timer
-                    </span>
-                    <span className="text-[12px] font-bold">{formatTimer(secondsLeft)} to accept</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="px-4 py-2 rounded-lg border border-[#cbc3d8] text-[#191c1e] text-[12px] font-bold hover:bg-[#f2f4f6]">
-                      Reject
-                    </button>
-                    <button
-                      onClick={() => openJobs[0] && handleAcceptJob(openJobs[0].id)}
-                      disabled={!isFullyVerified}
-                      className="px-4 py-2 rounded-lg bg-[#5e23dc] text-white text-[12px] font-bold hover:bg-[#4500b4] disabled:opacity-50"
-                    >
-                      Accept Job
-                    </button>
-                  </div>
+              ) : (
+                <div className="space-y-3">
+                  {activeJobs.map((job) => (
+                    <div key={job.id} className="bg-white border-2 border-purple-200/80 rounded-2xl p-4 shadow-xs space-y-3 relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-1.5 h-full bg-[#5e23dc]" />
+                      <div className="flex justify-between items-start gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="bg-[#5e23dc]/10 text-[#5e23dc] text-[10px] font-black px-2 py-0.5 rounded-md">
+                              {job.bookingRef}
+                            </span>
+                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-md uppercase ${job.status === 'IN_PROGRESS' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
+                              {job.status}
+                            </span>
+                          </div>
+                          <h4 className="text-sm font-bold text-[#111827] mt-1">{job.service.name}</h4>
+                          <p className="text-xs text-gray-600 flex items-center gap-1 mt-0.5">
+                            <span className="material-symbols-outlined text-xs">location_on</span>
+                            {job.address}, {job.city} ({job.pincode})
+                          </p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-sm font-black text-[#111827]">₹{job.totalAmount}</span>
+                          <span className="block text-[10px] text-gray-400">Payout</span>
+                        </div>
+                      </div>
+
+                      {/* Customer Details & Schedule */}
+                      <div className="bg-[#f8f9fb] rounded-xl p-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border border-gray-100">
+                        <div>
+                          <span className="font-bold text-[#111827]">{job.customerName || 'Customer'}</span>
+                          <span className="text-gray-400 mx-1.5">•</span>
+                          <span className="text-gray-500">
+                            {new Date(job.scheduledAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} at{' '}
+                            {new Date(job.scheduledAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                        {job.customerPhone && (
+                          <a
+                            href={`tel:${job.customerPhone}`}
+                            className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1 rounded-lg text-[11px] flex items-center gap-1 transition-colors"
+                          >
+                            <span className="material-symbols-outlined text-xs">call</span>
+                            <span>{job.customerPhone}</span>
+                          </a>
+                        )}
+                      </div>
+
+                      {job.notes && (
+                        <p className="text-[11px] text-gray-500 italic bg-amber-50/50 p-2 rounded-lg border border-amber-100/50">
+                          Note: {job.notes}
+                        </p>
+                      )}
+
+                      {/* Action buttons */}
+                      <div className="flex gap-2 pt-1 border-t border-gray-100">
+                        {job.status === 'ASSIGNED' ? (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateStatus(job.id, 'IN_PROGRESS')}
+                            className="flex-1 bg-[#5e23dc] hover:bg-[#4500b4] text-white font-bold py-2 rounded-xl text-xs transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-sm">play_arrow</span>
+                            <span>Start Service</span>
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateStatus(job.id, 'COMPLETED')}
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-sm">check_circle</span>
+                            <span>Mark as Completed</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 2. INCOMING REQUESTS / OPEN JOBS */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <h3 className="text-[18px] font-bold text-[#191c1e] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#5e23dc]">radar</span>
+                  Incoming Requests
+                </h3>
+                <span className="bg-[#ffdad6] text-[#ba1a1a] px-3 py-0.5 rounded-full text-xs font-bold border border-[#ba1a1a]/20">
+                  {openJobs.length} Available
+                </span>
+              </div>
+
+              {openJobs.length === 0 ? (
+                <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center text-xs text-gray-500 space-y-1 shadow-xs">
+                  <p className="font-bold text-gray-700">No open requests right now.</p>
+                  <p>Keep your status Online & Receiving Jobs to capture real-time customer bookings in your area.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {openJobs.map((job) => (
+                    <div key={job.id} className="bg-white border border-[#5e23dc]/20 rounded-xl p-4 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow space-y-3">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-[#5e23dc] rounded-l-xl" />
+                      <div className="flex justify-between items-start">
+                        <div className="flex gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#5e23dc] flex items-center justify-center shrink-0 border border-purple-100">
+                            <span className="material-symbols-outlined text-xl">home_repair_service</span>
+                          </div>
+                          <div>
+                            <span className="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded-md">
+                              {job.bookingRef}
+                            </span>
+                            <h4 className="text-sm text-[#191c1e] font-bold mt-0.5">{job.service.name}</h4>
+                            <p className="text-xs text-[#494455] flex items-center gap-1 mt-0.5">
+                              <span className="material-symbols-outlined text-xs">location_on</span>
+                              {job.address}, {job.city}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="text-base font-black text-[#191c1e]">₹{job.totalAmount}</div>
+                          <div className="text-[10px] text-[#494455]">Est. Payout</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-[#eceef0]">
+                        <div className="flex items-center gap-1.5 text-[#ba1a1a] text-xs font-bold">
+                          <span className="material-symbols-outlined text-sm animate-pulse">timer</span>
+                          <span>{formatTimer(secondsLeft)} to accept</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setOpenJobs((prev) => prev.filter((j) => j.id !== job.id))}
+                            className="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50 cursor-pointer"
+                          >
+                            Decline
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleAcceptJob(job.id)}
+                            disabled={!isFullyVerified}
+                            className="px-4 py-1.5 rounded-lg bg-[#5e23dc] hover:bg-[#4500b4] text-white text-xs font-bold disabled:opacity-50 transition-colors shadow-xs cursor-pointer"
+                          >
+                            Accept Job
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 3. RECENTLY COMPLETED JOBS */}
+            {completedJobs.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-[18px] font-bold text-[#191c1e] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-emerald-600">verified</span>
+                  Completed Jobs ({completedJobs.length})
+                </h3>
+                <div className="bg-white rounded-2xl border border-gray-200 divide-y divide-gray-100 overflow-hidden shadow-xs">
+                  {completedJobs.map((cj) => (
+                    <div key={cj.id} className="p-3.5 flex items-center justify-between text-xs">
+                      <div>
+                        <span className="font-bold text-gray-900">{cj.service.name}</span>
+                        <span className="block text-[11px] text-gray-500">{cj.bookingRef} • {cj.city}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-black text-emerald-600">₹{cj.totalAmount}</span>
+                        <span className="block text-[9px] font-bold uppercase text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-md">PAID</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right Column (3 cols): Earnings & Stats */}
           <div className="md:col-span-3 flex flex-col gap-4">
             <div className="bg-white rounded-xl p-5 border border-[#eceef0] flex flex-col shadow-sm">
               <h3 className="text-[11px] font-bold text-[#494455] uppercase tracking-wider mb-3">Total Jobs Done</h3>
-              <div className="text-[36px] font-bold text-[#191c1e] leading-none mb-1">{providerProfile?.totalJobs ?? 0}</div>
+              <div className="text-[36px] font-bold text-[#191c1e] leading-none mb-1">{(providerProfile?.totalJobs ?? 0) + completedJobs.length}</div>
               <div className="text-[13px] text-[#494455] flex items-center gap-1 mb-4 font-semibold">
                 <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>work_history</span>
                 {isFullyVerified ? 'Active & Verified' : 'Pending Verification'}
