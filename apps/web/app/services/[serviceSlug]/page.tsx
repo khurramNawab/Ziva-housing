@@ -8031,6 +8031,112 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
       }
       }
 
+      // ── Enrich live DB data with complete comprehensive catalog so live site has all 100% services ──
+      let defaultCatCandidate: ServiceCategory | null = null;
+      if (isAcSlug || data.slug === 'ac-appliance-repair' || data.name?.toLowerCase() === 'ac') {
+        defaultCatCandidate = DEFAULT_AC_CATEGORY;
+      } else if (isSpaSlug || (data.slug === 'spa-for-women' || (data.name?.toLowerCase().includes('spa') && !data.name?.toLowerCase().includes('salon')))) {
+        defaultCatCandidate = serviceSlug.includes('men') ? { ...DEFAULT_SPA_CATEGORY, name: 'Massage for Men', slug: 'massage-for-men' } : DEFAULT_SPA_CATEGORY;
+      } else if (isMensSalonSlug || data.slug === 'mens-salon-massage' || data.slug === 'salon-for-men' || (data.name?.toLowerCase().includes('men') && data.name?.toLowerCase().includes('salon'))) {
+        defaultCatCandidate = DEFAULT_MENS_SALON_CATEGORY;
+      } else if (isSalonLuxeSlug || data.slug === 'salon-luxe' || data.name?.toLowerCase().includes('salon')) {
+        defaultCatCandidate = DEFAULT_SALON_LUXE_CATEGORY;
+      } else if (isInstaHelpSlug || data.slug === 'instahelp') {
+        defaultCatCandidate = DEFAULT_INSTAHELP_CATEGORY;
+      } else if (isWashingMachineSlug || data.slug === 'washing-machine' || data.name?.toLowerCase().includes('washing')) {
+        defaultCatCandidate = DEFAULT_WASHING_MACHINE_CATEGORY;
+      } else if (isBathroomCleaningSlug || data.slug === 'bathroom-cleaning' || data.name?.toLowerCase().includes('bathroom')) {
+        defaultCatCandidate = DEFAULT_BATHROOM_CLEANING_CATEGORY;
+      } else if (isMakeupSlug || data.slug === 'makeup-saree-styling' || data.name?.toLowerCase().includes('makeup')) {
+        defaultCatCandidate = DEFAULT_MAKEUP_CATEGORY;
+      } else if (isInteriorModularKitchenSlug || data.slug === 'interior-modular-kitchen' || data.name?.toLowerCase().includes('modular kitchen')) {
+        defaultCatCandidate = DEFAULT_INTERIOR_MODULAR_KITCHEN_CATEGORY;
+      } else if (isKitchenCleaningSlug || data.slug === 'kitchen-cleaning') {
+        defaultCatCandidate = DEFAULT_KITCHEN_CLEANING_CATEGORY;
+      } else if (isLivingBedroomSlug || data.slug === 'living-bedroom-cleaning') {
+        defaultCatCandidate = DEFAULT_LIVING_BEDROOM_CLEANING_CATEGORY;
+      } else if (isFullHomeSlug || data.slug === 'full-home-cleaning') {
+        defaultCatCandidate = DEFAULT_FULL_HOME_CLEANING_CATEGORY;
+      } else if (isCockroachSlug || data.slug === 'cockroach-control') {
+        defaultCatCandidate = DEFAULT_COCKROACH_CONTROL_CATEGORY;
+      } else if (isAntsBedBugsSlug || data.slug === 'ants-bed-bugs-control') {
+        defaultCatCandidate = DEFAULT_ANTS_BED_BUGS_CATEGORY;
+      } else if (isFullHomePaintingSlug || data.slug === 'full-home-painting') {
+        defaultCatCandidate = DEFAULT_FULL_HOME_PAINTING_CATEGORY;
+      } else if (isWallsRoomsPaintingSlug || data.slug === 'walls-rooms-painting') {
+        defaultCatCandidate = DEFAULT_WALLS_ROOMS_PAINTING_CATEGORY;
+      } else if (isTelevisionRepairSlug || data.slug === 'television-repair') {
+        defaultCatCandidate = DEFAULT_TELEVISION_REPAIR_CATEGORY;
+      } else if (isChimneyRepairSlug || data.slug === 'chimney-repair') {
+        defaultCatCandidate = DEFAULT_CHIMNEY_REPAIR_CATEGORY;
+      } else if (isRefrigeratorSlug || data.slug === 'refrigerator') {
+        defaultCatCandidate = DEFAULT_REFRIGERATOR_CATEGORY;
+      } else if (isAirCoolerSlug || data.slug === 'air-cooler') {
+        defaultCatCandidate = DEFAULT_AIR_COOLER_CATEGORY;
+      } else if (isGeyserSlug || data.slug === 'geyser') {
+        defaultCatCandidate = DEFAULT_GEYSER_CATEGORY;
+      } else if (isWaterPurifierSlug || data.slug === 'water-purifier') {
+        defaultCatCandidate = DEFAULT_WATER_PURIFIER_CATEGORY;
+      } else if (isLaptopRepairSlug || data.slug === 'laptop') {
+        defaultCatCandidate = DEFAULT_LAPTOP_REPAIR_CATEGORY;
+      } else if (isStoveRepairSlug || data.slug === 'stove-service-repair') {
+        defaultCatCandidate = DEFAULT_STOVE_REPAIR_CATEGORY;
+      } else if (isEpcSlug || data.slug === 'electrician-plumber-carpenter') {
+        defaultCatCandidate = DEFAULT_EPC_CATEGORY;
+      } else if (isPlumberSlug || data.slug === 'plumber') {
+        defaultCatCandidate = DEFAULT_PLUMBER_CATEGORY;
+      } else if (isElectricianSlug || data.slug === 'electrician') {
+        defaultCatCandidate = DEFAULT_ELECTRICIAN_CATEGORY;
+      } else if (isCarpenterSlug || data.slug === 'carpenter') {
+        defaultCatCandidate = DEFAULT_CARPENTER_CATEGORY;
+      } else if (isFanInstallationSlug || data.slug === 'fan-installation') {
+        defaultCatCandidate = DEFAULT_FAN_INSTALLATION_CATEGORY;
+      } else if (isFestivalLightsSlug || data.slug === 'festival-lights-installation') {
+        defaultCatCandidate = DEFAULT_FESTIVAL_LIGHTS_CATEGORY;
+      } else if (isFurnitureAssemblySlug || data.slug === 'furniture-assembly') {
+        defaultCatCandidate = DEFAULT_FURNITURE_ASSEMBLY_CATEGORY;
+      } else if (isNativeSmartLocksSlug || data.slug === 'native-smart-locks') {
+        defaultCatCandidate = DEFAULT_NATIVE_SMART_LOCKS_CATEGORY;
+      } else if (isNativeWaterPurifierSlug || data.slug === 'native-water-purifier') {
+        defaultCatCandidate = DEFAULT_NATIVE_WATER_PURIFIER_MODELS_CATEGORY;
+      } else if (isSolarPanelsSlug || data.slug === 'solar-panels') {
+        defaultCatCandidate = DEFAULT_SOLAR_PANELS_CATEGORY;
+      }
+
+      if (defaultCatCandidate && Array.isArray(defaultCatCandidate.subCategories)) {
+        const liveSubs = Array.isArray(data.subCategories) ? [...data.subCategories] : [];
+        defaultCatCandidate.subCategories.forEach((defSub) => {
+          const liveSubIdx = liveSubs.findIndex(
+            (ls: any) => ls.slug === defSub.slug || ls.name?.toLowerCase() === defSub.name?.toLowerCase()
+          );
+          if (liveSubIdx === -1) {
+            liveSubs.push(defSub);
+          } else {
+            const liveSub = { ...liveSubs[liveSubIdx] };
+            const liveServices = Array.isArray(liveSub.services) ? [...liveSub.services] : [];
+            if (Array.isArray(defSub.services)) {
+              defSub.services.forEach((defSvc) => {
+                const alreadyExists = liveServices.some(
+                  (s: any) => s.slug === defSvc.slug || s.name?.toLowerCase() === defSvc.name?.toLowerCase()
+                );
+                if (!alreadyExists) {
+                  liveServices.push(defSvc);
+                }
+              });
+              liveSub.services = liveServices;
+            }
+            if (Array.isArray(defSub.tiers) && (!liveSub.tiers || liveSub.tiers.length === 0)) {
+              liveSub.tiers = defSub.tiers;
+            }
+            liveSubs[liveSubIdx] = liveSub;
+          }
+        });
+        data = {
+          ...data,
+          subCategories: liveSubs,
+        };
+      }
+
       setCategoryData(data);
 
       // Auto-select first active subcategory if none selected
