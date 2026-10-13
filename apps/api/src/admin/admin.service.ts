@@ -8,6 +8,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { sharedSystemSettings, sharedIncidents, sharedAlerts } from '../common/system-settings.store';
+import { SEED_CATEGORIES } from '../services/services.service';
 
 @Injectable()
 export class AdminService {
@@ -348,6 +349,7 @@ export class AdminService {
     },
   ];
 
+  private inMemoryCategories: any[] = JSON.parse(JSON.stringify(SEED_CATEGORIES));
   private inMemoryBookings: any[] = [
     {
       id: 'bk-1',
@@ -1914,12 +1916,12 @@ export class AdminService {
           },
           orderBy: { order: 'asc' },
         });
-        if (categories) return categories;
+        if (categories && categories.length > 0) return categories;
       } catch (err: any) {
         this.logger.warn(`Remote DB error in getAdminServiceCategories: ${err?.message}`);
       }
     }
-    return [];
+    return this.inMemoryCategories;
   }
 
   // Category CRUD & Toggle

@@ -15,7 +15,7 @@ const BACKGROUND_CHECK_CATEGORIES = [
   'nanny',
 ];
 
-const SEED_CATEGORIES = [
+export const SEED_CATEGORIES = [
   {
     id: 'cat-clean',
     name: 'Cleaning & Pest Control',
@@ -1141,7 +1141,7 @@ const SEED_CATEGORIES = [
   },
 ];
 
-const SEED_SERVICES = [
+export const SEED_SERVICES = [
   // Cleaning
   { id: 'svc-clean-1', categoryId: 'cat-clean', name: 'Bathroom Deep Cleaning (1 Bathroom)', slug: 'bathroom-deep-cleaning', description: 'Intense tile scrubbing, descaling of taps & toilet sanitization.', basePrice: 499, durationMinutes: 60, isActive: true, order: 1, imageUrl: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80' },
   { id: 'svc-clean-2', categoryId: 'cat-clean', name: '1 BHK Full Home Deep Cleaning', slug: '1bhk-deep-cleaning', description: 'Thorough mechanized scrubbing of all rooms, kitchen, and bathroom.', basePrice: 1999, durationMinutes: 240, isActive: true, order: 2, imageUrl: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80' },
@@ -1528,7 +1528,7 @@ export class ServicesService {
           ...sub,
           services: sub.services && sub.services.length > 0
             ? sub.services
-            : services.filter((s) => s.subCategoryId === sub.id),
+            : services.filter((s: any) => s.subCategoryId === sub.id),
         }))
       : [
           {
