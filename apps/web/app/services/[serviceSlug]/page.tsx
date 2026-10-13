@@ -1661,6 +1661,336 @@ const DEFAULT_SALON_LUXE_CATEGORY: ServiceCategory = {
   ],
 };
 
+const DEFAULT_MENS_SALON_CATEGORY: ServiceCategory = {
+  id: 'cat-msalon',
+  name: "Men's Salon & Massage",
+  slug: 'mens-salon-massage',
+  icon: '🧔‍♂️',
+  badge: '4.86 ★ (1.8M)',
+  order: 3,
+  subCategories: [
+    {
+      id: 'sub-m-haircut-beard',
+      name: 'Haircut & Beard grooming',
+      slug: 'haircut-beard',
+      icon: 'content_cut',
+      badge: 'Bestseller',
+      groupHeader: 'Haircut & Beard',
+      displayOrder: 1,
+      description: 'Expert haircut, beard grooming and styling by top-rated men\'s stylists.',
+      services: [
+        {
+          id: 'srv-m-haircut-styling',
+          name: "Men's Haircut & Styling",
+          slug: 'mens-haircut-styling',
+          basePrice: 299,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 920000,
+          description: '• Haircut with sanitized scissors and clippers\n• Relaxing 5-min head massage with tonic\n• Neck cleanup & styling with hair spray',
+          imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-beard-shaping',
+          name: 'Beard Shaping & Styling',
+          slug: 'beard-shaping-styling',
+          basePrice: 199,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.86,
+          reviewCount: 650000,
+          description: '• Precision clipper trimming & razor sharp cheek lines\n• Nourishing beard oil massage for soft, groomed look',
+          imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-haircut-beard-combo',
+          name: 'Haircut + Beard Styling Combo',
+          slug: 'haircut-beard-styling-combo',
+          basePrice: 449,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.90,
+          reviewCount: 1400000,
+          description: '• Full haircut + precision beard shape up\n• 5-min cooling head massage + beard serum\n• Save ₹49 on combined grooming',
+          imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-father-kid',
+          name: 'Father & Kid Haircut Combo',
+          slug: 'father-kid-haircut-combo',
+          basePrice: 549,
+          durationMinutes: 55,
+          bestsellerFlag: false,
+          rating: 4.89,
+          reviewCount: 320000,
+          description: '• Haircut for 1 adult & 1 kid with soothing head massage\n• Gentle trimming and trendy look for junior',
+          imageUrl: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-m-hair-color-spa',
+      name: 'Hair color & Hair spa',
+      slug: 'hair-color-spa',
+      icon: 'palette',
+      badge: 'Ammonia-free',
+      groupHeader: 'Hair Color & Care',
+      displayOrder: 2,
+      description: 'L’Oreal Professionnel grey coverage, ammonia-free beard color & hair spa.',
+      services: [
+        {
+          id: 'srv-m-hair-color',
+          name: "L'Oreal Majirel Hair Color (Men)",
+          slug: 'loreal-majirel-hair-color-men',
+          basePrice: 499,
+          durationMinutes: 35,
+          bestsellerFlag: true,
+          rating: 4.87,
+          reviewCount: 480000,
+          description: '• 100% natural grey coverage with L’Oreal Majirel / Inoa\n• No skin staining, long-lasting rich natural black / dark brown',
+          imageUrl: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-beard-color',
+          name: 'Beard Color (Ammonia-Free)',
+          slug: 'beard-color-ammonia-free',
+          basePrice: 249,
+          durationMinutes: 20,
+          bestsellerFlag: false,
+          rating: 4.84,
+          reviewCount: 310000,
+          description: '• Quick 10-minute skin-friendly grey hair coverage for beard & mustache\n• Nourishing vitamin E enriched formula',
+          imageUrl: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-hair-spa',
+          name: 'Anti-Dandruff Hair Spa & Scalp Therapy',
+          slug: 'antidandruff-hair-spa-men',
+          basePrice: 699,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 290000,
+          description: '• Deep scalp scrub + anti-dandruff mask\n• Warm towel steam + 15-min therapeutic head massage',
+          imageUrl: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-m-face-care',
+      name: 'Face care & Cleanups',
+      slug: 'face-care-cleanup',
+      icon: 'face',
+      badge: 'Instant Glow',
+      groupHeader: 'Skincare for Men',
+      displayOrder: 3,
+      description: 'Charcoal pollution detox, blackhead extraction & brightening facials.',
+      services: [
+        {
+          id: 'srv-m-charcoal-cleanup',
+          name: 'Activated Charcoal Pollution De-Tan Cleanup',
+          slug: 'activated-charcoal-detan-cleanup',
+          basePrice: 599,
+          durationMinutes: 40,
+          bestsellerFlag: true,
+          rating: 4.90,
+          reviewCount: 780000,
+          description: '• Deep pore unclogging with activated bamboo charcoal\n• Ultrasonic blackhead & whitehead extraction\n• Cooling mint peel-off pack for fresh matte skin',
+          imageUrl: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-o3-facial',
+          name: 'O3+ Men Brightening Radiance Facial',
+          slug: 'o3-men-brightening-facial',
+          basePrice: 1199,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.93,
+          reviewCount: 420000,
+          description: '• Multi-step brightening therapy with pure vitamin C serum\n• Gentle ultrasonic peel, lymphatic face massage & whitening rubber mask',
+          imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-oil-acne-cleanup',
+          name: 'Oil & Acne Control Salicylic Cleanup',
+          slug: 'oil-acne-control-cleanup',
+          basePrice: 649,
+          durationMinutes: 40,
+          bestsellerFlag: false,
+          rating: 4.86,
+          reviewCount: 270000,
+          description: '• Salicylic acid deep exfoliation + antibacterial tea tree gel\n• Controls excess sebum, calms active redness & tightens open pores',
+          imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-m-shave-detan',
+      name: 'Shave & Detan',
+      slug: 'shave-detan',
+      icon: 'sanitizer',
+      badge: 'Classic Care',
+      groupHeader: 'Shaving & Sun Tan',
+      displayOrder: 4,
+      description: 'Barbershop hot towel shaves and instant sun tan removal packs.',
+      services: [
+        {
+          id: 'srv-m-luxury-shave',
+          name: 'Luxury Lather Shave',
+          slug: 'luxury-lather-shave',
+          basePrice: 149,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.88,
+          reviewCount: 510000,
+          description: '• Warm towel softening compress + rich foam lather\n• Fresh single-use sanitized razor blade\n• Alum block rub + cooling aftershave balm',
+          imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-raaga-detan',
+          name: 'Raaga De-Tan Pack (Face & Neck)',
+          slug: 'raaga-detan-pack-men',
+          basePrice: 349,
+          durationMinutes: 20,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 620000,
+          description: '• Kojic acid & milk protein instant de-tanning pack\n• Removes harsh outdoor sun tan and dullness in 15 mins',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-shave-detan-combo',
+          name: 'Clean Shave + Raaga De-Tan Combo',
+          slug: 'clean-shave-detan-combo',
+          basePrice: 449,
+          durationMinutes: 35,
+          bestsellerFlag: true,
+          rating: 4.91,
+          reviewCount: 890000,
+          description: '• Luxury lather shave with fresh blade\n• Complete face & neck de-tan pack with ice roller soothing',
+          imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-m-pedicure-manicure',
+      name: 'Pedicure & Manicure for Men',
+      slug: 'pedicure-manicure-men',
+      icon: 'clean_hands',
+      badge: 'Foot & Nail Care',
+      groupHeader: 'Hand & Foot Care',
+      displayOrder: 5,
+      description: 'Hygienic foot crack care, nail shaping and relaxing hand therapy.',
+      services: [
+        {
+          id: 'srv-m-deep-pedi',
+          name: 'Deep Cleansing Pedicure for Men',
+          slug: 'deep-cleansing-pedicure-men',
+          basePrice: 699,
+          durationMinutes: 45,
+          bestsellerFlag: true,
+          rating: 4.89,
+          reviewCount: 310000,
+          description: '• Warm antiseptic foot soak, dead skin & cracked heel buffing\n• Walnut scrub, nail filing, cuticle care & 10-min foot reflexology',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-express-mani',
+          name: 'Express Manicure for Men',
+          slug: 'express-manicure-men',
+          basePrice: 499,
+          durationMinutes: 30,
+          bestsellerFlag: false,
+          rating: 4.85,
+          reviewCount: 190000,
+          description: '• Nail clipping, edge shaping, cuticle cleaning and shine buff\n• Moisturizing hand massage',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-mani-pedi-combo',
+          name: 'Signature Mani-Pedi Combo for Men',
+          slug: 'signature-mani-pedi-combo-men',
+          basePrice: 1099,
+          durationMinutes: 70,
+          bestsellerFlag: true,
+          rating: 4.92,
+          reviewCount: 450000,
+          description: '• Full pedicure with heel crack scrub + complete manicure\n• Dual scrub, massage & nail buffing',
+          imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+      ],
+    },
+    {
+      id: 'sub-m-massage-stress',
+      name: 'Massage & Stress relief',
+      slug: 'massage-stress-relief',
+      icon: 'self_improvement',
+      badge: 'Destress',
+      groupHeader: 'Therapies for Men',
+      displayOrder: 6,
+      description: 'Certified male masseurs, aromatic essential oils and deep muscle therapy.',
+      services: [
+        {
+          id: 'srv-m-head-shoulder-massage',
+          name: 'Head, Neck & Shoulder Acupressure Massage',
+          slug: 'head-neck-shoulder-massage-men',
+          basePrice: 399,
+          durationMinutes: 30,
+          bestsellerFlag: true,
+          rating: 4.91,
+          reviewCount: 840000,
+          description: '• 30-min targeted acupressure on tense neck, trapezius and scalp\n• Warm almond / mint oil relieves screen fatigue and migraines',
+          imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-swedish-massage',
+          name: 'Swedish Full Body De-Stress Massage',
+          slug: 'swedish-massage-men',
+          basePrice: 899,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.90,
+          reviewCount: 520000,
+          description: '• Long flowing rhythmic strokes improve blood circulation\n• Calming lavender aroma oil melt away physical tiredness',
+          imageUrl: '/services/spa-prime-massage.jpg',
+          isActive: true,
+        },
+        {
+          id: 'srv-m-deep-tissue-massage',
+          name: 'Deep Tissue Sports Recovery Massage',
+          slug: 'deep-tissue-massage-men',
+          basePrice: 999,
+          durationMinutes: 60,
+          bestsellerFlag: true,
+          rating: 4.94,
+          reviewCount: 680000,
+          description: '• Firm therapeutic pressure on deep muscle knots and back stiffness\n• Warm herbal oil blend with hot towel wipe',
+          imageUrl: '/services/spa-luxe-stones.jpg',
+          isActive: true,
+        },
+      ],
+    },
+  ],
+};
+
 const DEFAULT_INSTAHELP_CATEGORY: ServiceCategory = {
   id: 'cat-instahelp',
   name: 'InstaHelp',
@@ -7284,7 +7614,8 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   // Fetch full category hierarchy menu from backend
   const fetchCategoryHierarchy = useCallback(async (showLoadingScreen: boolean = false) => {
     const isAcSlug = ['ac', 'ac-service', 'ac-appliance-repair'].includes(serviceSlug);
-    const isSpaSlug = ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug);
+    const isMensSalonSlug = ['mens-salon-massage', 'mens-salon', 'salon-for-men', 'men-salon', 'mensalon', 'salon-men', 'mens-grooming'].includes(serviceSlug);
+    const isSpaSlug = !isMensSalonSlug && ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug);
     const isSalonLuxeSlug = !isSpaSlug && ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug);
     const isInstaHelpSlug = ['instahelp', 'instant-help', 'maid', 'cook'].includes(serviceSlug);
     const isWashingMachineSlug = ['washing-machine', 'washing-machine-repair', 'washingmachine'].includes(serviceSlug);
@@ -7354,6 +7685,21 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
             defaultSub = 'luxe';
           }
           setActiveSubCategorySlug(initialSubCatParam || defaultSub);
+          return;
+        }
+        if (isMensSalonSlug) {
+          setCategoryData(DEFAULT_MENS_SALON_CATEGORY);
+          let defaultSub = DEFAULT_MENS_SALON_CATEGORY.subCategories?.[0]?.slug || 'haircut-beard';
+          if (initialSubCatParam) {
+            if (['salon-for-men', 'haircut', 'beard'].includes(initialSubCatParam)) defaultSub = 'haircut-beard';
+            else if (['massage-for-men', 'massage'].includes(initialSubCatParam)) defaultSub = 'massage-stress-relief';
+            else if (['face-care', 'cleanup', 'facial'].includes(initialSubCatParam)) defaultSub = 'face-care-cleanup';
+            else if (['shave', 'detan'].includes(initialSubCatParam)) defaultSub = 'shave-detan';
+            else if (['pedicure', 'manicure'].includes(initialSubCatParam)) defaultSub = 'pedicure-manicure-men';
+            else if (['hair-color', 'spa'].includes(initialSubCatParam)) defaultSub = 'hair-color-spa';
+            else defaultSub = initialSubCatParam;
+          }
+          setActiveSubCategorySlug(defaultSub);
           return;
         }
         if (isSalonLuxeSlug) {
@@ -7538,6 +7884,8 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           data = DEFAULT_AC_CATEGORY;
         } else if (isSpaSlug) {
           data = serviceSlug.includes('men') ? { ...DEFAULT_SPA_CATEGORY, name: 'Massage for Men', slug: 'massage-for-men' } : DEFAULT_SPA_CATEGORY;
+        } else if (isMensSalonSlug) {
+          data = DEFAULT_MENS_SALON_CATEGORY;
         } else if (isSalonLuxeSlug) {
           data = DEFAULT_SALON_LUXE_CATEGORY;
         } else if (isInstaHelpSlug) {
@@ -7616,6 +7964,8 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
         data = DEFAULT_AC_CATEGORY;
       } else if (isSpaSlug || (data.slug === 'spa-for-women' || data.name?.toLowerCase().includes('spa') && !data.name?.toLowerCase().includes('salon'))) {
         data = serviceSlug.includes('men') ? { ...DEFAULT_SPA_CATEGORY, name: 'Massage for Men', slug: 'massage-for-men' } : DEFAULT_SPA_CATEGORY;
+      } else if (isMensSalonSlug || data.slug === 'mens-salon-massage' || data.slug === 'salon-for-men' || (data.name?.toLowerCase().includes('men') && data.name?.toLowerCase().includes('salon'))) {
+        data = DEFAULT_MENS_SALON_CATEGORY;
       } else if (isSalonLuxeSlug || data.slug === 'salon-luxe' || data.name?.toLowerCase().includes('salon')) {
         data = DEFAULT_SALON_LUXE_CATEGORY;
       } else if (isInstaHelpSlug || data.slug === 'instahelp') {
@@ -7730,6 +8080,20 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
           defaultSub = 'luxe';
         }
         setActiveSubCategorySlug(initialSubCatParam || defaultSub);
+        setError404(false);
+      } else if (isMensSalonSlug) {
+        setCategoryData(DEFAULT_MENS_SALON_CATEGORY);
+        let defaultSub = DEFAULT_MENS_SALON_CATEGORY.subCategories?.[0]?.slug || 'haircut-beard';
+        if (initialSubCatParam) {
+          if (['salon-for-men', 'haircut', 'beard'].includes(initialSubCatParam)) defaultSub = 'haircut-beard';
+          else if (['massage-for-men', 'massage'].includes(initialSubCatParam)) defaultSub = 'massage-stress-relief';
+          else if (['face-care', 'cleanup', 'facial'].includes(initialSubCatParam)) defaultSub = 'face-care-cleanup';
+          else if (['shave', 'detan'].includes(initialSubCatParam)) defaultSub = 'shave-detan';
+          else if (['pedicure', 'manicure'].includes(initialSubCatParam)) defaultSub = 'pedicure-manicure-men';
+          else if (['hair-color', 'spa'].includes(initialSubCatParam)) defaultSub = 'hair-color-spa';
+          else defaultSub = initialSubCatParam;
+        }
+        setActiveSubCategorySlug(defaultSub);
         setError404(false);
       } else if (['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug)) {
         setCategoryData(DEFAULT_SALON_LUXE_CATEGORY);
@@ -7960,7 +8324,17 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
     );
   }, [serviceSlug, categoryData]);
 
+  const isMensSalonCategory = useMemo(() => {
+    return (
+      ['mens-salon-massage', 'mens-salon', 'salon-for-men', 'men-salon', 'mensalon', 'salon-men', 'mens-grooming'].includes(serviceSlug) ||
+      ['mens-salon-massage', 'salon-for-men', 'mens-salon'].includes(categoryData?.slug || '') ||
+      (categoryData?.name?.toLowerCase().includes('men') && categoryData?.name?.toLowerCase().includes('salon')) ||
+      categoryData?.name?.toLowerCase() === "men's salon & massage"
+    );
+  }, [serviceSlug, categoryData]);
+
   const isSpaCategory = useMemo(() => {
+    if (isMensSalonCategory) return false;
     return (
       ['spa-for-women', 'spa', 'spa-luxe', 'spa-prime', 'spa-ayurveda', 'massage-for-men', 'massage', 'spa-women', 'curated-luxury-therapies', 'luxury-therapies', 'curated-therapies'].includes(serviceSlug) ||
       ['spa-for-women', 'spa', 'massage-for-men', 'curated-luxury-therapies', 'spa-luxe'].includes(categoryData?.slug || '') ||
@@ -7972,13 +8346,13 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
   }, [serviceSlug, categoryData]);
 
   const isSalonLuxeCategory = useMemo(() => {
-    if (isSpaCategory) return false;
+    if (isSpaCategory || isMensSalonCategory) return false;
     return (
       ['salon-luxe', 'salon-for-women', 'womens-salon-spa', 'salon', 'women-salon', 'womens-salon', 'salonluxe'].includes(serviceSlug) ||
       ['salon-luxe', 'salon-for-women', 'womens-salon-spa'].includes(categoryData?.slug || '') ||
-      categoryData?.name?.toLowerCase().includes('salon')
+      (categoryData?.name?.toLowerCase().includes('salon') && !categoryData?.name?.toLowerCase().includes('men'))
     );
-  }, [serviceSlug, categoryData, isSpaCategory]);
+  }, [serviceSlug, categoryData, isSpaCategory, isMensSalonCategory]);
 
   const isInstaHelpCategory = useMemo(() => {
     return (
@@ -8603,6 +8977,71 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                     </span>
                   </div>
                 </button>
+              </div>
+            )}
+
+            {isMensSalonCategory && (
+              <div className="mb-4 space-y-3 pb-3 border-b border-gray-100">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-black text-[#111827]">Men's Salon & Massage</h1>
+                    <span className="bg-emerald-50 text-emerald-700 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-emerald-200">
+                      Earliest Today, 45 mins
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-1">
+                    <span className="flex items-center text-amber-500 font-bold">
+                      <span className="material-symbols-outlined text-[15px] fill-amber-500">star</span>
+                      4.86
+                    </span>
+                    <span className="text-gray-400">•</span>
+                    <span className="font-medium text-gray-500">1.8 M bookings</span>
+                  </div>
+                </div>
+
+                {/* Address Selector Box */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('ziva_open_location_modal'));
+                    }
+                  }}
+                  className="w-full bg-[#f8f9fb] hover:bg-purple-50/50 rounded-xl p-2.5 border border-gray-200 text-left transition-colors cursor-pointer group"
+                >
+                  <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Select an address</div>
+                  <div className="text-xs font-bold text-[#111827] truncate mt-0.5 flex items-center justify-between">
+                    <span className="truncate">{userLocation || 'Kolkata'}</span>
+                    <span className="material-symbols-outlined text-[16px] text-gray-400 group-hover:text-[#5e23dc] shrink-0 ml-1">chevron_right</span>
+                  </div>
+                </button>
+
+                {/* Subcategory Icon Grid */}
+                <div className="grid grid-cols-3 gap-2 pt-1">
+                  {(categoryData?.subCategories || []).map((sub) => (
+                    <button
+                      key={sub.id}
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById(`subcat-section-${sub.slug}`);
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        setActiveSubCategorySlug(sub.slug);
+                      }}
+                      className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                        activeSubCategorySlug === sub.slug
+                          ? 'border-[#2563eb] bg-blue-50/70 shadow-2xs text-[#1d4ed8]'
+                          : 'border-gray-200 bg-white hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-2xl mb-1 text-gray-700">
+                        {sub.icon || 'content_cut'}
+                      </span>
+                      <span className="text-[10px] font-bold leading-tight line-clamp-2">
+                        {sub.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -9970,6 +10409,26 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                 </div>
                 <div className="w-full sm:w-56 h-36 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0">
                   <img src="/services/spa-luxe-stones.jpg" alt="Spa Luxe Stones" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                </div>
+              </div>
+            )}
+
+            {/* Dedicated Hero Banner for Men's Salon & Massage */}
+            {isMensSalonCategory && (
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#eff6ff] via-[#dbeafe] to-[#e0e7ff] text-[#111827] p-5 sm:p-6 shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-blue-200">
+                <div className="space-y-2 max-w-sm">
+                  <span className="inline-block bg-[#1d4ed8] text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-md tracking-wider">
+                    Trending Grooming
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight text-[#111827]">
+                    Men's Grooming<br /><span className="text-[#1d4ed8]">& De-stress Massage</span>
+                  </h2>
+                  <p className="text-sm font-bold text-[#1e40af]">
+                    Starting ₹149 • Arriving in 45 mins
+                  </p>
+                </div>
+                <div className="w-full sm:w-64 h-40 rounded-xl overflow-hidden shadow-lg border border-white/60 shrink-0">
+                  <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80" alt="Men's Salon" className="w-full h-full object-cover" />
                 </div>
               </div>
             )}
@@ -11354,7 +11813,7 @@ function UrbanCompanyServiceListingContent({ overrideSlug }: { overrideSlug?: st
                   </li>
                 </ul>
               </div>
-            ) : isSalonLuxeCategory ? (
+            ) : (isSalonLuxeCategory || isMensSalonCategory) ? (
               <>
                 <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/80 rounded-2xl p-3 flex items-center justify-between shadow-2xs">
                   <div className="flex items-center gap-2">
