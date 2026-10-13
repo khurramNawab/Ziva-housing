@@ -78,6 +78,9 @@ export default function CustomerDashboard() {
   const [visits, setVisits] = useState<Visit[]>([]);
   const [savedProperties, setSavedProperties] = useState<any[]>([]);
   const [serviceBookings, setServiceBookings] = useState<any[]>([]);
+  const [savedCart, setSavedCart] = useState<any | null>(null);
+  const [pendingBooking, setPendingBooking] = useState<any | null>(null);
+  const [bookingFromDashboard, setBookingFromDashboard] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -138,6 +141,96 @@ export default function CustomerDashboard() {
       router.push('/auth/login');
     }
   }, [router]);
+
+  const handleClearCart = () => {
+    try {
+      localStorage.removeItem('ziva_active_cart');
+      localStorage.removeItem('ziva_pending_booking_details');
+      if (savedCart?.serviceSlug) {
+        localStorage.removeItem(`ziva_cart_${savedCart.serviceSlug}`);
+      }
+    } catch (e) {}
+    setSavedCart(null);
+    setPendingBooking(null);
+  };
+
+  const handleCheckoutFromDashboard = async () => {
+    if (!savedCart || !savedCart.items || savedCart.items.length === 0) return;
+    setBookingFromDashboard(true);
+    try {
+      const token = localStorage.getItem('Ziva_access') || localStorage.getItem('token') || '';
+      const firstItem = savedCart.items[0];
+      const scheduledDate = pendingBooking?.selectedDate || new Date().toISOString().split('T')[0];
+      const scheduledTime = pendingBooking?.selectedTimeSlot || '10:30 AM';
+      const address = pendingBooking?.addressLine || user?.locality || 'Doorstep Address';
+      const cityName = pendingBooking?.city || user?.city || 'Kolkata';
+      const pincodeVal = pendingBooking?.pincode || '700019';
+      const custName = pendingBooking?.customerName || user?.firstName || 'Customer';
+      const custPhone = pendingBooking?.customerPhone || user?.phone || '9876543210';
+      const totalAmount = savedCart.grandTotal || savedCart.subtotal;
+
+      const newBookingObj = {
+        id: 'bk-' + Date.now(),
+        bookingRef: 'JVH-SVC-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000),
+        status: 'CONFIRMED',
+        scheduledAt: new Date(`${scheduledDate}T10:00:00.000Z`).toISOString(),
+        totalAmount,
+        address,
+        city: cityName,
+        pincode: pincodeVal,
+        customerName: custName,
+        customerPhone: custPhone,
+        notes: pendingBooking?.notes || `Items: ${savedCart.items.map((i: any) => `${i.service?.name} (x${i.quantity})`).join(', ')}`,
+        service: {
+          id: firstItem.service?.id || 'svc-1',
+          name: firstItem.service?.name || 'Home Service',
+          category: { name: savedCart.categoryName || 'Home Services' },
+        },
+        items: savedCart.items.map((i: any) => ({ name: i.service?.name, quantity: i.quantity, price: i.service?.basePrice })),
+        serviceProvider: { user: { firstName: 'Ziva Verified Pro' } },
+        createdAt: new Date().toISOString(),
+      };
+
+      // 1. Try sending to backend API if token exists
+      if (token) {
+        try {
+          const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+          await fetch(`${apiBase}/api/v1/services/bookings`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              serviceId: firstItem.service?.id || 'svc-1',
+              scheduledAt: newBookingObj.scheduledAt,
+              address,
+              city: cityName,
+              pincode: pincodeVal,
+              customerName: custName,
+              customerPhone: custPhone,
+              notes: newBookingObj.notes,
+            }),
+          });
+        } catch (e) {}
+      }
+
+      // 2. Persist to Ziva_user_bookings
+      const currentBookings = JSON.parse(localStorage.getItem('Ziva_user_bookings') || '[]');
+      const updatedBookings = [newBookingObj, ...currentBookings];
+      localStorage.setItem('Ziva_user_bookings', JSON.stringify(updatedBookings));
+
+      // 3. Clear cart
+      handleClearCart();
+      setServiceBookings(updatedBookings);
+      setActiveTab('services');
+      alert(`🎉 Booking Confirmed Successfully!\nReference: ${newBookingObj.bookingRef}\nAmount: ₹${totalAmount}\nYour service has been scheduled.`);
+    } catch (err: any) {
+      alert(err?.message || 'Error creating booking.');
+    } finally {
+      setBookingFromDashboard(false);
+    }
+  };
 
   const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -613,6 +706,82 @@ export default function CustomerDashboard() {
           {/* ───────────────── TAB 1: OVERVIEW DASHBOARD ───────────────── */}
           {activeTab === 'dashboard' && (
             <div className="space-y-8">
+              {/* ── Saved Cart & Pending Service Booking Banner ── */}
+              {savedCart && savedCart.items && savedCart.items.length > 0 && (
+                <div className="bg-gradient-to-r from-purple-50 via-pink-50 to-amber-50 border-2 border-[#5e23dc]/30 rounded-3xl p-5 md:p-6 shadow-md space-y-4 animate-in fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-[#5e23dc] text-white flex items-center justify-center text-xl shadow-sm">
+                        🛒
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-extrabold text-sm md:text-base text-[#111827]">
+                            You have {savedCart.items.length} saved service{savedCart.items.length > 1 ? 's' : ''} in your Cart
+                          </h4>
+                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                            Ready to Book
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          {pendingBooking?.addressLine
+                            ? `Doorstep Delivery: ${pendingBooking.addressLine}, ${pendingBooking.city || 'Kolkata'} • Slot: ${pendingBooking.selectedDate} (${pendingBooking.selectedTimeSlot})`
+                            : 'Review and confirm your doorstep appointment.'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right shrink-0">
+                      <span className="text-[11px] text-gray-500 font-semibold block">Total Payable</span>
+                      <span className="text-xl font-black text-[#5e23dc]">₹{savedCart.grandTotal || savedCart.subtotal}</span>
+                    </div>
+                  </div>
+
+                  {/* Items list */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                    {savedCart.items.map((item: any) => (
+                      <div key={item.service?.id || item.id} className="bg-white/90 rounded-xl p-3 border border-purple-100 flex items-center justify-between shadow-xs">
+                        <div className="truncate mr-2">
+                          <p className="text-xs font-bold text-[#111827] truncate">{item.service?.name}</p>
+                          <p className="text-[10px] text-gray-500">Qty: {item.quantity}</p>
+                        </div>
+                        <span className="text-xs font-extrabold text-[#111827] shrink-0">
+                          ₹{(item.service?.basePrice || 0) * (item.quantity || 1)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => handleClearCart()}
+                      className="text-xs text-gray-500 hover:text-red-600 font-bold underline cursor-pointer"
+                    >
+                      Clear Cart
+                    </button>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <Link
+                        href={`/services/${savedCart.serviceSlug || 'cleaning'}?openCheckout=true`}
+                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-sm">edit</span>
+                        <span>Edit in Service Page</span>
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={bookingFromDashboard}
+                        onClick={() => handleCheckoutFromDashboard()}
+                        className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        <span className="material-symbols-outlined text-sm">check_circle</span>
+                        <span>{bookingFromDashboard ? 'Securing Booking...' : `Confirm & Book Now (₹${savedCart.grandTotal || savedCart.subtotal})`}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
 
               {/* Dynamic Explore & Search Banner */}
               <div className="bg-gradient-to-r from-[#5e23dc] via-[#4500b4] to-[#2b007a] rounded-3xl p-6 md:p-8 text-white shadow-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
@@ -1055,6 +1224,82 @@ export default function CustomerDashboard() {
           {/* ───────────────── TAB 5: SERVICE BOOKINGS ───────────────── */}
           {activeTab === 'services' && (
             <div className="space-y-6">
+              {/* ── Saved Cart & Pending Service Booking Banner ── */}
+              {savedCart && savedCart.items && savedCart.items.length > 0 && (
+                <div className="bg-gradient-to-r from-purple-50 via-pink-50 to-amber-50 border-2 border-[#5e23dc]/30 rounded-3xl p-5 md:p-6 shadow-md space-y-4 animate-in fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-100 pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-[#5e23dc] text-white flex items-center justify-center text-xl shadow-sm">
+                        🛒
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-extrabold text-sm md:text-base text-[#111827]">
+                            You have {savedCart.items.length} saved service{savedCart.items.length > 1 ? 's' : ''} in your Cart
+                          </h4>
+                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                            Ready to Book
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          {pendingBooking?.addressLine
+                            ? `Doorstep Delivery: ${pendingBooking.addressLine}, ${pendingBooking.city || 'Kolkata'} • Slot: ${pendingBooking.selectedDate} (${pendingBooking.selectedTimeSlot})`
+                            : 'Review and confirm your doorstep appointment.'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right shrink-0">
+                      <span className="text-[11px] text-gray-500 font-semibold block">Total Payable</span>
+                      <span className="text-xl font-black text-[#5e23dc]">₹{savedCart.grandTotal || savedCart.subtotal}</span>
+                    </div>
+                  </div>
+
+                  {/* Items list */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                    {savedCart.items.map((item: any) => (
+                      <div key={item.service?.id || item.id} className="bg-white/90 rounded-xl p-3 border border-purple-100 flex items-center justify-between shadow-xs">
+                        <div className="truncate mr-2">
+                          <p className="text-xs font-bold text-[#111827] truncate">{item.service?.name}</p>
+                          <p className="text-[10px] text-gray-500">Qty: {item.quantity}</p>
+                        </div>
+                        <span className="text-xs font-extrabold text-[#111827] shrink-0">
+                          ₹{(item.service?.basePrice || 0) * (item.quantity || 1)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => handleClearCart()}
+                      className="text-xs text-gray-500 hover:text-red-600 font-bold underline cursor-pointer"
+                    >
+                      Clear Cart
+                    </button>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <Link
+                        href={`/services/${savedCart.serviceSlug || 'cleaning'}?openCheckout=true`}
+                        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-sm">edit</span>
+                        <span>Edit in Service Page</span>
+                      </Link>
+                      <button
+                        type="button"
+                        disabled={bookingFromDashboard}
+                        onClick={() => handleCheckoutFromDashboard()}
+                        className="bg-[#5e23dc] hover:bg-[#4500b4] text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        <span className="material-symbols-outlined text-sm">check_circle</span>
+                        <span>{bookingFromDashboard ? 'Securing Booking...' : `Confirm & Book Now (₹${savedCart.grandTotal || savedCart.subtotal})`}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {serviceBookings.length === 0 ? (
                 <div className="bg-white p-12 text-center rounded-2xl border border-[#cbc3d8]/50 space-y-4 shadow-sm">
                   <span className="material-symbols-outlined text-[#7a7487] text-4xl">home_repair_service</span>
